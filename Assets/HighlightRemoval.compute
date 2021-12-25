@@ -210,6 +210,8 @@ void RandomSwap (uint3 id : SV_DispatchThreadID)
 	);
 }
 
+// how to store the previous overall MSE to compare to candidate overall MSE?
+
 [numthreads(16,1,1)]
 void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 {
