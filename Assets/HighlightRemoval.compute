@@ -211,6 +211,7 @@ void RandomSwap (uint3 id : SV_DispatchThreadID)
 }
 
 // how to store the previous overall MSE to compare to candidate overall MSE?
+// store it in cluster center compute buffer (a copy in every entry)
 
 [numthreads(16,1,1)]
 void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
