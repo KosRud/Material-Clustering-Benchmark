@@ -8,6 +8,10 @@
 #define threshold 0.1
 
 bool final;
+bool validateCandidate;
+
+uint2 randomPosition;
+uint randomClusterCenter;
 
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
@@ -196,6 +200,14 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 			tex_arr_clusters_rw[uint3(id.xy, k)] = result;
 		}
 	}
+}
+
+[numthreads(1,1,1)]
+void RandomSwap (uint3 id : SV_DispatchThreadID)
+{
+	cbuf_cluster_centers[randomClusterCenter].xy = project(
+		tex_input[randomPosition].rgb
+	);
 }
 
 [numthreads(16,1,1)]
