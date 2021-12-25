@@ -25,7 +25,9 @@ public class HighlightRemovalTest : MonoBehaviour {
 			enableRandomWrite = true
 		};
 
-		this.cbufClusterCenters = new ComputeBuffer(16, sizeof(float) * 2);
+		// second half of the buffer contains candidate cluster centers
+		// first half contains current cluster centers
+		this.cbufClusterCenters = new ComputeBuffer(32, sizeof(float) * 2);
 
 		this.rtInput = new RenderTexture(1024, 1024, 0, RenderTextureFormat.ARGBFloat) {
 			useMipMap = true,

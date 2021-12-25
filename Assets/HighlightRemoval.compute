@@ -124,17 +124,21 @@ void AttributeInitialClusters (uint3 id : SV_DispatchThreadID)
 
 	float3 col = tex_input[id.xy].rgb;
 	int clusterID = (id.x + id.y * 1024) % numClusters;
+	bool included = test(col) > threshold;
 
 	for (int k = 0; k < numClusters; k++){
-		tex_arr_clusters_rw[uint3(id.xy, k)] = float4(
-			k == clusterID  && test(col) > threshold ?
-				project(col) :
-				float2(0,0),
-			0,
-			k == clusterID && test(col) > threshold  ?
-				1 :
-				0
-		);
+		float4 result = 0;
+
+		if (included) {
+			//result.z = dist*dist;
+
+			if (k == clusterID) {
+				result.xy = project(col);
+				result.w = 1;
+			}
+		}
+
+		tex_arr_clusters_rw[uint3(id.xy, k)] = result;
 	}
 }
 
@@ -146,8 +150,8 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 	float minDist = 100000000.0;
 	int clusterID = 0;
 
-	float3 col;
-	col = tex_input[id.xy].rgb;
+	float3 col = tex_input[id.xy].rgb;
+	bool included = test(col) > threshold;
 
 	for (int i = 0; i < numClusters; i++) {
 		float dist = length(
@@ -163,25 +167,33 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 
 	if (!final) {
 		for (int k = 0; k < numClusters; k++){
-			tex_arr_clusters_rw[uint3(id.xy, k)] = float4(
-				k == clusterID  && test(col) > threshold  ?
-					project(col) :
-					float2(0,0),
-				0,
-				k == clusterID && test(col) > threshold  ?
-					1 :
-					0
-			);
+			float4 result = 0;
+
+			if (included) {
+				result.z = minDist*minDist;
+
+				if (k == clusterID) {
+					result.xy = project(col);
+					result.w = 1;
+				}
+			}
+
+			tex_arr_clusters_rw[uint3(id.xy, k)] = result;
 		}
 	} else {
 		for (int k = 0; k < numClusters; k++){
-			tex_arr_clusters_rw[uint3(id.xy, k)] = float4(
-				k == clusterID  ?
-					project(col) :
-					float2(0,0),
-				0,
-				k == clusterID
-			);
+			float4 result = 0;
+
+			if (included) {
+				result.z = minDist*minDist;
+			}
+
+			if (k == clusterID) {
+				result.xy = project(col);
+				result.w = 1;
+			}
+
+			tex_arr_clusters_rw[uint3(id.xy, k)] = result;
 		}
 	}
 }
