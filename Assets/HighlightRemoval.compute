@@ -10,7 +10,6 @@
 bool final;
 bool validateCandidate;
 
-uint2 randomPosition;
 uint randomClusterCenter;
 
 // Create a RenderTexture with enableRandomWrite flag and set it
@@ -25,6 +24,7 @@ SamplerState sampler_tex_arr_clusters_r;
 SamplerState sampler_tex_input;
 
 RWStructuredBuffer<float2> cbuf_cluster_centers;
+RWStructuredBuffer<uint2> cbuf_random_positions;
 
 float2 project(float3 col)
 {
@@ -206,7 +206,9 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 void RandomSwap (uint3 id : SV_DispatchThreadID)
 {
 	cbuf_cluster_centers[randomClusterCenter].xy = project(
-		tex_input[randomPosition].rgb
+		tex_input[
+			cbuf_random_positions[randomClusterCenter]
+		].rgb
 	);
 }
 
@@ -224,17 +226,13 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 		10
 	);
 
-	if (aggregatedColor.a == 0){
-		float3 col;
-		col.rg = cbuf_cluster_centers[id.x].xy;
-		col.b = 1.0 - col.r - col.g;
-		col = RGBtoHSV(col);
-		col.x += 0.38197;
-		col.x = frac(col.x);
-		col = HSVtoRGB(col);
-		cbuf_cluster_centers[id.x].xy = project(col);
-	} else {
+	if (aggregatedColor.a != 0){
 		cbuf_cluster_centers[id.x].xy = aggregatedColor.xy / aggregatedColor.a;
+	} else {
+		float3 col = tex_input[
+			cbuf_random_positions[id.x]
+		].rgb;
+		cbuf_cluster_centers[id.x].xy = project(col);
 	}
 
 	//	0	1024

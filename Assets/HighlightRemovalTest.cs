@@ -4,6 +4,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private RenderTexture rtArr;
 	private RenderTexture rtResult;
 	private ComputeBuffer cbufClusterCenters;
+	private ComputeBuffer cbufRandomPositions;
 	private RenderTexture rtInput;
 
 	public ComputeShader csHighlightRemoval;
@@ -28,6 +29,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		// second half of the buffer contains candidate cluster centers
 		// first half contains current cluster centers
 		this.cbufClusterCenters = new ComputeBuffer(32, sizeof(float) * 2);
+		this.cbufRandomPositions = new ComputeBuffer(16, sizeof(float) * 2);
 
 		this.rtInput = new RenderTexture(1024, 1024, 0, RenderTextureFormat.ARGBFloat) {
 			useMipMap = true,
@@ -53,7 +55,9 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 			int kh_UpdateClusterCenters = this.csHighlightRemoval.FindKernel("UpdateClusterCenters");
 			this.csHighlightRemoval.SetTexture(kh_UpdateClusterCenters, "tex_arr_clusters_r", this.rtArr);
+			this.csHighlightRemoval.SetTexture(kh_UpdateClusterCenters, "tex_input", this.rtInput);
 			this.csHighlightRemoval.SetBuffer(kh_UpdateClusterCenters, "cbuf_cluster_centers", this.cbufClusterCenters);
+			this.csHighlightRemoval.SetBuffer(kh_UpdateClusterCenters, "cbuf_random_positions", this.cbufRandomPositions);
 			this.csHighlightRemoval.Dispatch(kh_UpdateClusterCenters, 1, 1, 1);
 
 			int kh_AttributeClusters = this.csHighlightRemoval.FindKernel("AttributeClusters");
