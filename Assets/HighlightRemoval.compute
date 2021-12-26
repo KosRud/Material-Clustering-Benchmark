@@ -212,6 +212,23 @@ void RandomSwap (uint3 id : SV_DispatchThreadID)
 	);
 }
 
+
+[numthreads(1,1,1)]
+void ValidateCandidates (uint3 id : SV_DispatchThreadID)
+{
+	float3 old = cbuf_cluster_centers[id.x + numClusters];
+	float3 candidate = cbuf_cluster_centers[id.x];
+
+	// z is same on all cluster centers
+	// and contains MSE across ALL clusters
+
+	if (candidate.z < old.z) {
+		cbuf_cluster_centers[id.x + numClusters] = cbuf_cluster_centers[id.x];
+	} else {
+		cbuf_cluster_centers[id.x] = cbuf_cluster_centers[id.x + numClusters];
+	}
+}
+
 // how to store the previous overall MSE to compare to candidate overall MSE?
 // store it in cluster center compute buffer (a copy in every entry)
 
@@ -226,12 +243,19 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 		10
 	);
 
+	// z is the same on all cluster centers
+	// and contains MSE across ALL clusters
+
 	if (aggregatedColor.a != 0){
 		cbuf_cluster_centers[id.x] = float3(
 			aggregatedColor.xy / aggregatedColor.w,
 			aggregatedColor.z
 		);
 	} else {
+		// if a cluster became empty right before validation
+		// we discard this swap candidate
+		// by setting z to inf
+
 		float3 col = tex_input[
 			cbuf_random_positions[id.x]
 		].rgb;
