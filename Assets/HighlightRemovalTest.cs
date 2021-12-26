@@ -89,6 +89,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.rtArr.Release();
 		this.rtResult.Release();
 		this.cbufClusterCenters.Release();
+		this.cbufRandomPositions.Release();
 		this.rtInput.Release();
 	}
 }
