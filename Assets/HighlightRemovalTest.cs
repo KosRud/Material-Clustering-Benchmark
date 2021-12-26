@@ -28,8 +28,15 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		// second half of the buffer contains candidate cluster centers
 		// first half contains current cluster centers
-		this.cbufClusterCenters = new ComputeBuffer(32, sizeof(float) * 2);
+		this.cbufClusterCenters = new ComputeBuffer(32, sizeof(float) * 3);
 		this.cbufRandomPositions = new ComputeBuffer(16, sizeof(float) * 2);
+
+		var clusterCenters = new Vector3[32];
+		for (int i = 0; i < 32; i++) {
+			// "old" cluster centers with infinite MSE
+			// to make sure new ones will overwrite them when validated
+			clusterCenters[i] = new Vector3(0, 0, Mathf.Infinity);
+		}
 
 		this.rtInput = new RenderTexture(1024, 1024, 0, RenderTextureFormat.ARGBFloat) {
 			useMipMap = true,
@@ -46,11 +53,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetBuffer(kh_AttributeInitialClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
 		this.csHighlightRemoval.Dispatch(kh_AttributeInitialClusters, 1024 / 32, 1024 / 32, 1);
 
-		// end initial clusters
-
-		const int numIter = 16;
-
-		for (int i = 0; i < numIter; i++) {
+		void KMeans(bool final = false) {
 			this.rtArr.GenerateMips();
 
 			int kh_UpdateClusterCenters = this.csHighlightRemoval.FindKernel("UpdateClusterCenters");
@@ -61,12 +64,15 @@ public class HighlightRemovalTest : MonoBehaviour {
 			this.csHighlightRemoval.Dispatch(kh_UpdateClusterCenters, 1, 1, 1);
 
 			int kh_AttributeClusters = this.csHighlightRemoval.FindKernel("AttributeClusters");
-			this.csHighlightRemoval.SetBool("final", i == numIter - 1);  // replace with define
+			this.csHighlightRemoval.SetBool("final", final);  // replace with define
 			this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_input", this.rtInput);
 			this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_arr_clusters_rw", this.rtArr);
 			this.csHighlightRemoval.SetBuffer(kh_AttributeClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
 			this.csHighlightRemoval.Dispatch(kh_AttributeClusters, 1024 / 32, 1024 / 32, 1);
 		}
+
+		KMeans();
+		KMeans();
 	}
 
 	// Update is called once per frame
