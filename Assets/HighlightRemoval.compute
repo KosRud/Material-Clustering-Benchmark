@@ -6,7 +6,7 @@
 #pragma kernel RandomSwap
 #pragma kernel ValidateCandidates
 
-#define numClusters 16
+#define numClusters 6
 #define threshold 0.1
 
 bool final;
@@ -170,36 +170,24 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 		}
 	}
 
-	if (!final) {
-		for (int k = 0; k < numClusters; k++){
-			float4 result = 0;
+	float4 result = 0;
 
-			if (included) {
-				result.z = minDist*minDist;
+	if (included) {
+		result.z = minDist*minDist;
+	}
 
-				if (k == clusterID) {
-					result.xy = project(col);
-					result.w = 1;
-				}
-			}
-
-			tex_arr_clusters_rw[uint3(id.xy, k)] = result;
+	for (int k = 0; k < numClusters; k++){		
+		if (
+			k == clusterID && 
+			(included || final)
+		) {
+			result.xy = project(col);
+			result.w = 1;
+		} else {
+			result.xyw = 0;
 		}
-	} else {
-		for (int k = 0; k < numClusters; k++){
-			float4 result = 0;
 
-			if (included) {
-				result.z = minDist*minDist;
-			}
-
-			if (k == clusterID) {
-				result.xy = project(col);
-				result.w = 1;
-			}
-
-			tex_arr_clusters_rw[uint3(id.xy, k)] = result;
-		}
+		tex_arr_clusters_rw[uint3(id.xy, k)] = result;
 	}
 }
 
