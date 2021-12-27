@@ -314,4 +314,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   csHighlightRemoval: {fileID: 7200000, guid: dc4e744027a39377184297ca8faf89f0, type: 3}
-  texInput: {fileID: 2800000, guid: 47afb60f28b21ad53a35d540335ae329, type: 3}
+  texInput: {fileID: 2800000, guid: 23529367e784b7b5b9feab0e92652172, type: 3}
