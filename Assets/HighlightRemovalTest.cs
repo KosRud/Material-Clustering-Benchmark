@@ -1,11 +1,20 @@
 using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
+	private const int numClusters = 16;
+
+	private struct Position {
+		public int x;
+		public int y;
+	}
+
 	private RenderTexture rtArr;
 	private RenderTexture rtResult;
 	private ComputeBuffer cbufClusterCenters;
 	private ComputeBuffer cbufRandomPositions;
 	private RenderTexture rtInput;
+	private System.Random random = new System.Random(1);
+	private Position[] randomPositions = new Position[numClusters];
 
 	public ComputeShader csHighlightRemoval;
 	public Texture2D texInput;
@@ -28,11 +37,11 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		// second half of the buffer contains candidate cluster centers
 		// first half contains current cluster centers
-		this.cbufClusterCenters = new ComputeBuffer(32, sizeof(float) * 3);
-		this.cbufRandomPositions = new ComputeBuffer(16, sizeof(float) * 2);
+		this.cbufClusterCenters = new ComputeBuffer(numClusters * 2, sizeof(float) * 3);
+		this.cbufRandomPositions = new ComputeBuffer(numClusters, sizeof(int) * 2);
 
-		var clusterCenters = new Vector3[32];
-		for (int i = 0; i < 32; i++) {
+		var clusterCenters = new Vector3[numClusters * 2];
+		for (int i = 0; i < clusterCenters.Length; i++) {
 			// "old" cluster centers with infinite MSE
 			// to make sure new ones will overwrite them when validated
 			clusterCenters[i] = new Vector3(0, 0, Mathf.Infinity);
@@ -53,7 +62,16 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetBuffer(kh_AttributeInitialClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
 		this.csHighlightRemoval.Dispatch(kh_AttributeInitialClusters, 1024 / 32, 1024 / 32, 1);
 
-		void KMeans(bool final = false) {
+		void AttributeClusters(bool final) {
+			int kh_AttributeClusters = this.csHighlightRemoval.FindKernel("AttributeClusters");
+			this.csHighlightRemoval.SetBool("final", final);  // replace with define
+			this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_input", this.rtInput);
+			this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_arr_clusters_rw", this.rtArr);
+			this.csHighlightRemoval.SetBuffer(kh_AttributeClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
+			this.csHighlightRemoval.Dispatch(kh_AttributeClusters, 1024 / 32, 1024 / 32, 1);
+		}
+
+		void KMeans() {
 			this.rtArr.GenerateMips();
 
 			int kh_UpdateClusterCenters = this.csHighlightRemoval.FindKernel("UpdateClusterCenters");
@@ -63,16 +81,53 @@ public class HighlightRemovalTest : MonoBehaviour {
 			this.csHighlightRemoval.SetBuffer(kh_UpdateClusterCenters, "cbuf_random_positions", this.cbufRandomPositions);
 			this.csHighlightRemoval.Dispatch(kh_UpdateClusterCenters, 1, 1, 1);
 
-			int kh_AttributeClusters = this.csHighlightRemoval.FindKernel("AttributeClusters");
-			this.csHighlightRemoval.SetBool("final", final);  // replace with define
-			this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_input", this.rtInput);
-			this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_arr_clusters_rw", this.rtArr);
-			this.csHighlightRemoval.SetBuffer(kh_AttributeClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
-			this.csHighlightRemoval.Dispatch(kh_AttributeClusters, 1024 / 32, 1024 / 32, 1);
+			AttributeClusters(false);
+
+			this.cbufClusterCenters.GetData(clusterCenters);
+			for (int i = 0; i < numClusters; i++) {
+				float MSE = clusterCenters[i].z;
+				if (MSE != Mathf.Infinity) {
+					Debug.Log($"MSE: {(int)(MSE * 1000000),8}");
+					break;
+				} else {
+					if (i == numClusters) {
+						Debug.Log("something went horribly wrong...");
+					}
+				}
+			}
+		}
+
+		void ValidateCandidates() {
+			int kh_ValidateCandidates = this.csHighlightRemoval.FindKernel("ValidateCandidates");
+			this.csHighlightRemoval.SetBuffer(kh_ValidateCandidates, "cbuf_cluster_centers", this.cbufClusterCenters);
+			this.csHighlightRemoval.SetBuffer(kh_ValidateCandidates, "cbuf_cluster_centers", this.cbufClusterCenters);
+			this.csHighlightRemoval.Dispatch(kh_ValidateCandidates, 1, 1, 1);
 		}
 
 		KMeans();
 		KMeans();
+		ValidateCandidates(); // guaranteed to succeed - MSE initialized with infinity
+
+		for (int i = 0; i < 3; i++) {
+			for (int k = 0; k < numClusters; k++) {
+				this.randomPositions[k].x = this.random.Next(1024);
+				this.randomPositions[k].y = this.random.Next(1024);
+				this.cbufRandomPositions.SetData(this.randomPositions);
+			}
+
+			int kh_RandomSwap = this.csHighlightRemoval.FindKernel("RandomSwap");
+			this.csHighlightRemoval.SetBuffer(kh_RandomSwap, "cbuf_cluster_centers", this.cbufClusterCenters);
+			this.csHighlightRemoval.SetBuffer(kh_RandomSwap, "cbuf_random_positions", this.cbufClusterCenters);
+			this.csHighlightRemoval.SetTexture(kh_RandomSwap, "tex_input", this.rtInput);
+			this.csHighlightRemoval.SetInt("randomClusterCenter", this.random.Next(numClusters));
+			this.csHighlightRemoval.Dispatch(kh_RandomSwap, 1, 1, 1);
+
+			KMeans();
+			KMeans();
+			//ValidateCandidates();
+		}
+
+		AttributeClusters(true);
 	}
 
 	// Update is called once per frame

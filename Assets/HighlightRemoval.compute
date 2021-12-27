@@ -3,8 +3,10 @@
 #pragma kernel AttributeClusters
 #pragma kernel UpdateClusterCenters
 #pragma kernel AttributeInitialClusters
+#pragma kernel RandomSwap
+#pragma kernel ValidateCandidates
 
-#define numClusters 6
+#define numClusters 16
 #define threshold 0.1
 
 bool final;
@@ -213,9 +215,13 @@ void RandomSwap (uint3 id : SV_DispatchThreadID)
 }
 
 
-[numthreads(1,1,1)]
+[numthreads(32,1,1)]
 void ValidateCandidates (uint3 id : SV_DispatchThreadID)
 {
+	if (id.x >= numClusters) {
+		return;
+	}
+
 	float3 old = cbuf_cluster_centers[id.x + numClusters];
 	float3 candidate = cbuf_cluster_centers[id.x];
 
@@ -232,9 +238,13 @@ void ValidateCandidates (uint3 id : SV_DispatchThreadID)
 // how to store the previous overall MSE to compare to candidate overall MSE?
 // store it in cluster center compute buffer (a copy in every entry)
 
-[numthreads(16,1,1)]
+[numthreads(32,1,1)]
 void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 {
+	if (id.x >= numClusters) {
+		return;
+	}
+
     float4 aggregatedColor = tex_arr_clusters_r.SampleLevel(
 		sampler_tex_arr_clusters_r,
 		float3(
