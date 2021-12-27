@@ -23,7 +23,6 @@ Texture2DArray<float4> tex_arr_clusters_r;
 RWTexture2DArray<float4> tex_arr_clusters_rw;
 
 SamplerState sampler_tex_arr_clusters_r;
-SamplerState sampler_tex_input;
 
 RWStructuredBuffer<float3> cbuf_cluster_centers;
 RWStructuredBuffer<uint2> cbuf_random_positions;
