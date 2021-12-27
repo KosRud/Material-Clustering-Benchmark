@@ -154,7 +154,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private void OnRenderImage(RenderTexture src, RenderTexture dest) {
 		void ClusteringIteration() {
-
 			if (doRandomSwap) {
 				this.KMeans();
 				this.KMeans();
@@ -165,17 +164,71 @@ public class HighlightRemovalTest : MonoBehaviour {
 				// so we need to account for it by running a few K-Means iterations
 				// before opting for a random swap attempt
 
+				cbufClusterCenters.GetData(this.clusterCenters);
+				for (int i = 0; i < numClusters; i++) {
+					float MSE = this.clusterCenters[i].z;
+					if (MSE != Mathf.Infinity) {
+						Debug.Log($"before swap | MSE: {(int)(MSE * 1000000),8}");
+						break;
+					} else {
+						if (i == numClusters) {
+							Debug.Log("something went horribly wrong...");
+						}
+					}
+				}
+
 				this.RandomSwap();
 
 				this.KMeans();
 				this.KMeans();
+
+				cbufClusterCenters.GetData(this.clusterCenters);
+				for (int i = 0; i < numClusters; i++) {
+					float MSE = this.clusterCenters[i].z;
+					if (MSE != Mathf.Infinity) {
+						Debug.Log($" after swap | MSE: {(int)(MSE * 1000000),8}");
+						break;
+					} else {
+						if (i == numClusters) {
+							Debug.Log("something went horribly wrong...");
+						}
+					}
+				}
 
 				this.ValidateCandidates();
 			} else {
 				this.KMeans();
 				this.KMeans();
 				this.KMeans();
+
+				cbufClusterCenters.GetData(this.clusterCenters);
+				for (int i = 0; i < numClusters; i++) {
+					float MSE = this.clusterCenters[i].z;
+					if (MSE != Mathf.Infinity) {
+						Debug.Log($" after 3 | MSE: {(int)(MSE * 1000000),8}");
+						break;
+					} else {
+						if (i == numClusters) {
+							Debug.Log("something went horribly wrong...");
+						}
+					}
+				}
+
 				this.KMeans();
+				this.KMeans();
+
+				cbufClusterCenters.GetData(this.clusterCenters);
+				for (int i = 0; i < numClusters; i++) {
+					float MSE = this.clusterCenters[i].z;
+					if (MSE != Mathf.Infinity) {
+						Debug.Log($" after 5 | MSE: {(int)(MSE * 1000000),8}");
+						break;
+					} else {
+						if (i == numClusters) {
+							Debug.Log("something went horribly wrong...");
+						}
+					}
+				}
 				// no need to discard old saved clusters
 				// we never validate / restore
 			}
@@ -187,7 +240,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 			this.timeLastIteration = Time.time;
 			ClusteringIteration();
 			this.AttributeClusters(true);
-			this.LogMSE();
+			//this.LogMSE();
 		}
 
 		int kh_ShowResult = this.csHighlightRemoval.FindKernel("ShowResult");
