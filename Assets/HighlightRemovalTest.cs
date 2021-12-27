@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
 	private const int numClusters = 6;
-	private const bool doRandomSwap = true;
+	private const bool doRandomSwap = false;
 	private const bool doRandomInitialAttribution = false;
-	private const float timeStep = 2f;
+	private const float timeStep = 1f;
 
 	private float timeLastIteration = 0;
 
@@ -157,31 +157,12 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private void OnRenderImage(RenderTexture src, RenderTexture dest) {
 		void ClusteringIteration() {
 			if (doRandomSwap) {
-				this.KMeans();
-				this.KMeans();
 				this.KMeans(true);  // discard old saved clusters, update MSE
-
-				// normally the data does not change between clustering iterations
-				// in our case it does
-				// so we need to account for it by running a few K-Means iterations
-				// before opting for a random swap attempt
-
-				this.cbufClusterCenters.GetData(this.clusterCenters);
-				for (int i = 0; i < numClusters; i++) {
-					float MSE = this.clusterCenters[i].z;
-					if (MSE != Mathf.Infinity) {
-						Debug.Log($"before swap | MSE: {(int)(MSE * 1000000),8}");
-						break;
-					} else {
-						if (i == numClusters) {
-							Debug.Log("something went horribly wrong...");
-						}
-					}
-				}
 
 				Debug.Log("doing random swap");
 				this.RandomSwap();
 
+				// adjust after swap
 				this.KMeans();
 				this.KMeans();
 
@@ -189,8 +170,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 				Debug.Log("validation");
 				this.LogMSE();
 			} else {
-				this.KMeans();
-				this.KMeans();
 				this.KMeans();
 				this.KMeans();
 				this.KMeans();
