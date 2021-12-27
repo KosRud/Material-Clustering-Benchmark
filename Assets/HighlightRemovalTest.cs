@@ -100,7 +100,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 		void ValidateCandidates() {
 			int kh_ValidateCandidates = this.csHighlightRemoval.FindKernel("ValidateCandidates");
 			this.csHighlightRemoval.SetBuffer(kh_ValidateCandidates, "cbuf_cluster_centers", this.cbufClusterCenters);
-			this.csHighlightRemoval.SetBuffer(kh_ValidateCandidates, "cbuf_cluster_centers", this.cbufClusterCenters);
 			this.csHighlightRemoval.Dispatch(kh_ValidateCandidates, 1, 1, 1);
 		}
 
@@ -124,7 +123,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 			KMeans();
 			KMeans();
-			//ValidateCandidates();
+			ValidateCandidates();
 		}
 
 		AttributeClusters(true);
