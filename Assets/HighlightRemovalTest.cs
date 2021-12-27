@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
 	private const int numClusters = 6;
-	private const bool doRandomSwap = false;
+	private const bool doRandomSwap = true;
 	private const bool doRandomInitialAttribution = false;
 	private const float timeStep = 2f;
 
@@ -113,6 +113,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.rtArr.GenerateMips();
 
 		this.UpdateClusterCenters(rejectOld);
+
+		this.LogMSE();
 	}
 
 	private void RandomSwap() {
@@ -177,58 +179,21 @@ public class HighlightRemovalTest : MonoBehaviour {
 					}
 				}
 
+				Debug.Log("doing random swap");
 				this.RandomSwap();
 
 				this.KMeans();
 				this.KMeans();
 
-				this.cbufClusterCenters.GetData(this.clusterCenters);
-				for (int i = 0; i < numClusters; i++) {
-					float MSE = this.clusterCenters[i].z;
-					if (MSE != Mathf.Infinity) {
-						Debug.Log($" after swap | MSE: {(int)(MSE * 1000000),8}");
-						break;
-					} else {
-						if (i == numClusters) {
-							Debug.Log("something went horribly wrong...");
-						}
-					}
-				}
-
 				this.ValidateCandidates();
+				Debug.Log("validation");
+				this.LogMSE();
 			} else {
 				this.KMeans();
 				this.KMeans();
 				this.KMeans();
-
-				this.cbufClusterCenters.GetData(this.clusterCenters);
-				for (int i = 0; i < numClusters; i++) {
-					float MSE = this.clusterCenters[i].z;
-					if (MSE != Mathf.Infinity) {
-						Debug.Log($" after 3 | MSE: {(int)(MSE * 1000000),8}");
-						break;
-					} else {
-						if (i == numClusters) {
-							Debug.Log("something went horribly wrong...");
-						}
-					}
-				}
-
 				this.KMeans();
 				this.KMeans();
-
-				this.cbufClusterCenters.GetData(this.clusterCenters);
-				for (int i = 0; i < numClusters; i++) {
-					float MSE = this.clusterCenters[i].z;
-					if (MSE != Mathf.Infinity) {
-						Debug.Log($" after 5 | MSE: {(int)(MSE * 1000000),8}");
-						break;
-					} else {
-						if (i == numClusters) {
-							Debug.Log("something went horribly wrong...");
-						}
-					}
-				}
 				// no need to discard old saved clusters
 				// we never validate / restore
 			}
