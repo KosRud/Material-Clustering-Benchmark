@@ -10,7 +10,7 @@
 #define threshold 0.1
 
 bool final;
-bool validateCandidate;
+bool rejectOld;
 
 uint randomClusterCenter;
 
@@ -258,6 +258,9 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 	clusterCenter.z = aggregatedColor.z;
 
 	cbuf_cluster_centers[id.x] = clusterCenter;
+	if (rejectOld) {
+		cbuf_cluster_centers[id.x + numClusters] = clusterCenter;
+	}
 
 	//	0	1024
 	//	1	512

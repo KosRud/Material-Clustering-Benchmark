@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
 	private const int numClusters = 6;
-	private const bool doRandomSwap = true;
+	private const bool doRandomSwap = false;
 	private const bool doRandomInitialAttribution = false;
-	private const float timeStep = 0.5f;
+	private const float timeStep = 2f;
 
 	private float timeLastIteration = 0;
 
@@ -80,12 +80,11 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 			this.rtArr.GenerateMips();
 
-			this.UpdateClusterCenters();
+			this.UpdateClusterCenters(true);
 		}
 
 		this.KMeans();
-		this.KMeans();
-		this.ValidateCandidates(); // guaranteed to succeed - MSE initialized with infinity
+		this.KMeans(true);
 	}
 
 	private void AttributeClusters(bool final = false) {
@@ -97,10 +96,11 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.Dispatch(kh_AttributeClusters, 1024 / 32, 1024 / 32, 1);
 	}
 
-	private void UpdateClusterCenters() {
+	private void UpdateClusterCenters(bool rejectOld) {
 		this.UpdateRandomPositions();
 
 		int kh_UpdateClusterCenters = this.csHighlightRemoval.FindKernel("UpdateClusterCenters");
+		this.csHighlightRemoval.SetBool("rejectOld", rejectOld);
 		this.csHighlightRemoval.SetTexture(kh_UpdateClusterCenters, "tex_arr_clusters_r", this.rtArr);
 		this.csHighlightRemoval.SetTexture(kh_UpdateClusterCenters, "tex_input", this.rtInput);
 		this.csHighlightRemoval.SetBuffer(kh_UpdateClusterCenters, "cbuf_cluster_centers", this.cbufClusterCenters);
@@ -108,11 +108,21 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.Dispatch(kh_UpdateClusterCenters, 1, 1, 1);
 	}
 
-	private void KMeans() {
+	private void KMeans(bool rejectOld = false) {
 		this.AttributeClusters();
 		this.rtArr.GenerateMips();
 
-		this.UpdateClusterCenters();
+		this.UpdateClusterCenters(rejectOld);
+	}
+
+	private void RandomSwap() {
+		this.UpdateRandomPositions();
+		int kh_RandomSwap = this.csHighlightRemoval.FindKernel("RandomSwap");
+		this.csHighlightRemoval.SetBuffer(kh_RandomSwap, "cbuf_cluster_centers", this.cbufClusterCenters);
+		this.csHighlightRemoval.SetBuffer(kh_RandomSwap, "cbuf_random_positions", this.cbufClusterCenters);
+		this.csHighlightRemoval.SetTexture(kh_RandomSwap, "tex_input", this.rtInput);
+		this.csHighlightRemoval.SetInt("randomClusterCenter", this.random.Next(numClusters));
+		this.csHighlightRemoval.Dispatch(kh_RandomSwap, 1, 1, 1);
 	}
 
 	private void LogMSE() {
@@ -144,17 +154,18 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private void OnRenderImage(RenderTexture src, RenderTexture dest) {
 		void ClusteringIteration() {
-			this.UpdateRandomPositions();
 
 			if (doRandomSwap) {
-				this.KMeans();  // update MSE in case if input changed
+				this.KMeans();
+				this.KMeans();
+				this.KMeans(true);  // discard old saved clusters, update MSE
 
-				int kh_RandomSwap = this.csHighlightRemoval.FindKernel("RandomSwap");
-				this.csHighlightRemoval.SetBuffer(kh_RandomSwap, "cbuf_cluster_centers", this.cbufClusterCenters);
-				this.csHighlightRemoval.SetBuffer(kh_RandomSwap, "cbuf_random_positions", this.cbufClusterCenters);
-				this.csHighlightRemoval.SetTexture(kh_RandomSwap, "tex_input", this.rtInput);
-				this.csHighlightRemoval.SetInt("randomClusterCenter", this.random.Next(numClusters));
-				this.csHighlightRemoval.Dispatch(kh_RandomSwap, 1, 1, 1);
+				// normally the data does not change between clustering iterations
+				// in our case it does
+				// so we need to account for it by running a few K-Means iterations
+				// before opting for a random swap attempt
+
+				this.RandomSwap();
 
 				this.KMeans();
 				this.KMeans();
@@ -164,6 +175,9 @@ public class HighlightRemovalTest : MonoBehaviour {
 				this.KMeans();
 				this.KMeans();
 				this.KMeans();
+				this.KMeans();
+				// no need to discard old saved clusters
+				// we never validate / restore
 			}
 		}
 
