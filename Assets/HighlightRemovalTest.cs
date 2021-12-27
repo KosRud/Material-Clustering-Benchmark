@@ -164,7 +164,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				// so we need to account for it by running a few K-Means iterations
 				// before opting for a random swap attempt
 
-				cbufClusterCenters.GetData(this.clusterCenters);
+				this.cbufClusterCenters.GetData(this.clusterCenters);
 				for (int i = 0; i < numClusters; i++) {
 					float MSE = this.clusterCenters[i].z;
 					if (MSE != Mathf.Infinity) {
@@ -182,7 +182,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				this.KMeans();
 				this.KMeans();
 
-				cbufClusterCenters.GetData(this.clusterCenters);
+				this.cbufClusterCenters.GetData(this.clusterCenters);
 				for (int i = 0; i < numClusters; i++) {
 					float MSE = this.clusterCenters[i].z;
 					if (MSE != Mathf.Infinity) {
@@ -201,7 +201,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				this.KMeans();
 				this.KMeans();
 
-				cbufClusterCenters.GetData(this.clusterCenters);
+				this.cbufClusterCenters.GetData(this.clusterCenters);
 				for (int i = 0; i < numClusters; i++) {
 					float MSE = this.clusterCenters[i].z;
 					if (MSE != Mathf.Infinity) {
@@ -217,7 +217,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				this.KMeans();
 				this.KMeans();
 
-				cbufClusterCenters.GetData(this.clusterCenters);
+				this.cbufClusterCenters.GetData(this.clusterCenters);
 				for (int i = 0; i < numClusters; i++) {
 					float MSE = this.clusterCenters[i].z;
 					if (MSE != Mathf.Infinity) {
