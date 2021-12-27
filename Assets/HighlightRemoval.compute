@@ -255,24 +255,21 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 	// z is the same on all cluster centers
 	// and contains MSE across ALL clusters
 
-	if (aggregatedColor.a != 0){
-		cbuf_cluster_centers[id.x] = float3(
-			aggregatedColor.xy / aggregatedColor.w,
-			aggregatedColor.z
-		);
-	} else {
-		// if a cluster became empty right before validation
-		// we discard this swap candidate
-		// by setting z to inf
+	float3 clusterCenter;
 
+	if (aggregatedColor.a != 0) {
+		clusterCenter.xy = aggregatedColor.xy / aggregatedColor.w;
+	} else {
 		float3 col = tex_input[
 			cbuf_random_positions[id.x]
 		].rgb;
-		cbuf_cluster_centers[id.x] = float3(
-			project(col),
-			1.#INF
-		);
+
+		clusterCenter.xy = project(col);
 	}
+
+	clusterCenter.z = aggregatedColor.z;
+
+	cbuf_cluster_centers[id.x] = clusterCenter;
 
 	//	0	1024
 	//	1	512

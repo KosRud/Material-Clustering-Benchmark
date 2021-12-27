@@ -19,6 +19,14 @@ public class HighlightRemovalTest : MonoBehaviour {
 	public ComputeShader csHighlightRemoval;
 	public Texture2D texInput;
 
+	private void UpdateRandomPositions() {
+		for (int k = 0; k < numClusters; k++) {
+			this.randomPositions[k].x = this.random.Next(1024);
+			this.randomPositions[k].y = this.random.Next(1024);
+		}
+		this.cbufRandomPositions.SetData(this.randomPositions);
+	}
+
 	// Start is called before the first frame update
 	private void Start() {
 		var rtDesc = new RenderTextureDescriptor(1024, 1024, RenderTextureFormat.ARGBFloat, 0) {
@@ -74,6 +82,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		void KMeans() {
 			this.rtArr.GenerateMips();
 
+			UpdateRandomPositions();
 			int kh_UpdateClusterCenters = this.csHighlightRemoval.FindKernel("UpdateClusterCenters");
 			this.csHighlightRemoval.SetTexture(kh_UpdateClusterCenters, "tex_arr_clusters_r", this.rtArr);
 			this.csHighlightRemoval.SetTexture(kh_UpdateClusterCenters, "tex_input", this.rtInput);
@@ -108,11 +117,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		ValidateCandidates(); // guaranteed to succeed - MSE initialized with infinity
 
 		for (int i = 0; i < 3; i++) {
-			for (int k = 0; k < numClusters; k++) {
-				this.randomPositions[k].x = this.random.Next(1024);
-				this.randomPositions[k].y = this.random.Next(1024);
-				this.cbufRandomPositions.SetData(this.randomPositions);
-			}
+			UpdateRandomPositions();
 
 			int kh_RandomSwap = this.csHighlightRemoval.FindKernel("RandomSwap");
 			this.csHighlightRemoval.SetBuffer(kh_RandomSwap, "cbuf_cluster_centers", this.cbufClusterCenters);
