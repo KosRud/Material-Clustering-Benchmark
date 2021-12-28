@@ -1,9 +1,10 @@
 using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
-	private const int numClusters = 16;
+	private const int numClusters = 6;
 	private const bool doRandomSwap = false;
-	private const bool doRandomInitialAttribution = false;
+	//private const bool doRandomInitialAttribution = false;
+	private const bool randomInitialClusters = false;
 	private const float timeStep = 1f;
 
 	private float timeLastIteration = 0;
@@ -65,8 +66,9 @@ public class HighlightRemovalTest : MonoBehaviour {
 			// "old" cluster centers with infinite MSE
 			// to make sure new ones will overwrite them when validated
 			var c = Color.HSVToRGB(
-				//this.random.Next(10000) / 10000.0f,
-				i / (float)(numClusters),
+				randomInitialClusters == true ?
+					this.random.Next(10000) / 10000.0f :
+					i / (float)(numClusters),
 				1,
 				1
 			);

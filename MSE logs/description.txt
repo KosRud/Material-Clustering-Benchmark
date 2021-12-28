@@ -44,4 +44,4 @@
     K-Means x2
         9
             leave empty cluster centers untouched
-            random hue initialization
+            random hue initialization (seed = 1)

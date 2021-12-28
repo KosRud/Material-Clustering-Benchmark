@@ -6,7 +6,7 @@
 #pragma kernel RandomSwap
 #pragma kernel ValidateCandidates
 
-#define numClusters 16
+#define numClusters 6
 #define threshold 0.1
 
 bool final;
