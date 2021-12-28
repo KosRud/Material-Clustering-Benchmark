@@ -19,3 +19,7 @@ K-Means
     4
         assign random sample to empty clusters
         equidistant hue initialization
+K-Means x2
+    5
+        assign random sample to empty clusters
+        equidistant hue initialization

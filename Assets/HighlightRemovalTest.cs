@@ -188,7 +188,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 			//this.LogMSE();
 		} else {
 			this.KMeans();
-			//this.KMeans();
+			this.KMeans();
 			//this.KMeans();
 			// no need to discard old saved clusters
 			// we never validate / restore
