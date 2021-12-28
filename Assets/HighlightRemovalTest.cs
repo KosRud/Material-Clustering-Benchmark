@@ -4,7 +4,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private const int textureSize = 256;
 
 	private const int numClusters = 6;
-	private const bool doRandomSwap = false;
+	private const bool doRandomSwap = true;
 	//private const bool doRandomInitialAttribution = false;
 	private const bool randomInitialClusters = false;
 	private const float timeStep = 1f;
@@ -186,7 +186,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 			// adjust after swap
 			this.KMeans();
-			//this.KMeans();
+			this.KMeans();
+			this.KMeans();
 
 			this.ValidateCandidates();
 			//Debug.Log("validation");
