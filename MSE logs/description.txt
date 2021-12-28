@@ -1,18 +1,59 @@
-1
-    KMeans
-    random swap
-    KMeans x2
-    validation
+Video 1
+    1
+        KMeans x3
 
-    equidistant hue init
-    empty cluster <- random sample
-2
-    KMeans x3
+        equidistant hue init
+        empty cluster <- freeze
+    2
+        KMeans x3
 
-    equidistant hue init
-    empty cluster <- random sample
-3
-    KMeans x3
+        equidistant hue init
+        empty cluster <- random sample
+    3
+        KMeans
+        random swap
+        KMeans x2
+        validation
 
-    equidistant hue init
-    empty cluster <- leave unchanged
+        equidistant hue init
+        empty cluster <- random sample
+Video 2
+    4
+        KMeans x3
+
+        equidistant hue init
+        empty cluster <- freeze
+    5
+        KMeans x3
+
+        equidistant hue init
+        empty cluster <- random sample
+    6
+        KMeans
+        random swap
+        KMeans x2
+        validation
+
+        equidistant hue init
+        empty cluster <- random sample
+    7
+        KMeans
+        random swap
+        KMeans x1       (!!!)
+        validation
+
+        equidistant hue init
+        empty cluster <- random sample
+    8
+        KMeans x4
+
+        equidistant hue init
+        empty cluster <- random sample
+    9
+        KMeans
+        random swap
+        KMeans x3       (!!!)
+        validation
+
+        equidistant hue init
+        empty cluster <- random sample

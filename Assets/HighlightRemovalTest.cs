@@ -186,12 +186,13 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 			// adjust after swap
 			this.KMeans();
-			this.KMeans();
+			//this.KMeans();
 
 			this.ValidateCandidates();
 			//Debug.Log("validation");
 			//this.LogMSE();
 		} else {
+			this.KMeans();
 			this.KMeans();
 			this.KMeans();
 			this.KMeans();

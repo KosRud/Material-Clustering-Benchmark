@@ -256,7 +256,7 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 	if (aggregatedColor.a != 0) {
 		clusterCenter.xy = aggregatedColor.xy / aggregatedColor.w;
 	} else {
-		if (false) {
+		if (true) {
 			float3 col = tex_input[
 				cbuf_random_positions[id.x]
 			].rgb;
