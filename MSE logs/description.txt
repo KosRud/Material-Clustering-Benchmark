@@ -1,0 +1,4 @@
+1
+    leave empty cluster centers untouched
+    no random swap
+    equidistant hue initialization
