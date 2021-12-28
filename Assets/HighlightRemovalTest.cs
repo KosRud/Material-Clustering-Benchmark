@@ -7,6 +7,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private const float timeStep = 1f;
 
 	private float timeLastIteration = 0;
+	private long? previousFrame = null;
 
 	private struct Position {
 		public int x;
@@ -39,6 +40,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 	// Start is called before the first frame update
 	private void Start() {
 		this.videoPlayer = this.GetComponent<UnityEngine.Video.VideoPlayer>();
+		this.videoPlayer.playbackSpeed = 0;
 
 		var rtDesc = new RenderTextureDescriptor(512, 512, RenderTextureFormat.ARGBFloat, 0) {
 			dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray,
@@ -196,6 +198,15 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		Graphics.Blit(this.videoPlayer.texture, this.rtInput);
 		this.videoPlayer.StepForward();
+		if (this.previousFrame == null) {
+			if (this.videoPlayer.frame > 0) {
+				this.previousFrame = this.videoPlayer.frame;
+			}
+		} else if (this.videoPlayer.frame != this.previousFrame + 1) {
+			throw new System.Exception($"current frame: {this.videoPlayer.frame}\nprevious frame: {this.previousFrame}");
+		} else {
+			this.previousFrame++;
+		}
 
 		this.ClusteringIteration();
 

@@ -2,3 +2,7 @@
     leave empty cluster centers untouched
     no random swap
     equidistant hue initialization
+2
+    assign random sample to empty clusters
+    no random swap
+    equidistant hue initialization
