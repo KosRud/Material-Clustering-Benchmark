@@ -1,8 +1,21 @@
-1
-    leave empty cluster centers untouched
-    no random swap
-    equidistant hue initialization
-2
-    assign random sample to empty clusters
-    no random swap
-    equidistant hue initialization
+K-Means x3
+    1
+        leave empty cluster centers untouched
+        no random swap
+        equidistant hue initialization
+    2
+        assign random sample to empty clusters
+        no random swap
+        equidistant hue initialization
+K-Means
+random swap
+K-Means x2
+validation
+    3
+        assign random sample to empty clusters
+        random swap
+        equidistant hue initialization
+K-Means
+    4
+        assign random sample to empty clusters
+        equidistant hue initialization
