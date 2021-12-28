@@ -1,6 +1,8 @@
 using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
+	private const int textureSize = 256;
+
 	private const int numClusters = 6;
 	private const bool doRandomSwap = false;
 	//private const bool doRandomInitialAttribution = false;
@@ -9,6 +11,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private float timeLastIteration = 0;
 	private long? previousFrame = null;
+	private bool showReference = false;
 
 	private struct Position {
 		public int x;
@@ -32,8 +35,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private void UpdateRandomPositions() {
 		for (int k = 0; k < numClusters; k++) {
-			this.randomPositions[k].x = this.random.Next(512);
-			this.randomPositions[k].y = this.random.Next(512);
+			this.randomPositions[k].x = this.random.Next(textureSize);
+			this.randomPositions[k].y = this.random.Next(textureSize);
 		}
 		this.cbufRandomPositions.SetData(this.randomPositions);
 	}
@@ -43,7 +46,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.videoPlayer = this.GetComponent<UnityEngine.Video.VideoPlayer>();
 		this.videoPlayer.playbackSpeed = 0;
 
-		var rtDesc = new RenderTextureDescriptor(512, 512, RenderTextureFormat.ARGBFloat, 0) {
+		var rtDesc = new RenderTextureDescriptor(textureSize, textureSize, RenderTextureFormat.ARGBFloat, 0) {
 			dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray,
 			volumeDepth = 16,
 			useMipMap = true,
@@ -53,7 +56,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.rtArr = new RenderTexture(rtDesc) {
 			enableRandomWrite = true
 		};
-		this.rtResult = new RenderTexture(512, 512, 0, RenderTextureFormat.ARGBFloat) {
+		this.rtResult = new RenderTexture(textureSize, textureSize, 0, RenderTextureFormat.ARGBFloat) {
 			enableRandomWrite = true
 		};
 
@@ -77,7 +80,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		}
 		this.cbufClusterCenters.SetData(this.clusterCenters);
 
-		this.rtInput = new RenderTexture(512, 512, 0, RenderTextureFormat.ARGBFloat);
+		this.rtInput = new RenderTexture(textureSize, textureSize, 0, RenderTextureFormat.ARGBFloat);
 	}
 
 	private void AttributeClusters(bool final = false) {
@@ -86,7 +89,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_input", this.rtInput);
 		this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_arr_clusters_rw", this.rtArr);
 		this.csHighlightRemoval.SetBuffer(kh_AttributeClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
-		this.csHighlightRemoval.Dispatch(kh_AttributeClusters, 512 / 32, 512 / 32, 1);
+		this.csHighlightRemoval.Dispatch(kh_AttributeClusters, textureSize / 32, textureSize / 32, 1);
 	}
 
 	private void UpdateClusterCenters(bool rejectOld) {
@@ -212,7 +215,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 					"frameLogMSE.csv", System.IO.FileMode.OpenOrCreate
 				)
 			) {
-				var sw = new System.IO.StreamWriter(fs);
+				using var sw = new System.IO.StreamWriter(fs);
 				sw.WriteLine("Frame,MSE");
 				for (int i = 0; i < this.frameLogMSE.Count; i++) {
 					float MSE = this.frameLogMSE[i];
@@ -225,8 +228,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 							$"{i},{MSE}"
 						);
 					}
-
 				}
+				Debug.Log($"entries: {this.frameLogMSE.Count}");
 			}
 			System.Threading.Thread.Sleep(3000);
 			UnityEditor.EditorApplication.isPlaying = false;
@@ -252,6 +255,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 			float val = this.videoPlayer.frame / (float)this.videoPlayer.frameCount * 100;
 			Debug.Log($"{val:0.}%");
 			this.LogMSE();
+			this.showReference = !this.showReference;
 		}
 
 		this.frameLogMSE.Add(this.GetMSE());
@@ -274,7 +278,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetTexture(kh_ShowResult, "tex_arr_clusters_r", this.rtArr);
 		this.csHighlightRemoval.SetTexture(kh_ShowResult, "tex_output", this.rtResult);
 		this.csHighlightRemoval.SetBuffer(kh_ShowResult, "cbuf_cluster_centers", this.cbufClusterCenters);
+		this.csHighlightRemoval.SetBool("showReference", this.showReference);
 		this.csHighlightRemoval.SetTexture(kh_ShowResult, "tex_input", this.rtInput);
-		this.csHighlightRemoval.Dispatch(kh_ShowResult, 512 / 32, 512 / 32, 1);
+		this.csHighlightRemoval.Dispatch(kh_ShowResult, textureSize / 32, textureSize / 32, 1);
 	}
 }

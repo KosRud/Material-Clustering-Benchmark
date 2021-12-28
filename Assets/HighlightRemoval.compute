@@ -11,6 +11,7 @@
 
 bool final;
 bool rejectOld;
+bool showReference;
 
 uint randomClusterCenter;
 
@@ -100,24 +101,30 @@ void ShowResult (uint3 id : SV_DispatchThreadID)
 		) {
 			color.rg = cbuf_cluster_centers[i].rg;
 			color.b = 1.0 - color.r - color.g;
-
-			if (test(tex_input[id.xy].rgb) <= threshold){
-				color.rgb /= 128.0;
-			}
-
-			//color.rgb = (i + 1.0) / numClusters;
 		}
 	}
 
-	//float2 coord = id.xy / 512.0;
-	//
-	//color.g = dot(coord.xy, 1) - 1.0;
-	//color.r = coord.x - color.g;
-	//color.b = coord.y - color.g;
-	//
-	//if (color.g < 0) {
-	//	color = 0;
-	//}
+	if (showReference) {
+		color.rg = project(tex_input[id.xy].rgb);
+		uint borderWidth = 8;
+	}
+
+	if (test(tex_input[id.xy].rgb) <= threshold){
+		color.rgb /= 128.0;
+	}
+
+	uint borderWidth = 8;
+
+	if (showReference) {
+		if (
+			id.x < borderWidth ||
+			id.x > 256 - borderWidth ||
+			id.y < borderWidth ||
+			id.y > 256 - borderWidth
+		) {
+			color.rgb = float3(1,0,0);
+		}
+	}
 
 	tex_output[id.xy] = color;
 }
@@ -128,7 +135,7 @@ void AttributeInitialClusters (uint3 id : SV_DispatchThreadID)
     // TODO: insert actual code here!
 
 	float3 col = tex_input[id.xy].rgb;
-	int clusterID = (id.x + id.y * 512) % numClusters;
+	int clusterID = (id.x + id.y * 256) % numClusters;
 	bool included = test(col) > threshold;
 
 	for (int k = 0; k < numClusters; k++){
@@ -237,7 +244,7 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 		float3(
 			0.5, 0.5, id.x
 		),
-		9
+		8
 	);
 
 	// z is the same on all cluster centers
@@ -266,7 +273,7 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 		cbuf_cluster_centers[id.x + numClusters] = clusterCenter;
 	}
 
-	//	0	512
+	//	0	1024
 	//	1	512
 	//	2	256
 	//	3	128

@@ -1,47 +1,18 @@
-6 clusters
-    K-Means x3
-        1
-            leave empty cluster centers untouched
-            no random swap
-            equidistant hue initialization
-        2
-            assign random sample to empty clusters
-            no random swap
-            equidistant hue initialization
-    K-Means
+1
+    KMeans
     random swap
-    K-Means x2
+    KMeans x2
     validation
-        3
-            assign random sample to empty clusters
-            random swap
-            equidistant hue initialization
-    K-Means
-        4
-            assign random sample to empty clusters
-            equidistant hue initialization
-    K-Means x2
-        5
-            assign random sample to empty clusters
-            equidistant hue initialization
-16 clusters
-    K-Means x3
-        6
-            assign random sample to empty clusters
-            equidistant hue initialization
-    K-Means
-    random swap
-    K-Means x2
-    validation
-        7
-            assign random sample to empty clusters
-            equidistant hue initialization
-    K-Means x3
-        8
-            leave empty cluster centers untouched
-            equidistant hue initialization
-6 clusters
-    K-Means x2
-        9
-            leave empty cluster centers untouched
-            random hue initialization (seed = 1)
+
+    equidistant hue init
+    empty cluster <- random sample
+2
+    KMeans x3
+
+    equidistant hue init
+    empty cluster <- random sample
+3
+    KMeans x3
+
+    equidistant hue init
+    empty cluster <- leave unchanged
