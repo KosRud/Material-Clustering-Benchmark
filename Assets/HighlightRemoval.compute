@@ -244,6 +244,7 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 	// and contains MSE across ALL clusters
 
 	float3 clusterCenter;
+	clusterCenter.z = aggregatedColor.z;
 
 	if (aggregatedColor.a != 0) {
 		clusterCenter.xy = aggregatedColor.xy / aggregatedColor.w;
@@ -252,14 +253,13 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 			float3 col = tex_input[
 				cbuf_random_positions[id.x]
 			].rgb;
-
 			clusterCenter.xy = project(col);
+			clusterCenter.z = 1.#INF;
 		} else {
 			clusterCenter.xy = cbuf_cluster_centers[id.x].xy;
+			clusterCenter.z = 1.#INF;
 		}
 	}
-
-	clusterCenter.z = aggregatedColor.z;
 
 	cbuf_cluster_centers[id.x] = clusterCenter;
 	if (rejectOld) {

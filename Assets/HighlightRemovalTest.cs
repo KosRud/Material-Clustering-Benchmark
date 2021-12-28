@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
 	private const int numClusters = 6;
-	private const bool doRandomSwap = false;
+	private const bool doRandomSwap = true;
 	private const bool doRandomInitialAttribution = false;
 	private const float timeStep = 1f;
 
@@ -128,11 +128,37 @@ public class HighlightRemovalTest : MonoBehaviour {
 			}
 		}
 
-		throw new System.Exception("no MSE!");
+		if (this.videoPlayer.frame > 5) {
+			throw new System.Exception("no MSE!");
+		}
+
+		return -1;
 	}
 
 	private void LogMSE() {
+		this.cbufClusterCenters.GetData(this.clusterCenters);
+
+		float MSE = -1;
+		float emptyClusters = 0;
+
+		for (int i = 0; i < numClusters; i++) {
+			float x = this.clusterCenters[i].z;
+			if (x != Mathf.Infinity && MSE == -1) {
+				MSE = x;
+			}
+			if (x > 100) {
+				emptyClusters++;
+			}
+		}
+
+		if (MSE == -1 && this.videoPlayer.frame > 5) {
+			throw new System.Exception("no MSE!");
+		}
+
 		Debug.Log($"MSE: {(int)(this.GetMSE() * 1000000),8}");
+		if (emptyClusters != 0) {
+			Debug.Log($"empty clusters: {emptyClusters}");
+		}
 	}
 
 	private void ValidateCandidates() {
@@ -187,9 +213,17 @@ public class HighlightRemovalTest : MonoBehaviour {
 				var sw = new System.IO.StreamWriter(fs);
 				sw.WriteLine("Frame,MSE");
 				for (int i = 0; i < this.frameLogMSE.Count; i++) {
-					sw.WriteLine(
-						$"{i},{this.frameLogMSE[i]}"
-					);
+					float MSE = this.frameLogMSE[i];
+					if (MSE == -1) {
+						sw.WriteLine(
+							$"{i}"
+						);
+					} else {
+						sw.WriteLine(
+							$"{i},{MSE}"
+						);
+					}
+
 				}
 			}
 			System.Threading.Thread.Sleep(3000);
