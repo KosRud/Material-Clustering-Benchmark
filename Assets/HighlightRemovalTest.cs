@@ -192,6 +192,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 					);
 				}
 			}
+			System.Threading.Thread.Sleep(3000);
 			UnityEditor.EditorApplication.isPlaying = false;
 			return;
 		}
