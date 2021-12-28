@@ -22,20 +22,25 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private readonly Position[] randomPositions = new Position[numClusters];
 	private readonly Vector3[] clusterCenters = new Vector3[numClusters * 2];
 
+	private UnityEngine.Video.VideoPlayer videoPlayer;
+	private readonly System.Collections.Generic.List<float> frameLogMSE = new System.Collections.Generic.List<float>();
+
 	public ComputeShader csHighlightRemoval;
 	public Texture2D texInput;
 
 	private void UpdateRandomPositions() {
 		for (int k = 0; k < numClusters; k++) {
-			this.randomPositions[k].x = this.random.Next(1024);
-			this.randomPositions[k].y = this.random.Next(1024);
+			this.randomPositions[k].x = this.random.Next(512);
+			this.randomPositions[k].y = this.random.Next(512);
 		}
 		this.cbufRandomPositions.SetData(this.randomPositions);
 	}
 
 	// Start is called before the first frame update
 	private void Start() {
-		var rtDesc = new RenderTextureDescriptor(1024, 1024, RenderTextureFormat.ARGBFloat, 0) {
+		this.videoPlayer = this.GetComponent<UnityEngine.Video.VideoPlayer>();
+
+		var rtDesc = new RenderTextureDescriptor(512, 512, RenderTextureFormat.ARGBFloat, 0) {
 			dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray,
 			volumeDepth = 16,
 			useMipMap = true,
@@ -45,7 +50,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.rtArr = new RenderTexture(rtDesc) {
 			enableRandomWrite = true
 		};
-		this.rtResult = new RenderTexture(1024, 1024, 0, RenderTextureFormat.ARGBFloat) {
+		this.rtResult = new RenderTexture(512, 512, 0, RenderTextureFormat.ARGBFloat) {
 			enableRandomWrite = true
 		};
 
@@ -68,23 +73,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		}
 		this.cbufClusterCenters.SetData(this.clusterCenters);
 
-		this.rtInput = new RenderTexture(1024, 1024, 0, RenderTextureFormat.ARGBFloat);
-		Graphics.Blit(this.texInput, this.rtInput);
-
-		if (doRandomInitialAttribution) {
-			int kh_AttributeInitialClusters = this.csHighlightRemoval.FindKernel("AttributeInitialClusters");
-			this.csHighlightRemoval.SetTexture(kh_AttributeInitialClusters, "tex_input", this.rtInput);
-			this.csHighlightRemoval.SetTexture(kh_AttributeInitialClusters, "tex_arr_clusters_rw", this.rtArr);
-			this.csHighlightRemoval.SetBuffer(kh_AttributeInitialClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
-			this.csHighlightRemoval.Dispatch(kh_AttributeInitialClusters, 1024 / 32, 1024 / 32, 1);
-
-			this.rtArr.GenerateMips();
-
-			this.UpdateClusterCenters(true);
-		}
-
-		this.KMeans();
-		this.KMeans(true);
+		this.rtInput = new RenderTexture(512, 512, 0, RenderTextureFormat.ARGBFloat);
 	}
 
 	private void AttributeClusters(bool final = false) {
@@ -93,7 +82,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_input", this.rtInput);
 		this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_arr_clusters_rw", this.rtArr);
 		this.csHighlightRemoval.SetBuffer(kh_AttributeClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
-		this.csHighlightRemoval.Dispatch(kh_AttributeClusters, 1024 / 32, 1024 / 32, 1);
+		this.csHighlightRemoval.Dispatch(kh_AttributeClusters, 512 / 32, 512 / 32, 1);
 	}
 
 	private void UpdateClusterCenters(bool rejectOld) {
@@ -114,7 +103,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		this.UpdateClusterCenters(rejectOld);
 
-		this.LogMSE();
+		//this.LogMSE();
 	}
 
 	private void RandomSwap() {
@@ -127,20 +116,21 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.Dispatch(kh_RandomSwap, 1, 1, 1);
 	}
 
-	private void LogMSE() {
+	private float GetMSE() {
 		this.cbufClusterCenters.GetData(this.clusterCenters);
 
 		for (int i = 0; i < numClusters; i++) {
 			float MSE = this.clusterCenters[i].z;
 			if (MSE != Mathf.Infinity) {
-				Debug.Log($"MSE: {(int)(MSE * 1000000),8}");
-				break;
-			} else {
-				if (i == numClusters) {
-					Debug.Log("something went horribly wrong...");
-				}
+				return MSE;
 			}
 		}
+
+		throw new System.Exception("no MSE!");
+	}
+
+	private void LogMSE() {
+		Debug.Log($"MSE: {(int)(this.GetMSE() * 1000000),8}");
 	}
 
 	private void ValidateCandidates() {
@@ -154,45 +144,71 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	}
 
+	private void ClusteringIteration() {
+		if (doRandomSwap) {
+			this.KMeans(true);  // discard old saved clusters, update MSE
+
+			//Debug.Log("doing random swap");
+			this.RandomSwap();
+
+			// adjust after swap
+			this.KMeans();
+			this.KMeans();
+
+			this.ValidateCandidates();
+			//Debug.Log("validation");
+			//this.LogMSE();
+		} else {
+			this.KMeans();
+			this.KMeans();
+			this.KMeans();
+			// no need to discard old saved clusters
+			// we never validate / restore
+		}
+		this.AttributeClusters(true);
+	}
+
 	private void OnRenderImage(RenderTexture src, RenderTexture dest) {
-		void ClusteringIteration() {
-			if (doRandomSwap) {
-				this.KMeans(true);  // discard old saved clusters, update MSE
-
-				Debug.Log("doing random swap");
-				this.RandomSwap();
-
-				// adjust after swap
-				this.KMeans();
-				this.KMeans();
-
-				this.ValidateCandidates();
-				Debug.Log("validation");
-				this.LogMSE();
-			} else {
-				this.KMeans();
-				this.KMeans();
-				this.KMeans();
-				// no need to discard old saved clusters
-				// we never validate / restore
-			}
+		if (!this.videoPlayer.isPrepared) {
+			Graphics.Blit(src, dest);
+			return;
 		}
 
-		Graphics.Blit(this.texInput, this.rtInput);
+		if (this.videoPlayer.frame == (long)this.videoPlayer.frameCount - 1) {
+			Graphics.Blit(src, dest);
+			Debug.Log(this.frameLogMSE.Count);
+			using (
+				System.IO.FileStream fs = System.IO.File.Open(
+					"frameLogMSE.csv", System.IO.FileMode.OpenOrCreate
+				)
+			) {
+				var sw = new System.IO.StreamWriter(fs);
+				sw.WriteLine("Frame,MSE");
+				for (int i = 0; i < this.frameLogMSE.Count; i++) {
+					sw.WriteLine(
+						$"{i},{this.frameLogMSE[i]}"
+					);
+				}
+			}
+			UnityEditor.EditorApplication.isPlaying = false;
+			return;
+		}
+
+		Graphics.Blit(this.videoPlayer.texture, this.rtInput);
+		this.videoPlayer.StepForward();
+
+		this.ClusteringIteration();
 
 		if (Time.time - this.timeLastIteration > timeStep) {
 			this.timeLastIteration = Time.time;
-			ClusteringIteration();
-			this.AttributeClusters(true);
-			//this.LogMSE();
+			float val = this.videoPlayer.frame / (float)this.videoPlayer.frameCount * 100;
+			Debug.Log($"{val:0.}%");
+			this.LogMSE();
 		}
 
-		int kh_ShowResult = this.csHighlightRemoval.FindKernel("ShowResult");
-		this.csHighlightRemoval.SetTexture(kh_ShowResult, "tex_arr_clusters_r", this.rtArr);
-		this.csHighlightRemoval.SetTexture(kh_ShowResult, "tex_output", this.rtResult);
-		this.csHighlightRemoval.SetBuffer(kh_ShowResult, "cbuf_cluster_centers", this.cbufClusterCenters);
-		this.csHighlightRemoval.SetTexture(kh_ShowResult, "tex_input", this.rtInput);
-		this.csHighlightRemoval.Dispatch(kh_ShowResult, 1024 / 32, 1024 / 32, 1);
+		this.frameLogMSE.Add(this.GetMSE());
+
+		this.RenderResult();
 		Graphics.Blit(this.rtResult, dest);
 		this.rtResult.DiscardContents();
 	}
@@ -203,5 +219,14 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.cbufClusterCenters.Release();
 		this.cbufRandomPositions.Release();
 		this.rtInput.Release();
+	}
+
+	private void RenderResult() {
+		int kh_ShowResult = this.csHighlightRemoval.FindKernel("ShowResult");
+		this.csHighlightRemoval.SetTexture(kh_ShowResult, "tex_arr_clusters_r", this.rtArr);
+		this.csHighlightRemoval.SetTexture(kh_ShowResult, "tex_output", this.rtResult);
+		this.csHighlightRemoval.SetBuffer(kh_ShowResult, "cbuf_cluster_centers", this.cbufClusterCenters);
+		this.csHighlightRemoval.SetTexture(kh_ShowResult, "tex_input", this.rtInput);
+		this.csHighlightRemoval.Dispatch(kh_ShowResult, 512 / 32, 512 / 32, 1);
 	}
 }
