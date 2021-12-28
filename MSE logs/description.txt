@@ -40,3 +40,8 @@
         8
             leave empty cluster centers untouched
             equidistant hue initialization
+6 clusters
+    K-Means x2
+        9
+            leave empty cluster centers untouched
+            random hue initialization
