@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
 	private const int numClusters = 6;
-	private const bool doRandomSwap = true;
+	private const bool doRandomSwap = false;
 	private const bool doRandomInitialAttribution = false;
 	private const float timeStep = 1f;
 
@@ -188,8 +188,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 			//this.LogMSE();
 		} else {
 			this.KMeans();
-			this.KMeans();
-			this.KMeans();
+			//this.KMeans();
+			//this.KMeans();
 			// no need to discard old saved clusters
 			// we never validate / restore
 		}
