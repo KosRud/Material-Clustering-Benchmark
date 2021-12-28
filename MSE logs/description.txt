@@ -25,10 +25,18 @@
             assign random sample to empty clusters
             equidistant hue initialization
 16 clusters
+    K-Means x3
+        6
+            assign random sample to empty clusters
+            equidistant hue initialization
     K-Means
     random swap
     K-Means x2
     validation
-        6
+        7
             assign random sample to empty clusters
+            equidistant hue initialization
+    K-Means x3
+        8
+            leave empty cluster centers untouched
             equidistant hue initialization
