@@ -4,7 +4,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private const int textureSize = 256;
 
 	private const int numClusters = 6;
-	private const bool doRandomSwap = true;
+	private const bool doRandomSwap = false;
 	//private const bool doRandomInitialAttribution = false;
 	private const bool randomInitialClusters = false;
 	private const float timeStep = 1f;
@@ -160,7 +160,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 			throw new System.Exception("no MSE!");
 		}
 
-		Debug.Log($"MSE: {(int)(this.GetMSE() * 1000000),8}");
+		Debug.Log($"MSE: {(int)(this.GetMSE() * 1000),8}");
 		if (emptyClusters != 0) {
 			Debug.Log($"empty clusters: {emptyClusters}");
 		}
@@ -181,19 +181,11 @@ public class HighlightRemovalTest : MonoBehaviour {
 		if (doRandomSwap) {
 			this.KMeans(true);  // discard old saved clusters, update MSE
 
-			//Debug.Log("doing random swap");
 			this.RandomSwap();
-
-			// adjust after swap
 			this.KMeans();
 			this.KMeans();
-			this.KMeans();
-
 			this.ValidateCandidates();
-			//Debug.Log("validation");
-			//this.LogMSE();
 		} else {
-			this.KMeans();
 			this.KMeans();
 			this.KMeans();
 			this.KMeans();

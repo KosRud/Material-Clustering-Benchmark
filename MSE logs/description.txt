@@ -57,3 +57,5 @@ Video 2
 
         equidistant hue init
         empty cluster <- random sample
+    10
+        KHM x3

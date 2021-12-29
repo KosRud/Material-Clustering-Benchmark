@@ -240,7 +240,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 		}
 
 		if (!included && !final) {
-			result = 0;
+			result.xyw = 0;
 		}
 
 		tex_arr_clusters_rw[uint3(id.xy, k)] = result;
