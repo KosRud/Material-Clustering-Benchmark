@@ -2,11 +2,10 @@
 #pragma kernel ShowResult
 #pragma kernel AttributeClusters
 #pragma kernel UpdateClusterCenters
-#pragma kernel AttributeInitialClusters
 #pragma kernel RandomSwap
 #pragma kernel ValidateCandidates
 
-#define numClusters 6
+#define num_clusters 6
 #define threshold 0.1
 
 bool final;
@@ -27,6 +26,24 @@ SamplerState sampler_tex_arr_clusters_r;
 
 RWStructuredBuffer<float3> cbuf_cluster_centers;
 RWStructuredBuffer<uint2> cbuf_random_positions;
+
+inline float pow2(float x){
+	return x*x;
+}
+
+inline float pow3(float x){
+	return x*x*x;
+}
+
+inline float pow4(float x){
+	return pow2(
+		pow2(x)
+	);
+}
+
+inline float pow5(float x){
+	return pow4(x)*x;
+}
 
 float2 project(float3 col)
 {
@@ -95,7 +112,7 @@ void ShowResult (uint3 id : SV_DispatchThreadID)
     // TODO: insert actual code here!
 
 	float4 color = float4(0,0,0,1);
-	for (int i = 0; i < numClusters; i++){
+	for (int i = 0; i < num_clusters; i++){
 		if (
 			tex_arr_clusters_r[uint3(id.xy, i)].a == 1 //&& i == 0
 		) {
@@ -135,10 +152,10 @@ void AttributeInitialClusters (uint3 id : SV_DispatchThreadID)
     // TODO: insert actual code here!
 
 	float3 col = tex_input[id.xy].rgb;
-	int clusterID = (id.x + id.y * 256) % numClusters;
+	int clusterID = (id.x + id.y * 256) % num_clusters;
 	bool included = test(col) > threshold;
 
-	for (int k = 0; k < numClusters; k++){
+	for (int k = 0; k < num_clusters; k++){
 		float4 result = 0;
 
 		if (included) {
@@ -159,38 +176,64 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 {
     // TODO: insert actual code here!
 
-	float minDist = 100000000.0;
-	int clusterID = 0;
+	float min_dist = 100;
+	// difference calculated on 2 coordinates within [0,1] range
+	// theoretical maximum distance is sqrt(2)
+	
+	uint clusterID;
 
 	float3 col = tex_input[id.xy].rgb;
 	bool included = test(col) > threshold;
 
-	for (int i = 0; i < numClusters; i++) {
+	float dist_list[num_clusters];
+
+	for (int i = 0; i < num_clusters; i++) {
 		float dist = length(
 			cbuf_cluster_centers[i].rg -
 			project(col)
 		);
 
-		if (dist < minDist) {
+		dist_list[i] = dist;
+
+		if (dist < min_dist) {
 			clusterID = i;
-			minDist = dist;
+			min_dist = dist;
 		}
 	}
 
-	float4 result = 0;
+	float MSE = pow2(min_dist);
 
-	if (included) {
-		result.z = minDist*minDist;
-	}
+	for (uint k = 0; k < num_clusters; k++) {
+		float top = min_dist * pow5(
+			min_dist / dist_list[k]
+		);
 
-	for (int k = 0; k < numClusters; k++){		
-		if (
-			k == clusterID && 
-			(included || final)
-		) {
-			result.xy = project(col);
-			result.w = 1;
-		} else {
+		float bottom = 1.0;
+
+		for (uint n = 0; n < num_clusters; n++){
+			if (n == clusterID) {
+				continue;
+			}
+
+			bottom += pow3(min_dist / dist_list[n]);
+		}
+
+		float w = top / pow2(bottom);
+
+		// simple K-Means
+		// w = (k == clusterID);
+
+		float4 result = float4(
+			project(col) * w,
+			MSE,
+			w
+		);
+
+		if (final) {
+			result.z = (k == clusterID);
+		}
+
+		if (!included && !final) {
 			result.xyw = 0;
 		}
 
@@ -212,20 +255,20 @@ void RandomSwap (uint3 id : SV_DispatchThreadID)
 [numthreads(32,1,1)]
 void ValidateCandidates (uint3 id : SV_DispatchThreadID)
 {
-	if (id.x >= numClusters) {
+	if (id.x >= num_clusters) {
 		return;
 	}
 
-	float3 old = cbuf_cluster_centers[id.x + numClusters];
+	float3 old = cbuf_cluster_centers[id.x + num_clusters];
 	float3 candidate = cbuf_cluster_centers[id.x];
 
 	// z is same on all cluster centers
 	// and contains MSE across ALL clusters
 
 	if (candidate.z < old.z) {
-		cbuf_cluster_centers[id.x + numClusters] = cbuf_cluster_centers[id.x];
+		cbuf_cluster_centers[id.x + num_clusters] = cbuf_cluster_centers[id.x];
 	} else {
-		cbuf_cluster_centers[id.x] = cbuf_cluster_centers[id.x + numClusters];
+		cbuf_cluster_centers[id.x] = cbuf_cluster_centers[id.x + num_clusters];
 	}
 }
 
@@ -235,7 +278,7 @@ void ValidateCandidates (uint3 id : SV_DispatchThreadID)
 [numthreads(32,1,1)]
 void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 {
-	if (id.x >= numClusters) {
+	if (id.x >= num_clusters) {
 		return;
 	}
 
@@ -270,7 +313,7 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 
 	cbuf_cluster_centers[id.x] = clusterCenter;
 	if (rejectOld) {
-		cbuf_cluster_centers[id.x + numClusters] = clusterCenter;
+		cbuf_cluster_centers[id.x + num_clusters] = clusterCenter;
 	}
 
 	//	0	1024
