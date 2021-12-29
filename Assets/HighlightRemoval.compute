@@ -114,7 +114,7 @@ void ShowResult (uint3 id : SV_DispatchThreadID)
 	float4 color = float4(0,0,0,1);
 	for (int i = 0; i < num_clusters; i++){
 		if (
-			tex_arr_clusters_r[uint3(id.xy, i)].a == 1 //&& i == 0
+			tex_arr_clusters_r[uint3(id.xy, i)].a == 1
 		) {
 			color.rg = cbuf_cluster_centers[i].rg;
 			color.b = 1.0 - color.r - color.g;
@@ -227,7 +227,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 		float w = top / pow2(bottom);
 
 		// simple K-Means
-		w = (k == clusterID);
+		//w = (k == clusterID);
 
 		float4 result = float4(
 			project(col) * w,
@@ -236,7 +236,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 		);
 
 		if (final) {
-			result.z = (k == clusterID);
+			result.w = (k == clusterID);
 		}
 
 		if (!included && !final) {
