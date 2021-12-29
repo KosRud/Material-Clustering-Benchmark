@@ -201,12 +201,14 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 		}
 	}
 
-	float MSE = pow2(min_dist);
-
 	for (uint k = 0; k < num_clusters; k++) {
-		float top = min_dist * pow5(
-			min_dist / dist_list[k]
-		);
+		float top = min_dist;
+
+		if (k != clusterID) {
+			top *= pow5(
+				min_dist / dist_list[k]
+			);
+		}
 
 		float bottom = 1.0;
 
@@ -215,17 +217,21 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 				continue;
 			}
 
-			bottom += pow3(min_dist / dist_list[n]);
+			if (dist_list[n] == 0){
+				bottom += 1;
+			} else {
+				bottom += pow3(min_dist / dist_list[n]);
+			}
 		}
 
 		float w = top / pow2(bottom);
 
 		// simple K-Means
-		// w = (k == clusterID);
+		w = (k == clusterID);
 
 		float4 result = float4(
 			project(col) * w,
-			MSE,
+			pow2(min_dist), // MSE
 			w
 		);
 
