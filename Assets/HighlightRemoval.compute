@@ -24,7 +24,7 @@ RWTexture2DArray<float4> tex_arr_clusters_rw;
 
 SamplerState sampler_tex_arr_clusters_r;
 
-RWStructuredBuffer<float3> cbuf_cluster_centers;
+RWStructuredBuffer<float4> cbuf_cluster_centers;
 RWStructuredBuffer<uint2> cbuf_random_positions;
 
 inline float pow2(float x){

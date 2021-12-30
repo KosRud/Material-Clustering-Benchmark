@@ -62,7 +62,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		// second half of the buffer contains candidate cluster centers
 		// first half contains current cluster centers
-		this.cbufClusterCenters = new ComputeBuffer(numClusters * 2, sizeof(float) * 3);
+		this.cbufClusterCenters = new ComputeBuffer(numClusters * 2, sizeof(float) * 4);
 		this.cbufRandomPositions = new ComputeBuffer(numClusters, sizeof(int) * 2);
 
 		for (int i = 0; i < this.clusterCenters.Length; i++) {
