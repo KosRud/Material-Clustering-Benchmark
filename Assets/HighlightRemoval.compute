@@ -4,6 +4,7 @@
 #pragma kernel UpdateClusterCenters
 #pragma kernel RandomSwap
 #pragma kernel ValidateCandidates
+#pragma kernel SubSample
 
 #define num_clusters 6
 #define threshold 0.1
@@ -15,6 +16,9 @@ bool showReference;
 uint randomClusterCenter;
 uint mip_level;
 uint texture_size;
+
+uint sub_sample_multiplier;
+uint2 sub_sample_offset;
 
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
@@ -128,14 +132,13 @@ void ShowResult (uint3 id : SV_DispatchThreadID)
 
 	if (showReference) {
 		color.rg = project(tex_input[id.xy].rgb);
-		uint borderWidth = 8;
 	}
 
 	if (test(tex_input[id.xy].rgb) <= threshold){
 		color.rgb /= 128.0;
 	}
 
-	uint borderWidth = 8;
+	uint borderWidth = texture_size / 32;
 
 	if (showReference) {
 		if (
@@ -149,6 +152,14 @@ void ShowResult (uint3 id : SV_DispatchThreadID)
 	}
 
 	tex_output[id.xy] = color;
+}
+
+[numthreads(32,32,1)]
+void SubSample (uint3 id : SV_DispatchThreadID)
+{
+	tex_output[id.xy] = tex_input[
+		id.xy * sub_sample_multiplier + sub_sample_offset
+	];
 }
 
 [numthreads(32,32,1)]

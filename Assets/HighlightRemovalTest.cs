@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
 	private const int textureSize = 256;
+	private const int referenceTextureSize = 1024;
 
 	private const int numClusters = 6;
 	private const bool doRandomSwap = false;
@@ -26,6 +27,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private RenderTexture rtArr;
 	private RenderTexture rtResult;
 	private RenderTexture rtMaskMSE;
+	private RenderTexture rtReference;
 	private ComputeBuffer cbufClusterCenters;
 	private ComputeBuffer cbufRandomPositions;
 	private RenderTexture rtInput;
@@ -53,7 +55,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				textureSize & (textureSize - 1)
 			) == 0 && textureSize > 0
 		); // positive power of 2
-		Debug.Assert(textureSize <= 1024);
+		Debug.Assert(textureSize <= referenceTextureSize);
 
 		int mipLevel = 0;
 		int targetSize = 1;
@@ -65,13 +67,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetInt("texture_size", textureSize);
 	}
 
-	// Start is called before the first frame update
-	private void Start() {
-		this.SetTextureSize();
-
-		this.videoPlayer = this.GetComponent<UnityEngine.Video.VideoPlayer>();
-		this.videoPlayer.playbackSpeed = 0;
-
+	private void InitRTs() {
 		var rtDesc = new RenderTextureDescriptor(textureSize, textureSize, RenderTextureFormat.ARGBFloat, 0) {
 			dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray,
 			volumeDepth = 16,
@@ -82,15 +78,40 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.rtArr = new RenderTexture(rtDesc) {
 			enableRandomWrite = true
 		};
-		this.rtResult = new RenderTexture(textureSize, textureSize, 0, RenderTextureFormat.ARGBFloat) {
+
+		this.rtReference = new RenderTexture(
+			referenceTextureSize,
+			referenceTextureSize,
+			0,
+			RenderTextureFormat.ARGBFloat
+		);
+
+		this.rtResult = new RenderTexture(
+			textureSize,
+			textureSize,
+			0,
+			RenderTextureFormat.ARGBFloat
+		) {
 			enableRandomWrite = true
 		};
-		this.rtMaskMSE = new RenderTexture(textureSize, textureSize, 0, RenderTextureFormat.RFloat) {
+
+		this.rtMaskMSE = new RenderTexture(
+			textureSize,
+			textureSize,
+			0,
+			RenderTextureFormat.RFloat
+		) {
 			enableRandomWrite = true,
 			useMipMap = true,
 			autoGenerateMips = false
 		};
 
+		this.rtInput = new RenderTexture(textureSize, textureSize, 0, RenderTextureFormat.ARGBFloat) {
+			enableRandomWrite = true
+		};
+	}
+
+	private void InitCbufs() {
 		/*
 			second half of the buffer contains candidate cluster centers
 			first half contains current cluster centers
@@ -113,8 +134,17 @@ public class HighlightRemovalTest : MonoBehaviour {
 			this.clusterCenters[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0);
 		}
 		this.cbufClusterCenters.SetData(this.clusterCenters);
+	}
 
-		this.rtInput = new RenderTexture(textureSize, textureSize, 0, RenderTextureFormat.ARGBFloat);
+	// Start is called before the first frame update
+	private void Start() {
+		this.SetTextureSize();
+
+		this.videoPlayer = this.GetComponent<UnityEngine.Video.VideoPlayer>();
+		this.videoPlayer.playbackSpeed = 0;
+
+		this.InitRTs();
+		this.InitCbufs();
 	}
 
 	private void AttributeClusters(bool final = false) {
@@ -266,7 +296,15 @@ public class HighlightRemovalTest : MonoBehaviour {
 			return;
 		}
 
-		Graphics.Blit(this.videoPlayer.texture, this.rtInput);
+		Graphics.Blit(this.videoPlayer.texture, this.rtReference);
+
+		int kh_subsample = this.csHighlightRemoval.FindKernel("SubSample");
+		this.csHighlightRemoval.SetInt("sub_sample_multiplier", referenceTextureSize / textureSize);
+		this.csHighlightRemoval.SetInts("sub_sample_offset", new int[] { 0, 0 });
+		this.csHighlightRemoval.SetTexture(kh_subsample, "tex_input", this.rtReference);
+		this.csHighlightRemoval.SetTexture(kh_subsample, "tex_output", this.rtInput);
+		this.csHighlightRemoval.Dispatch(kh_subsample, textureSize / 32, textureSize / 32, 1);
+
 		this.videoPlayer.StepForward();
 		if (this.previousFrame == null) {
 			if (this.videoPlayer.frame > 0) {
@@ -302,6 +340,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.rtMaskMSE.Release();
 		this.cbufClusterCenters.Release();
 		this.cbufRandomPositions.Release();
+		this.rtReference.Release();
 	}
 
 	private void RenderResult() {
