@@ -68,7 +68,12 @@ public class HighlightRemovalTest : MonoBehaviour {
 	}
 
 	private void InitRTs() {
-		var rtDesc = new RenderTextureDescriptor(textureSize, textureSize, RenderTextureFormat.ARGBFloat, 0) {
+		var rtDesc = new RenderTextureDescriptor(
+			textureSize,
+			textureSize,
+			RenderTextureFormat.ARGBFloat,
+			0
+		) {
 			dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray,
 			volumeDepth = 16,
 			useMipMap = true,
@@ -147,14 +152,16 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.InitCbufs();
 	}
 
-	private void AttributeClusters(bool final = false) {
+	private void AttributeClusters(Texture inputTex = null, bool final = false) {
+		inputTex ??= this.rtInput;
+
 		int kh_AttributeClusters = this.csHighlightRemoval.FindKernel("AttributeClusters");
 		this.csHighlightRemoval.SetBool("final", final);  // replace with define
-		this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_input", this.rtInput);
+		this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_input", inputTex);
 		this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_mse_mask", this.rtMaskMSE);
 		this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_arr_clusters_rw", this.rtArr);
 		this.csHighlightRemoval.SetBuffer(kh_AttributeClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
-		this.csHighlightRemoval.Dispatch(kh_AttributeClusters, textureSize / 32, textureSize / 32, 1);
+		this.csHighlightRemoval.Dispatch(kh_AttributeClusters, inputTex.width / 32, inputTex.height / 32, 1);
 	}
 
 	private void UpdateClusterCenters(bool rejectOld) {
@@ -170,8 +177,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.Dispatch(kh_UpdateClusterCenters, 1, 1, 1);
 	}
 
-	private void KMeans(bool rejectOld = false) {
-		this.AttributeClusters();
+	private void KMeans(Texture texInput = null, bool rejectOld = false) {
+		this.AttributeClusters(texInput);
 		this.rtArr.GenerateMips();
 		this.rtMaskMSE.GenerateMips();
 		this.UpdateClusterCenters(rejectOld);
@@ -190,6 +197,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 	}
 
 	private float GetMSE() {
+		//this.KMeans(this.rtReference);
+
 		this.cbufClusterCenters.GetData(this.clusterCenters);
 
 		for (int i = 0; i < numClusters; i++) {
@@ -245,7 +254,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private void ClusteringIteration() {
 		if (doRandomSwap) {
-			this.KMeans(true);  // discard old saved clusters, update MSE
+			this.KMeans(this.rtInput, true);  // discard old saved clusters, update MSE
 
 			this.RandomSwap();
 			this.KMeans();
@@ -258,7 +267,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 			// no need to discard old saved clusters
 			// we never validate / restore
 		}
-		this.AttributeClusters(true);
+		this.AttributeClusters(this.rtInput, true);
 	}
 
 	private void OnRenderImage(RenderTexture src, RenderTexture dest) {
