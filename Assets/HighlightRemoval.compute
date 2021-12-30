@@ -17,11 +17,14 @@ uint randomClusterCenter;
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
 Texture2D<float4> tex_input;
+RWTexture2D<float> tex_mse_mask;
+Texture2D<float> tex_mse_mask_r;
 RWTexture2D<float4> tex_output;
 
 Texture2DArray<float4> tex_arr_clusters_r;
 RWTexture2DArray<float4> tex_arr_clusters_rw;
 
+SamplerState sampler_tex_mse_mask_r;
 SamplerState sampler_tex_arr_clusters_r;
 
 RWStructuredBuffer<float4> cbuf_cluster_centers;
@@ -185,6 +188,8 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 	float3 col = tex_input[id.xy].rgb;
 	bool included = test(col) > threshold;
 
+	tex_mse_mask[id.xy] = included;
+
 	float dist_list[num_clusters];
 
 	for (int i = 0; i < num_clusters; i++) {
@@ -290,16 +295,18 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 
     float4 aggregatedColor = tex_arr_clusters_r.SampleLevel(
 		sampler_tex_arr_clusters_r,
-		float3(
-			0.5, 0.5, id.x
-		),
+		float3(0.5, 0.5, id.x),
 		8
 	);
 
 	// z is the same on all cluster centers
 	// and contains MSE across ALL clusters
 
-	float4 clusterCenter = aggregatedColor.z;
+	float4 clusterCenter = aggregatedColor.z / tex_mse_mask_r.SampleLevel(
+		sampler_tex_mse_mask_r,
+		float2(0.5, 0.5),
+		8
+	);
 
 	if (aggregatedColor.a != 0) {
 		clusterCenter.xy = aggregatedColor.xy / aggregatedColor.w;

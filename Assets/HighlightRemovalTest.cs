@@ -27,6 +27,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private RenderTexture rtArr;
 	private RenderTexture rtResult;
+	private RenderTexture rtMaskMSE;
 	private ComputeBuffer cbufClusterCenters;
 	private ComputeBuffer cbufRandomPositions;
 	private RenderTexture rtInput;
@@ -66,6 +67,11 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.rtResult = new RenderTexture(textureSize, textureSize, 0, RenderTextureFormat.ARGBFloat) {
 			enableRandomWrite = true
 		};
+		this.rtMaskMSE = new RenderTexture(textureSize, textureSize, 0, RenderTextureFormat.RFloat) {
+			enableRandomWrite = true,
+			useMipMap = true,
+			autoGenerateMips = false
+		};
 
 		/*
 			second half of the buffer contains candidate cluster centers
@@ -99,6 +105,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		int kh_AttributeClusters = this.csHighlightRemoval.FindKernel("AttributeClusters");
 		this.csHighlightRemoval.SetBool("final", final);  // replace with define
 		this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_input", this.rtInput);
+		this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_mse_mask", this.rtMaskMSE);
 		this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_arr_clusters_rw", this.rtArr);
 		this.csHighlightRemoval.SetBuffer(kh_AttributeClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
 		this.csHighlightRemoval.Dispatch(kh_AttributeClusters, textureSize / 32, textureSize / 32, 1);
@@ -111,6 +118,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetBool("rejectOld", rejectOld);
 		this.csHighlightRemoval.SetTexture(kh_UpdateClusterCenters, "tex_arr_clusters_r", this.rtArr);
 		this.csHighlightRemoval.SetTexture(kh_UpdateClusterCenters, "tex_input", this.rtInput);
+		this.csHighlightRemoval.SetTexture(kh_UpdateClusterCenters, "tex_mse_mask_r", this.rtMaskMSE);
 		this.csHighlightRemoval.SetBuffer(kh_UpdateClusterCenters, "cbuf_cluster_centers", this.cbufClusterCenters);
 		this.csHighlightRemoval.SetBuffer(kh_UpdateClusterCenters, "cbuf_random_positions", this.cbufRandomPositions);
 		this.csHighlightRemoval.Dispatch(kh_UpdateClusterCenters, 1, 1, 1);
@@ -119,7 +127,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private void KMeans(bool rejectOld = false) {
 		this.AttributeClusters();
 		this.rtArr.GenerateMips();
-
+		this.rtMaskMSE.GenerateMips();
 		this.UpdateClusterCenters(rejectOld);
 
 		//this.LogMSE();
@@ -274,9 +282,10 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private void OnDisable() {
 		this.rtArr.Release();
 		this.rtResult.Release();
+		this.rtInput.Release();
+		this.rtMaskMSE.Release();
 		this.cbufClusterCenters.Release();
 		this.cbufRandomPositions.Release();
-		this.rtInput.Release();
 	}
 
 	private void RenderResult() {
