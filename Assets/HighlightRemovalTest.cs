@@ -16,6 +16,13 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private struct Position {
 		public int x;
 		public int y;
+
+		/*
+			NVidia says structures not aligned to 128 bits are slow
+			https://developer.nvidia.com/content/understanding-structured-buffer-performance
+		*/
+		private readonly int padding_1;
+		private readonly int padding_2;
 	}
 
 	private RenderTexture rtArr;
@@ -25,7 +32,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private RenderTexture rtInput;
 	private readonly System.Random random = new System.Random(1);
 	private readonly Position[] randomPositions = new Position[numClusters];
-	private readonly Vector3[] clusterCenters = new Vector3[numClusters * 2];
+	private readonly Vector4[] clusterCenters = new Vector4[numClusters * 2];
 
 	private UnityEngine.Video.VideoPlayer videoPlayer;
 	private readonly System.Collections.Generic.List<float> frameLogMSE = new System.Collections.Generic.List<float>();
@@ -60,10 +67,15 @@ public class HighlightRemovalTest : MonoBehaviour {
 			enableRandomWrite = true
 		};
 
-		// second half of the buffer contains candidate cluster centers
-		// first half contains current cluster centers
+		/*
+			second half of the buffer contains candidate cluster centers
+			first half contains current cluster centers
+
+			NVidia says structures not aligned to 128 bits are slow
+			https://developer.nvidia.com/content/understanding-structured-buffer-performance
+		*/
 		this.cbufClusterCenters = new ComputeBuffer(numClusters * 2, sizeof(float) * 4);
-		this.cbufRandomPositions = new ComputeBuffer(numClusters, sizeof(int) * 2);
+		this.cbufRandomPositions = new ComputeBuffer(numClusters, sizeof(int) * 4);
 
 		for (int i = 0; i < this.clusterCenters.Length; i++) {
 			// "old" cluster centers with infinite MSE
@@ -76,7 +88,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				1
 			);
 			c *= 1.0f / (c.r + c.g + c.b);
-			this.clusterCenters[i] = new Vector3(c.r, c.g, Mathf.Infinity);
+			this.clusterCenters[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0);
 		}
 		this.cbufClusterCenters.SetData(this.clusterCenters);
 
@@ -151,7 +163,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 			if (x != Mathf.Infinity && MSE == -1) {
 				MSE = x;
 			}
-			if (x > 100) {
+			if (x == Mathf.Infinity) {
 				emptyClusters++;
 			}
 		}
