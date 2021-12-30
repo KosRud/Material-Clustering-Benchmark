@@ -5,8 +5,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private const int numClusters = 6;
 	private const bool doRandomSwap = false;
-	//private const bool doRandomInitialAttribution = false;
-	private const bool randomInitialClusters = false;
 	private const float timeStep = 1f;
 
 	private float timeLastIteration = 0;
@@ -49,8 +47,28 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.cbufRandomPositions.SetData(this.randomPositions);
 	}
 
+	private void SetTextureSize() {
+		Debug.Assert(
+			(
+				textureSize & (textureSize - 1)
+			) == 0 && textureSize > 0
+		); // positive power of 2
+		Debug.Assert(textureSize <= 1024);
+
+		int mipLevel = 0;
+		int targetSize = 1;
+		while (targetSize != textureSize) {
+			mipLevel++;
+			targetSize *= 2;
+		}
+		this.csHighlightRemoval.SetInt("mip_level", mipLevel);
+		this.csHighlightRemoval.SetInt("texture_size", textureSize);
+	}
+
 	// Start is called before the first frame update
 	private void Start() {
+		this.SetTextureSize();
+
 		this.videoPlayer = this.GetComponent<UnityEngine.Video.VideoPlayer>();
 		this.videoPlayer.playbackSpeed = 0;
 
@@ -87,9 +105,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 			// "old" cluster centers with infinite MSE
 			// to make sure new ones will overwrite them when validated
 			var c = Color.HSVToRGB(
-				randomInitialClusters == true ?
-					this.random.Next(10000) / 10000.0f :
-					i / (float)(numClusters),
+				i / (float)(numClusters),
 				1,
 				1
 			);
