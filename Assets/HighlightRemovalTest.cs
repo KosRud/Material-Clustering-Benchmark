@@ -6,8 +6,9 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private const int numClusters = 6;
 	private const bool doRandomSwap = false;
-	private const float timeStep = 1f;
 	private const bool doRandomizeEmptyClusters = true;
+
+	private const float timeStep = 1f;
 
 	private float timeLastIteration = 0;
 	private long? previousFrame = null;
