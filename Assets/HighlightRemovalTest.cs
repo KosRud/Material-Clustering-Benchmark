@@ -40,6 +40,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private int kernelRandomSwap;
 	private int kernelValidateCandidates;
 	private int kernelsubsample;
+	private int kernelGenerateMSE;
+	private int kernelGatherMSE;
 
 	private readonly System.Random random = new System.Random(1);
 	private readonly Position[] randomPositions = new Position[numClusters];
@@ -111,8 +113,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		};
 
 		this.rtMSE = new RenderTexture(
-			textureSize,
-			textureSize,
+			referenceTextureSize,
+			referenceTextureSize,
 			0,
 			RenderTextureFormat.RGFloat
 		) {
@@ -158,6 +160,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.kernelRandomSwap = this.csHighlightRemoval.FindKernel("RandomSwap");
 		this.kernelValidateCandidates = this.csHighlightRemoval.FindKernel("ValidateCandidates");
 		this.kernelsubsample = this.csHighlightRemoval.FindKernel("SubSample");
+		this.kernelGenerateMSE = this.csHighlightRemoval.FindKernel("GenerateMSE");
+		this.kernelGatherMSE = this.csHighlightRemoval.FindKernel("GatherMSE");
 	}
 
 	// Start is called before the first frame update
@@ -216,48 +220,31 @@ public class HighlightRemovalTest : MonoBehaviour {
 	}
 
 	private float GetMSE() {
-		//this.KMeans(this.rtReference);
+		this.csHighlightRemoval.SetTexture(this.kernelGenerateMSE, "tex_input", this.rtInput);
+		this.csHighlightRemoval.SetTexture(this.kernelGenerateMSE, "tex_mse_rw", this.rtMSE);
+		this.csHighlightRemoval.SetTexture(this.kernelGenerateMSE, "tex_arr_clusters_r", this.rtArr);
+		this.csHighlightRemoval.Dispatch(
+			this.kernelGenerateMSE,
+			referenceTextureSize / 32,
+			referenceTextureSize / 32,
+		1);
+
+		this.csHighlightRemoval.SetTexture(this.kernelGatherMSE, "tex_mse_r", this.rtMSE);
+		this.csHighlightRemoval.SetBuffer(this.kernelGatherMSE, "cbuf_cluster_centers", this.cbufClusterCenters);
+		this.csHighlightRemoval.Dispatch(this.kernelGatherMSE, 1, 1, 1);
 
 		this.cbufClusterCenters.GetData(this.clusterCenters);
-
-		for (int i = 0; i < numClusters; i++) {
-			float MSE = this.clusterCenters[i].z;
-			if (MSE != Mathf.Infinity) {
-				return MSE;
-			}
-		}
-
-		if (this.videoPlayer.frame > 5) {
-			//throw new System.Exception("no MSE!");
-		}
-
-		return -1;
-	}
-
-	private void LogMSE() {
-		this.cbufClusterCenters.GetData(this.clusterCenters);
-
-		float MSE = -1;
-		float emptyClusters = 0;
-
-		for (int i = 0; i < numClusters; i++) {
-			float x = this.clusterCenters[i].z;
-			if (x != Mathf.Infinity && MSE == -1) {
-				MSE = x;
-			}
-			if (x == Mathf.Infinity) {
-				emptyClusters++;
-			}
-		}
+		float MSE = this.clusterCenters[0].w;
 
 		if (MSE == -1 && this.videoPlayer.frame > 5) {
 			//throw new System.Exception("no MSE!");
 		}
 
+		return MSE;
+	}
+
+	private void LogMSE() {
 		Debug.Log($"MSE: {(int)(this.GetMSE() * 1000),8}");
-		if (emptyClusters != 0) {
-			Debug.Log($"empty clusters: {emptyClusters}");
-		}
 	}
 
 	private void ValidateCandidates() {

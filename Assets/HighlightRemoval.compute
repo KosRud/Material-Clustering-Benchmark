@@ -27,15 +27,15 @@ uint2 sub_sample_offset;
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
 Texture2D<float4> tex_input;
-RWTexture2D<float2> tex_mse;
-Texture2D<float2> tex_mse_r;
 RWTexture2D<float4> tex_output;
 
-Texture2DArray<float4> tex_arr_clusters_r;
 RWTexture2DArray<float4> tex_arr_clusters_rw;
-
-SamplerState sampler_tex_mse_r;
+Texture2DArray<float4> tex_arr_clusters_r;
 SamplerState sampler_tex_arr_clusters_r;
+
+RWTexture2D<float2> tex_mse_rw;
+Texture2D<float2> tex_mse_r;
+SamplerState sampler_tex_mse_r;
 
 RWStructuredBuffer<float4> cbuf_cluster_centers;
 RWStructuredBuffer<uint4> cbuf_random_positions;
@@ -285,7 +285,9 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 		mip_level
 	);
 
-	float4 clusterCenter = 0;
+	float4 clusterCenter = aggregatedColor.z;	// overall MSE for random swap validation
+	// first K-Means iteration before random swap updates MSE
+	// subsequent random swap has the same mask of included pixels (same frame)
 
 	if (aggregatedColor.a != 0) {
 		clusterCenter.xy = aggregatedColor.xy / aggregatedColor.w;
@@ -314,11 +316,14 @@ void GenerateMSE (uint3 id : SV_DispatchThreadID)
 
 	float3 col = tex_input[id.xy].rgb;
 
-	tex_mse[id.xy].rg = float2(
-		pow2(
-			tex_arr_clusters_rw[uint3(id.xy, 0)].z // min_dist
-		),
-		test(col) > threshold // included
+	bool included = test(col) > threshold;
+	float MSE = pow2(
+		tex_arr_clusters_r[uint3(id.xy, 0)].z // min_dist
+	);
+
+	tex_mse_rw[id.xy].rg = float2(
+		included ? MSE : 0,
+		included
 	);
 }
 
@@ -336,7 +341,7 @@ void GatherMSE (uint3 id : SV_DispatchThreadID)
 	);
 
 	float4 clusterCenter = cbuf_cluster_centers[id.x];
-	clusterCenter.xy = mse_sample.r / mse_sample.g;
+	clusterCenter.w = mse_sample.r / mse_sample.g;
 
 	cbuf_cluster_centers[id.x] = clusterCenter;
 }
