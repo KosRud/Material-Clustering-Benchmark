@@ -16,6 +16,7 @@ bool reject_old;
 bool show_reference;
 bool store_mse;
 bool do_random_sample_empty_clusters;
+bool KHM;
 
 uint randomClusterCenter;
 uint mip_level;
@@ -217,8 +218,9 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 
 		float w = top / pow2(bottom);
 
-		// simple K-Means
-		//w = (k == clusterID);
+		if (!KHM){
+			w = (k == clusterID);
+		}
 
 		float4 result = float4(
 			project(col) * w,

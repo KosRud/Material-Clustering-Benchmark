@@ -1,12 +1,13 @@
 using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
-	private const int textureSize = 256;
+	private const int textureSize = 1024;
 	private const int referenceTextureSize = 1024;
 
 	private const int numClusters = 6;
 	private const bool doRandomSwap = false;
 	private const bool doRandomizeEmptyClusters = true;
+	private const bool doKHM = false;
 
 	private const float timeStep = 1f;
 
@@ -176,6 +177,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.videoPlayer.playbackSpeed = 0;
 
 		this.csHighlightRemoval.SetBool("do_random_sample_empty_clusters", doRandomizeEmptyClusters);
+		this.csHighlightRemoval.SetBool("KHM", doKHM);
 	}
 
 	private void AttributeClusters(Texture inputTex = null, bool final = false) {
