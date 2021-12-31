@@ -7,7 +7,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private const float timeStep = 1f;
 
 	private float timeLastIteration = 0;
-	private long? previousFrame = null;
 	private bool showReference = false;
 	private int[][] offsets;
 
@@ -60,7 +59,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 		public readonly bool doRandomSwap;
 		public readonly bool doRandomizeEmptyClusters;
 		public readonly bool doKHM;
-		public readonly bool doJitter;
 		public readonly bool staggeredJitter;
 		public readonly int jitterRadius;
 
@@ -72,7 +70,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 			bool doRandomSwap,
 			bool doRandomizeEmptyClusters,
 			bool doKHM,
-			bool doJitter,
 			bool staggeredJitter,
 			int jitterRadius
 		) {
@@ -81,7 +78,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 			this.doRandomSwap = doRandomSwap;
 			this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
 			this.doKHM = doKHM;
-			this.doJitter = doJitter;
 			this.staggeredJitter = staggeredJitter;
 			this.jitterRadius = jitterRadius;
 		}
@@ -222,9 +218,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 							doRandomSwap: false,
 							doRandomizeEmptyClusters: false,
 							doKHM: false,
-							doJitter: jitterOffset > 1,
 							staggeredJitter: staggeredJitter,
-							jitterRadius: jitterOffset
+							jitterRadius: jitterRadius
 						)
 					);
 				}
@@ -246,6 +241,9 @@ public class HighlightRemovalTest : MonoBehaviour {
 			case 2:
 				this.offsets = new int[][] { new int[] { 0, 0 }, new int[] { 1, 0 }, new int[] { 1, 1 }, new int[] { 0, 1 }, };
 				break;
+			case 1:
+				this.offsets = new int[][] { new int[] { 0, 0 }, };
+				break;
 			default:
 				throw new System.Exception($"invalid jitter radius: {this.work.Peek().jitterRadius}");
 
@@ -264,6 +262,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		this.videoPlayer = this.GetComponent<UnityEngine.Video.VideoPlayer>();
 		this.videoPlayer.playbackSpeed = 0;
+		this.videoPlayer.frame = (long)(this.videoPlayer.frameCount - 5);
 
 		this.csHighlightRemoval.SetBool("do_random_sample_empty_clusters", this.work.Peek().doRandomizeEmptyClusters);
 		this.csHighlightRemoval.SetBool("KHM", this.work.Peek().doKHM);
@@ -328,6 +327,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.cbufClusterCenters.GetData(this.clusterCenters);
 
 		float MSE = this.clusterCenters[0].w;
+		return MSE;
 		return float.IsNaN(MSE) == false ? MSE : this.videoPlayer.frame < 5 ? 0 : throw new System.Exception("no MSE!");
 	}
 
@@ -373,7 +373,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		if (this.videoPlayer.frame == (long)this.videoPlayer.frameCount - 1) {
 			Graphics.Blit(src, dest);
-			Debug.Log(this.frameLogMSE.Count);
 
 			/*
 				num. iterations
@@ -440,33 +439,20 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetInt("sub_sample_multiplier", referenceTextureSize / textureSize);
 		this.csHighlightRemoval.SetInts(
 			"sub_sample_offset",
-			this.work.Peek().doJitter ?
-				(
-					this.work.Peek().staggeredJitter ?
-						this.offsets[
-							Time.frameCount % this.offsets.Length
-						] :
-						new int[] {
-							Time.frameCount % this.offsets.Length,
-							(Time.frameCount / this.offsets.Length) % this.offsets.Length
-						}
-				) :
-				new int[] { 0, 0 }
+			this.work.Peek().staggeredJitter ?
+				this.offsets[
+					Time.frameCount % this.offsets.Length
+				] :
+				new int[] {
+					Time.frameCount % this.offsets.Length,
+					(Time.frameCount / this.offsets.Length) % this.offsets.Length
+				}
 		);
 		this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_input", this.rtReference);
 		this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_output", this.rtInput);
 		this.csHighlightRemoval.Dispatch(this.kernelsubsample, textureSize / 16, textureSize / 16, 1);
 
 		this.videoPlayer.StepForward();
-		if (this.previousFrame == null) {
-			if (this.videoPlayer.frame > 0) {
-				this.previousFrame = this.videoPlayer.frame;
-			}
-		} else if (this.videoPlayer.frame != this.previousFrame + 1) {
-			throw new System.Exception($"current frame: {this.videoPlayer.frame}\nprevious frame: {this.previousFrame}");
-		} else {
-			this.previousFrame++;
-		}
 
 		this.ClusteringIteration();
 
