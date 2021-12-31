@@ -23,3 +23,15 @@ Video 1
         resolution: 32
         K-Means x3
         empty cluster <- random sample
+    7
+        resolution: 16
+        K-Means x3
+        empty cluster <- random sample
+    8
+        resolution: 128 + 8x8 jitter
+        K-Means x3
+        empty cluster <- random sample
+    9
+        resolution: 128 + 4x4 jitter
+        K-Means x3
+        empty cluster <- random sample

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
-	private const int textureSize = 64;
+	private const int textureSize = 256;
 	private const int referenceTextureSize = 1024;
 
 	private const int numClusters = 6;
@@ -14,6 +14,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private float timeLastIteration = 0;
 	private long? previousFrame = null;
 	private bool showReference = false;
+	private readonly int[][] offsets = new int[][] { new int[] { 0, 0 }, new int[] { 2, 0 }, new int[] { 0, 2 }, new int[] { 2, 2 }, new int[] { 1, 0 }, new int[] { 3, 0 }, new int[] { 1, 2 }, new int[] { 3, 2 }, new int[] { 1, 1 }, new int[] { 3, 1 }, new int[] { 1, 3 }, new int[] { 3, 3 }, new int[] { 0, 1 }, new int[] { 2, 1 }, new int[] { 0, 3 }, new int[] { 2, 3 }, };
+
 
 	private struct Position {
 		public int x;
@@ -63,7 +65,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.cbufRandomPositions.SetData(this.randomPositions);
 	}
 
-	int MipLevel(int textureSize) {
+	private int MipLevel(int textureSize) {
 		int mipLevel = 0;
 		int targetSize = 1;
 		while (targetSize != textureSize) {
@@ -194,7 +196,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_mse", this.rtMSE);
 		this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_arr_clusters_rw", this.rtArr);
 		this.csHighlightRemoval.SetBuffer(this.kernelAttributeClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
-		this.csHighlightRemoval.Dispatch(this.kernelAttributeClusters, inputTex.width / 32, inputTex.height / 32, 1);
+		this.csHighlightRemoval.Dispatch(this.kernelAttributeClusters, inputTex.width / 16, inputTex.height / 16, 1);
 	}
 
 	private void UpdateClusterCenters(bool rejectOld) {
@@ -235,8 +237,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetTexture(this.kernelGenerateMSE, "tex_arr_clusters_r", this.rtArr);
 		this.csHighlightRemoval.Dispatch(
 			this.kernelGenerateMSE,
-			referenceTextureSize / 32,
-			referenceTextureSize / 32,
+			referenceTextureSize / 16,
+			referenceTextureSize / 16,
 		1);
 
 		this.csHighlightRemoval.SetTexture(this.kernelGatherMSE, "tex_mse_r", this.rtMSE);
@@ -250,11 +252,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 			return MSE;
 		}
 
-		if (this.videoPlayer.frame < 5) {
-			return 0;
-		}
-
-		throw new System.Exception("no MSE!");
+		return this.videoPlayer.frame < 5 ? (float)0 : throw new System.Exception("no MSE!");
 	}
 
 	private void LogMSE() {
@@ -329,10 +327,15 @@ public class HighlightRemovalTest : MonoBehaviour {
 		Graphics.Blit(this.videoPlayer.texture, this.rtReference);
 
 		this.csHighlightRemoval.SetInt("sub_sample_multiplier", referenceTextureSize / textureSize);
-		this.csHighlightRemoval.SetInts("sub_sample_offset", new int[] { 0, 0 });
+		this.csHighlightRemoval.SetInts(
+			"sub_sample_offset",
+			this.offsets[
+				Time.frameCount % this.offsets.Length
+			]
+		);
 		this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_input", this.rtReference);
 		this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_output", this.rtInput);
-		this.csHighlightRemoval.Dispatch(this.kernelsubsample, textureSize / 32, textureSize / 32, 1);
+		this.csHighlightRemoval.Dispatch(this.kernelsubsample, textureSize / 16, textureSize / 16, 1);
 
 		this.videoPlayer.StepForward();
 		if (this.previousFrame == null) {
@@ -377,6 +380,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetBuffer(this.kernelShowResult, "cbuf_cluster_centers", this.cbufClusterCenters);
 		this.csHighlightRemoval.SetBool("show_reference", this.showReference);
 		this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_input", this.rtInput);
-		this.csHighlightRemoval.Dispatch(this.kernelShowResult, textureSize / 32, textureSize / 32, 1);
+		this.csHighlightRemoval.Dispatch(this.kernelShowResult, textureSize / 16, textureSize / 16, 1);
 	}
 }
