@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
-	private const int textureSize = 1024;
+	private const int textureSize = 64;
 	private const int referenceTextureSize = 1024;
 
 	private const int numClusters = 6;
