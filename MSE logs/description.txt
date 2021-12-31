@@ -2,36 +2,32 @@ Video 1
     1
         resolution: 1024
         K-Means x3
-        empty cluster <- random sample
+        empty cluster <- freeze
     2
         resolution: 512
         K-Means x3
-        empty cluster <- random sample
+        empty cluster <- freeze
     3
         resolution: 256
         K-Means x3
-        empty cluster <- random sample
+        empty cluster <- freeze
     4
         resolution: 128
         K-Means x3
-        empty cluster <- random sample
+        empty cluster <- freeze
     4
         resolution: 64
         K-Means x3
-        empty cluster <- random sample
+        empty cluster <- freeze
     6
         resolution: 32
         K-Means x3
-        empty cluster <- random sample
+        empty cluster <- freeze
     7
         resolution: 16
         K-Means x3
-        empty cluster <- random sample
+        empty cluster <- freeze
     8
         resolution: 128 + 8x8 jitter
         K-Means x3
-        empty cluster <- random sample
-    9
-        resolution: 128 + 4x4 jitter
-        K-Means x3
-        empty cluster <- random sample
+        empty cluster <- freeze
