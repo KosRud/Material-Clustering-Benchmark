@@ -317,12 +317,24 @@ void GenerateMSE (uint3 id : SV_DispatchThreadID)
 	float3 col = tex_input[id.xy].rgb;
 
 	bool included = test(col) > threshold;
-	float MSE = pow2(
-		tex_arr_clusters_r[uint3(id.xy, 0)].z // min_dist
-	);
+	
+	float min_dist = 100;
+	// difference calculated on 2 coordinates within [0,1] range
+	// theoretical maximum distance is sqrt(2)
+
+	for (int i = 0; i < num_clusters; i++) {
+		float dist = length(
+			cbuf_cluster_centers[i].rg -
+			project(col)
+		);
+
+		if (dist < min_dist) {
+			min_dist = dist;
+		}
+	}
 
 	tex_mse_rw[id.xy].rg = float2(
-		included ? MSE : 0,
+		included ? pow2(min_dist) : 0,
 		included
 	);
 }

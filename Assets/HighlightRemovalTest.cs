@@ -220,8 +220,9 @@ public class HighlightRemovalTest : MonoBehaviour {
 	}
 
 	private float GetMSE() {
-		this.csHighlightRemoval.SetTexture(this.kernelGenerateMSE, "tex_input", this.rtInput);
+		this.csHighlightRemoval.SetTexture(this.kernelGenerateMSE, "tex_input", this.rtReference);
 		this.csHighlightRemoval.SetTexture(this.kernelGenerateMSE, "tex_mse_rw", this.rtMSE);
+		this.csHighlightRemoval.SetBuffer(this.kernelGenerateMSE, "cbuf_cluster_centers", this.cbufClusterCenters);
 		this.csHighlightRemoval.SetTexture(this.kernelGenerateMSE, "tex_arr_clusters_r", this.rtArr);
 		this.csHighlightRemoval.Dispatch(
 			this.kernelGenerateMSE,
@@ -244,7 +245,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 	}
 
 	private void LogMSE() {
-		Debug.Log($"MSE: {(int)(this.GetMSE() * 1000),8}");
+		Debug.Log($"MSE: {(int)(this.GetMSE() * 1000000),8}");
 	}
 
 	private void ValidateCandidates() {
