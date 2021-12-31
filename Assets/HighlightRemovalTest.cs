@@ -7,6 +7,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private const int numClusters = 6;
 	private const bool doRandomSwap = false;
 	private const float timeStep = 1f;
+	private const bool doRandomizeEmptyClusters = true;
 
 	private float timeLastIteration = 0;
 	private long? previousFrame = null;
@@ -26,11 +27,20 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private RenderTexture rtArr;
 	private RenderTexture rtResult;
-	private RenderTexture rtMaskMSE;
+	private RenderTexture rtMSE;
 	private RenderTexture rtReference;
+	private RenderTexture rtInput;
+
 	private ComputeBuffer cbufClusterCenters;
 	private ComputeBuffer cbufRandomPositions;
-	private RenderTexture rtInput;
+
+	private int kernelShowResult;
+	private int kernelAttributeClusters;
+	private int kernelUpdateClusterCenters;
+	private int kernelRandomSwap;
+	private int kernelValidateCandidates;
+	private int kernelsubsample;
+
 	private readonly System.Random random = new System.Random(1);
 	private readonly Position[] randomPositions = new Position[numClusters];
 	private readonly Vector4[] clusterCenters = new Vector4[numClusters * 2];
@@ -100,11 +110,11 @@ public class HighlightRemovalTest : MonoBehaviour {
 			enableRandomWrite = true
 		};
 
-		this.rtMaskMSE = new RenderTexture(
+		this.rtMSE = new RenderTexture(
 			textureSize,
 			textureSize,
 			0,
-			RenderTextureFormat.RFloat
+			RenderTextureFormat.RGFloat
 		) {
 			enableRandomWrite = true,
 			useMipMap = true,
@@ -141,46 +151,55 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.cbufClusterCenters.SetData(this.clusterCenters);
 	}
 
+	private void FindKernels() {
+		this.kernelShowResult = this.csHighlightRemoval.FindKernel("ShowResult");
+		this.kernelAttributeClusters = this.csHighlightRemoval.FindKernel("AttributeClusters");
+		this.kernelUpdateClusterCenters = this.csHighlightRemoval.FindKernel("UpdateClusterCenters");
+		this.kernelRandomSwap = this.csHighlightRemoval.FindKernel("RandomSwap");
+		this.kernelValidateCandidates = this.csHighlightRemoval.FindKernel("ValidateCandidates");
+		this.kernelsubsample = this.csHighlightRemoval.FindKernel("SubSample");
+	}
+
 	// Start is called before the first frame update
 	private void Start() {
+		this.FindKernels();
 		this.SetTextureSize();
+		this.InitRTs();
+		this.InitCbufs();
 
 		this.videoPlayer = this.GetComponent<UnityEngine.Video.VideoPlayer>();
 		this.videoPlayer.playbackSpeed = 0;
 
-		this.InitRTs();
-		this.InitCbufs();
+		this.csHighlightRemoval.SetBool("do_random_sample_empty_clusters", doRandomizeEmptyClusters);
 	}
 
 	private void AttributeClusters(Texture inputTex = null, bool final = false) {
 		inputTex ??= this.rtInput;
 
-		int kh_AttributeClusters = this.csHighlightRemoval.FindKernel("AttributeClusters");
 		this.csHighlightRemoval.SetBool("final", final);  // replace with define
-		this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_input", inputTex);
-		this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_mse_mask", this.rtMaskMSE);
-		this.csHighlightRemoval.SetTexture(kh_AttributeClusters, "tex_arr_clusters_rw", this.rtArr);
-		this.csHighlightRemoval.SetBuffer(kh_AttributeClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
-		this.csHighlightRemoval.Dispatch(kh_AttributeClusters, inputTex.width / 32, inputTex.height / 32, 1);
+		this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_input", inputTex);
+		this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_mse", this.rtMSE);
+		this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_arr_clusters_rw", this.rtArr);
+		this.csHighlightRemoval.SetBuffer(this.kernelAttributeClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
+		this.csHighlightRemoval.Dispatch(this.kernelAttributeClusters, inputTex.width / 32, inputTex.height / 32, 1);
 	}
 
 	private void UpdateClusterCenters(bool rejectOld) {
 		this.UpdateRandomPositions();
 
-		int kh_UpdateClusterCenters = this.csHighlightRemoval.FindKernel("UpdateClusterCenters");
-		this.csHighlightRemoval.SetBool("rejectOld", rejectOld);
-		this.csHighlightRemoval.SetTexture(kh_UpdateClusterCenters, "tex_arr_clusters_r", this.rtArr);
-		this.csHighlightRemoval.SetTexture(kh_UpdateClusterCenters, "tex_input", this.rtInput);
-		this.csHighlightRemoval.SetTexture(kh_UpdateClusterCenters, "tex_mse_mask_r", this.rtMaskMSE);
-		this.csHighlightRemoval.SetBuffer(kh_UpdateClusterCenters, "cbuf_cluster_centers", this.cbufClusterCenters);
-		this.csHighlightRemoval.SetBuffer(kh_UpdateClusterCenters, "cbuf_random_positions", this.cbufRandomPositions);
-		this.csHighlightRemoval.Dispatch(kh_UpdateClusterCenters, 1, 1, 1);
+		this.csHighlightRemoval.SetBool("reject_old", rejectOld);
+		this.csHighlightRemoval.SetTexture(this.kernelUpdateClusterCenters, "tex_arr_clusters_r", this.rtArr);
+		this.csHighlightRemoval.SetTexture(this.kernelUpdateClusterCenters, "tex_input", this.rtInput);
+		this.csHighlightRemoval.SetTexture(this.kernelUpdateClusterCenters, "tex_mse_maskernelr", this.rtMSE);
+		this.csHighlightRemoval.SetBuffer(this.kernelUpdateClusterCenters, "cbuf_cluster_centers", this.cbufClusterCenters);
+		this.csHighlightRemoval.SetBuffer(this.kernelUpdateClusterCenters, "cbuf_random_positions", this.cbufRandomPositions);
+		this.csHighlightRemoval.Dispatch(this.kernelUpdateClusterCenters, 1, 1, 1);
 	}
 
 	private void KMeans(Texture texInput = null, bool rejectOld = false) {
 		this.AttributeClusters(texInput);
 		this.rtArr.GenerateMips();
-		this.rtMaskMSE.GenerateMips();
+		this.rtMSE.GenerateMips();
 		this.UpdateClusterCenters(rejectOld);
 
 		//this.LogMSE();
@@ -188,12 +207,12 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private void RandomSwap() {
 		this.UpdateRandomPositions();
-		int kh_RandomSwap = this.csHighlightRemoval.FindKernel("RandomSwap");
-		this.csHighlightRemoval.SetBuffer(kh_RandomSwap, "cbuf_cluster_centers", this.cbufClusterCenters);
-		this.csHighlightRemoval.SetBuffer(kh_RandomSwap, "cbuf_random_positions", this.cbufClusterCenters);
-		this.csHighlightRemoval.SetTexture(kh_RandomSwap, "tex_input", this.rtInput);
+
+		this.csHighlightRemoval.SetBuffer(this.kernelRandomSwap, "cbuf_cluster_centers", this.cbufClusterCenters);
+		this.csHighlightRemoval.SetBuffer(this.kernelRandomSwap, "cbuf_random_positions", this.cbufClusterCenters);
+		this.csHighlightRemoval.SetTexture(this.kernelRandomSwap, "tex_input", this.rtInput);
 		this.csHighlightRemoval.SetInt("randomClusterCenter", this.random.Next(numClusters));
-		this.csHighlightRemoval.Dispatch(kh_RandomSwap, 1, 1, 1);
+		this.csHighlightRemoval.Dispatch(this.kernelRandomSwap, 1, 1, 1);
 	}
 
 	private float GetMSE() {
@@ -209,7 +228,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		}
 
 		if (this.videoPlayer.frame > 5) {
-			throw new System.Exception("no MSE!");
+			//throw new System.Exception("no MSE!");
 		}
 
 		return -1;
@@ -232,7 +251,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		}
 
 		if (MSE == -1 && this.videoPlayer.frame > 5) {
-			throw new System.Exception("no MSE!");
+			//throw new System.Exception("no MSE!");
 		}
 
 		Debug.Log($"MSE: {(int)(this.GetMSE() * 1000),8}");
@@ -242,9 +261,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 	}
 
 	private void ValidateCandidates() {
-		int kh_ValidateCandidates = this.csHighlightRemoval.FindKernel("ValidateCandidates");
-		this.csHighlightRemoval.SetBuffer(kh_ValidateCandidates, "cbuf_cluster_centers", this.cbufClusterCenters);
-		this.csHighlightRemoval.Dispatch(kh_ValidateCandidates, 1, 1, 1);
+		this.csHighlightRemoval.SetBuffer(this.kernelValidateCandidates, "cbuf_cluster_centers", this.cbufClusterCenters);
+		this.csHighlightRemoval.Dispatch(this.kernelValidateCandidates, 1, 1, 1);
 	}
 
 	// Update is called once per frame
@@ -307,12 +325,11 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		Graphics.Blit(this.videoPlayer.texture, this.rtReference);
 
-		int kh_subsample = this.csHighlightRemoval.FindKernel("SubSample");
 		this.csHighlightRemoval.SetInt("sub_sample_multiplier", referenceTextureSize / textureSize);
 		this.csHighlightRemoval.SetInts("sub_sample_offset", new int[] { 0, 0 });
-		this.csHighlightRemoval.SetTexture(kh_subsample, "tex_input", this.rtReference);
-		this.csHighlightRemoval.SetTexture(kh_subsample, "tex_output", this.rtInput);
-		this.csHighlightRemoval.Dispatch(kh_subsample, textureSize / 32, textureSize / 32, 1);
+		this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_input", this.rtReference);
+		this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_output", this.rtInput);
+		this.csHighlightRemoval.Dispatch(this.kernelsubsample, textureSize / 32, textureSize / 32, 1);
 
 		this.videoPlayer.StepForward();
 		if (this.previousFrame == null) {
@@ -346,19 +363,18 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.rtArr.Release();
 		this.rtResult.Release();
 		this.rtInput.Release();
-		this.rtMaskMSE.Release();
+		this.rtMSE.Release();
 		this.cbufClusterCenters.Release();
 		this.cbufRandomPositions.Release();
 		this.rtReference.Release();
 	}
 
 	private void RenderResult() {
-		int kh_ShowResult = this.csHighlightRemoval.FindKernel("ShowResult");
-		this.csHighlightRemoval.SetTexture(kh_ShowResult, "tex_arr_clusters_r", this.rtArr);
-		this.csHighlightRemoval.SetTexture(kh_ShowResult, "tex_output", this.rtResult);
-		this.csHighlightRemoval.SetBuffer(kh_ShowResult, "cbuf_cluster_centers", this.cbufClusterCenters);
-		this.csHighlightRemoval.SetBool("showReference", this.showReference);
-		this.csHighlightRemoval.SetTexture(kh_ShowResult, "tex_input", this.rtInput);
-		this.csHighlightRemoval.Dispatch(kh_ShowResult, textureSize / 32, textureSize / 32, 1);
+		this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_arr_clusters_r", this.rtArr);
+		this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_output", this.rtResult);
+		this.csHighlightRemoval.SetBuffer(this.kernelShowResult, "cbuf_cluster_centers", this.cbufClusterCenters);
+		this.csHighlightRemoval.SetBool("show_reference", this.showReference);
+		this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_input", this.rtInput);
+		this.csHighlightRemoval.Dispatch(this.kernelShowResult, textureSize / 32, textureSize / 32, 1);
 	}
 }

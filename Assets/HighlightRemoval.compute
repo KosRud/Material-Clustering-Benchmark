@@ -5,13 +5,17 @@
 #pragma kernel RandomSwap
 #pragma kernel ValidateCandidates
 #pragma kernel SubSample
+#pragma kernel GenerateMSE
+#pragma kernel GatherMSE
 
 #define num_clusters 6
 #define threshold 0.1
 
 bool final;
-bool rejectOld;
-bool showReference;
+bool reject_old;
+bool show_reference;
+bool store_mse;
+bool do_random_sample_empty_clusters;
 
 uint randomClusterCenter;
 uint mip_level;
@@ -23,14 +27,14 @@ uint2 sub_sample_offset;
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
 Texture2D<float4> tex_input;
-RWTexture2D<float> tex_mse_mask;
-Texture2D<float> tex_mse_mask_r;
+RWTexture2D<float2> tex_mse;
+Texture2D<float2> tex_mse_r;
 RWTexture2D<float4> tex_output;
 
 Texture2DArray<float4> tex_arr_clusters_r;
 RWTexture2DArray<float4> tex_arr_clusters_rw;
 
-SamplerState sampler_tex_mse_mask_r;
+SamplerState sampler_tex_mse_r;
 SamplerState sampler_tex_arr_clusters_r;
 
 RWStructuredBuffer<float4> cbuf_cluster_centers;
@@ -118,8 +122,6 @@ float3 HSVtoRGB(in float3 HSV)
 [numthreads(32,32,1)]
 void ShowResult (uint3 id : SV_DispatchThreadID)
 {
-    // TODO: insert actual code here!
-
 	float4 color = float4(0,0,0,1);
 	for (int i = 0; i < num_clusters; i++){
 		if (
@@ -130,7 +132,7 @@ void ShowResult (uint3 id : SV_DispatchThreadID)
 		}
 	}
 
-	if (showReference) {
+	if (show_reference) {
 		color.rg = project(tex_input[id.xy].rgb);
 	}
 
@@ -140,7 +142,7 @@ void ShowResult (uint3 id : SV_DispatchThreadID)
 
 	uint borderWidth = texture_size / 32;
 
-	if (showReference) {
+	if (show_reference) {
 		if (
 			id.x < borderWidth ||
 			id.x > texture_size - borderWidth ||
@@ -165,8 +167,6 @@ void SubSample (uint3 id : SV_DispatchThreadID)
 [numthreads(32,32,1)]
 void AttributeClusters (uint3 id : SV_DispatchThreadID)
 {
-    // TODO: insert actual code here!
-
 	float min_dist = 100;
 	// difference calculated on 2 coordinates within [0,1] range
 	// theoretical maximum distance is sqrt(2)
@@ -175,8 +175,6 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 
 	float3 col = tex_input[id.xy].rgb;
 	bool included = test(col) > threshold;
-
-	tex_mse_mask[id.xy] = included;
 
 	float dist_list[num_clusters];
 
@@ -224,7 +222,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 
 		float4 result = float4(
 			project(col) * w,
-			pow2(min_dist), // MSE
+			min_dist, // used for MSE monitoring
 			w
 		);
 
@@ -287,44 +285,58 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 		mip_level
 	);
 
-	// z is the same on all cluster centers
-	// and contains MSE across ALL clusters
-
-	float4 clusterCenter = aggregatedColor.z / tex_mse_mask_r.SampleLevel(
-		sampler_tex_mse_mask_r,
-		float2(0.5, 0.5),
-		mip_level
-	);
+	float4 clusterCenter = 0;
 
 	if (aggregatedColor.a != 0) {
 		clusterCenter.xy = aggregatedColor.xy / aggregatedColor.w;
 	} else {
-		if (true) {
-			float3 col = tex_input[
-				cbuf_random_positions[id.x].xy
-			].rgb;
-			clusterCenter.xy = project(col);
-			clusterCenter.z = 1.#INF;
+		if (do_random_sample_empty_clusters) {
+			clusterCenter.xy = project(
+				tex_input[
+					cbuf_random_positions[id.x].xy
+				].rgb
+			);
 		} else {
 			clusterCenter.xy = cbuf_cluster_centers[id.x].xy;
-			clusterCenter.z = 1.#INF;
 		}
 	}
 
 	cbuf_cluster_centers[id.x] = clusterCenter;
-	if (rejectOld) {
+	if (reject_old) {
 		cbuf_cluster_centers[id.x + num_clusters] = clusterCenter;
 	}
+}
 
-	//	0	1024
-	//	1	512
-	//	2	256
-	//	3	128
-	//	4	64
-	//	5	32
-	//	6	16
-	//	7	8
-	//	8	4
-	//	9	2
-	//	10	1
+[numthreads(32,32,1)]
+void GenerateMSE (uint3 id : SV_DispatchThreadID)
+{	
+	uint clusterID;
+
+	float3 col = tex_input[id.xy].rgb;
+
+	tex_mse[id.xy].rg = float2(
+		pow2(
+			tex_arr_clusters_rw[uint3(id.xy, 0)].z // min_dist
+		),
+		test(col) > threshold // included
+	);
+}
+
+[numthreads(32,1,1)]
+void GatherMSE (uint3 id : SV_DispatchThreadID)
+{
+	if (id.x >= num_clusters) {
+		return;
+	}
+
+	float2 mse_sample = tex_mse_r.SampleLevel(
+		sampler_tex_mse_r,
+		float2(0.5, 0.5),
+		mip_level
+	);
+
+	float4 clusterCenter = cbuf_cluster_centers[id.x];
+	clusterCenter.xy = mse_sample.r / mse_sample.g;
+
+	cbuf_cluster_centers[id.x] = clusterCenter;
 }
