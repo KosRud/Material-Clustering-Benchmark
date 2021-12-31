@@ -1,13 +1,14 @@
 using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
-	private const int textureSize = 256;
+	private const int textureSize = 1024;
 	private const int referenceTextureSize = 1024;
 
 	private const int numClusters = 6;
 	private const bool doRandomSwap = false;
 	private const bool doRandomizeEmptyClusters = true;
 	private const bool doKHM = false;
+	private const bool doOffset = false;
 
 	private const float timeStep = 1f;
 
@@ -329,9 +330,11 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetInt("sub_sample_multiplier", referenceTextureSize / textureSize);
 		this.csHighlightRemoval.SetInts(
 			"sub_sample_offset",
-			this.offsets[
-				Time.frameCount % this.offsets.Length
-			]
+			doOffset ?
+				this.offsets[
+					Time.frameCount % this.offsets.Length
+				] :
+				new int[] { 0, 0 }
 		);
 		this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_input", this.rtReference);
 		this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_output", this.rtInput);
