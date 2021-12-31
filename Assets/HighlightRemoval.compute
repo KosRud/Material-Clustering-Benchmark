@@ -20,6 +20,7 @@ bool KHM;
 
 uint randomClusterCenter;
 uint mip_level;
+uint ref_mip_level;
 uint texture_size;
 
 uint sub_sample_multiplier;
@@ -224,7 +225,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 
 		float4 result = float4(
 			project(col) * w,
-			min_dist, // used for MSE monitoring
+			pow2(min_dist), // used for MSE monitoring
 			w
 		);
 
@@ -314,8 +315,6 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 [numthreads(32,32,1)]
 void GenerateMSE (uint3 id : SV_DispatchThreadID)
 {	
-	uint clusterID;
-
 	float3 col = tex_input[id.xy].rgb;
 
 	bool included = test(col) > threshold;
@@ -351,7 +350,7 @@ void GatherMSE (uint3 id : SV_DispatchThreadID)
 	float2 mse_sample = tex_mse_r.SampleLevel(
 		sampler_tex_mse_r,
 		float2(0.5, 0.5),
-		mip_level
+		ref_mip_level
 	);
 
 	float4 clusterCenter = cbuf_cluster_centers[id.x];

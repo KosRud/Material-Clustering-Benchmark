@@ -63,6 +63,16 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.cbufRandomPositions.SetData(this.randomPositions);
 	}
 
+	int MipLevel(int textureSize) {
+		int mipLevel = 0;
+		int targetSize = 1;
+		while (targetSize != textureSize) {
+			mipLevel++;
+			targetSize *= 2;
+		}
+		return mipLevel;
+	}
+
 	private void SetTextureSize() {
 		Debug.Assert(
 			(
@@ -71,13 +81,9 @@ public class HighlightRemovalTest : MonoBehaviour {
 		); // positive power of 2
 		Debug.Assert(textureSize <= referenceTextureSize);
 
-		int mipLevel = 0;
-		int targetSize = 1;
-		while (targetSize != textureSize) {
-			mipLevel++;
-			targetSize *= 2;
-		}
-		this.csHighlightRemoval.SetInt("mip_level", mipLevel);
+		this.csHighlightRemoval.SetInt("mip_level", this.MipLevel(textureSize));
+		this.csHighlightRemoval.SetInt("ref_mip_level", this.MipLevel(referenceTextureSize));
+
 		this.csHighlightRemoval.SetInt("texture_size", textureSize);
 	}
 
@@ -238,17 +244,23 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.Dispatch(this.kernelGatherMSE, 1, 1, 1);
 
 		this.cbufClusterCenters.GetData(this.clusterCenters);
-		float MSE = this.clusterCenters[0].w;
 
-		if (MSE == -1 && this.videoPlayer.frame > 5) {
-			//throw new System.Exception("no MSE!");
+		float MSE = this.clusterCenters[0].w;
+		if (float.IsNaN(MSE) == false) {
+			return MSE;
 		}
 
-		return MSE;
+		if (this.videoPlayer.frame < 5) {
+			return 0;
+		}
+
+		throw new System.Exception("no MSE!");
 	}
 
 	private void LogMSE() {
-		Debug.Log($"MSE: {(int)(this.GetMSE() * 1000000),8}");
+		long progress = this.videoPlayer.frame * 100 / (long)this.videoPlayer.frameCount;
+		float MSE = this.GetMSE();
+		Debug.Log($"         {progress:00}%         MSE: {MSE:0.000000}");
 	}
 
 	private void ValidateCandidates() {
@@ -337,10 +349,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		if (Time.time - this.timeLastIteration > timeStep) {
 			this.timeLastIteration = Time.time;
-			float val = this.videoPlayer.frame / (float)this.videoPlayer.frameCount * 100;
-			Debug.Log($"{val:0.}%");
-			this.LogMSE();
 			this.showReference = !this.showReference;
+			this.LogMSE();
 		}
 
 		this.frameLogMSE.Add(this.GetMSE());
@@ -355,9 +365,10 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.rtResult.Release();
 		this.rtInput.Release();
 		this.rtMSE.Release();
+		this.rtReference.Release();
+
 		this.cbufClusterCenters.Release();
 		this.cbufRandomPositions.Release();
-		this.rtReference.Release();
 	}
 
 	private void RenderResult() {
