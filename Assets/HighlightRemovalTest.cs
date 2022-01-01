@@ -257,6 +257,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 			return;
 		}
 
+		Debug.Log($"work left: {this.work.Count}");
 		Debug.Log($"processing: {this.GetFileName()}");
 
 		this.randomPositions = new Position[this.work.Peek().numClusters];
@@ -394,13 +395,15 @@ public class HighlightRemovalTest : MonoBehaviour {
 			this.awaitingRestart = false;
 		}
 
-		if (this.videoPlayer.frame == 0) {
+		if (this.videoPlayer.frame == -1) {
 			Graphics.Blit(src, dest);
+			Debug.Log("frame: -1");
 			return;
 		}
 
 		if (this.awaitingRestart) {
 			Graphics.Blit(src, dest);
+			Debug.Log($"awaiting on frame: {this.videoPlayer.frame}");
 			return;
 		}
 
@@ -449,7 +452,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 			}
 
 			this.work.Pop();
-			Debug.Log($"work left: {this.work.Count}");
 
 			if (this.work.Count == 0) {
 				UnityEditor.EditorApplication.isPlaying = false;
