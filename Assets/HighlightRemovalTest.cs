@@ -7,6 +7,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private float timeLastIteration = 0;
 	private bool showReference = false;
+	private bool awaitingRestart = false;
 	private int[][] offsets;
 
 	private struct Position {
@@ -213,7 +214,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		foreach (var video in this.videos) {
 			// texture size 1024 to 16
-			for (int textureSize = 1024; textureSize >= 64; textureSize /= 2) {
+			for (int textureSize = 1024; textureSize >= 16; textureSize /= 2) {
 				// jitter 1 to 16
 				for (
 					int jitterSize = 1;
@@ -234,6 +235,13 @@ public class HighlightRemovalTest : MonoBehaviour {
 								video: video
 							)
 						);
+
+						string fileName = $"MSE logs/{this.GetFileName()}";
+
+						if (System.IO.File.Exists(fileName)) {
+							UnityEditor.EditorApplication.isPlaying = false;
+							throw new System.Exception($"File exists: {fileName}");
+						}
 					}
 				}
 			}
@@ -245,7 +253,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 	}
 
 	private void OnEnable() {
-		Debug.Log("enable");
 		if (this.enabled == false) {
 			return;
 		}
@@ -265,7 +272,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.videoPlayer.playbackSpeed = 0;
 		this.videoPlayer.clip = this.work.Peek().video;
 		this.videoPlayer.Play();
-		this.videoPlayer.frame = (long)this.videoPlayer.frameCount - 200;
+		this.videoPlayer.frame = 0;
 
 		this.csHighlightRemoval.SetBool("do_random_sample_empty_clusters", this.work.Peek().doRandomizeEmptyClusters);
 		this.csHighlightRemoval.SetBool("KHM", this.work.Peek().doKHM);
@@ -344,8 +351,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.cbufClusterCenters.GetData(this.clusterCenters);
 
 		float MSE = this.clusterCenters[0].w;
-		return MSE;
-		//return float.IsNaN(MSE) == false ? MSE : this.videoPlayer.frame < 5 ? 0 : throw new System.Exception($"no MSE! (frame {this.videoPlayer.frame})");
+		//return MSE;
+		return float.IsNaN(MSE) == false ? MSE : this.videoPlayer.frame < 5 ? 0 : throw new System.Exception($"no MSE! (frame {this.videoPlayer.frame})");
 	}
 
 	private void LogMSE() {
@@ -383,18 +390,22 @@ public class HighlightRemovalTest : MonoBehaviour {
 	}
 
 	private void OnRenderImage(RenderTexture src, RenderTexture dest) {
-		if (
-			this.videoPlayer.frame == -1 ||
-			this.videoPlayer.frame == (long)this.videoPlayer.frameCount - 1
-		) {
+		if (this.videoPlayer.frame < (long)this.videoPlayer.frameCount - 1) {
+			this.awaitingRestart = false;
+		}
+
+		if (this.videoPlayer.frame == 0) {
 			Graphics.Blit(src, dest);
 			return;
 		}
 
-		Debug.Log(this.videoPlayer.frame);
+		if (this.awaitingRestart) {
+			Graphics.Blit(src, dest);
+			return;
+		}
 
-		if (this.videoPlayer.frame == (long)this.videoPlayer.frameCount - 2) {
-			this.videoPlayer.StepForward();
+		if (this.videoPlayer.frame == (long)this.videoPlayer.frameCount - 1) {
+			this.awaitingRestart = true;
 			Graphics.Blit(src, dest);
 
 			/*
