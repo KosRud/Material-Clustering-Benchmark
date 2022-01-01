@@ -1,7 +1,6 @@
 using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
-	private const int textureSize = 16;
 	private const int referenceTextureSize = 1024;
 
 	private const float timeStep = 1f;
@@ -51,7 +50,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private readonly System.Collections.Generic.List<float> frameLogMSE = new System.Collections.Generic.List<float>();
 
 	public ComputeShader csHighlightRemoval;
-	public Texture2D texInput;
+	//public Texture2D texInput;
+	public UnityEngine.Video.VideoClip[] videos;
 
 	private class LaunchParameters {
 		public readonly int textureSize;
@@ -60,7 +60,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		public readonly bool doRandomizeEmptyClusters;
 		public readonly bool doKHM;
 		public readonly bool staggeredJitter;
-		public readonly int jitterRadius;
+		public readonly int jitterSize;
+		public readonly UnityEngine.Video.VideoClip video;
 
 		private LaunchParameters() { }
 
@@ -71,7 +72,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 			bool doRandomizeEmptyClusters,
 			bool doKHM,
 			bool staggeredJitter,
-			int jitterRadius
+			int jitterSize,
+			UnityEngine.Video.VideoClip video
 		) {
 			this.textureSize = textureSize;
 			this.numClusters = numClusters;
@@ -79,14 +81,15 @@ public class HighlightRemovalTest : MonoBehaviour {
 			this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
 			this.doKHM = doKHM;
 			this.staggeredJitter = staggeredJitter;
-			this.jitterRadius = jitterRadius;
+			this.jitterSize = jitterSize;
+			this.video = video;
 		}
 	}
 
 	private void UpdateRandomPositions() {
 		for (int k = 0; k < this.work.Peek().numClusters; k++) {
-			this.randomPositions[k].x = this.random.Next(textureSize);
-			this.randomPositions[k].y = this.random.Next(textureSize);
+			this.randomPositions[k].x = this.random.Next(this.work.Peek().textureSize);
+			this.randomPositions[k].y = this.random.Next(this.work.Peek().textureSize);
 		}
 		this.cbufRandomPositions.SetData(this.randomPositions);
 	}
@@ -104,21 +107,21 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private void SetTextureSize() {
 		Debug.Assert(
 			(
-				textureSize & (textureSize - 1)
-			) == 0 && textureSize > 0
+				this.work.Peek().textureSize & (this.work.Peek().textureSize - 1)
+			) == 0 && this.work.Peek().textureSize > 0
 		); // positive power of 2
-		Debug.Assert(textureSize <= referenceTextureSize);
+		Debug.Assert(this.work.Peek().textureSize <= referenceTextureSize);
 
-		this.csHighlightRemoval.SetInt("mip_level", this.MipLevel(textureSize));
+		this.csHighlightRemoval.SetInt("mip_level", this.MipLevel(this.work.Peek().textureSize));
 		this.csHighlightRemoval.SetInt("ref_mip_level", this.MipLevel(referenceTextureSize));
 
-		this.csHighlightRemoval.SetInt("texture_size", textureSize);
+		this.csHighlightRemoval.SetInt("texture_size", this.work.Peek().textureSize);
 	}
 
 	private void InitRTs() {
 		var rtDesc = new RenderTextureDescriptor(
-			textureSize,
-			textureSize,
+			this.work.Peek().textureSize,
+			this.work.Peek().textureSize,
 			RenderTextureFormat.ARGBFloat,
 			0
 		) {
@@ -140,8 +143,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		);
 
 		this.rtResult = new RenderTexture(
-			textureSize,
-			textureSize,
+			this.work.Peek().textureSize,
+			this.work.Peek().textureSize,
 			0,
 			RenderTextureFormat.ARGBFloat
 		) {
@@ -159,7 +162,12 @@ public class HighlightRemovalTest : MonoBehaviour {
 			autoGenerateMips = false
 		};
 
-		this.rtInput = new RenderTexture(textureSize, textureSize, 0, RenderTextureFormat.ARGBFloat) {
+		this.rtInput = new RenderTexture(
+			this.work.Peek().textureSize,
+			this.work.Peek().textureSize,
+			0,
+			RenderTextureFormat.ARGBFloat
+		) {
 			enableRandomWrite = true
 		};
 	}
@@ -201,60 +209,53 @@ public class HighlightRemovalTest : MonoBehaviour {
 	}
 
 	private void Awake() {
-		// texture size 1024 to 16
-		for (int textureSize = 128; textureSize >= 16; textureSize /= 2) {
-			// jitter 1 to 16
-			for (
-				int jitterRadius = 1;
-				jitterRadius <= 16 && jitterRadius * textureSize <= 1024;
-				jitterRadius *= 2
-			) {
-				// staggered vs sequential jitter
-				foreach (bool staggeredJitter in new bool[] { true, false }) {
-					this.work.Push(
-						new LaunchParameters(
-							textureSize: 1024,
-							numClusters: 6,
-							doRandomSwap: false,
-							doRandomizeEmptyClusters: false,
-							doKHM: false,
-							staggeredJitter: staggeredJitter,
-							jitterRadius: jitterRadius
-						)
-					);
+		Debug.Assert(this.videos.Length != 0);
+
+		foreach (var video in this.videos) {
+			// texture size 1024 to 16
+			for (int textureSize = 1024; textureSize >= 64; textureSize /= 2) {
+				// jitter 1 to 16
+				for (
+					int jitterSize = 1;
+					jitterSize <= 16 && jitterSize * textureSize <= 1024;
+					jitterSize *= 2
+				) {
+					// staggered vs sequential jitter
+					foreach (bool staggeredJitter in new bool[] { true, false }) {
+						this.work.Push(
+							new LaunchParameters(
+								textureSize: textureSize,
+								numClusters: 6,
+								doRandomSwap: false,
+								doRandomizeEmptyClusters: false,
+								doKHM: false,
+								staggeredJitter: staggeredJitter,
+								jitterSize: jitterSize,
+								video: video
+							)
+						);
+					}
 				}
 			}
 		}
 	}
 
-	private void IntJitterOffsets() {
-		switch (this.work.Peek().jitterRadius) {
-			case 16:
-				this.offsets = new int[][] { new int[] { 0, 0 }, new int[] { 8, 0 }, new int[] { 0, 8 }, new int[] { 8, 8 }, new int[] { 4, 0 }, new int[] { 12, 0 }, new int[] { 4, 8 }, new int[] { 12, 8 }, new int[] { 0, 4 }, new int[] { 8, 4 }, new int[] { 0, 12 }, new int[] { 8, 12 }, new int[] { 4, 4 }, new int[] { 12, 4 }, new int[] { 4, 12 }, new int[] { 12, 12 }, new int[] { 2, 0 }, new int[] { 10, 0 }, new int[] { 2, 8 }, new int[] { 10, 8 }, new int[] { 6, 0 }, new int[] { 14, 0 }, new int[] { 6, 8 }, new int[] { 14, 8 }, new int[] { 2, 4 }, new int[] { 10, 4 }, new int[] { 2, 12 }, new int[] { 10, 12 }, new int[] { 6, 4 }, new int[] { 14, 4 }, new int[] { 6, 12 }, new int[] { 14, 12 }, new int[] { 0, 2 }, new int[] { 8, 2 }, new int[] { 0, 10 }, new int[] { 8, 10 }, new int[] { 4, 2 }, new int[] { 12, 2 }, new int[] { 4, 10 }, new int[] { 12, 10 }, new int[] { 0, 6 }, new int[] { 8, 6 }, new int[] { 0, 14 }, new int[] { 8, 14 }, new int[] { 4, 6 }, new int[] { 12, 6 }, new int[] { 4, 14 }, new int[] { 12, 14 }, new int[] { 2, 2 }, new int[] { 10, 2 }, new int[] { 2, 10 }, new int[] { 10, 10 }, new int[] { 6, 2 }, new int[] { 14, 2 }, new int[] { 6, 10 }, new int[] { 14, 10 }, new int[] { 2, 6 }, new int[] { 10, 6 }, new int[] { 2, 14 }, new int[] { 10, 14 }, new int[] { 6, 6 }, new int[] { 14, 6 }, new int[] { 6, 14 }, new int[] { 14, 14 }, new int[] { 1, 0 }, new int[] { 9, 0 }, new int[] { 1, 8 }, new int[] { 9, 8 }, new int[] { 5, 0 }, new int[] { 13, 0 }, new int[] { 5, 8 }, new int[] { 13, 8 }, new int[] { 1, 4 }, new int[] { 9, 4 }, new int[] { 1, 12 }, new int[] { 9, 12 }, new int[] { 5, 4 }, new int[] { 13, 4 }, new int[] { 5, 12 }, new int[] { 13, 12 }, new int[] { 3, 0 }, new int[] { 11, 0 }, new int[] { 3, 8 }, new int[] { 11, 8 }, new int[] { 7, 0 }, new int[] { 15, 0 }, new int[] { 7, 8 }, new int[] { 15, 8 }, new int[] { 3, 4 }, new int[] { 11, 4 }, new int[] { 3, 12 }, new int[] { 11, 12 }, new int[] { 7, 4 }, new int[] { 15, 4 }, new int[] { 7, 12 }, new int[] { 15, 12 }, new int[] { 1, 2 }, new int[] { 9, 2 }, new int[] { 1, 10 }, new int[] { 9, 10 }, new int[] { 5, 2 }, new int[] { 13, 2 }, new int[] { 5, 10 }, new int[] { 13, 10 }, new int[] { 1, 6 }, new int[] { 9, 6 }, new int[] { 1, 14 }, new int[] { 9, 14 }, new int[] { 5, 6 }, new int[] { 13, 6 }, new int[] { 5, 14 }, new int[] { 13, 14 }, new int[] { 3, 2 }, new int[] { 11, 2 }, new int[] { 3, 10 }, new int[] { 11, 10 }, new int[] { 7, 2 }, new int[] { 15, 2 }, new int[] { 7, 10 }, new int[] { 15, 10 }, new int[] { 3, 6 }, new int[] { 11, 6 }, new int[] { 3, 14 }, new int[] { 11, 14 }, new int[] { 7, 6 }, new int[] { 15, 6 }, new int[] { 7, 14 }, new int[] { 15, 14 }, new int[] { 1, 1 }, new int[] { 9, 1 }, new int[] { 1, 9 }, new int[] { 9, 9 }, new int[] { 5, 1 }, new int[] { 13, 1 }, new int[] { 5, 9 }, new int[] { 13, 9 }, new int[] { 1, 5 }, new int[] { 9, 5 }, new int[] { 1, 13 }, new int[] { 9, 13 }, new int[] { 5, 5 }, new int[] { 13, 5 }, new int[] { 5, 13 }, new int[] { 13, 13 }, new int[] { 3, 1 }, new int[] { 11, 1 }, new int[] { 3, 9 }, new int[] { 11, 9 }, new int[] { 7, 1 }, new int[] { 15, 1 }, new int[] { 7, 9 }, new int[] { 15, 9 }, new int[] { 3, 5 }, new int[] { 11, 5 }, new int[] { 3, 13 }, new int[] { 11, 13 }, new int[] { 7, 5 }, new int[] { 15, 5 }, new int[] { 7, 13 }, new int[] { 15, 13 }, new int[] { 1, 3 }, new int[] { 9, 3 }, new int[] { 1, 11 }, new int[] { 9, 11 }, new int[] { 5, 3 }, new int[] { 13, 3 }, new int[] { 5, 11 }, new int[] { 13, 11 }, new int[] { 1, 7 }, new int[] { 9, 7 }, new int[] { 1, 15 }, new int[] { 9, 15 }, new int[] { 5, 7 }, new int[] { 13, 7 }, new int[] { 5, 15 }, new int[] { 13, 15 }, new int[] { 3, 3 }, new int[] { 11, 3 }, new int[] { 3, 11 }, new int[] { 11, 11 }, new int[] { 7, 3 }, new int[] { 15, 3 }, new int[] { 7, 11 }, new int[] { 15, 11 }, new int[] { 3, 7 }, new int[] { 11, 7 }, new int[] { 3, 15 }, new int[] { 11, 15 }, new int[] { 7, 7 }, new int[] { 15, 7 }, new int[] { 7, 15 }, new int[] { 15, 15 }, new int[] { 0, 1 }, new int[] { 8, 1 }, new int[] { 0, 9 }, new int[] { 8, 9 }, new int[] { 4, 1 }, new int[] { 12, 1 }, new int[] { 4, 9 }, new int[] { 12, 9 }, new int[] { 0, 5 }, new int[] { 8, 5 }, new int[] { 0, 13 }, new int[] { 8, 13 }, new int[] { 4, 5 }, new int[] { 12, 5 }, new int[] { 4, 13 }, new int[] { 12, 13 }, new int[] { 2, 1 }, new int[] { 10, 1 }, new int[] { 2, 9 }, new int[] { 10, 9 }, new int[] { 6, 1 }, new int[] { 14, 1 }, new int[] { 6, 9 }, new int[] { 14, 9 }, new int[] { 2, 5 }, new int[] { 10, 5 }, new int[] { 2, 13 }, new int[] { 10, 13 }, new int[] { 6, 5 }, new int[] { 14, 5 }, new int[] { 6, 13 }, new int[] { 14, 13 }, new int[] { 0, 3 }, new int[] { 8, 3 }, new int[] { 0, 11 }, new int[] { 8, 11 }, new int[] { 4, 3 }, new int[] { 12, 3 }, new int[] { 4, 11 }, new int[] { 12, 11 }, new int[] { 0, 7 }, new int[] { 8, 7 }, new int[] { 0, 15 }, new int[] { 8, 15 }, new int[] { 4, 7 }, new int[] { 12, 7 }, new int[] { 4, 15 }, new int[] { 12, 15 }, new int[] { 2, 3 }, new int[] { 10, 3 }, new int[] { 2, 11 }, new int[] { 10, 11 }, new int[] { 6, 3 }, new int[] { 14, 3 }, new int[] { 6, 11 }, new int[] { 14, 11 }, new int[] { 2, 7 }, new int[] { 10, 7 }, new int[] { 2, 15 }, new int[] { 10, 15 }, new int[] { 6, 7 }, new int[] { 14, 7 }, new int[] { 6, 15 }, new int[] { 14, 15 }, };
-				break;
-			case 8:
-				this.offsets = new int[][] { new int[] { 0, 0 }, new int[] { 4, 0 }, new int[] { 0, 4 }, new int[] { 4, 4 }, new int[] { 2, 0 }, new int[] { 6, 0 }, new int[] { 2, 4 }, new int[] { 6, 4 }, new int[] { 0, 2 }, new int[] { 4, 2 }, new int[] { 0, 6 }, new int[] { 4, 6 }, new int[] { 2, 2 }, new int[] { 6, 2 }, new int[] { 2, 6 }, new int[] { 6, 6 }, new int[] { 1, 0 }, new int[] { 5, 0 }, new int[] { 1, 4 }, new int[] { 5, 4 }, new int[] { 3, 0 }, new int[] { 7, 0 }, new int[] { 3, 4 }, new int[] { 7, 4 }, new int[] { 1, 2 }, new int[] { 5, 2 }, new int[] { 1, 6 }, new int[] { 5, 6 }, new int[] { 3, 2 }, new int[] { 7, 2 }, new int[] { 3, 6 }, new int[] { 7, 6 }, new int[] { 1, 1 }, new int[] { 5, 1 }, new int[] { 1, 5 }, new int[] { 5, 5 }, new int[] { 3, 1 }, new int[] { 7, 1 }, new int[] { 3, 5 }, new int[] { 7, 5 }, new int[] { 1, 3 }, new int[] { 5, 3 }, new int[] { 1, 7 }, new int[] { 5, 7 }, new int[] { 3, 3 }, new int[] { 7, 3 }, new int[] { 3, 7 }, new int[] { 7, 7 }, new int[] { 0, 1 }, new int[] { 4, 1 }, new int[] { 0, 5 }, new int[] { 4, 5 }, new int[] { 2, 1 }, new int[] { 6, 1 }, new int[] { 2, 5 }, new int[] { 6, 5 }, new int[] { 0, 3 }, new int[] { 4, 3 }, new int[] { 0, 7 }, new int[] { 4, 7 }, new int[] { 2, 3 }, new int[] { 6, 3 }, new int[] { 2, 7 }, new int[] { 6, 7 }, };
-				break;
-			case 4:
-				this.offsets = new int[][] { new int[] { 0, 0 }, new int[] { 2, 0 }, new int[] { 0, 2 }, new int[] { 2, 2 }, new int[] { 1, 0 }, new int[] { 3, 0 }, new int[] { 1, 2 }, new int[] { 3, 2 }, new int[] { 1, 1 }, new int[] { 3, 1 }, new int[] { 1, 3 }, new int[] { 3, 3 }, new int[] { 0, 1 }, new int[] { 2, 1 }, new int[] { 0, 3 }, new int[] { 2, 3 }, };
-				break;
-			case 2:
-				this.offsets = new int[][] { new int[] { 0, 0 }, new int[] { 1, 0 }, new int[] { 1, 1 }, new int[] { 0, 1 }, };
-				break;
-			case 1:
-				this.offsets = new int[][] { new int[] { 0, 0 }, };
-				break;
-			default:
-				throw new System.Exception($"invalid jitter radius: {this.work.Peek().jitterRadius}");
-
-		}
+	private void InitJitterOffsets() {
+		this.offsets = JitterPattern.Get(this.work.Peek().jitterSize);
 	}
 
 	private void OnEnable() {
+		Debug.Log("enable");
+		if (this.enabled == false) {
+			return;
+		}
+
+		Debug.Log($"processing: {this.GetFileName()}");
+
 		this.randomPositions = new Position[this.work.Peek().numClusters];
 		this.clusterCenters = new Vector4[this.work.Peek().numClusters * 2];
 
-		this.IntJitterOffsets();
+		this.InitJitterOffsets();
 		this.FindKernels();
 		this.SetTextureSize();
 		this.InitRTs();
@@ -262,7 +263,9 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		this.videoPlayer = this.GetComponent<UnityEngine.Video.VideoPlayer>();
 		this.videoPlayer.playbackSpeed = 0;
-		this.videoPlayer.frame = (long)(this.videoPlayer.frameCount - 5);
+		this.videoPlayer.clip = this.work.Peek().video;
+		this.videoPlayer.Play();
+		this.videoPlayer.frame = (long)this.videoPlayer.frameCount - 200;
 
 		this.csHighlightRemoval.SetBool("do_random_sample_empty_clusters", this.work.Peek().doRandomizeEmptyClusters);
 		this.csHighlightRemoval.SetBool("KHM", this.work.Peek().doKHM);
@@ -310,6 +313,20 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.Dispatch(this.kernelRandomSwap, 1, 1, 1);
 	}
 
+	private string GetFileName() {
+		string videoName = this.work.Peek().video.name;
+		int numIterations = 3;
+		int textureSize = this.work.Peek().textureSize;
+		int numClusters = this.work.Peek().numClusters;
+		bool doRandomSwap = this.work.Peek().doRandomSwap;
+		bool doRandomizeEmptyClusters = this.work.Peek().doRandomizeEmptyClusters;
+		bool doKHM = this.work.Peek().doKHM;
+		int jitterSize = this.work.Peek().jitterSize;
+		bool staggeredJitter = this.work.Peek().staggeredJitter;
+
+		return $"{videoName}|{numIterations}|{textureSize}|{numClusters}|{doRandomSwap}|{doRandomizeEmptyClusters}|{doKHM}|{jitterSize}|{staggeredJitter}.csv";
+	}
+
 	private float GetMSE() {
 		this.csHighlightRemoval.SetTexture(this.kernelGenerateMSE, "tex_input", this.rtReference);
 		this.csHighlightRemoval.SetTexture(this.kernelGenerateMSE, "tex_mse_rw", this.rtMSE);
@@ -328,7 +345,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		float MSE = this.clusterCenters[0].w;
 		return MSE;
-		return float.IsNaN(MSE) == false ? MSE : this.videoPlayer.frame < 5 ? 0 : throw new System.Exception("no MSE!");
+		//return float.IsNaN(MSE) == false ? MSE : this.videoPlayer.frame < 5 ? 0 : throw new System.Exception($"no MSE! (frame {this.videoPlayer.frame})");
 	}
 
 	private void LogMSE() {
@@ -366,39 +383,36 @@ public class HighlightRemovalTest : MonoBehaviour {
 	}
 
 	private void OnRenderImage(RenderTexture src, RenderTexture dest) {
-		if (!this.videoPlayer.isPrepared) {
+		if (
+			this.videoPlayer.frame == -1 ||
+			this.videoPlayer.frame == (long)this.videoPlayer.frameCount - 1
+		) {
 			Graphics.Blit(src, dest);
 			return;
 		}
 
-		if (this.videoPlayer.frame == (long)this.videoPlayer.frameCount - 1) {
+		Debug.Log(this.videoPlayer.frame);
+
+		if (this.videoPlayer.frame == (long)this.videoPlayer.frameCount - 2) {
+			this.videoPlayer.StepForward();
 			Graphics.Blit(src, dest);
 
 			/*
+				video file
 				num. iterations
 				texture size
 				num clusters
 				random swap (y/n)
 				randomize empty clusters (y/n)
 				KHM (y/n)
-				jitter radius
+				jitter Size
 				staggered jitter
-				video (1/2)
 			*/
-			int numIterations = 3;
-			int textureSize = this.work.Peek().textureSize;
-			int numClusters = this.work.Peek().numClusters;
-			bool doRandomSwap = this.work.Peek().doRandomSwap;
-			bool doRandomizeEmptyClusters = this.work.Peek().doRandomizeEmptyClusters;
-			bool doKHM = this.work.Peek().doKHM;
-			int jitterRadius = this.work.Peek().jitterRadius;
-			bool staggeredJitter = this.work.Peek().staggeredJitter;
-			string video = "2";
-
-			string fileName = $"MSE logs/{numIterations}|{textureSize}|{numClusters}|{doRandomSwap}|{doRandomizeEmptyClusters}|{doKHM}|{jitterRadius}|{staggeredJitter}|{video}.csv";
+			string fileName = $"MSE logs/{this.GetFileName()}";
 
 			if (System.IO.File.Exists(fileName)) {
-				System.IO.File.Delete(fileName);
+				UnityEditor.EditorApplication.isPlaying = false;
+				throw new System.Exception($"File exists: {fileName}");
 			}
 
 			using (
@@ -420,23 +434,26 @@ public class HighlightRemovalTest : MonoBehaviour {
 						);
 					}
 				}
-				Debug.Log($"entries: {this.frameLogMSE.Count}");
+				Debug.Log($"file written: {fileName}");
 			}
-			System.Threading.Thread.Sleep(3000);
 
 			this.work.Pop();
-			this.OnDisable();
-			this.OnEnable();
+			Debug.Log($"work left: {this.work.Count}");
 
 			if (this.work.Count == 0) {
 				UnityEditor.EditorApplication.isPlaying = false;
+				Destroy(this);
 			}
+
+			this.OnDisable();
+			this.OnEnable();
+
 			return;
 		}
 
 		Graphics.Blit(this.videoPlayer.texture, this.rtReference);
 
-		this.csHighlightRemoval.SetInt("sub_sample_multiplier", referenceTextureSize / textureSize);
+		this.csHighlightRemoval.SetInt("sub_sample_multiplier", referenceTextureSize / this.work.Peek().textureSize);
 		this.csHighlightRemoval.SetInts(
 			"sub_sample_offset",
 			this.work.Peek().staggeredJitter ?
@@ -444,13 +461,18 @@ public class HighlightRemovalTest : MonoBehaviour {
 					Time.frameCount % this.offsets.Length
 				] :
 				new int[] {
-					Time.frameCount % this.offsets.Length,
-					(Time.frameCount / this.offsets.Length) % this.offsets.Length
+					Time.frameCount % this.work.Peek().jitterSize,
+					(Time.frameCount / this.offsets.Length) % this.work.Peek().jitterSize
 				}
 		);
 		this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_input", this.rtReference);
 		this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_output", this.rtInput);
-		this.csHighlightRemoval.Dispatch(this.kernelsubsample, textureSize / 16, textureSize / 16, 1);
+		this.csHighlightRemoval.Dispatch(
+			this.kernelsubsample,
+			this.work.Peek().textureSize / 16,
+			this.work.Peek().textureSize / 16,
+			1
+		);
 
 		this.videoPlayer.StepForward();
 
@@ -459,7 +481,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		if (Time.time - this.timeLastIteration > timeStep) {
 			this.timeLastIteration = Time.time;
 			this.showReference = !this.showReference;
-			this.LogMSE();
+			this.showReference = false;
+			//this.LogMSE();
 		}
 
 		this.frameLogMSE.Add(this.GetMSE());
@@ -470,14 +493,14 @@ public class HighlightRemovalTest : MonoBehaviour {
 	}
 
 	private void OnDisable() {
-		this.rtArr.Release();
-		this.rtResult.Release();
-		this.rtInput.Release();
-		this.rtMSE.Release();
-		this.rtReference.Release();
+		this?.rtArr.Release();
+		this?.rtResult.Release();
+		this?.rtInput.Release();
+		this?.rtMSE.Release();
+		this?.rtReference.Release();
 
-		this.cbufClusterCenters.Release();
-		this.cbufRandomPositions.Release();
+		this?.cbufClusterCenters.Release();
+		this?.cbufRandomPositions.Release();
 	}
 
 	private void RenderResult() {
@@ -486,6 +509,11 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetBuffer(this.kernelShowResult, "cbuf_cluster_centers", this.cbufClusterCenters);
 		this.csHighlightRemoval.SetBool("show_reference", this.showReference);
 		this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_input", this.rtInput);
-		this.csHighlightRemoval.Dispatch(this.kernelShowResult, textureSize / 16, textureSize / 16, 1);
+		this.csHighlightRemoval.Dispatch(
+			this.kernelShowResult,
+			this.work.Peek().textureSize / 16,
+			this.work.Peek().textureSize / 16,
+			1
+		);
 	}
 }
