@@ -223,6 +223,10 @@ public class HighlightRemovalTest : MonoBehaviour {
 				) {
 					// staggered vs sequential jitter
 					foreach (bool staggeredJitter in new bool[] { true, false }) {
+						if (jitterSize == 1 && staggeredJitter) {
+							continue;
+						}
+
 						this.work.Push(
 							new LaunchParameters(
 								textureSize: textureSize,
