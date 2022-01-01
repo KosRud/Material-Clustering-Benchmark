@@ -397,13 +397,13 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		if (this.videoPlayer.frame == -1) {
 			Graphics.Blit(src, dest);
-			Debug.Log("frame: -1");
+			//Debug.Log("frame: -1");
 			return;
 		}
 
 		if (this.awaitingRestart) {
 			Graphics.Blit(src, dest);
-			Debug.Log($"awaiting on frame: {this.videoPlayer.frame}");
+			//Debug.Log($"awaiting on frame: {this.videoPlayer.frame}");
 			return;
 		}
 
