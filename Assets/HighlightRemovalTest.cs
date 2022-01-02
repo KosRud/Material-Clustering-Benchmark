@@ -1,15 +1,19 @@
 using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
+	// configuration
 	private const int referenceTextureSize = 1024;
 
 	private const float timeStep = 1f;
 
-	private float timeLastIteration = 0;
-	private bool showReference = false;
-	private bool awaitingRestart = false;
-	private int[][] offsets;
+	// textures and buffers
+	private RenderTexture rtArr;
+	private RenderTexture rtInput;
+	private RenderTexture rtMSE;
+	private RenderTexture rtReference;
+	private RenderTexture rtResult;
 
+	private ComputeBuffer cbufClusterCenters;
 	private struct Position {
 		public int x;
 		public int y;
@@ -21,37 +25,35 @@ public class HighlightRemovalTest : MonoBehaviour {
 		private readonly int padding_1;
 		private readonly int padding_2;
 	}
-
-	private RenderTexture rtArr;
-	private RenderTexture rtResult;
-	private RenderTexture rtMSE;
-	private RenderTexture rtReference;
-	private RenderTexture rtInput;
-
-	private ComputeBuffer cbufClusterCenters;
 	private ComputeBuffer cbufRandomPositions;
 
-	private int kernelShowResult;
+	// shader kernels
 	private int kernelAttributeClusters;
-	private int kernelUpdateClusterCenters;
-	private int kernelRandomSwap;
-	private int kernelValidateCandidates;
-	private int kernelsubsample;
-	private int kernelGenerateMSE;
 	private int kernelGatherMSE;
+	private int kernelGenerateMSE;
+	private int kernelRandomSwap;
+	private int kernelShowResult;
+	private int kernelsubsample;
+	private int kernelUpdateClusterCenters;
+	private int kernelValidateCandidates;
 
+	// inner workings
 	private readonly System.Collections.Generic.Stack<LaunchParameters> work =
 		new System.Collections.Generic.Stack<LaunchParameters>();
 
-	private readonly System.Random random = new System.Random(1);
+	private bool awaitingRestart = false;
+	private bool showReference = false;
+	private int[][] offsets;
 	private Position[] randomPositions;
+	private readonly System.Random random = new System.Random(1);
+	private readonly System.Collections.Generic.List<float> frameLogMSE = new System.Collections.Generic.List<float>();
 	private Vector4[] clusterCenters;
+	private float timeLastIteration = 0;
 
 	private UnityEngine.Video.VideoPlayer videoPlayer;
-	private readonly System.Collections.Generic.List<float> frameLogMSE = new System.Collections.Generic.List<float>();
 
+	// public
 	public ComputeShader csHighlightRemoval;
-	//public Texture2D texInput;
 	public UnityEngine.Video.VideoClip[] videos;
 
 	private class LaunchParameters {
@@ -263,6 +265,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		Debug.Log($"work left: {this.work.Count}");
 		Debug.Log($"processing: {this.GetFileName()}");
+
+		this.frameLogMSE.Clear();
 
 		this.randomPositions = new Position[this.work.Peek().numClusters];
 		this.clusterCenters = new Vector4[this.work.Peek().numClusters * 2];
