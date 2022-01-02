@@ -3,6 +3,7 @@ using UnityEngine;
 public class HighlightRemovalTest : MonoBehaviour {
 	// configuration
 	private const int referenceTextureSize = 1024;
+	private const int kernelSize = 8;
 
 	private const float timeStep = 1f;
 
@@ -216,7 +217,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		foreach (var video in this.videos) {
 			// texture size 1024 to 16
-			for (int textureSize = 1024; textureSize >= 16; textureSize /= 2) {
+			for (int textureSize = 8; textureSize >= 8; textureSize /= 2) {
 				// jitter 1 to 16
 				for (
 					int jitterSize = 1;
@@ -295,7 +296,12 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_mse", this.rtMSE);
 		this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_arr_clusters_rw", this.rtArr);
 		this.csHighlightRemoval.SetBuffer(this.kernelAttributeClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
-		this.csHighlightRemoval.Dispatch(this.kernelAttributeClusters, inputTex.width / 16, inputTex.height / 16, 1);
+		this.csHighlightRemoval.Dispatch(
+			this.kernelAttributeClusters,
+			inputTex.width / kernelSize,
+			inputTex.height / kernelSize,
+			1
+		);
 	}
 
 	private void UpdateClusterCenters(bool rejectOld) {
@@ -349,8 +355,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetBuffer(this.kernelGenerateMSE, "cbuf_cluster_centers", this.cbufClusterCenters);
 		this.csHighlightRemoval.Dispatch(
 			this.kernelGenerateMSE,
-			referenceTextureSize / 16,
-			referenceTextureSize / 16,
+			referenceTextureSize / kernelSize,
+			referenceTextureSize / kernelSize,
 		1);
 
 		this.csHighlightRemoval.SetTexture(this.kernelGatherMSE, "tex_mse_r", this.rtMSE);
@@ -490,8 +496,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_output", this.rtInput);
 		this.csHighlightRemoval.Dispatch(
 			this.kernelsubsample,
-			this.work.Peek().textureSize / 16,
-			this.work.Peek().textureSize / 16,
+			this.work.Peek().textureSize / kernelSize,
+			this.work.Peek().textureSize / kernelSize,
 			1
 		);
 
@@ -532,8 +538,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_input", this.rtInput);
 		this.csHighlightRemoval.Dispatch(
 			this.kernelShowResult,
-			this.work.Peek().textureSize / 16,
-			this.work.Peek().textureSize / 16,
+			this.work.Peek().textureSize / kernelSize,
+			this.work.Peek().textureSize / kernelSize,
 			1
 		);
 	}
