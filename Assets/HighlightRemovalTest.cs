@@ -514,14 +514,14 @@ public class HighlightRemovalTest : MonoBehaviour {
 	}
 
 	private void OnDisable() {
-		this?.rtArr.Release();
-		this?.rtResult.Release();
-		this?.rtInput.Release();
-		this?.rtMSE.Release();
-		this?.rtReference.Release();
+		this.rtArr?.Release();
+		this.rtResult?.Release();
+		this.rtInput?.Release();
+		this.rtMSE?.Release();
+		this.rtReference?.Release();
 
-		this?.cbufClusterCenters.Release();
-		this?.cbufRandomPositions.Release();
+		this.cbufClusterCenters?.Release();
+		this.cbufRandomPositions?.Release();
 	}
 
 	private void RenderResult() {
