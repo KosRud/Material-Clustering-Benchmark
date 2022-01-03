@@ -262,11 +262,11 @@ public class HighlightRemovalTest : MonoBehaviour {
 		}
         */
 
-		// downscale
-
+		/*
+		// downscale vs subsamples
 		foreach (var video in this.videos) {
-			// texture size 1024 to 16
-			for (int textureSize = 8; textureSize >= 8; textureSize /= 2) {
+			// texture size 32 to 8
+			for (int textureSize = 32; textureSize >= 16; textureSize /= 2) {
 				// downscale (mip) vs subsample
 				foreach (var doDownscale in new bool[] { true, false })
 					this.work.Push(
@@ -291,6 +291,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				}
 			}
 		}
+        */
 	}
 
 	private void InitJitterOffsets() {
