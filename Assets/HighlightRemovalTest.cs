@@ -218,9 +218,12 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private void Awake() {
 		Debug.Assert(this.videos.Length != 0);
 
+		/*  
+        //subsampling
+
 		foreach (var video in this.videos) {
-			// texture size 1024 to 16
-			for (int textureSize = 8; textureSize >= 8; textureSize /= 2) {
+			// texture size 1024 to 8
+			for (int textureSize = 1024; textureSize >= 8; textureSize /= 2) {
 				// jitter 1 to 16
 				for (
 					int jitterSize = 1;
@@ -254,6 +257,37 @@ public class HighlightRemovalTest : MonoBehaviour {
 							throw new System.Exception($"File exists: {fileName}");
 						}
 					}
+				}
+			}
+		}
+        */
+
+		// downscale
+
+		foreach (var video in this.videos) {
+			// texture size 1024 to 16
+			for (int textureSize = 8; textureSize >= 8; textureSize /= 2) {
+				// downscale (mip) vs subsample
+				foreach (var doDownscale in new bool[] { true, false })
+					this.work.Push(
+						new LaunchParameters(
+							textureSize: textureSize,
+							numClusters: 6,
+							doRandomSwap: false,
+							doRandomizeEmptyClusters: false,
+							doKHM: false,
+							staggeredJitter: false,
+							jitterSize: 1,
+							video: video,
+							doDownscale: doDownscale
+						)
+					);
+
+				string fileName = $"MSE logs/{this.GetFileName()}";
+
+				if (System.IO.File.Exists(fileName)) {
+					UnityEditor.EditorApplication.isPlaying = false;
+					throw new System.Exception($"File exists: {fileName}");
 				}
 			}
 		}
@@ -499,6 +533,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		);
 		this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_input", this.rtReference);
 		this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_output", this.rtInput);
+		this.csHighlightRemoval.SetBool("downscale", this.work.Peek().doDownscale);
 		this.csHighlightRemoval.Dispatch(
 			this.kernelsubsample,
 			this.work.Peek().textureSize / kernelSize,

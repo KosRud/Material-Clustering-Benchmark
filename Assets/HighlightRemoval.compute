@@ -25,10 +25,13 @@ uint texture_size;
 
 uint sub_sample_multiplier;
 uint2 sub_sample_offset;
+bool downscale;
 
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
 Texture2D<float4> tex_input;
+SamplerState sampler_tex_input;
+
 RWTexture2D<float4> tex_output;
 
 RWTexture2DArray<float4> tex_arr_clusters_rw;
@@ -161,9 +164,19 @@ void ShowResult (uint3 id : SV_DispatchThreadID)
 [numthreads(8,8,1)]
 void SubSample (uint3 id : SV_DispatchThreadID)
 {
-	tex_output[id.xy] = tex_input[
-		id.xy * sub_sample_multiplier + sub_sample_offset
-	];
+    if (downscale == false){
+        tex_output[id.xy] = tex_input[
+            id.xy * sub_sample_multiplier + sub_sample_offset
+        ];
+    } else {
+        tex_output[id.xy] = tex_input.SampleLevel(
+            sampler_tex_input,
+            float2(
+                (id.xy + 0.5) / texture_size
+            ),
+            ref_mip_level
+        );
+    }
 }
 
 [numthreads(8,8,1)]
