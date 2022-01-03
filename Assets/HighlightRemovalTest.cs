@@ -66,6 +66,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		public readonly bool staggeredJitter;
 		public readonly int jitterSize;
 		public readonly UnityEngine.Video.VideoClip video;
+		public readonly bool doDownscale;
 
 		private LaunchParameters() { }
 
@@ -77,7 +78,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 			bool doKHM,
 			bool staggeredJitter,
 			int jitterSize,
-			UnityEngine.Video.VideoClip video
+			UnityEngine.Video.VideoClip video,
+			bool doDownscale
 		) {
 			this.textureSize = textureSize;
 			this.numClusters = numClusters;
@@ -87,6 +89,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 			this.staggeredJitter = staggeredJitter;
 			this.jitterSize = jitterSize;
 			this.video = video;
+			this.doDownscale = doDownscale;
 		}
 	}
 
@@ -239,7 +242,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 								doKHM: false,
 								staggeredJitter: staggeredJitter,
 								jitterSize: jitterSize,
-								video: video
+								video: video,
+								doDownscale: false
 							)
 						);
 
@@ -345,8 +349,9 @@ public class HighlightRemovalTest : MonoBehaviour {
 		bool doKHM = this.work.Peek().doKHM;
 		int jitterSize = this.work.Peek().jitterSize;
 		bool staggeredJitter = this.work.Peek().staggeredJitter;
+		bool doDownscale = this.work.Peek().doDownscale;
 
-		return $"{videoName}|{numIterations}|{textureSize}|{numClusters}|{doRandomSwap}|{doRandomizeEmptyClusters}|{doKHM}|{jitterSize}|{staggeredJitter}.csv";
+		return $"{videoName}|{numIterations}|{textureSize}|{numClusters}|{doRandomSwap}|{doRandomizeEmptyClusters}|{doKHM}|{jitterSize}|{staggeredJitter}|{doDownscale}.csv";
 	}
 
 	private float GetMSE() {
