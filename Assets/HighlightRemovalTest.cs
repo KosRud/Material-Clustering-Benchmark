@@ -301,7 +301,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		// number of iterations per number of clusters
 		foreach (var video in this.videos) {
 			// number of clusters 4 to 16
-			for (int numClusters = 4; numClusters <= 16; numClusters++) {
+			foreach (var numClusters in new int[] { 4, 6, 8, 12, 16 }) {
 				// iterations 1 to 6
 				for (int numIterations = 1; numIterations <= 6; numIterations++) {
 					this.work.Push(
