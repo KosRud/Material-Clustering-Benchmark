@@ -242,6 +242,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 						this.work.Push(
 							new LaunchParameters(
 								textureSize: textureSize,
+                                numIterations: 3,
 								numClusters: 6,
 								doRandomSwap: false,
 								doRandomizeEmptyClusters: false,
@@ -275,6 +276,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 					this.work.Push(
 						new LaunchParameters(
 							textureSize: textureSize,
+							numIterations: 3,
 							numClusters: 6,
 							doRandomSwap: false,
 							doRandomizeEmptyClusters: false,
@@ -298,8 +300,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		// number of iterations per number of clusters
 		foreach (var video in this.videos) {
-			// texture size 1024 to 8
-			for (int numClusters = 4; numClusters < 16; numClusters++) {
+			// number of clusters 4 to 16
+			for (int numClusters = 4; numClusters <= 16; numClusters++) {
 				// iterations 1 to 6
 				for (int numIterations = 1; numIterations <= 6; numIterations++) {
 					this.work.Push(
@@ -326,6 +328,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				}
 			}
 		}
+
 	}
 
 	private void InitJitterOffsets() {
@@ -420,7 +423,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		bool staggeredJitter = this.work.Peek().staggeredJitter;
 		bool doDownscale = this.work.Peek().doDownscale;
 
-		return $"{videoName}|{numIterations}|{textureSize}|{numClusters}|{doRandomSwap}|{doRandomizeEmptyClusters}|{doKHM}|{jitterSize}|{staggeredJitter}|{doDownscale}.csv";
+		return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{textureSize}|number of clusters:{numClusters}|random swap:{doRandomSwap}|randomize empty clusters:{doRandomizeEmptyClusters}|KHM:{doKHM}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}.csv";
 	}
 
 	private float GetMSE() {
