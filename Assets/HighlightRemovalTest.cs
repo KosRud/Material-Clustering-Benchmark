@@ -67,6 +67,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		public readonly int jitterSize;
 		public readonly UnityEngine.Video.VideoClip video;
 		public readonly bool doDownscale;
+		public readonly int numIterations;
 
 		private LaunchParameters() { }
 
@@ -79,7 +80,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 			bool staggeredJitter,
 			int jitterSize,
 			UnityEngine.Video.VideoClip video,
-			bool doDownscale
+			bool doDownscale,
+			int numIterations
 		) {
 			this.textureSize = textureSize;
 			this.numClusters = numClusters;
@@ -90,6 +92,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 			this.jitterSize = jitterSize;
 			this.video = video;
 			this.doDownscale = doDownscale;
+			this.numIterations = numIterations;
 		}
 	}
 
@@ -292,6 +295,37 @@ public class HighlightRemovalTest : MonoBehaviour {
 			}
 		}
         */
+
+		// number of iterations per number of clusters
+		foreach (var video in this.videos) {
+			// texture size 1024 to 8
+			for (int numClusters = 4; numClusters < 16; numClusters++) {
+				// iterations 1 to 6
+				for (int numIterations = 1; numIterations <= 6; numIterations++) {
+					this.work.Push(
+						new LaunchParameters(
+							textureSize: 1024,
+							numClusters: numClusters,
+							doRandomSwap: false,
+							doRandomizeEmptyClusters: false,
+							doKHM: false,
+							staggeredJitter: false,
+							jitterSize: 1,
+							video: video,
+							doDownscale: false,
+							numIterations: numIterations
+						)
+					);
+
+					string fileName = $"MSE logs/{this.GetFileName()}";
+
+					if (System.IO.File.Exists(fileName)) {
+						UnityEditor.EditorApplication.isPlaying = false;
+						throw new System.Exception($"File exists: {fileName}");
+					}
+				}
+			}
+		}
 	}
 
 	private void InitJitterOffsets() {
@@ -376,7 +410,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private string GetFileName() {
 		string videoName = this.work.Peek().video.name;
-		int numIterations = 3;
+		int numIterations = this.work.Peek().numIterations;
 		int textureSize = this.work.Peek().textureSize;
 		int numClusters = this.work.Peek().numClusters;
 		bool doRandomSwap = this.work.Peek().doRandomSwap;
