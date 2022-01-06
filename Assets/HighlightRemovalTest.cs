@@ -327,7 +327,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 					}
 				}
 			}
-			break;
 		}
 
 	}
