@@ -465,18 +465,21 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private void ClusteringIteration() {
 		if (this.work.Peek().doRandomSwap) {
-			this.KMeans(this.rtInput, true);  // discard old saved clusters, update MSE
+			// discard old saved clusters, update MSE
+			this.KMeans(this.rtInput, true);
 
 			this.RandomSwap();
-			this.KMeans();
-			this.KMeans();
+
+			Debug.Assert(this.work.Peek().numIterations > 1);
+			for (int i = 1; i < this.work.Peek().numIterations; i++) {
+				this.KMeans();
+			}
+
 			this.ValidateCandidates();
 		} else {
-			this.KMeans();
-			this.KMeans();
-			this.KMeans();
-			// no need to discard old saved clusters
-			// we never validate / restore
+			for (int i = 0; i < this.work.Peek().numIterations; i++) {
+				this.KMeans();
+			}
 		}
 		this.AttributeClusters(this.rtInput, true);
 	}
