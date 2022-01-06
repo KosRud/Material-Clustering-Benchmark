@@ -299,11 +299,11 @@ public class HighlightRemovalTest : MonoBehaviour {
         */
 
 		// number of iterations per number of clusters
-		foreach (var video in this.videos) {
+		foreach (UnityEngine.Video.VideoClip video in this.videos) {
 			// number of clusters 4 to 16
-			foreach (var numClusters in new int[] { 4, 6, 8, 12, 16 }) {
+			foreach (int numClusters in new int[] { 4, 6, 8, 12, 16 }) {
 				// iterations 1 to 6
-				for (int numIterations = 1; numIterations <= 6; numIterations++) {
+				for (int numIterations = 1; numIterations <= 4; numIterations++) {
 					this.work.Push(
 						new LaunchParameters(
 							textureSize: 1024,
@@ -327,6 +327,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 					}
 				}
 			}
+			break;
 		}
 
 	}
@@ -362,6 +363,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		this.csHighlightRemoval.SetBool("do_random_sample_empty_clusters", this.work.Peek().doRandomizeEmptyClusters);
 		this.csHighlightRemoval.SetBool("KHM", this.work.Peek().doKHM);
+		this.csHighlightRemoval.SetInt("num_clusters", this.work.Peek().numClusters);
 	}
 
 	private void AttributeClusters(Texture inputTex = null, bool final = false) {
