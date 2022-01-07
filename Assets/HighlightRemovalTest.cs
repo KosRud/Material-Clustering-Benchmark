@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
 	// configuration
-	private const int referenceTextureSize = 1024;
+	private const int referenceTextureSize = 512;
 	private const int kernelSize = 8;
 
 	private const float timeStep = 1f;
@@ -221,92 +221,27 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private void Awake() {
 		Debug.Assert(this.videos.Length != 0);
 
-		/*  
-        //subsampling
-
-		foreach (var video in this.videos) {
-			// texture size 1024 to 8
-			for (int textureSize = 1024; textureSize >= 8; textureSize /= 2) {
-				// jitter 1 to 16
-				for (
-					int jitterSize = 1;
-					jitterSize <= 16 && jitterSize * textureSize <= 1024;
-					jitterSize *= 2
-				) {
-					// staggered vs sequential jitter
-					foreach (bool staggeredJitter in new bool[] { true, false }) {
+		/*
+            for (int textureSize = 1024; textureSize >= 8; textureSize /= 2) {
+                    // jitter 1 to 16
+                    for (
+                        int jitterSize = 1;
+                        jitterSize <= 16 && jitterSize * textureSize <= 1024;
+                        jitterSize *= 2
+                    ) {
+                        foreach (bool staggeredJitter in new bool[] { true, false }) {
 						if (jitterSize == 1 && staggeredJitter) {
 							continue;
 						}
-
-						this.work.Push(
-							new LaunchParameters(
-								textureSize: textureSize,
-                                numIterations: 3,
-								numClusters: 6,
-								doRandomSwap: false,
-								doRandomizeEmptyClusters: false,
-								doKHM: false,
-								staggeredJitter: staggeredJitter,
-								jitterSize: jitterSize,
-								video: video,
-								doDownscale: false
-							)
-						);
-
-						string fileName = $"MSE logs/{this.GetFileName()}";
-
-						if (System.IO.File.Exists(fileName)) {
-							UnityEditor.EditorApplication.isPlaying = false;
-							throw new System.Exception($"File exists: {fileName}");
-						}
-					}
-				}
-			}
-		}
         */
 
-		/*
-		// downscale vs subsamples
-		foreach (var video in this.videos) {
-			// texture size 32 to 8
-			for (int textureSize = 32; textureSize >= 16; textureSize /= 2) {
-				// downscale (mip) vs subsample
-				foreach (var doDownscale in new bool[] { true, false })
+		foreach (UnityEngine.Video.VideoClip video in this.videos) {
+			for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
+				foreach (int numClusters in new int[] { 4, 6, 8, 12, 16 }) {
 					this.work.Push(
 						new LaunchParameters(
 							textureSize: textureSize,
 							numIterations: 3,
-							numClusters: 6,
-							doRandomSwap: false,
-							doRandomizeEmptyClusters: false,
-							doKHM: false,
-							staggeredJitter: false,
-							jitterSize: 1,
-							video: video,
-							doDownscale: doDownscale
-						)
-					);
-
-				string fileName = $"MSE logs/{this.GetFileName()}";
-
-				if (System.IO.File.Exists(fileName)) {
-					UnityEditor.EditorApplication.isPlaying = false;
-					throw new System.Exception($"File exists: {fileName}");
-				}
-			}
-		}
-        */
-
-		// number of iterations per number of clusters
-		foreach (UnityEngine.Video.VideoClip video in this.videos) {
-			// number of clusters 4 to 16
-			foreach (int numClusters in new int[] { 4, 6, 8, 12, 16 }) {
-				// iterations 1 to 6
-				for (int numIterations = 1; numIterations <= 4; numIterations++) {
-					this.work.Push(
-						new LaunchParameters(
-							textureSize: 1024,
 							numClusters: numClusters,
 							doRandomSwap: false,
 							doRandomizeEmptyClusters: false,
@@ -314,8 +249,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 							staggeredJitter: false,
 							jitterSize: 1,
 							video: video,
-							doDownscale: false,
-							numIterations: numIterations
+							doDownscale: false
 						)
 					);
 
@@ -328,7 +262,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 				}
 			}
 		}
-
 	}
 
 	private void InitJitterOffsets() {
