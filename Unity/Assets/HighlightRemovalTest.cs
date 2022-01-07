@@ -303,6 +303,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		// 3. jitter
 
 		foreach (UnityEngine.Video.VideoClip video in this.videos) {
+			int textureSize = 64;
+
 			for (
 					int jitterSize = 1;
 					jitterSize <= 16 && jitterSize * textureSize <= referenceTextureSize;
@@ -310,7 +312,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				) {
 				this.work.Push(
 					new LaunchParameters(
-						textureSize: 64,
+						textureSize: textureSize,
 						numIterations: 3,
 						numClusters: 6,
 						doRandomSwap: false,

@@ -228,8 +228,8 @@ GameObject:
   - component: {fileID: 534669905}
   - component: {fileID: 534669904}
   - component: {fileID: 534669903}
-  - component: {fileID: 534669906}
   - component: {fileID: 534669907}
+  - component: {fileID: 534669906}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -315,9 +315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   csHighlightRemoval: {fileID: 7200000, guid: dc4e744027a39377184297ca8faf89f0, type: 3}
-  videos:
-  - {fileID: 32900000, guid: 0db3a2d7b9d2c2d91b09787a228be464, type: 3}
-  - {fileID: 32900000, guid: 8d56fbdfa0b69b94099e24955c93a415, type: 3}
+  videos: []
 --- !u!328 &534669907
 VideoPlayer:
   m_ObjectHideFlags: 0
