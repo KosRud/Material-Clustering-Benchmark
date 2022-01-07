@@ -235,6 +235,10 @@ public class HighlightRemovalTest : MonoBehaviour {
 						}
         */
 
+
+		/*
+                // 1. subsampling
+
 		foreach (UnityEngine.Video.VideoClip video in this.videos) {
 			for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
 				foreach (int numClusters in new int[] { 4, 6, 8, 12, 16 }) {
@@ -262,6 +266,72 @@ public class HighlightRemovalTest : MonoBehaviour {
 				}
 			}
 		}
+        */
+
+		/*
+                // 2. scaling vs subsampling
+
+		foreach (UnityEngine.Video.VideoClip video in this.videos) {
+			for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
+				foreach (bool doDownscale in new bool[] { true, false }) {
+					this.work.Push(
+						new LaunchParameters(
+							textureSize: textureSize,
+							numIterations: 3,
+							numClusters: 6,
+							doRandomSwap: false,
+							doRandomizeEmptyClusters: false,
+							doKHM: false,
+							staggeredJitter: false,
+							jitterSize: 1,
+							video: video,
+							doDownscale: doDownscale
+						)
+					);
+
+					string fileName = $"MSE logs/{this.GetFileName()}";
+
+					if (System.IO.File.Exists(fileName)) {
+						UnityEditor.EditorApplication.isPlaying = false;
+						throw new System.Exception($"File exists: {fileName}");
+					}
+				}
+			}
+		}
+        */
+
+		// 3. jitter
+
+		foreach (UnityEngine.Video.VideoClip video in this.videos) {
+			for (
+					int jitterSize = 1;
+					jitterSize <= 16 && jitterSize * textureSize <= referenceTextureSize;
+					jitterSize *= 2
+				) {
+				this.work.Push(
+					new LaunchParameters(
+						textureSize: 64,
+						numIterations: 3,
+						numClusters: 6,
+						doRandomSwap: false,
+						doRandomizeEmptyClusters: false,
+						doKHM: false,
+						staggeredJitter: true,
+						jitterSize: jitterSize,
+						video: video,
+						doDownscale: false
+					)
+				);
+
+				string fileName = $"MSE logs/{this.GetFileName()}";
+
+				if (System.IO.File.Exists(fileName)) {
+					UnityEditor.EditorApplication.isPlaying = false;
+					throw new System.Exception($"File exists: {fileName}");
+				}
+			}
+		}
+
 	}
 
 	private void InitJitterOffsets() {
