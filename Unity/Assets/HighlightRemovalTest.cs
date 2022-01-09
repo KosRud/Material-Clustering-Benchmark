@@ -10,7 +10,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 	// textures and buffers
 	private RenderTexture rtArr;
 	private RenderTexture rtInput;
-	private RenderTexture rtMSE;
+	private RenderTexture rtVariance;
 	private RenderTexture rtReference;
 	private RenderTexture rtResult;
 
@@ -30,8 +30,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	// shader kernels
 	private int kernelAttributeClusters;
-	private int kernelGatherMSE;
-	private int kernelGenerateMSE;
+	private int kernelGatherVariance;
+	private int kernelGenerateVariance;
 	private int kernelRandomSwap;
 	private int kernelShowResult;
 	private int kernelsubsample;
@@ -47,7 +47,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private int[][] offsets;
 	private Position[] randomPositions;
 	private readonly System.Random random = new System.Random(1);
-	private readonly System.Collections.Generic.List<float> frameLogMSE = new System.Collections.Generic.List<float>();
+	private readonly System.Collections.Generic.List<float> frameLogVariance = new System.Collections.Generic.List<float>();
 	private Vector4[] clusterCenters;
 	private float timeLastIteration = 0;
 
@@ -161,7 +161,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 			enableRandomWrite = true
 		};
 
-		this.rtMSE = new RenderTexture(
+		this.rtVariance = new RenderTexture(
 			referenceTextureSize,
 			referenceTextureSize,
 			0,
@@ -194,7 +194,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.cbufRandomPositions = new ComputeBuffer(this.work.Peek().numClusters, sizeof(int) * 4);
 
 		for (int i = 0; i < this.clusterCenters.Length; i++) {
-			// "old" cluster centers with infinite MSE
+			// "old" cluster centers with infinite Variance
 			// to make sure new ones will overwrite them when validated
 			var c = Color.HSVToRGB(
 				i / (float)(this.work.Peek().numClusters),
@@ -214,8 +214,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.kernelRandomSwap = this.csHighlightRemoval.FindKernel("RandomSwap");
 		this.kernelValidateCandidates = this.csHighlightRemoval.FindKernel("ValidateCandidates");
 		this.kernelsubsample = this.csHighlightRemoval.FindKernel("SubSample");
-		this.kernelGenerateMSE = this.csHighlightRemoval.FindKernel("GenerateMSE");
-		this.kernelGatherMSE = this.csHighlightRemoval.FindKernel("GatherMSE");
+		this.kernelGenerateVariance = this.csHighlightRemoval.FindKernel("GenerateVariance");
+		this.kernelGatherVariance = this.csHighlightRemoval.FindKernel("GatherVariance");
 	}
 
 	private void Awake() {
@@ -257,7 +257,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 						)
 					);
 
-					string fileName = $"MSE logs/{this.GetFileName()}";
+					string fileName = $"Variance logs/{this.GetFileName()}";
 
 					if (System.IO.File.Exists(fileName)) {
 						UnityEditor.EditorApplication.isPlaying = false;
@@ -289,7 +289,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 						)
 					);
 
-					string fileName = $"MSE logs/{this.GetFileName()}";
+					string fileName = $"Variance logs/{this.GetFileName()}";
 
 					if (System.IO.File.Exists(fileName)) {
 						UnityEditor.EditorApplication.isPlaying = false;
@@ -325,7 +325,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 					)
 				);
 
-				string fileName = $"MSE logs/{this.GetFileName()}";
+				string fileName = $"Variance logs/{this.GetFileName()}";
 
 				if (System.IO.File.Exists(fileName)) {
 					UnityEditor.EditorApplication.isPlaying = false;
@@ -348,7 +348,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		Debug.Log($"work left: {this.work.Count}");
 		Debug.Log($"processing: {this.GetFileName()}");
 
-		this.frameLogMSE.Clear();
+		this.frameLogVariance.Clear();
 
 		this.randomPositions = new Position[this.work.Peek().numClusters];
 		this.clusterCenters = new Vector4[this.work.Peek().numClusters * 2];
@@ -375,7 +375,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		this.csHighlightRemoval.SetBool("final", final);  // replace with define
 		this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_input", inputTex);
-		this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_mse", this.rtMSE);
+		this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_variance", this.rtVariance);
 		this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_arr_clusters_rw", this.rtArr);
 		this.csHighlightRemoval.SetBuffer(this.kernelAttributeClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
 		this.csHighlightRemoval.Dispatch(
@@ -392,7 +392,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.csHighlightRemoval.SetBool("reject_old", rejectOld);
 		this.csHighlightRemoval.SetTexture(this.kernelUpdateClusterCenters, "tex_arr_clusters_r", this.rtArr);
 		this.csHighlightRemoval.SetTexture(this.kernelUpdateClusterCenters, "tex_input", this.rtInput);
-		this.csHighlightRemoval.SetTexture(this.kernelUpdateClusterCenters, "tex_mse_maskernelr", this.rtMSE);
+		this.csHighlightRemoval.SetTexture(this.kernelUpdateClusterCenters, "tex_variance_maskernelr", this.rtVariance);
 		this.csHighlightRemoval.SetBuffer(this.kernelUpdateClusterCenters, "cbuf_cluster_centers", this.cbufClusterCenters);
 		this.csHighlightRemoval.SetBuffer(this.kernelUpdateClusterCenters, "cbuf_random_positions", this.cbufRandomPositions);
 		this.csHighlightRemoval.Dispatch(this.kernelUpdateClusterCenters, 1, 1, 1);
@@ -401,10 +401,10 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private void KMeans(Texture texInput = null, bool rejectOld = false) {
 		this.AttributeClusters(texInput);
 		this.rtArr.GenerateMips();
-		this.rtMSE.GenerateMips();
+		this.rtVariance.GenerateMips();
 		this.UpdateClusterCenters(rejectOld);
 
-		//this.LogMSE();
+		//this.LogVariance();
 	}
 
 	private void RandomSwap() {
@@ -432,31 +432,31 @@ public class HighlightRemovalTest : MonoBehaviour {
 		return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{textureSize}|number of clusters:{numClusters}|random swap:{doRandomSwap}|randomize empty clusters:{doRandomizeEmptyClusters}|KHM:{doKHM}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}.csv";
 	}
 
-	private float GetMSE() {
-		this.csHighlightRemoval.SetTexture(this.kernelGenerateMSE, "tex_input", this.rtReference);
-		this.csHighlightRemoval.SetTexture(this.kernelGenerateMSE, "tex_mse_rw", this.rtMSE);
-		this.csHighlightRemoval.SetBuffer(this.kernelGenerateMSE, "cbuf_cluster_centers", this.cbufClusterCenters);
+	private float GetVariance() {
+		this.csHighlightRemoval.SetTexture(this.kernelGenerateVariance, "tex_input", this.rtReference);
+		this.csHighlightRemoval.SetTexture(this.kernelGenerateVariance, "tex_variance_rw", this.rtVariance);
+		this.csHighlightRemoval.SetBuffer(this.kernelGenerateVariance, "cbuf_cluster_centers", this.cbufClusterCenters);
 		this.csHighlightRemoval.Dispatch(
-			this.kernelGenerateMSE,
+			this.kernelGenerateVariance,
 			referenceTextureSize / kernelSize,
 			referenceTextureSize / kernelSize,
 		1);
 
-		this.csHighlightRemoval.SetTexture(this.kernelGatherMSE, "tex_mse_r", this.rtMSE);
-		this.csHighlightRemoval.SetBuffer(this.kernelGatherMSE, "cbuf_cluster_centers", this.cbufClusterCenters);
-		this.csHighlightRemoval.Dispatch(this.kernelGatherMSE, 1, 1, 1);
+		this.csHighlightRemoval.SetTexture(this.kernelGatherVariance, "tex_variance_r", this.rtVariance);
+		this.csHighlightRemoval.SetBuffer(this.kernelGatherVariance, "cbuf_cluster_centers", this.cbufClusterCenters);
+		this.csHighlightRemoval.Dispatch(this.kernelGatherVariance, 1, 1, 1);
 
 		this.cbufClusterCenters.GetData(this.clusterCenters);
 
-		float MSE = this.clusterCenters[0].w;
-		//return MSE;
-		return float.IsNaN(MSE) == false ? MSE : this.videoPlayer.frame < 5 ? 0 : throw new System.Exception($"no MSE! (frame {this.videoPlayer.frame})");
+		float variance = this.clusterCenters[0].w;
+		//return Variance;
+		return float.IsNaN(variance) == false ? variance : this.videoPlayer.frame < 5 ? 0 : throw new System.Exception($"no Variance! (frame {this.videoPlayer.frame})");
 	}
 
-	private void LogMSE() {
+	private void LogVariance() {
 		long progress = this.videoPlayer.frame * 100 / (long)this.videoPlayer.frameCount;
-		float MSE = this.GetMSE();
-		Debug.Log($"         {progress:00}%         MSE: {MSE:0.000000}");
+		float Variance = this.GetVariance();
+		Debug.Log($"         {progress:00}%         Variance: {Variance:0.000000}");
 	}
 
 	private void ValidateCandidates() {
@@ -471,7 +471,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private void ClusteringIteration() {
 		if (this.work.Peek().doRandomSwap) {
-			// discard old saved clusters, update MSE
+			// discard old saved clusters, update Variance
 			this.KMeans(this.rtInput, true);
 
 			this.RandomSwap();
@@ -522,7 +522,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				jitter Size
 				staggered jitter
 			*/
-			string fileName = $"MSE logs/{this.GetFileName()}";
+			string fileName = $"Variance logs/{this.GetFileName()}";
 
 			if (System.IO.File.Exists(fileName)) {
 				UnityEditor.EditorApplication.isPlaying = false;
@@ -535,16 +535,16 @@ public class HighlightRemovalTest : MonoBehaviour {
 			)
 			) {
 				using var sw = new System.IO.StreamWriter(fs);
-				sw.WriteLine("Frame,MSE");
-				for (int i = 0; i < this.frameLogMSE.Count; i++) {
-					float MSE = this.frameLogMSE[i];
-					if (MSE == -1) {
+				sw.WriteLine("Frame,Variance");
+				for (int i = 0; i < this.frameLogVariance.Count; i++) {
+					float Variance = this.frameLogVariance[i];
+					if (Variance == -1) {
 						sw.WriteLine(
 							$"{i}"
 						);
 					} else {
 						sw.WriteLine(
-							$"{i},{MSE}"
+							$"{i},{Variance}"
 						);
 					}
 				}
@@ -596,10 +596,10 @@ public class HighlightRemovalTest : MonoBehaviour {
 			this.timeLastIteration = Time.time;
 			this.showReference = !this.showReference;
 			this.showReference = false;
-			//this.LogMSE();
+			//this.LogVariance();
 		}
 
-		this.frameLogMSE.Add(this.GetMSE());
+		this.frameLogVariance.Add(this.GetVariance());
 
 		this.RenderResult();
 		Graphics.Blit(this.rtResult, dest);
@@ -610,7 +610,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.rtArr?.Release();
 		this.rtResult?.Release();
 		this.rtInput?.Release();
-		this.rtMSE?.Release();
+		this.rtVariance?.Release();
 		this.rtReference?.Release();
 
 		this.cbufClusterCenters?.Release();

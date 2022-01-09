@@ -5,8 +5,8 @@
 #pragma kernel RandomSwap
 #pragma kernel ValidateCandidates
 #pragma kernel SubSample
-#pragma kernel GenerateMSE
-#pragma kernel GatherMSE
+#pragma kernel GenerateVariance
+#pragma kernel GatherVariance
 
 #define threshold 0.1
 #define max_num_clusters 16
@@ -14,7 +14,7 @@
 bool final;
 bool reject_old;
 bool show_reference;
-bool store_mse;
+bool store_variance;
 bool do_random_sample_empty_clusters;
 bool KHM;
 
@@ -40,9 +40,9 @@ RWTexture2DArray<float4> tex_arr_clusters_rw;
 Texture2DArray<float4> tex_arr_clusters_r;
 SamplerState sampler_tex_arr_clusters_r;
 
-RWTexture2D<float2> tex_mse_rw;
-Texture2D<float2> tex_mse_r;
-SamplerState sampler_tex_mse_r;
+RWTexture2D<float2> tex_variance_rw;
+Texture2D<float2> tex_variance_r;
+SamplerState sampler_tex_variance_r;
 
 RWStructuredBuffer<float4> cbuf_cluster_centers;
 RWStructuredBuffer<uint4> cbuf_random_positions;
@@ -240,7 +240,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 
 		float4 result = float4(
 			project(col) * w,
-			pow2(min_dist), // used for MSE monitoring
+			pow2(min_dist), // used for Variance monitoring
 			w
 		);
 
@@ -278,7 +278,7 @@ void ValidateCandidates (uint3 id : SV_DispatchThreadID)
 	float4 candidate = cbuf_cluster_centers[id.x];
 
 	// z is same on all cluster centers
-	// and contains MSE across ALL clusters
+	// and contains Variance across ALL clusters
 
 	if (candidate.z < old.z) {
 		cbuf_cluster_centers[id.x + num_clusters] = candidate;
@@ -287,7 +287,7 @@ void ValidateCandidates (uint3 id : SV_DispatchThreadID)
 	}
 }
 
-// how to store the previous overall MSE to compare to candidate overall MSE?
+// how to store the previous overall Variance to compare to candidate overall Variance?
 // store it in cluster center compute buffer (a copy in every entry)
 
 [numthreads(32,1,1)]
@@ -303,8 +303,8 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 		mip_level
 	);
 
-	float4 clusterCenter = aggregatedColor.z;	// overall MSE for random swap validation
-	// first K-Means iteration before random swap updates MSE
+	float4 clusterCenter = aggregatedColor.z;	// overall Variance for random swap validation
+	// first K-Means iteration before random swap updates Variance
 	// subsequent random swap has the same mask of included pixels (same frame)
 
 	if (aggregatedColor.a != 0) {
@@ -328,7 +328,7 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 }
 
 [numthreads(8,8,1)]
-void GenerateMSE (uint3 id : SV_DispatchThreadID)
+void GenerateVariance (uint3 id : SV_DispatchThreadID)
 {	
 	float3 col = tex_input[id.xy].rgb;
 
@@ -349,27 +349,27 @@ void GenerateMSE (uint3 id : SV_DispatchThreadID)
 		}
 	}
 
-	tex_mse_rw[id.xy].rg = float2(
+	tex_variance_rw[id.xy].rg = float2(
 		included ? pow2(min_dist) : 0,
 		included
 	);
 }
 
 [numthreads(32,1,1)]
-void GatherMSE (uint3 id : SV_DispatchThreadID)
+void GatherVariance (uint3 id : SV_DispatchThreadID)
 {
 	if (id.x >= num_clusters) {
 		return;
 	}
 
-	float2 mse_sample = tex_mse_r.SampleLevel(
-		sampler_tex_mse_r,
+	float2 variance_sample = tex_variance_r.SampleLevel(
+		sampler_tex_variance_r,
 		float2(0.5, 0.5),
 		ref_mip_level
 	);
 
 	float4 clusterCenter = cbuf_cluster_centers[id.x];
-	clusterCenter.w = mse_sample.r / mse_sample.g;
+	clusterCenter.w = variance_sample.r / variance_sample.g;
 
 	cbuf_cluster_centers[id.x] = clusterCenter;
 }
