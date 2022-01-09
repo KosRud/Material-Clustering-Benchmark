@@ -236,8 +236,8 @@ public class HighlightRemovalTest : MonoBehaviour {
         */
 
 
-		/*
-                // 1. subsampling
+
+		// 1. subsampling
 
 		foreach (UnityEngine.Video.VideoClip video in this.videos) {
 			for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
@@ -266,7 +266,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				}
 			}
 		}
-        */
+
 
 		/*
                 // 2. scaling vs subsampling
@@ -302,6 +302,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		// 3. jitter
 
+		/*
 		foreach (UnityEngine.Video.VideoClip video in this.videos) {
 			int textureSize = 64;
 
@@ -333,6 +334,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				}
 			}
 		}
+        */
 
 	}
 
