@@ -3,7 +3,7 @@ using UnityEngine;
 public class HighlightRemovalTest : MonoBehaviour {
 	// configuration
 	private const int referenceTextureSize = 512;
-	private const int kernelSize = 8;
+	private const int kernelSize = 4;
 
 	private const float timeStep = 1f;
 
@@ -223,21 +223,21 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		/*
             for (int textureSize = 1024; textureSize >= 8; textureSize /= 2) {
-                    // jitter 1 to 16
-                    for (
-                        int jitterSize = 1;
-                        jitterSize <= 16 && jitterSize * textureSize <= 1024;
-                        jitterSize *= 2
-                    ) {
-                        foreach (bool staggeredJitter in new bool[] { true, false }) {
-						if (jitterSize == 1 && staggeredJitter) {
-							continue;
-						}
+                for (
+                    int jitterSize = 1;
+                    jitterSize <= 16 && jitterSize * textureSize <= 1024;
+                    jitterSize *= 2
+                ) {
+                    foreach (bool staggeredJitter in new bool[] { true, false }) {
+                    if (jitterSize == 1 && staggeredJitter) {
+                        continue;
+                    }
         */
 
 
 
-		// 1. subsampling
+		/*
+		    // 1. subsampling
 
 		foreach (UnityEngine.Video.VideoClip video in this.videos) {
 			for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
@@ -266,10 +266,11 @@ public class HighlightRemovalTest : MonoBehaviour {
 				}
 			}
 		}
+        */
 
 
 		/*
-                // 2. scaling vs subsampling
+		        // 2. scaling vs subsampling
 
 		foreach (UnityEngine.Video.VideoClip video in this.videos) {
 			for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
@@ -300,41 +301,76 @@ public class HighlightRemovalTest : MonoBehaviour {
 		}
         */
 
-		// 3. jitter
 
 		/*
+		        // 3. staggered jitter
+
 		foreach (UnityEngine.Video.VideoClip video in this.videos) {
-			int textureSize = 64;
+			for (int textureSize = 64; textureSize >= 4; textureSize /= 2) {
+				for (
+						int jitterSize = 1;
+						jitterSize <= 16 && jitterSize * textureSize <= 64;
+						jitterSize *= 2
+					) {
+					this.work.Push(
+						new LaunchParameters(
+							textureSize: textureSize,
+							numIterations: 3,
+							numClusters: 6,
+							doRandomSwap: false,
+							doRandomizeEmptyClusters: false,
+							doKHM: false,
+							staggeredJitter: true,
+							jitterSize: jitterSize,
+							video: video,
+							doDownscale: false
+						)
+					);
 
-			for (
-					int jitterSize = 1;
-					jitterSize <= 16 && jitterSize * textureSize <= referenceTextureSize;
-					jitterSize *= 2
-				) {
-				this.work.Push(
-					new LaunchParameters(
-						textureSize: textureSize,
-						numIterations: 3,
-						numClusters: 6,
-						doRandomSwap: false,
-						doRandomizeEmptyClusters: false,
-						doKHM: false,
-						staggeredJitter: true,
-						jitterSize: jitterSize,
-						video: video,
-						doDownscale: false
-					)
-				);
+					string fileName = $"Variance logs/{this.GetFileName()}";
 
-				string fileName = $"Variance logs/{this.GetFileName()}";
-
-				if (System.IO.File.Exists(fileName)) {
-					UnityEditor.EditorApplication.isPlaying = false;
-					throw new System.Exception($"File exists: {fileName}");
+					if (System.IO.File.Exists(fileName)) {
+						UnityEditor.EditorApplication.isPlaying = false;
+						throw new System.Exception($"File exists: {fileName}");
+					}
 				}
 			}
 		}
         */
+
+		// 4. scanline jitter
+
+		foreach (UnityEngine.Video.VideoClip video in this.videos) {
+			for (int textureSize = 64; textureSize >= 4; textureSize /= 2) {
+				for (
+						int jitterSize = 1;
+						jitterSize <= 16 && jitterSize * textureSize <= 64;
+						jitterSize *= 2
+					) {
+					this.work.Push(
+						new LaunchParameters(
+							textureSize: textureSize,
+							numIterations: 3,
+							numClusters: 6,
+							doRandomSwap: false,
+							doRandomizeEmptyClusters: false,
+							doKHM: false,
+							staggeredJitter: false,
+							jitterSize: jitterSize,
+							video: video,
+							doDownscale: false
+						)
+					);
+
+					string fileName = $"Variance logs/{this.GetFileName()}";
+
+					if (System.IO.File.Exists(fileName)) {
+						UnityEditor.EditorApplication.isPlaying = false;
+						throw new System.Exception($"File exists: {fileName}");
+					}
+				}
+			}
+		}
 
 	}
 

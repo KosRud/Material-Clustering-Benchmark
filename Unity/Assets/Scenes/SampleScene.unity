@@ -315,7 +315,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   csHighlightRemoval: {fileID: 7200000, guid: dc4e744027a39377184297ca8faf89f0, type: 3}
-  videos: []
+  videos:
+  - {fileID: 32900000, guid: 984229d7d97b2b3eca5c8f4b9c69bb02, type: 3}
+  - {fileID: 32900000, guid: def3c94c59f635f088b278708a5e1041, type: 3}
 --- !u!328 &534669907
 VideoPlayer:
   m_ObjectHideFlags: 0
