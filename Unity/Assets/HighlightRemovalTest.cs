@@ -405,8 +405,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		{       // 6. KHM and random swap
 
-			const int numIterations = 12;
-			const int numRandomSwapIterations = numIterations / 2;
+			const int numIterations = 31;
 
 			foreach (UnityEngine.Video.VideoClip video in this.videos) {
 
@@ -430,7 +429,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				this.work.Push(
 					new LaunchParameters(
 						textureSize: 64,
-						numIterations: numRandomSwapIterations,
+						numIterations: numIterations,
 						numClusters: 6,
 						doRandomSwap: true,
 						doRandomizeEmptyClusters: false,
@@ -611,7 +610,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 			this.RandomSwap();
 
 			Debug.Assert(this.work.Peek().numIterations > 1);
-			for (int i = 1; i < this.work.Peek().numIterations; i++) {
+			Debug.Assert(this.work.Peek().numIterations % 2 == 1);
+			for (int i = 1; i < this.work.Peek().numIterations; i += 2) {
 				this.KMeans();
 			}
 
