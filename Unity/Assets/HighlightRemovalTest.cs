@@ -374,11 +374,12 @@ public class HighlightRemovalTest : MonoBehaviour {
 		}
         */
 
-		// 1. empty cluster randomization
+		/*
+		    // 1. empty cluster randomization
 
 		foreach (UnityEngine.Video.VideoClip video in this.videos) {
 			for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
-				foreach (bool doRandomizeEmptyClusters in new bool[] { true }) {
+				foreach (bool doRandomizeEmptyClusters in new bool[] { true, false }) {
 					this.work.Push(
 						new LaunchParameters(
 							textureSize: textureSize,
@@ -403,6 +404,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				}
 			}
 		}
+        */
 
 	}
 
