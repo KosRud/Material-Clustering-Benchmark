@@ -338,7 +338,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 		}
         */
 
-		// 4. scanline jitter
+		/*
+		        // 4. scanline jitter
 
 		foreach (UnityEngine.Video.VideoClip video in this.videos) {
 			for (int textureSize = 64; textureSize >= 4; textureSize /= 2) {
@@ -357,6 +358,37 @@ public class HighlightRemovalTest : MonoBehaviour {
 							doKHM: false,
 							staggeredJitter: false,
 							jitterSize: jitterSize,
+							video: video,
+							doDownscale: false
+						)
+					);
+
+					string fileName = $"Variance logs/{this.GetFileName()}";
+
+					if (System.IO.File.Exists(fileName)) {
+						UnityEditor.EditorApplication.isPlaying = false;
+						throw new System.Exception($"File exists: {fileName}");
+					}
+				}
+			}
+		}
+        */
+
+		// 1. empty cluster randomization
+
+		foreach (UnityEngine.Video.VideoClip video in this.videos) {
+			for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
+				foreach (bool doRandomizeEmptyClusters in new bool[] { true }) {
+					this.work.Push(
+						new LaunchParameters(
+							textureSize: textureSize,
+							numIterations: 3,
+							numClusters: 6,
+							doRandomSwap: false,
+							doRandomizeEmptyClusters: doRandomizeEmptyClusters,
+							doKHM: false,
+							staggeredJitter: false,
+							jitterSize: 1,
 							video: video,
 							doDownscale: false
 						)
