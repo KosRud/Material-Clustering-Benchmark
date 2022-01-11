@@ -240,7 +240,12 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 
 		float4 result = float4(
 			project(col) * w,
-			pow2(min_dist), // used for Variance monitoring
+
+            // used for Variance monitoring
+            // all random swap attempts are done on the same input frame
+            // bias from included flag remains constant and does not affect choice
+			included ? pow2(min_dist) : 0,
+
 			w
 		);
 
@@ -259,11 +264,18 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 [numthreads(1,1,1)]
 void RandomSwap (uint3 id : SV_DispatchThreadID)
 {
-	cbuf_cluster_centers[randomClusterCenter].xy = project(
-		tex_input[
-			cbuf_random_positions[randomClusterCenter].xy
-		].rgb
-	);
+    float3 sampleCol = tex_input[
+        cbuf_random_positions[randomClusterCenter].xy
+    ].rgb;
+
+    if (
+        // prevents actual bugs!
+        test(sampleCol) <= threshold
+    ) {
+        return;
+    }
+
+	cbuf_cluster_centers[randomClusterCenter].xy = project(sampleCol);
 }
 
 
@@ -307,7 +319,7 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 	// first K-Means iteration before random swap updates Variance
 	// subsequent random swap has the same mask of included pixels (same frame)
 
-	if (aggregatedColor.a != 0) {
+	if (aggregatedColor.w != 0) {
 		clusterCenter.xy = aggregatedColor.xy / aggregatedColor.w;
 	} else {
 		if (do_random_sample_empty_clusters) {

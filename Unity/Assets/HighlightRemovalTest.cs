@@ -405,63 +405,64 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		{       // 6. KHM and random swap
 
-			const int numIterations = 31;
+			foreach (int numIterations in new int[] { 3, 5, 9, 17, 31 }) {
 
-			foreach (UnityEngine.Video.VideoClip video in this.videos) {
+				foreach (UnityEngine.Video.VideoClip video in this.videos) {
 
-				// normal  K-Means
-				this.work.Push(
-					new LaunchParameters(
-						textureSize: 64,
-						numIterations: numIterations,
-						numClusters: 6,
-						doRandomSwap: false,
-						doRandomizeEmptyClusters: false,
-						doKHM: false,
-						staggeredJitter: false,
-						jitterSize: 1,
-						video: video,
-						doDownscale: false
-					)
-				);
+					// normal  K-Means
+					this.work.Push(
+						new LaunchParameters(
+							textureSize: 64,
+							numIterations: numIterations,
+							numClusters: 6,
+							doRandomSwap: false,
+							doRandomizeEmptyClusters: false,
+							doKHM: false,
+							staggeredJitter: false,
+							jitterSize: 1,
+							video: video,
+							doDownscale: false
+						)
+					);
 
-				// random swap
-				this.work.Push(
-					new LaunchParameters(
-						textureSize: 64,
-						numIterations: numIterations,
-						numClusters: 6,
-						doRandomSwap: true,
-						doRandomizeEmptyClusters: false,
-						doKHM: false,
-						staggeredJitter: false,
-						jitterSize: 1,
-						video: video,
-						doDownscale: false
-					)
-				);
+					// random swap
+					this.work.Push(
+						new LaunchParameters(
+							textureSize: 64,
+							numIterations: numIterations,
+							numClusters: 6,
+							doRandomSwap: true,
+							doRandomizeEmptyClusters: false,
+							doKHM: false,
+							staggeredJitter: false,
+							jitterSize: 1,
+							video: video,
+							doDownscale: false
+						)
+					);
 
-				// KHM
-				this.work.Push(
-					new LaunchParameters(
-						textureSize: 64,
-						numIterations: numIterations,
-						numClusters: 6,
-						doRandomSwap: false,
-						doRandomizeEmptyClusters: false,
-						doKHM: true,
-						staggeredJitter: false,
-						jitterSize: 1,
-						video: video,
-						doDownscale: false
-					)
-				);
+					// KHM
+					this.work.Push(
+						new LaunchParameters(
+							textureSize: 64,
+							numIterations: numIterations,
+							numClusters: 6,
+							doRandomSwap: false,
+							doRandomizeEmptyClusters: false,
+							doKHM: true,
+							staggeredJitter: false,
+							jitterSize: 1,
+							video: video,
+							doDownscale: false
+						)
+					);
 
-				string fileName = $"Variance logs/{this.GetFileName()}";
+					string fileName = $"Variance logs/{this.GetFileName()}";
 
-				if (System.IO.File.Exists(fileName)) {
-					UnityEditor.EditorApplication.isPlaying = false;
-					throw new System.Exception($"File exists: {fileName}");
+					if (System.IO.File.Exists(fileName)) {
+						UnityEditor.EditorApplication.isPlaying = false;
+						throw new System.Exception($"File exists: {fileName}");
+					}
 				}
 			}
 		}
@@ -607,15 +608,14 @@ public class HighlightRemovalTest : MonoBehaviour {
 			// discard old saved clusters, update Variance
 			this.KMeans(this.rtInput, true);
 
-			this.RandomSwap();
-
 			Debug.Assert(this.work.Peek().numIterations > 1);
 			Debug.Assert(this.work.Peek().numIterations % 2 == 1);
 			for (int i = 1; i < this.work.Peek().numIterations; i += 2) {
+				this.RandomSwap();
 				this.KMeans();
+				this.KMeans();
+				this.ValidateCandidates();
 			}
-
-			this.ValidateCandidates();
 		} else {
 			for (int i = 0; i < this.work.Peek().numIterations; i++) {
 				this.KMeans();
