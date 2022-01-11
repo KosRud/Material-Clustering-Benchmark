@@ -235,103 +235,32 @@ public class HighlightRemovalTest : MonoBehaviour {
         */
 
 
-
 		/*
-		    // 1. subsampling
+		{       // 1. subsampling
+			foreach (UnityEngine.Video.VideoClip video in this.videos) {
+				for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
+					foreach (int numClusters in new int[] { 4, 6, 8, 12, 16 }) {
+						this.work.Push(
+							new LaunchParameters(
+								textureSize: textureSize,
+								numIterations: 3,
+								numClusters: numClusters,
+								doRandomSwap: false,
+								doRandomizeEmptyClusters: false,
+								doKHM: false,
+								staggeredJitter: false,
+								jitterSize: 1,
+								video: video,
+								doDownscale: false
+							)
+						);
 
-		foreach (UnityEngine.Video.VideoClip video in this.videos) {
-			for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
-				foreach (int numClusters in new int[] { 4, 6, 8, 12, 16 }) {
-					this.work.Push(
-						new LaunchParameters(
-							textureSize: textureSize,
-							numIterations: 3,
-							numClusters: numClusters,
-							doRandomSwap: false,
-							doRandomizeEmptyClusters: false,
-							doKHM: false,
-							staggeredJitter: false,
-							jitterSize: 1,
-							video: video,
-							doDownscale: false
-						)
-					);
+						string fileName = $"Variance logs/{this.GetFileName()}";
 
-					string fileName = $"Variance logs/{this.GetFileName()}";
-
-					if (System.IO.File.Exists(fileName)) {
-						UnityEditor.EditorApplication.isPlaying = false;
-						throw new System.Exception($"File exists: {fileName}");
-					}
-				}
-			}
-		}
-        */
-
-
-		/*
-		        // 2. scaling vs subsampling
-
-		foreach (UnityEngine.Video.VideoClip video in this.videos) {
-			for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
-				foreach (bool doDownscale in new bool[] { true, false }) {
-					this.work.Push(
-						new LaunchParameters(
-							textureSize: textureSize,
-							numIterations: 3,
-							numClusters: 6,
-							doRandomSwap: false,
-							doRandomizeEmptyClusters: false,
-							doKHM: false,
-							staggeredJitter: false,
-							jitterSize: 1,
-							video: video,
-							doDownscale: doDownscale
-						)
-					);
-
-					string fileName = $"Variance logs/{this.GetFileName()}";
-
-					if (System.IO.File.Exists(fileName)) {
-						UnityEditor.EditorApplication.isPlaying = false;
-						throw new System.Exception($"File exists: {fileName}");
-					}
-				}
-			}
-		}
-        */
-
-
-		/*
-		        // 3. staggered jitter
-
-		foreach (UnityEngine.Video.VideoClip video in this.videos) {
-			for (int textureSize = 64; textureSize >= 4; textureSize /= 2) {
-				for (
-						int jitterSize = 1;
-						jitterSize <= 16 && jitterSize * textureSize <= 64;
-						jitterSize *= 2
-					) {
-					this.work.Push(
-						new LaunchParameters(
-							textureSize: textureSize,
-							numIterations: 3,
-							numClusters: 6,
-							doRandomSwap: false,
-							doRandomizeEmptyClusters: false,
-							doKHM: false,
-							staggeredJitter: true,
-							jitterSize: jitterSize,
-							video: video,
-							doDownscale: false
-						)
-					);
-
-					string fileName = $"Variance logs/{this.GetFileName()}";
-
-					if (System.IO.File.Exists(fileName)) {
-						UnityEditor.EditorApplication.isPlaying = false;
-						throw new System.Exception($"File exists: {fileName}");
+						if (System.IO.File.Exists(fileName)) {
+							UnityEditor.EditorApplication.isPlaying = false;
+							throw new System.Exception($"File exists: {fileName}");
+						}
 					}
 				}
 			}
@@ -339,35 +268,31 @@ public class HighlightRemovalTest : MonoBehaviour {
         */
 
 		/*
-		        // 4. scanline jitter
+		{       // 2. scaling vs subsampling
+			foreach (UnityEngine.Video.VideoClip video in this.videos) {
+				for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
+					foreach (bool doDownscale in new bool[] { true, false }) {
+						this.work.Push(
+							new LaunchParameters(
+								textureSize: textureSize,
+								numIterations: 3,
+								numClusters: 6,
+								doRandomSwap: false,
+								doRandomizeEmptyClusters: false,
+								doKHM: false,
+								staggeredJitter: false,
+								jitterSize: 1,
+								video: video,
+								doDownscale: doDownscale
+							)
+						);
 
-		foreach (UnityEngine.Video.VideoClip video in this.videos) {
-			for (int textureSize = 64; textureSize >= 4; textureSize /= 2) {
-				for (
-						int jitterSize = 1;
-						jitterSize <= 16 && jitterSize * textureSize <= 64;
-						jitterSize *= 2
-					) {
-					this.work.Push(
-						new LaunchParameters(
-							textureSize: textureSize,
-							numIterations: 3,
-							numClusters: 6,
-							doRandomSwap: false,
-							doRandomizeEmptyClusters: false,
-							doKHM: false,
-							staggeredJitter: false,
-							jitterSize: jitterSize,
-							video: video,
-							doDownscale: false
-						)
-					);
+						string fileName = $"Variance logs/{this.GetFileName()}";
 
-					string fileName = $"Variance logs/{this.GetFileName()}";
-
-					if (System.IO.File.Exists(fileName)) {
-						UnityEditor.EditorApplication.isPlaying = false;
-						throw new System.Exception($"File exists: {fileName}");
+						if (System.IO.File.Exists(fileName)) {
+							UnityEditor.EditorApplication.isPlaying = false;
+							throw new System.Exception($"File exists: {fileName}");
+						}
 					}
 				}
 			}
@@ -375,36 +300,173 @@ public class HighlightRemovalTest : MonoBehaviour {
         */
 
 		/*
-		    // 1. empty cluster randomization
+		{       // 3. staggered jitter
+			foreach (UnityEngine.Video.VideoClip video in this.videos) {
+				for (int textureSize = 64; textureSize >= 4; textureSize /= 2) {
+					for (
+							int jitterSize = 1;
+							jitterSize <= 16 && jitterSize * textureSize <= 64;
+							jitterSize *= 2
+						) {
+						this.work.Push(
+							new LaunchParameters(
+								textureSize: textureSize,
+								numIterations: 3,
+								numClusters: 6,
+								doRandomSwap: false,
+								doRandomizeEmptyClusters: false,
+								doKHM: false,
+								staggeredJitter: true,
+								jitterSize: jitterSize,
+								video: video,
+								doDownscale: false
+							)
+						);
 
-		foreach (UnityEngine.Video.VideoClip video in this.videos) {
-			for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
-				foreach (bool doRandomizeEmptyClusters in new bool[] { true, false }) {
-					this.work.Push(
-						new LaunchParameters(
-							textureSize: textureSize,
-							numIterations: 3,
-							numClusters: 6,
-							doRandomSwap: false,
-							doRandomizeEmptyClusters: doRandomizeEmptyClusters,
-							doKHM: false,
-							staggeredJitter: false,
-							jitterSize: 1,
-							video: video,
-							doDownscale: false
-						)
-					);
+						string fileName = $"Variance logs/{this.GetFileName()}";
 
-					string fileName = $"Variance logs/{this.GetFileName()}";
-
-					if (System.IO.File.Exists(fileName)) {
-						UnityEditor.EditorApplication.isPlaying = false;
-						throw new System.Exception($"File exists: {fileName}");
+						if (System.IO.File.Exists(fileName)) {
+							UnityEditor.EditorApplication.isPlaying = false;
+							throw new System.Exception($"File exists: {fileName}");
+						}
 					}
 				}
 			}
 		}
         */
+
+		/*
+		{       // 4. scanline jitter
+			foreach (UnityEngine.Video.VideoClip video in this.videos) {
+				for (int textureSize = 64; textureSize >= 4; textureSize /= 2) {
+					for (
+							int jitterSize = 1;
+							jitterSize <= 16 && jitterSize * textureSize <= 64;
+							jitterSize *= 2
+						) {
+						this.work.Push(
+							new LaunchParameters(
+								textureSize: textureSize,
+								numIterations: 3,
+								numClusters: 6,
+								doRandomSwap: false,
+								doRandomizeEmptyClusters: false,
+								doKHM: false,
+								staggeredJitter: false,
+								jitterSize: jitterSize,
+								video: video,
+								doDownscale: false
+							)
+						);
+
+						string fileName = $"Variance logs/{this.GetFileName()}";
+
+						if (System.IO.File.Exists(fileName)) {
+							UnityEditor.EditorApplication.isPlaying = false;
+							throw new System.Exception($"File exists: {fileName}");
+						}
+					}
+				}
+			}
+		}
+        */
+
+		/*
+		{       // 5. empty cluster randomization
+			foreach (UnityEngine.Video.VideoClip video in this.videos) {
+				for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
+					foreach (bool doRandomizeEmptyClusters in new bool[] { true, false }) {
+						this.work.Push(
+							new LaunchParameters(
+								textureSize: textureSize,
+								numIterations: 3,
+								numClusters: 6,
+								doRandomSwap: false,
+								doRandomizeEmptyClusters: doRandomizeEmptyClusters,
+								doKHM: false,
+								staggeredJitter: false,
+								jitterSize: 1,
+								video: video,
+								doDownscale: false
+							)
+						);
+
+						string fileName = $"Variance logs/{this.GetFileName()}";
+
+						if (System.IO.File.Exists(fileName)) {
+							UnityEditor.EditorApplication.isPlaying = false;
+							throw new System.Exception($"File exists: {fileName}");
+						}
+					}
+				}
+			}
+		}
+        */
+
+		{       // 6. KHM and random swap
+
+			const int numIterations = 12;
+			const int numRandomSwapIterations = numIterations / 2;
+
+			foreach (UnityEngine.Video.VideoClip video in this.videos) {
+
+				// normal  K-Means
+				this.work.Push(
+					new LaunchParameters(
+						textureSize: 64,
+						numIterations: numIterations,
+						numClusters: 6,
+						doRandomSwap: false,
+						doRandomizeEmptyClusters: false,
+						doKHM: false,
+						staggeredJitter: false,
+						jitterSize: 1,
+						video: video,
+						doDownscale: false
+					)
+				);
+
+				// random swap
+				this.work.Push(
+					new LaunchParameters(
+						textureSize: 64,
+						numIterations: numRandomSwapIterations,
+						numClusters: 6,
+						doRandomSwap: true,
+						doRandomizeEmptyClusters: false,
+						doKHM: false,
+						staggeredJitter: false,
+						jitterSize: 1,
+						video: video,
+						doDownscale: false
+					)
+				);
+
+				// KHM
+				this.work.Push(
+					new LaunchParameters(
+						textureSize: 64,
+						numIterations: numIterations,
+						numClusters: 6,
+						doRandomSwap: false,
+						doRandomizeEmptyClusters: false,
+						doKHM: true,
+						staggeredJitter: false,
+						jitterSize: 1,
+						video: video,
+						doDownscale: false
+					)
+				);
+
+				string fileName = $"Variance logs/{this.GetFileName()}";
+
+				if (System.IO.File.Exists(fileName)) {
+					UnityEditor.EditorApplication.isPlaying = false;
+					throw new System.Exception($"File exists: {fileName}");
+				}
+			}
+		}
+
 
 	}
 
