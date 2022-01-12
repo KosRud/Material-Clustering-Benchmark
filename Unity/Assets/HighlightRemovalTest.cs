@@ -405,7 +405,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		{       // 6. KHM and random swap
 
-			foreach (int numIterations in new int[] { 3, 5, 9, 17, 31 }) {
+			foreach (int numIterations in new int[] { /*3, 5, 9, 17, 31*/ 7, 11, 13, 15, 19, 21, 23, 25, 27, 29 }) {
 
 				foreach (UnityEngine.Video.VideoClip video in this.videos) {
 
