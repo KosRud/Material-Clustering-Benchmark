@@ -224,12 +224,8 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 			if (n == clusterID) {
 				continue;
 			}
-
-			if (dist_list[n] == 0){
-				bottom += 1;
-			} else {
-				bottom += pow3(min_dist / dist_list[n]);
-			}
+			
+            bottom += pow3(min_dist / dist_list[n]);
 		}
 
 		float w = top / pow2(bottom);
