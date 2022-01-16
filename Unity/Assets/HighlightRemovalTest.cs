@@ -39,9 +39,18 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private int kernelValidateCandidates;
 
 	// inner workings
+	private enum Algorithm {
+		KM,
+		KHM,
+		RS,
+		Alternating,
+		OneKM
+	}
+
 	private readonly System.Collections.Generic.Stack<LaunchParameters> work =
 		new System.Collections.Generic.Stack<LaunchParameters>();
 
+	private bool toggleKHM = false;
 	private bool awaitingRestart = false;
 	private bool showReference = false;
 	private int[][] offsets;
@@ -60,39 +69,36 @@ public class HighlightRemovalTest : MonoBehaviour {
 	private class LaunchParameters {
 		public readonly int textureSize;
 		public readonly int numClusters;
-		public readonly bool doRandomSwap;
 		public readonly bool doRandomizeEmptyClusters;
-		public readonly bool doKHM;
 		public readonly bool staggeredJitter;
 		public readonly int jitterSize;
 		public readonly UnityEngine.Video.VideoClip video;
 		public readonly bool doDownscale;
 		public readonly int numIterations;
+		public readonly Algorithm algorithm;
 
 		private LaunchParameters() { }
 
 		public LaunchParameters(
 			int textureSize,
 			int numClusters,
-			bool doRandomSwap,
 			bool doRandomizeEmptyClusters,
-			bool doKHM,
 			bool staggeredJitter,
 			int jitterSize,
 			UnityEngine.Video.VideoClip video,
 			bool doDownscale,
-			int numIterations
+			int numIterations,
+			Algorithm algorithm
 		) {
 			this.textureSize = textureSize;
 			this.numClusters = numClusters;
-			this.doRandomSwap = doRandomSwap;
 			this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
-			this.doKHM = doKHM;
 			this.staggeredJitter = staggeredJitter;
 			this.jitterSize = jitterSize;
 			this.video = video;
 			this.doDownscale = doDownscale;
 			this.numIterations = numIterations;
+			this.algorithm = algorithm;
 		}
 	}
 
@@ -403,6 +409,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		}
         */
 
+		/*
 		{       // 6. KHM and random swap
 
 			foreach (int numIterations in new int[] { 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31 }) {
@@ -466,6 +473,42 @@ public class HighlightRemovalTest : MonoBehaviour {
 				}
 			}
 		}
+        */
+
+		{       // 7. alternating and single KM
+
+			for (int numIterations = 30; numIterations >= 1; numIterations--) {
+
+				foreach (UnityEngine.Video.VideoClip video in this.videos) {
+
+					foreach (Algorithm algo in new Algorithm[] { Algorithm.KHM, Algorithm.KM, Algorithm.Alternating, Algorithm.OneKM }) {
+
+
+						// normal  K-Means
+						this.work.Push(
+							new LaunchParameters(
+								textureSize: 64,
+								numIterations: numIterations,
+								numClusters: 6,
+								doRandomizeEmptyClusters: false,
+								staggeredJitter: false,
+								jitterSize: 1,
+								video: video,
+								doDownscale: false,
+								algorithm: algo
+							)
+						);
+
+						string fileName = $"Variance logs/{this.GetFileName()}";
+
+						if (System.IO.File.Exists(fileName)) {
+							UnityEditor.EditorApplication.isPlaying = false;
+							throw new System.Exception($"File exists: {fileName}");
+						}
+					}
+				}
+			}
+		}
 
 
 	}
@@ -500,7 +543,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.videoPlayer.frame = 0;
 
 		this.csHighlightRemoval.SetBool("do_random_sample_empty_clusters", this.work.Peek().doRandomizeEmptyClusters);
-		this.csHighlightRemoval.SetBool("KHM", this.work.Peek().doKHM);
 		this.csHighlightRemoval.SetInt("num_clusters", this.work.Peek().numClusters);
 	}
 
@@ -556,14 +598,32 @@ public class HighlightRemovalTest : MonoBehaviour {
 		int numIterations = this.work.Peek().numIterations;
 		int textureSize = this.work.Peek().textureSize;
 		int numClusters = this.work.Peek().numClusters;
-		bool doRandomSwap = this.work.Peek().doRandomSwap;
 		bool doRandomizeEmptyClusters = this.work.Peek().doRandomizeEmptyClusters;
-		bool doKHM = this.work.Peek().doKHM;
 		int jitterSize = this.work.Peek().jitterSize;
 		bool staggeredJitter = this.work.Peek().staggeredJitter;
 		bool doDownscale = this.work.Peek().doDownscale;
+		string algorithm;
+		switch (this.work.Peek().algorithm) {
+			case Algorithm.KM:
+				algorithm = "KM";
+				break;
+			case Algorithm.KHM:
+				algorithm = "KHM(3)";
+				break;
+			case Algorithm.RS:
+				algorithm = "RS";
+				break;
+			case Algorithm.Alternating:
+				algorithm = "KM+KHM(3)";
+				break;
+			case Algorithm.OneKM:
+				algorithm = "1xKM+KHM(3)";
+				break;
+			default:
+				throw new System.NotImplementedException();
+		}
 
-		return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{textureSize}|number of clusters:{numClusters}|random swap:{doRandomSwap}|randomize empty clusters:{doRandomizeEmptyClusters}|KHM:{doKHM}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}.csv";
+		return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{textureSize}|number of clusters:{numClusters}|randomize empty clusters:{doRandomizeEmptyClusters}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}|algorithm:{algorithm}.csv";
 	}
 
 	private float GetVariance() {
@@ -604,23 +664,58 @@ public class HighlightRemovalTest : MonoBehaviour {
 	}
 
 	private void ClusteringIteration() {
-		if (this.work.Peek().doRandomSwap) {
-			// discard old saved clusters, update Variance
-			this.KMeans(this.rtInput, true);
+		switch (this.work.Peek().algorithm) {
+			case Algorithm.KM:
+				this.csHighlightRemoval.SetBool("KHM", false);
 
-			Debug.Assert(this.work.Peek().numIterations > 1);
-			Debug.Assert(this.work.Peek().numIterations % 2 == 1);
-			for (int i = 1; i < this.work.Peek().numIterations; i += 2) {
-				this.RandomSwap();
-				this.KMeans();
-				this.KMeans();
-				this.ValidateCandidates();
-			}
-		} else {
-			for (int i = 0; i < this.work.Peek().numIterations; i++) {
-				this.KMeans();
-			}
+				for (int i = 0; i < this.work.Peek().numIterations; i++) {
+					this.KMeans();
+				}
+
+				break;
+			case Algorithm.KHM:
+				this.csHighlightRemoval.SetBool("KHM", true);
+
+				for (int i = 0; i < this.work.Peek().numIterations; i++) {
+					this.KMeans();
+				}
+
+				break;
+			case Algorithm.RS:
+				this.csHighlightRemoval.SetBool("KHM", false);
+
+				this.KMeans(this.rtInput, true);
+
+				Debug.Assert(this.work.Peek().numIterations > 1);
+				Debug.Assert(this.work.Peek().numIterations % 2 == 1);
+				for (int i = 1; i < this.work.Peek().numIterations; i += 2) {
+					this.RandomSwap();
+					this.KMeans();
+					this.KMeans();
+					this.ValidateCandidates();
+				}
+
+				break;
+			case Algorithm.Alternating:
+				for (int i = 0; i < this.work.Peek().numIterations; i++) {
+					this.csHighlightRemoval.SetBool("KHM", this.toggleKHM);
+					this.toggleKHM = !this.toggleKHM;
+					this.KMeans();
+				}
+
+				break;
+			case Algorithm.OneKM:
+				for (int i = 0; i < this.work.Peek().numIterations; i++) {
+					this.csHighlightRemoval.SetBool("KHM", i != 0);
+					this.toggleKHM = !this.toggleKHM;
+					this.KMeans();
+				}
+
+				break;
+			default:
+				throw new System.NotImplementedException();
 		}
+
 		this.AttributeClusters(this.rtInput, true);
 	}
 
