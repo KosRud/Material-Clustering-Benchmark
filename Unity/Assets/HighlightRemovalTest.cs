@@ -409,13 +409,14 @@ public class HighlightRemovalTest : MonoBehaviour {
 		}
         */
 
-		/*
+
 		{       // 6. KHM and random swap
 
-			foreach (int numIterations in new int[] { 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31 }) {
+			foreach (int numIterations in new int[] { 4, 7, 10, 13, 16, 19, 22, 25, 28, 31 }) {
 
 				foreach (UnityEngine.Video.VideoClip video in this.videos) {
 
+					/*
 					// normal  K-Means
 					this.work.Push(
 						new LaunchParameters(
@@ -431,6 +432,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 							doDownscale: false
 						)
 					);
+                    */
 
 					// random swap
 					this.work.Push(
@@ -438,16 +440,16 @@ public class HighlightRemovalTest : MonoBehaviour {
 							textureSize: 64,
 							numIterations: numIterations,
 							numClusters: 6,
-							doRandomSwap: true,
 							doRandomizeEmptyClusters: false,
-							doKHM: false,
 							staggeredJitter: false,
 							jitterSize: 1,
 							video: video,
-							doDownscale: false
+							doDownscale: false,
+							algorithm: Algorithm.RS
 						)
 					);
 
+					/*
 					// KHM
 					this.work.Push(
 						new LaunchParameters(
@@ -463,6 +465,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 							doDownscale: false
 						)
 					);
+                    */
 
 					string fileName = $"Variance logs/{this.GetFileName()}";
 
@@ -473,15 +476,16 @@ public class HighlightRemovalTest : MonoBehaviour {
 				}
 			}
 		}
-        */
 
+
+		/*
 		{       // 7. alternating and single KM
 
 			for (int numIterations = 30; numIterations >= 1; numIterations--) {
 
 				foreach (UnityEngine.Video.VideoClip video in this.videos) {
 
-					foreach (Algorithm algo in new Algorithm[] { /*Algorithm.KHM, Algorithm.KM,*/ Algorithm.Alternating, /*Algorithm.OneKM*/ }) {
+					foreach (Algorithm algo in new Algorithm[] { Algorithm.KHM, Algorithm.KM, Algorithm.Alternating, Algorithm.OneKM }) {
 
 
 						// normal  K-Means
@@ -509,6 +513,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				}
 			}
 		}
+        */
 
 
 	}
@@ -688,9 +693,10 @@ public class HighlightRemovalTest : MonoBehaviour {
 				this.KMeans(this.rtInput, true);
 
 				Debug.Assert(this.work.Peek().numIterations > 1);
-				Debug.Assert(this.work.Peek().numIterations % 2 == 1);
-				for (int i = 1; i < this.work.Peek().numIterations; i += 2) {
+				Debug.Assert(this.work.Peek().numIterations % 3 == 1);
+				for (int i = 1; i < this.work.Peek().numIterations; i += 3) {
 					this.RandomSwap();
+					this.KMeans();
 					this.KMeans();
 					this.KMeans();
 					this.ValidateCandidates();
