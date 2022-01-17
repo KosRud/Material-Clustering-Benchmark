@@ -412,27 +412,26 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		{       // 6. KHM and random swap
 
-			foreach (int numIterations in new int[] { 4, 7, 10, 13, 16, 19, 22, 25, 28, 31 }) {
+			foreach (int numIterations in new int[] { 121 }) {
 
 				foreach (UnityEngine.Video.VideoClip video in this.videos) {
 
-					/*
+
 					// normal  K-Means
 					this.work.Push(
 						new LaunchParameters(
 							textureSize: 64,
 							numIterations: numIterations,
 							numClusters: 6,
-							doRandomSwap: false,
 							doRandomizeEmptyClusters: false,
-							doKHM: false,
 							staggeredJitter: false,
 							jitterSize: 1,
 							video: video,
-							doDownscale: false
+							doDownscale: false,
+							algorithm: Algorithm.KM
 						)
 					);
-                    */
+
 
 					// random swap
 					this.work.Push(
@@ -692,13 +691,15 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 				this.KMeans(this.rtInput, true);
 
+				const int iterationsKM = 2;
+
 				Debug.Assert(this.work.Peek().numIterations > 1);
-				Debug.Assert(this.work.Peek().numIterations % 3 == 1);
-				for (int i = 1; i < this.work.Peek().numIterations; i += 3) {
+				Debug.Assert(this.work.Peek().numIterations % iterationsKM == 1);
+				for (int i = 1; i < this.work.Peek().numIterations; i += iterationsKM) {
 					this.RandomSwap();
-					this.KMeans();
-					this.KMeans();
-					this.KMeans();
+					for (int k = 0; k < iterationsKM; k++) {
+						KMeans();
+					}
 					this.ValidateCandidates();
 				}
 
