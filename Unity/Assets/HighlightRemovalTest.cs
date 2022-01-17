@@ -481,7 +481,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 				foreach (UnityEngine.Video.VideoClip video in this.videos) {
 
-					foreach (Algorithm algo in new Algorithm[] { Algorithm.KHM, Algorithm.KM, Algorithm.Alternating, Algorithm.OneKM }) {
+					foreach (Algorithm algo in new Algorithm[] { /*Algorithm.KHM, Algorithm.KM,*/ Algorithm.Alternating, /*Algorithm.OneKM*/ }) {
 
 
 						// normal  K-Means
@@ -526,6 +526,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		Debug.Log($"processing: {this.GetFileName()}");
 
 		this.frameLogVariance.Clear();
+		this.toggleKHM = false; // important to reset!
 
 		this.randomPositions = new Position[this.work.Peek().numClusters];
 		this.clusterCenters = new Vector4[this.work.Peek().numClusters * 2];
@@ -707,7 +708,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 			case Algorithm.OneKM:
 				for (int i = 0; i < this.work.Peek().numIterations; i++) {
 					this.csHighlightRemoval.SetBool("KHM", i != 0);
-					this.toggleKHM = !this.toggleKHM;
 					this.KMeans();
 				}
 
