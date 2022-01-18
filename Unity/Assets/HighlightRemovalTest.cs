@@ -7,6 +7,9 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private const float timeStep = 1f;
 
+	private readonly long? overrideStartFrame = 3600;
+	private readonly long? overrideEndFrame = 3700;
+
 	// textures and buffers
 	private RenderTexture rtArr;
 	private RenderTexture rtInput;
@@ -412,67 +415,68 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		{       // 6. KHM and random swap
 
-			foreach (int numIterations in new int[] { 121 }) {
+			foreach (int numIterations in new int[] { 1001 }) {
 
-				foreach (UnityEngine.Video.VideoClip video in this.videos) {
+				//foreach (UnityEngine.Video.VideoClip video in this.videos) {
+
+				UnityEngine.Video.VideoClip video = this.videos[1];
+
+				// normal  K-Means
+				this.work.Push(
+					new LaunchParameters(
+						textureSize: 64,
+						numIterations: numIterations,
+						numClusters: 6,
+						doRandomizeEmptyClusters: false,
+						staggeredJitter: false,
+						jitterSize: 1,
+						video: video,
+						doDownscale: false,
+						algorithm: Algorithm.KM
+					)
+				);
 
 
-					// normal  K-Means
-					this.work.Push(
-						new LaunchParameters(
-							textureSize: 64,
-							numIterations: numIterations,
-							numClusters: 6,
-							doRandomizeEmptyClusters: false,
-							staggeredJitter: false,
-							jitterSize: 1,
-							video: video,
-							doDownscale: false,
-							algorithm: Algorithm.KM
-						)
-					);
+
+				// random swap
+				this.work.Push(
+					new LaunchParameters(
+						textureSize: 64,
+						numIterations: numIterations,
+						numClusters: 6,
+						doRandomizeEmptyClusters: false,
+						staggeredJitter: false,
+						jitterSize: 1,
+						video: video,
+						doDownscale: false,
+						algorithm: Algorithm.RS
+					)
+				);
 
 
-					// random swap
-					this.work.Push(
-						new LaunchParameters(
-							textureSize: 64,
-							numIterations: numIterations,
-							numClusters: 6,
-							doRandomizeEmptyClusters: false,
-							staggeredJitter: false,
-							jitterSize: 1,
-							video: video,
-							doDownscale: false,
-							algorithm: Algorithm.RS
-						)
-					);
+				// KHM
+				this.work.Push(
+					new LaunchParameters(
+						textureSize: 64,
+						numIterations: numIterations,
+						numClusters: 6,
+						doRandomizeEmptyClusters: false,
+						staggeredJitter: false,
+						jitterSize: 1,
+						video: video,
+						doDownscale: false,
+						algorithm: Algorithm.KHM
+					)
+				);
 
-					/*
-					// KHM
-					this.work.Push(
-						new LaunchParameters(
-							textureSize: 64,
-							numIterations: numIterations,
-							numClusters: 6,
-							doRandomSwap: false,
-							doRandomizeEmptyClusters: false,
-							doKHM: true,
-							staggeredJitter: false,
-							jitterSize: 1,
-							video: video,
-							doDownscale: false
-						)
-					);
-                    */
 
-					string fileName = $"Variance logs/{this.GetFileName()}";
+				string fileName = $"Variance logs/{this.GetFileName()}";
 
-					if (System.IO.File.Exists(fileName)) {
-						UnityEditor.EditorApplication.isPlaying = false;
-						throw new System.Exception($"File exists: {fileName}");
-					}
+				if (System.IO.File.Exists(fileName)) {
+					UnityEditor.EditorApplication.isPlaying = false;
+					throw new System.Exception($"File exists: {fileName}");
 				}
+				//}
 			}
 		}
 
@@ -521,6 +525,14 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.offsets = JitterPattern.Get(this.work.Peek().jitterSize);
 	}
 
+	private long GetStartFrame() {
+		return this.overrideStartFrame ?? 0;
+	}
+
+	private long GetEndFrame() {
+		return this.overrideEndFrame ?? (long)this.videoPlayer.frameCount - 1;
+	}
+
 	private void OnEnable() {
 		if (this.enabled == false) {
 			return;
@@ -545,7 +557,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.videoPlayer.playbackSpeed = 0;
 		this.videoPlayer.clip = this.work.Peek().video;
 		this.videoPlayer.Play();
-		this.videoPlayer.frame = 0;
+		this.videoPlayer.frame = this.GetStartFrame();
 
 		this.csHighlightRemoval.SetBool("do_random_sample_empty_clusters", this.work.Peek().doRandomizeEmptyClusters);
 		this.csHighlightRemoval.SetInt("num_clusters", this.work.Peek().numClusters);
@@ -649,11 +661,15 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		float variance = this.clusterCenters[0].w;
 		//return Variance;
-		return float.IsNaN(variance) == false ? variance : this.videoPlayer.frame < 5 ? 0 : throw new System.Exception($"no Variance! (frame {this.videoPlayer.frame})");
+		return float.IsNaN(variance) == false ? variance : this.videoPlayer.frame < this.GetStartFrame() + 5 ? 0 : throw new System.Exception($"no Variance! (frame {this.videoPlayer.frame})");
 	}
 
 	private void LogVariance() {
-		long progress = this.videoPlayer.frame * 100 / (long)this.videoPlayer.frameCount;
+		long progress = (
+			this.videoPlayer.frame - this.GetStartFrame()
+		) * 100 / (
+			this.GetEndFrame() - this.GetStartFrame()
+		);
 		float Variance = this.GetVariance();
 		Debug.Log($"         {progress:00}%         Variance: {Variance:0.000000}");
 	}
@@ -691,14 +707,14 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 				this.KMeans(this.rtInput, true);
 
-				const int iterationsKM = 2;
+				const int iterationsKM = 4;
 
 				Debug.Assert(this.work.Peek().numIterations > 1);
 				Debug.Assert(this.work.Peek().numIterations % iterationsKM == 1);
 				for (int i = 1; i < this.work.Peek().numIterations; i += iterationsKM) {
 					this.RandomSwap();
 					for (int k = 0; k < iterationsKM; k++) {
-						KMeans();
+						this.KMeans();
 					}
 					this.ValidateCandidates();
 				}
@@ -727,23 +743,21 @@ public class HighlightRemovalTest : MonoBehaviour {
 	}
 
 	private void OnRenderImage(RenderTexture src, RenderTexture dest) {
-		if (this.videoPlayer.frame < (long)this.videoPlayer.frameCount - 1) {
+		if (this.videoPlayer.frame < this.GetEndFrame()) {
 			this.awaitingRestart = false;
 		}
 
 		if (this.videoPlayer.frame == -1) {
 			Graphics.Blit(src, dest);
-			//Debug.Log("frame: -1");
 			return;
 		}
 
 		if (this.awaitingRestart) {
 			Graphics.Blit(src, dest);
-			//Debug.Log($"awaiting on frame: {this.videoPlayer.frame}");
 			return;
 		}
 
-		if (this.videoPlayer.frame == (long)this.videoPlayer.frameCount - 1) {
+		if (this.videoPlayer.frame == this.GetEndFrame()) {
 			this.awaitingRestart = true;
 			Graphics.Blit(src, dest);
 

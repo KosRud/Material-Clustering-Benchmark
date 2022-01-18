@@ -230,9 +230,10 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 
 		float w = top / pow2(bottom);
 
-		if (!KHM){
+		if (!KHM || final){
 			w = (k == clusterID);
 		}
+
 
 		float4 result = float4(
 			project(col) * w,
@@ -240,17 +241,13 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
             // used for Variance monitoring
             // all random swap attempts are done on the same input frame
             // bias from included flag remains constant and does not affect choice
-			included ? pow2(min_dist) : 0,
+			pow2(min_dist),
 
 			w
 		);
 
-		if (final) {
-			result.w = (k == clusterID);
-		}
-
 		if (!included && !final) {
-			result.xyw = 0;
+			result = 0;
 		}
 
 		tex_arr_clusters_rw[uint3(id.xy, k)] = result;
@@ -311,7 +308,8 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 		mip_level
 	);
 
-	float4 clusterCenter = aggregatedColor.z;	// overall Variance for random swap validation
+	float4 clusterCenter = aggregatedColor.z;
+    // overall Variance for random swap validation
 	// first K-Means iteration before random swap updates Variance
 	// subsequent random swap has the same mask of included pixels (same frame)
 
