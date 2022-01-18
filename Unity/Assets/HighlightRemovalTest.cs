@@ -7,8 +7,8 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 	private const float timeStep = 1f;
 
-	private readonly long? overrideStartFrame = 3600;
-	private readonly long? overrideEndFrame = 3700;
+	private readonly long? overrideStartFrame = null;
+	private readonly long? overrideEndFrame = null;
 
 	// textures and buffers
 	private RenderTexture rtArr;
@@ -415,68 +415,67 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 		{       // 6. KHM and random swap
 
-			foreach (int numIterations in new int[] { 1001 }) {
+			foreach (int numIterations in new int[] { 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31 }) {
 
-				//foreach (UnityEngine.Video.VideoClip video in this.videos) {
+				foreach (UnityEngine.Video.VideoClip video in this.videos) {
 
-				UnityEngine.Video.VideoClip video = this.videos[1];
-
-				// normal  K-Means
-				this.work.Push(
-					new LaunchParameters(
-						textureSize: 64,
-						numIterations: numIterations,
-						numClusters: 6,
-						doRandomizeEmptyClusters: false,
-						staggeredJitter: false,
-						jitterSize: 1,
-						video: video,
-						doDownscale: false,
-						algorithm: Algorithm.KM
-					)
-				);
+					// normal  K-Means
+					this.work.Push(
+						new LaunchParameters(
+							textureSize: 64,
+							numIterations: numIterations,
+							numClusters: 6,
+							doRandomizeEmptyClusters: false,
+							staggeredJitter: false,
+							jitterSize: 1,
+							video: video,
+							doDownscale: false,
+							algorithm: Algorithm.KM
+						)
+					);
 
 
 
-				// random swap
-				this.work.Push(
-					new LaunchParameters(
-						textureSize: 64,
-						numIterations: numIterations,
-						numClusters: 6,
-						doRandomizeEmptyClusters: false,
-						staggeredJitter: false,
-						jitterSize: 1,
-						video: video,
-						doDownscale: false,
-						algorithm: Algorithm.RS
-					)
-				);
+					// random swap
+					this.work.Push(
+						new LaunchParameters(
+							textureSize: 64,
+							numIterations: numIterations,
+							numClusters: 6,
+							doRandomizeEmptyClusters: false,
+							staggeredJitter: false,
+							jitterSize: 1,
+							video: video,
+							doDownscale: false,
+							algorithm: Algorithm.RS
+						)
+					);
 
 
-				// KHM
-				this.work.Push(
-					new LaunchParameters(
-						textureSize: 64,
-						numIterations: numIterations,
-						numClusters: 6,
-						doRandomizeEmptyClusters: false,
-						staggeredJitter: false,
-						jitterSize: 1,
-						video: video,
-						doDownscale: false,
-						algorithm: Algorithm.KHM
-					)
-				);
+
+					// KHM
+					this.work.Push(
+						new LaunchParameters(
+							textureSize: 64,
+							numIterations: numIterations,
+							numClusters: 6,
+							doRandomizeEmptyClusters: false,
+							staggeredJitter: false,
+							jitterSize: 1,
+							video: video,
+							doDownscale: false,
+							algorithm: Algorithm.KHM
+						)
+					);
 
 
-				string fileName = $"Variance logs/{this.GetFileName()}";
+					string fileName = $"Variance logs/{this.GetFileName()}";
 
-				if (System.IO.File.Exists(fileName)) {
-					UnityEditor.EditorApplication.isPlaying = false;
-					throw new System.Exception($"File exists: {fileName}");
+					if (System.IO.File.Exists(fileName)) {
+						UnityEditor.EditorApplication.isPlaying = false;
+						throw new System.Exception($"File exists: {fileName}");
+					}
 				}
-				//}
 			}
 		}
 
@@ -516,7 +515,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 				}
 			}
 		}
-        */
+		*/
 
 
 	}
@@ -604,7 +603,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		this.UpdateRandomPositions();
 
 		this.csHighlightRemoval.SetBuffer(this.kernelRandomSwap, "cbuf_cluster_centers", this.cbufClusterCenters);
-		this.csHighlightRemoval.SetBuffer(this.kernelRandomSwap, "cbuf_random_positions", this.cbufClusterCenters);
+		this.csHighlightRemoval.SetBuffer(this.kernelRandomSwap, "cbuf_random_positions", this.cbufRandomPositions);
 		this.csHighlightRemoval.SetTexture(this.kernelRandomSwap, "tex_input", this.rtInput);
 		this.csHighlightRemoval.SetInt("randomClusterCenter", this.random.Next(this.work.Peek().numClusters));
 		this.csHighlightRemoval.Dispatch(this.kernelRandomSwap, 1, 1, 1);
@@ -707,7 +706,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
 				this.KMeans(this.rtInput, true);
 
-				const int iterationsKM = 4;
+				const int iterationsKM = 2;
 
 				Debug.Assert(this.work.Peek().numIterations > 1);
 				Debug.Assert(this.work.Peek().numIterations % iterationsKM == 1);

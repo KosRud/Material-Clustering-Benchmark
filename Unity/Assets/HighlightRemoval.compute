@@ -45,7 +45,7 @@ Texture2D<float2> tex_variance_r;
 SamplerState sampler_tex_variance_r;
 
 RWStructuredBuffer<float4> cbuf_cluster_centers;
-RWStructuredBuffer<uint4> cbuf_random_positions;
+RWStructuredBuffer<int4> cbuf_random_positions;
 
 inline float pow2(float x){
 	return x*x;
