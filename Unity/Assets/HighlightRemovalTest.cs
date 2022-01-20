@@ -228,6 +228,13 @@ public class HighlightRemovalTest : MonoBehaviour {
         this.kernelGatherVariance = this.csHighlightRemoval.FindKernel("GatherVariance");
     }
 
+    private void PopIfExists() {
+        string fileName = $"Variance logs/{this.GetFileName()}";
+        if (System.IO.File.Exists(fileName)) {
+            this.work.Pop();
+        }
+    }
+
     private void Awake() {
         Debug.Assert(this.videos.Length != 0);
 
@@ -413,7 +420,6 @@ public class HighlightRemovalTest : MonoBehaviour {
 		}
         */
 
-
         {       // 6. KHM and random swap
 
             for (int numIterations = 0; numIterations < 31; numIterations++) {
@@ -434,6 +440,7 @@ public class HighlightRemovalTest : MonoBehaviour {
                             algorithm: Algorithm.KM
                         )
                     );
+                    this.PopIfExists();
 
                     if (
                         this.ValidateRandomSwapParams(1, numIterations)
@@ -452,6 +459,7 @@ public class HighlightRemovalTest : MonoBehaviour {
                                 algorithm: Algorithm.RS_1KM
                             )
                         );
+                        this.PopIfExists();
                     }
 
                     if (
@@ -471,6 +479,7 @@ public class HighlightRemovalTest : MonoBehaviour {
                                 algorithm: Algorithm.RS_2KM
                             )
                         );
+                        this.PopIfExists();
                     }
 
                     // KHM
@@ -486,8 +495,9 @@ public class HighlightRemovalTest : MonoBehaviour {
                             doDownscale: false,
                             algorithm: Algorithm.KHM
                         )
-                    );
 
+                    );
+                    this.PopIfExists();
 
                     string fileName = $"Variance logs/{this.GetFileName()}";
 
@@ -709,6 +719,9 @@ public class HighlightRemovalTest : MonoBehaviour {
     bool ValidateRandomSwapParams(int iterationsKM, int iterations) {
         if (iterations <= 1) {
             return false;
+        }
+        if (iterationsKM == 1) {
+            return true;
         }
         if (iterations % iterationsKM != 1) {
             return false;
