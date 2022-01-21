@@ -42,6 +42,9 @@ public class HighlightRemovalTest : MonoBehaviour {
     private int kernelValidateCandidates;
 
     // inner workings
+    private float? timeStart;
+    private long framesProcessed;
+
     private enum Algorithm {
         KM,
         KHM,
@@ -420,6 +423,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 		}
         */
 
+        /*
         {       // 6. KHM and random swap
 
             for (int numIterations = 1; numIterations < 31; numIterations++) {
@@ -504,44 +508,24 @@ public class HighlightRemovalTest : MonoBehaviour {
                 }
             }
         }
+        */
 
 
-        /*
-		{       // 7. alternating and single KM
-
-			for (int numIterations = 30; numIterations >= 1; numIterations--) {
-
-				foreach (UnityEngine.Video.VideoClip video in this.videos) {
-
-					foreach (Algorithm algo in new Algorithm[] { Algorithm.KHM, Algorithm.KM, Algorithm.Alternating, Algorithm.OneKM }) {
-
-
-						// normal  K-Means
-						this.work.Push(
-							new LaunchParameters(
-								textureSize: 64,
-								numIterations: numIterations,
-								numClusters: 6,
-								doRandomizeEmptyClusters: false,
-								staggeredJitter: false,
-								jitterSize: 1,
-								video: video,
-								doDownscale: false,
-								algorithm: algo
-							)
-						);
-
-						string fileName = $"Variance logs/{this.GetFileName()}";
-
-						if (System.IO.File.Exists(fileName)) {
-							UnityEditor.EditorApplication.isPlaying = false;
-							throw new System.Exception($"File exists: {fileName}");
-						}
-					}
-				}
-			}
-		}
-		*/
+        foreach (UnityEngine.Video.VideoClip video in this.videos) {
+            this.work.Push(
+                new LaunchParameters(
+                    textureSize: 64,
+                    numIterations: 1,
+                    numClusters: 6,
+                    doRandomizeEmptyClusters: false,
+                    staggeredJitter: false,
+                    jitterSize: 1,
+                    video: video,
+                    doDownscale: false,
+                    algorithm: Algorithm.KM
+                )
+            );
+        }
 
 
     }
@@ -567,6 +551,8 @@ public class HighlightRemovalTest : MonoBehaviour {
         Debug.Log($"processing: {this.GetFileName()}");
 
         this.frameLogVariance.Clear();
+        this.framesProcessed = 0;
+        this.timeStart = null;
         this.toggleKHM = false; // important to reset!
 
         this.randomPositions = new Position[this.work.Peek().numClusters];
@@ -712,17 +698,14 @@ public class HighlightRemovalTest : MonoBehaviour {
 
     }
 
-    bool ValidateRandomSwapParams(int iterationsKM, int iterations) {
+    private bool ValidateRandomSwapParams(int iterationsKM, int iterations) {
         if (iterations <= 1) {
             return false;
         }
         if (iterationsKM == 1) {
             return true;
         }
-        if (iterations % iterationsKM != 1) {
-            return false;
-        }
-        return true;
+        return iterations % iterationsKM == 1;
     }
 
     private void RandomSwapClustering(int iterationsKM) {
@@ -788,6 +771,49 @@ public class HighlightRemovalTest : MonoBehaviour {
         this.AttributeClusters(this.rtInput, true);
     }
 
+    private void WriteVarianceLog() {
+        string fileName = $"Variance logs/{this.GetFileName()}";
+
+        if (System.IO.File.Exists(fileName)) {
+            UnityEditor.EditorApplication.isPlaying = false;
+            throw new System.Exception($"File exists: {fileName}");
+        }
+
+        using (
+            System.IO.FileStream fs = System.IO.File.Open(
+                fileName, System.IO.FileMode.OpenOrCreate
+            )
+        ) {
+            using var sw = new System.IO.StreamWriter(fs);
+            sw.WriteLine("Frame,Variance");
+            for (int i = 0; i < this.frameLogVariance.Count; i++) {
+                float Variance = this.frameLogVariance[i];
+                if (Variance == -1) {
+                    sw.WriteLine(
+                        $"{i}"
+                    );
+                } else {
+                    sw.WriteLine(
+                        $"{i},{Variance}"
+                    );
+                }
+            }
+        }
+        Debug.Log($"file written: {fileName}");
+    }
+
+    private void WriteFPSLog(float fps) {
+        string fileName = "FPS log.txt";
+
+        using System.IO.FileStream fs = System.IO.File.Open(
+                fileName, System.IO.FileMode.Append
+            );
+        using var sw = new System.IO.StreamWriter(fs);
+        sw.WriteLine(this.GetFileName());
+        sw.WriteLine($"{fps:0.0}");
+        sw.WriteLine();
+    }
+
     private void OnRenderImage(RenderTexture src, RenderTexture dest) {
         if (this.videoPlayer.frame < this.GetEndFrame()) {
             this.awaitingRestart = false;
@@ -803,49 +829,17 @@ public class HighlightRemovalTest : MonoBehaviour {
             return;
         }
 
+        this.timeStart ??= Time.time;
+        this.framesProcessed++;
+
         if (this.videoPlayer.frame == this.GetEndFrame()) {
             this.awaitingRestart = true;
             Graphics.Blit(src, dest);
 
-            /*
-				video file
-				num. iterations
-				texture size
-				num clusters
-				random swap (y/n)
-				randomize empty clusters (y/n)
-				KHM (y/n)
-				jitter Size
-				staggered jitter
-			*/
-            string fileName = $"Variance logs/{this.GetFileName()}";
-
-            if (System.IO.File.Exists(fileName)) {
-                UnityEditor.EditorApplication.isPlaying = false;
-                throw new System.Exception($"File exists: {fileName}");
-            }
-
-            using (
-            System.IO.FileStream fs = System.IO.File.Open(
-                fileName, System.IO.FileMode.OpenOrCreate
-            )
-            ) {
-                using var sw = new System.IO.StreamWriter(fs);
-                sw.WriteLine("Frame,Variance");
-                for (int i = 0; i < this.frameLogVariance.Count; i++) {
-                    float Variance = this.frameLogVariance[i];
-                    if (Variance == -1) {
-                        sw.WriteLine(
-                            $"{i}"
-                        );
-                    } else {
-                        sw.WriteLine(
-                            $"{i},{Variance}"
-                        );
-                    }
-                }
-                Debug.Log($"file written: {fileName}");
-            }
+            this.WriteVarianceLog();
+            this.WriteFPSLog(
+                this.framesProcessed / (Time.time - (float)this.timeStart)
+            );
 
             this.work.Pop();
 
