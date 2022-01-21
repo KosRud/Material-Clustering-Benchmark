@@ -422,7 +422,7 @@ public class HighlightRemovalTest : MonoBehaviour {
 
         {       // 6. KHM and random swap
 
-            for (int numIterations = 0; numIterations < 31; numIterations++) {
+            for (int numIterations = 1; numIterations < 31; numIterations++) {
 
                 foreach (UnityEngine.Video.VideoClip video in this.videos) {
 
@@ -440,7 +440,6 @@ public class HighlightRemovalTest : MonoBehaviour {
                             algorithm: Algorithm.KM
                         )
                     );
-                    this.PopIfExists();
 
                     if (
                         this.ValidateRandomSwapParams(1, numIterations)
@@ -459,7 +458,6 @@ public class HighlightRemovalTest : MonoBehaviour {
                                 algorithm: Algorithm.RS_1KM
                             )
                         );
-                        this.PopIfExists();
                     }
 
                     if (
@@ -479,7 +477,6 @@ public class HighlightRemovalTest : MonoBehaviour {
                                 algorithm: Algorithm.RS_2KM
                             )
                         );
-                        this.PopIfExists();
                     }
 
                     // KHM
@@ -497,7 +494,6 @@ public class HighlightRemovalTest : MonoBehaviour {
                         )
 
                     );
-                    this.PopIfExists();
 
                     string fileName = $"Variance logs/{this.GetFileName()}";
 
