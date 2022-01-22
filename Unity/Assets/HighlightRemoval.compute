@@ -210,41 +210,37 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 	}
 
 	for (uint k = 0; k < num_clusters; k++) {
-		float top = min_dist;
-
-		if (k != clusterID) {
-			top *= pow5(
-				min_dist / dist_list[k]
-			);
-		}
-
-		float bottom = 1.0;
-
-		for (uint n = 0; n < num_clusters; n++){
-			if (n == clusterID) {
-				continue;
-			}
-			
-            bottom += pow3(min_dist / dist_list[n]);
-		}
-
-		float w = top / pow2(bottom);
+		float4 result;
 
 		if (!KHM || final){
-			w = (k == clusterID);
-		}
+			result.w = (k == clusterID);
+		} else {
+            float top = min_dist;
 
+            if (k != clusterID) {
+                top *= pow5(
+                    min_dist / dist_list[k]
+                );
+            }
 
-		float4 result = float4(
-			project(col) * w,
+            float bottom = 1.0;
 
-            // used for Variance monitoring
-            // all random swap attempts are done on the same input frame
-            // bias from included flag remains constant and does not affect choice
-			pow2(min_dist),
+            for (uint n = 0; n < num_clusters; n++){
+                if (n == clusterID) {
+                    continue;
+                }
+                
+                bottom += pow3(min_dist / dist_list[n]);
+            }
 
-			w
-		);
+            result.w = top / pow2(bottom);
+        }
+
+        result.xy = project(col) * result.w;
+        // used for Variance monitoring
+        // all random swap attempts are done on the same input frame
+        // bias from included flag remains constant and does not affect choice
+        result.z = pow2(min_dist);
 
 		if (!included && !final) {
 			result = 0;

@@ -2,10 +2,15 @@ using UnityEngine;
 
 public class HighlightRemovalTest : MonoBehaviour {
     // configuration
+    enum LogType {
+        FrameTime,
+        Variance
+    }
+
     private const int referenceTextureSize = 512;
     private const int kernelSize = 4;
-
     private const float timeStep = 1f;
+    private const LogType logType = LogType.FrameTime;
 
     private readonly long? overrideStartFrame = null;
     private readonly long? overrideEndFrame = null;
@@ -48,8 +53,9 @@ public class HighlightRemovalTest : MonoBehaviour {
     private enum Algorithm {
         KM,
         KHM,
-        RS_1KM,    // 1 KM iteration
-        RS_2KM,    // 2 KM iterations
+        RS_1KM,
+        RS_2KM,
+        RS_2KM_readback,
         Alternating,
         OneKM
     }
@@ -510,21 +516,45 @@ public class HighlightRemovalTest : MonoBehaviour {
         }
         */
 
-
-        foreach (UnityEngine.Video.VideoClip video in this.videos) {
-            this.work.Push(
-                new LaunchParameters(
-                    textureSize: 64,
-                    numIterations: 1,
-                    numClusters: 6,
-                    doRandomizeEmptyClusters: false,
-                    staggeredJitter: false,
-                    jitterSize: 1,
-                    video: video,
-                    doDownscale: false,
-                    algorithm: Algorithm.KM
-                )
-            );
+        {       // frame time measurement for RS (dispatch vs readback) 
+            for (int i = 0; i < 10; i++) {
+                foreach (UnityEngine.Video.VideoClip video in this.videos) {
+                    foreach (int textureSize in new int[] { 512, 64 }) {
+                        foreach (
+                            Algorithm algorithm in new Algorithm[] {
+                            Algorithm.KM, Algorithm.RS_2KM, Algorithm.RS_2KM_readback
+                            }
+                        ) {
+                            this.work.Push(
+                                new LaunchParameters(
+                                    textureSize: textureSize,
+                                    numIterations: 3,
+                                    numClusters: 6,
+                                    doRandomizeEmptyClusters: false,
+                                    staggeredJitter: false,
+                                    jitterSize: 1,
+                                    video: video,
+                                    doDownscale: false,
+                                    algorithm: algorithm
+                                )
+                            );
+                        }
+                        this.work.Push(
+                            new LaunchParameters(
+                                textureSize: textureSize,
+                                numIterations: 1,
+                                numClusters: 6,
+                                doRandomizeEmptyClusters: false,
+                                staggeredJitter: false,
+                                jitterSize: 1,
+                                video: video,
+                                doDownscale: false,
+                                algorithm: Algorithm.KM
+                            )
+                        );
+                    }
+                }
+            }
         }
 
 
@@ -644,6 +674,9 @@ public class HighlightRemovalTest : MonoBehaviour {
             case Algorithm.RS_2KM:
                 algorithm = "RS(2KM)";
                 break;
+            case Algorithm.RS_2KM_readback:
+                algorithm = "RS(2KM)_readback";
+                break;
             case Algorithm.Alternating:
                 algorithm = "KM+KHM(3)";
                 break;
@@ -678,19 +711,28 @@ public class HighlightRemovalTest : MonoBehaviour {
         return float.IsNaN(variance) == false ? variance : this.videoPlayer.frame < this.GetStartFrame() + 5 ? 0 : throw new System.Exception($"no Variance! (frame {this.videoPlayer.frame})");
     }
 
-    private void LogVariance() {
-        long progress = (
-            this.videoPlayer.frame - this.GetStartFrame()
-        ) * 100 / (
-            this.GetEndFrame() - this.GetStartFrame()
-        );
-        float Variance = this.GetVariance();
-        Debug.Log($"         {progress:00}%         Variance: {Variance:0.000000}");
-    }
-
     private void ValidateCandidates() {
-        this.csHighlightRemoval.SetBuffer(this.kernelValidateCandidates, "cbuf_cluster_centers", this.cbufClusterCenters);
-        this.csHighlightRemoval.Dispatch(this.kernelValidateCandidates, 1, 1, 1);
+        switch (this.work.Peek().algorithm) {
+            case Algorithm.RS_1KM:
+            case Algorithm.RS_2KM:
+                this.csHighlightRemoval.SetBuffer(this.kernelValidateCandidates, "cbuf_cluster_centers", this.cbufClusterCenters);
+                this.csHighlightRemoval.Dispatch(this.kernelValidateCandidates, 1, 1, 1);
+                break;
+            case Algorithm.RS_2KM_readback:
+                this.cbufClusterCenters.GetData(this.clusterCenters);
+                int numClusters = this.work.Peek().numClusters;
+                for (int i = 0; i < numClusters; i++) {
+                    if (this.clusterCenters[i].z < this.clusterCenters[i + numClusters].z) {
+                        this.clusterCenters[i + numClusters] = this.clusterCenters[i];
+                    } else {
+                        this.clusterCenters[i] = this.clusterCenters[i + numClusters];
+                    }
+                }
+                this.cbufClusterCenters.SetData(this.clusterCenters);
+                break;
+            default:
+                throw new System.NotImplementedException();
+        }
     }
 
     // Update is called once per frame
@@ -747,6 +789,7 @@ public class HighlightRemovalTest : MonoBehaviour {
                 this.RandomSwapClustering(1);
                 break;
             case Algorithm.RS_2KM:
+            case Algorithm.RS_2KM_readback:
                 this.RandomSwapClustering(2);
                 break;
             case Algorithm.Alternating:
@@ -802,15 +845,15 @@ public class HighlightRemovalTest : MonoBehaviour {
         Debug.Log($"file written: {fileName}");
     }
 
-    private void WriteFPSLog(float fps) {
-        string fileName = "FPS log.txt";
+    private void WriteFrameTimeLog(float frameTime) {
+        string fileName = "Frame time log.txt";
 
         using System.IO.FileStream fs = System.IO.File.Open(
                 fileName, System.IO.FileMode.Append
             );
         using var sw = new System.IO.StreamWriter(fs);
         sw.WriteLine(this.GetFileName());
-        sw.WriteLine($"{fps:0.0}");
+        sw.WriteLine($"Frame time: {frameTime:0.000} ms");
         sw.WriteLine();
     }
 
@@ -836,10 +879,16 @@ public class HighlightRemovalTest : MonoBehaviour {
             this.awaitingRestart = true;
             Graphics.Blit(src, dest);
 
-            this.WriteVarianceLog();
-            this.WriteFPSLog(
-                this.framesProcessed / (Time.time - (float)this.timeStart)
-            );
+            switch (logType) {
+                case LogType.Variance:
+                    this.WriteVarianceLog();
+                    break;
+                case LogType.FrameTime:
+                    this.WriteFrameTimeLog(
+                        (Time.time - (float)this.timeStart) / this.framesProcessed * 1000
+                    );
+                    break;
+            }
 
             this.work.Pop();
 
@@ -889,7 +938,9 @@ public class HighlightRemovalTest : MonoBehaviour {
             //this.LogVariance();
         }
 
-        this.frameLogVariance.Add(this.GetVariance());
+        if (logType == LogType.Variance) {
+            this.frameLogVariance.Add(this.GetVariance());
+        }
 
         this.RenderResult();
         Graphics.Blit(this.rtResult, dest);
