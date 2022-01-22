@@ -522,7 +522,7 @@ public class HighlightRemovalTest : MonoBehaviour {
                     foreach (int textureSize in new int[] { 512, 64 }) {
                         foreach (
                             Algorithm algorithm in new Algorithm[] {
-                            Algorithm.KM, Algorithm.RS_2KM, Algorithm.RS_2KM_readback
+                            Algorithm.KM, Algorithm.KHM, Algorithm.RS_2KM, Algorithm.RS_2KM_readback
                             }
                         ) {
                             this.work.Push(
@@ -539,19 +539,25 @@ public class HighlightRemovalTest : MonoBehaviour {
                                 )
                             );
                         }
-                        this.work.Push(
-                            new LaunchParameters(
-                                textureSize: textureSize,
-                                numIterations: 1,
-                                numClusters: 6,
-                                doRandomizeEmptyClusters: false,
-                                staggeredJitter: false,
-                                jitterSize: 1,
-                                video: video,
-                                doDownscale: false,
-                                algorithm: Algorithm.KM
-                            )
-                        );
+                        foreach (
+                            Algorithm algorithm in new Algorithm[] {
+                            Algorithm.KM, Algorithm.KHM,
+                            }
+                        ) {
+                            this.work.Push(
+                                new LaunchParameters(
+                                    textureSize: textureSize,
+                                    numIterations: 1,
+                                    numClusters: 6,
+                                    doRandomizeEmptyClusters: false,
+                                    staggeredJitter: false,
+                                    jitterSize: 1,
+                                    video: video,
+                                    doDownscale: false,
+                                    algorithm: Algorithm.KM
+                                )
+                            );
+                        }
                     }
                 }
             }
