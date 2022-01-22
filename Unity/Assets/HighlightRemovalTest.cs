@@ -554,7 +554,7 @@ public class HighlightRemovalTest : MonoBehaviour {
                                     jitterSize: 1,
                                     video: video,
                                     doDownscale: false,
-                                    algorithm: Algorithm.KM
+                                    algorithm: algorithm
                                 )
                             );
                         }
