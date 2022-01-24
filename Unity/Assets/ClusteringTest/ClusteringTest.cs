@@ -534,8 +534,6 @@ public class ClusteringTest : MonoBehaviour {
         */
 
         {       // Knecht
-
-
             foreach (UnityEngine.Video.VideoClip video in this.videos) {
                 // normal  K-Means
                 this.work.Push(
