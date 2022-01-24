@@ -187,6 +187,17 @@ public class ClusteringTest : MonoBehaviour {
         }
     }
 
+    private void ThrowIfExists() {
+        string fileName = $"Variance logs/{this.GetFileName()}";
+
+        if (System.IO.File.Exists(fileName)) {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            throw new System.Exception($"File exists: {fileName}");
+        }
+    }
+
     private void Awake() {
         Debug.Assert(this.videos.Length != 0);
 
@@ -378,7 +389,7 @@ public class ClusteringTest : MonoBehaviour {
             for (int numIterations = 1; numIterations < 31; numIterations += 5) {
 
                 foreach (UnityEngine.Video.VideoClip video in this.videos) {
-
+                    /*
                     // normal  K-Means
                     this.work.Push(
                         new LaunchParameters(
@@ -397,7 +408,10 @@ public class ClusteringTest : MonoBehaviour {
                             )
                         )
                     );
+                    this.ThrowIfExists();
+                    */
 
+                    /*
                     // KHM
                     this.work.Push(
                         new LaunchParameters(
@@ -416,6 +430,8 @@ public class ClusteringTest : MonoBehaviour {
                             )
                         )
                     );
+                    this.ThrowIfExists();
+                    */
 
                     // random swap
                     {
@@ -426,23 +442,26 @@ public class ClusteringTest : MonoBehaviour {
                                 iterationsKM: 1
                             )
                         ) {
-                            new LaunchParameters(
-                                textureSize: 64,
-                                numClusters: 6,
-                                staggeredJitter: false,
-                                jitterSize: 1,
-                                video: video,
-                                doDownscale: false,
-                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
-                                    kernelSize: kernelSize,
-                                    computeShader: this.csHighlightRemoval,
-                                    numIterations: numIterations,
-                                    doRandomizeEmptyClusters: false,
+                            this.work.Push(
+                                new LaunchParameters(
+                                    textureSize: 64,
                                     numClusters: 6,
-                                    numIterationsKM: 1,
-                                    doReadback: false
+                                    staggeredJitter: false,
+                                    jitterSize: 1,
+                                    video: video,
+                                    doDownscale: false,
+                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                                        kernelSize: kernelSize,
+                                        computeShader: this.csHighlightRemoval,
+                                        numIterations: numIterations,
+                                        doRandomizeEmptyClusters: false,
+                                        numClusters: 6,
+                                        numIterationsKM: 1,
+                                        doReadback: false
+                                    )
                                 )
                             );
+                            this.ThrowIfExists();
                         }
 
                         //2KM
@@ -452,34 +471,30 @@ public class ClusteringTest : MonoBehaviour {
                                 iterationsKM: 2
                             )
                         ) {
-                            new LaunchParameters(
-                                textureSize: 64,
-                                numClusters: 6,
-                                staggeredJitter: false,
-                                jitterSize: 1,
-                                video: video,
-                                doDownscale: false,
-                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
-                                    kernelSize: kernelSize,
-                                    computeShader: this.csHighlightRemoval,
-                                    numIterations: numIterations,
-                                    doRandomizeEmptyClusters: false,
+                            this.work.Push(
+                                new LaunchParameters(
+                                    textureSize: 64,
                                     numClusters: 6,
-                                    numIterationsKM: 2,
-                                    doReadback: false
+                                    staggeredJitter: false,
+                                    jitterSize: 1,
+                                    video: video,
+                                    doDownscale: false,
+                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                                        kernelSize: kernelSize,
+                                        computeShader: this.csHighlightRemoval,
+                                        numIterations: numIterations,
+                                        doRandomizeEmptyClusters: false,
+                                        numClusters: 6,
+                                        numIterationsKM: 2,
+                                        doReadback: false
+                                    )
                                 )
                             );
+                            this.ThrowIfExists();
                         }
                     }
 
-                    string fileName = $"Variance logs/{this.GetFileName()}";
 
-                    if (System.IO.File.Exists(fileName)) {
-#if UNITY_EDITOR
-                        UnityEditor.EditorApplication.isPlaying = false;
-#endif
-                        throw new System.Exception($"File exists: {fileName}");
-                    }
                 }
             }
         }
