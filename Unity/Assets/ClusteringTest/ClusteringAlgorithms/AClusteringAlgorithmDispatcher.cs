@@ -14,14 +14,18 @@ public abstract class AClusteringAlgorithmDispatcher {
     // internal
     protected readonly int kernelSize;
     protected readonly ComputeShader computeShader;
-    protected readonly int kernelHandleAttributeClusters;
-    protected readonly int kernelUpdateClusterCenters;
+    private readonly int kernelHandleAttributeClusters;
+    private readonly int kernelUpdateClusterCenters;
+    private readonly int kernelGenerateVariance;
+    private readonly int kernelGatherVariance;
 
     protected AClusteringAlgorithmDispatcher(int kernelSize, ComputeShader computeShader, int numIterations, bool doRandomizeEmptyClusters, int numClusters) {
         this.kernelSize = kernelSize;
         this.computeShader = computeShader;
         this.kernelHandleAttributeClusters = this.computeShader.FindKernel("AttributeClusters");
         this.kernelUpdateClusterCenters = computeShader.FindKernel("UpdateClusterCenters");
+        this.kernelGenerateVariance = this.computeShader.FindKernel("GenerateVariance");
+        this.kernelGatherVariance = this.computeShader.FindKernel("GatherVariance");
         this.numClusters = numClusters;
         this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
         this.numIterations = numIterations;
@@ -91,5 +95,47 @@ public abstract class AClusteringAlgorithmDispatcher {
             inputTex.height / this.kernelSize,
             1
         );
+    }
+
+    public float GetVariance(ClusteringRTsAndBuffers clusteringRTsAndBuffers) {
+        this.computeShader.SetTexture(
+            this.kernelGenerateVariance,
+            "tex_input",
+            clusteringRTsAndBuffers.texReference
+        );
+        this.computeShader.SetTexture(
+            this.kernelGenerateVariance,
+            "tex_variance_rw",
+            clusteringRTsAndBuffers.rtVariance
+        );
+        this.computeShader.SetBuffer(
+            this.kernelGenerateVariance,
+            "cbuf_cluster_centers",
+            clusteringRTsAndBuffers.cbufClusterCenters
+        );
+        this.computeShader.Dispatch(
+            this.kernelGenerateVariance,
+            clusteringRTsAndBuffers.texReference.width / this.kernelSize,
+            clusteringRTsAndBuffers.texReference.height / this.kernelSize,
+        1);
+
+        clusteringRTsAndBuffers.rtVariance.GenerateMips();
+
+        this.computeShader.SetTexture(
+            this.kernelGatherVariance,
+            "tex_variance_r",
+            clusteringRTsAndBuffers.rtVariance
+        );
+        this.computeShader.SetBuffer(
+            this.kernelGatherVariance,
+            "cbuf_cluster_centers",
+            clusteringRTsAndBuffers.cbufClusterCenters
+        );
+        this.computeShader.Dispatch(this.kernelGatherVariance, 1, 1, 1);
+
+        float variance = clusteringRTsAndBuffers.clusterCenters[0].w;
+
+        Debug.Assert(float.IsNaN(variance) == false);
+        return variance;
     }
 }

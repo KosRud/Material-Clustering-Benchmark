@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ClusteringTest : MonoBehaviour {
     // configuration
-    enum LogType {
+    private enum LogType {
         FrameTime,
         Variance
     }
@@ -36,13 +36,8 @@ public class ClusteringTest : MonoBehaviour {
 
     // shader kernels
     //private int kernelAttributeClusters;
-    private int kernelGatherVariance;
-    private int kernelGenerateVariance;
-    private int kernelRandomSwap;
     private int kernelShowResult;
-    private int kernelsubsample;
-    private int kernelUpdateClusterCenters;
-    private int kernelValidateCandidates;
+    private int kernelSubsample;
 
     // inner workings
     private float? timeStart;
@@ -61,7 +56,6 @@ public class ClusteringTest : MonoBehaviour {
     private readonly System.Collections.Generic.Stack<LaunchParameters> work =
         new System.Collections.Generic.Stack<LaunchParameters>();
 
-    private bool toggleKHM = false;
     private bool awaitingRestart = false;
     private bool showReference = false;
     private int[][] offsets;
@@ -171,13 +165,7 @@ public class ClusteringTest : MonoBehaviour {
 
     private void FindKernels() {
         this.kernelShowResult = this.csHighlightRemoval.FindKernel("ShowResult");
-        //this.kernelAttributeClusters = this.csHighlightRemoval.FindKernel("AttributeClusters");
-        this.kernelUpdateClusterCenters = this.csHighlightRemoval.FindKernel("UpdateClusterCenters");
-        this.kernelRandomSwap = this.csHighlightRemoval.FindKernel("RandomSwap");
-        this.kernelValidateCandidates = this.csHighlightRemoval.FindKernel("ValidateCandidates");
-        this.kernelsubsample = this.csHighlightRemoval.FindKernel("SubSample");
-        this.kernelGenerateVariance = this.csHighlightRemoval.FindKernel("GenerateVariance");
-        this.kernelGatherVariance = this.csHighlightRemoval.FindKernel("GatherVariance");
+        this.kernelSubsample = this.csHighlightRemoval.FindKernel("SubSample");
     }
 
     private void PopIfExists() {
@@ -383,13 +371,12 @@ public class ClusteringTest : MonoBehaviour {
 		}
         */
 
-
+        /*
         {       // 6. KHM and random swap
 
             for (int numIterations = 1; numIterations < 31; numIterations += 5) {
 
                 foreach (UnityEngine.Video.VideoClip video in this.videos) {
-                    /*
                     // normal  K-Means
                     this.work.Push(
                         new LaunchParameters(
@@ -409,9 +396,7 @@ public class ClusteringTest : MonoBehaviour {
                         )
                     );
                     this.ThrowIfExists();
-                    */
 
-                    /*
                     // KHM
                     this.work.Push(
                         new LaunchParameters(
@@ -431,7 +416,6 @@ public class ClusteringTest : MonoBehaviour {
                         )
                     );
                     this.ThrowIfExists();
-                    */
 
                     // random swap
                     {
@@ -498,6 +482,7 @@ public class ClusteringTest : MonoBehaviour {
                 }
             }
         }
+        */
 
         /*
         {       // frame time measurement for RS (dispatch vs readback) 
@@ -548,6 +533,31 @@ public class ClusteringTest : MonoBehaviour {
         }
         */
 
+        {       // Knecht
+
+
+            foreach (UnityEngine.Video.VideoClip video in this.videos) {
+                // normal  K-Means
+                this.work.Push(
+                    new LaunchParameters(
+                        textureSize: 64,
+                        numClusters: 6,
+                        staggeredJitter: false,
+                        jitterSize: 1,
+                        video: video,
+                        doDownscale: false,
+                        clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKnecht(
+                            kernelSize: kernelSize,
+                            computeShader: this.csHighlightRemoval,
+                            doRandomizeEmptyClusters: false,
+                            numClusters: 6
+                        )
+                    )
+                );
+                this.ThrowIfExists();
+            }
+        }
+
     }
 
     private void InitJitterOffsets() {
@@ -573,7 +583,6 @@ public class ClusteringTest : MonoBehaviour {
         this.frameLogVariance.Clear();
         this.framesProcessed = 0;
         this.timeStart = null;
-        this.toggleKHM = false; // important to reset!
 
         this.randomPositions = new Position[this.work.Peek().numClusters];
 
@@ -585,7 +594,8 @@ public class ClusteringTest : MonoBehaviour {
         this.clusteringRTsAndBuffers = new ClusteringRTsAndBuffers(
             this.work.Peek().numClusters,
             this.work.Peek().textureSize,
-            referenceTextureSize
+            referenceTextureSize,
+            this.rtReference
         );
 
         this.videoPlayer = this.GetComponent<UnityEngine.Video.VideoPlayer>();
@@ -593,88 +603,6 @@ public class ClusteringTest : MonoBehaviour {
         this.videoPlayer.clip = this.work.Peek().video;
         this.videoPlayer.Play();
         this.videoPlayer.frame = this.GetStartFrame();
-    }
-
-    /*
-    private void AttributeClusters(Texture inputTex, bool final, bool khm) {
-        this.csHighlightRemoval.SetBool("final", final);  // replace with define
-        this.csHighlightRemoval.SetBool("KHM", khm);
-        this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_input", inputTex);
-        this.csHighlightRemoval.SetTexture(
-            this.kernelAttributeClusters,
-            "tex_variance",
-            this.clusteringRTsAndBuffers.rtVariance
-        );
-        this.csHighlightRemoval.SetTexture(
-            this.kernelAttributeClusters,
-            "tex_arr_clusters_rw",
-            this.clusteringRTsAndBuffers.rtArr
-        );
-        this.csHighlightRemoval.SetBuffer(
-            this.kernelAttributeClusters,
-            "cbuf_cluster_centers",
-            this.clusteringRTsAndBuffers.cbufClusterCenters
-        );
-        this.csHighlightRemoval.Dispatch(
-            this.kernelAttributeClusters,
-            inputTex.width / kernelSize,
-            inputTex.height / kernelSize,
-            1
-        );
-    }
-    */
-
-    private void UpdateClusterCenters(bool rejectOld) {
-        this.UpdateRandomPositions();
-
-        this.csHighlightRemoval.SetBool("reject_old", rejectOld);
-        this.csHighlightRemoval.SetTexture(
-            this.kernelUpdateClusterCenters,
-            "tex_arr_clusters_r",
-            this.clusteringRTsAndBuffers.rtArr
-        );
-        this.csHighlightRemoval.SetTexture(this.kernelUpdateClusterCenters, "tex_input", this.rtInput);
-        this.csHighlightRemoval.SetTexture(
-            this.kernelUpdateClusterCenters,
-            "tex_variance_maskernelr",
-            this.clusteringRTsAndBuffers.rtVariance
-        );
-        this.csHighlightRemoval.SetBuffer(
-            this.kernelUpdateClusterCenters,
-            "cbuf_cluster_centers",
-            this.clusteringRTsAndBuffers.cbufClusterCenters
-        );
-        this.csHighlightRemoval.SetBuffer(
-            this.kernelUpdateClusterCenters,
-            "cbuf_random_positions",
-            this.cbufRandomPositions
-        );
-        this.csHighlightRemoval.Dispatch(this.kernelUpdateClusterCenters, 1, 1, 1);
-    }
-
-    /*
-    private void KMeans(Texture texInput = null, bool rejectOld = false) {
-        this.AttributeClusters(texInput, final: false, khm: false);
-        this.clusteringRTsAndBuffers.rtArr.GenerateMips();
-        this.clusteringRTsAndBuffers.rtVariance.GenerateMips();
-        this.UpdateClusterCenters(rejectOld);
-
-        //this.LogVariance();
-    }
-    */
-
-    private void RandomSwap() {
-        this.UpdateRandomPositions();
-
-        this.csHighlightRemoval.SetBuffer(
-            this.kernelRandomSwap,
-            "cbuf_cluster_centers",
-            this.clusteringRTsAndBuffers.cbufClusterCenters
-        );
-        this.csHighlightRemoval.SetBuffer(this.kernelRandomSwap, "cbuf_random_positions", this.cbufRandomPositions);
-        this.csHighlightRemoval.SetTexture(this.kernelRandomSwap, "tex_input", this.rtInput);
-        this.csHighlightRemoval.SetInt("randomClusterCenter", this.random.Next(this.work.Peek().numClusters));
-        this.csHighlightRemoval.Dispatch(this.kernelRandomSwap, 1, 1, 1);
     }
 
     private string GetFileName() {
@@ -689,103 +617,9 @@ public class ClusteringTest : MonoBehaviour {
         bool doDownscale = launchParams.doDownscale;
         string algorithm = launchParams.clusteringAlgorithmDispatcher.descriptionString;
         bool doRandomizeEmptyClusters = launchParams.clusteringAlgorithmDispatcher.doRandomizeEmptyClusters;
-        /*
-        switch (this.work.Peek().algorithm) {
-            case Algorithm.KM:
-                algorithm = "KM";
-                break;
-            case Algorithm.KHM:
-                algorithm = "KHM(3)";
-                break;
-            case Algorithm.RS_1KM:
-                algorithm = "RS(1KM)";
-                break;
-            case Algorithm.RS_2KM:
-                algorithm = "RS(2KM)";
-                break;
-            case Algorithm.RS_2KM_readback:
-                algorithm = "RS(2KM)_readback";
-                break;
-            case Algorithm.Alternating:
-                algorithm = "KM+KHM(3)";
-                break;
-            case Algorithm.OneKM:
-                algorithm = "1xKM+KHM(3)";
-                break;
-            default:
-                throw new System.NotImplementedException();
-        }
-        */
 
         return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{textureSize}|number of clusters:{numClusters}|randomize empty clusters:{doRandomizeEmptyClusters}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}|algorithm:{algorithm}.csv";
     }
-
-    private float GetVariance() {
-        this.csHighlightRemoval.SetTexture(
-            this.kernelGenerateVariance,
-            "tex_input",
-            this.rtReference
-        );
-        this.csHighlightRemoval.SetTexture(
-            this.kernelGenerateVariance,
-            "tex_variance_rw",
-            this.clusteringRTsAndBuffers.rtVariance
-        );
-        this.csHighlightRemoval.SetBuffer(
-            this.kernelGenerateVariance,
-            "cbuf_cluster_centers",
-            this.clusteringRTsAndBuffers.cbufClusterCenters
-        );
-        this.csHighlightRemoval.Dispatch(
-            this.kernelGenerateVariance,
-            referenceTextureSize / kernelSize,
-            referenceTextureSize / kernelSize,
-        1);
-
-        this.clusteringRTsAndBuffers.rtVariance.GenerateMips();
-
-        this.csHighlightRemoval.SetTexture(
-            this.kernelGatherVariance,
-            "tex_variance_r",
-            this.clusteringRTsAndBuffers.rtVariance
-        );
-        this.csHighlightRemoval.SetBuffer(
-            this.kernelGatherVariance,
-            "cbuf_cluster_centers",
-            this.clusteringRTsAndBuffers.cbufClusterCenters
-        );
-        this.csHighlightRemoval.Dispatch(this.kernelGatherVariance, 1, 1, 1);
-
-        float variance = this.clusteringRTsAndBuffers.clusterCenters[0].w;
-        //return Variance;
-        return float.IsNaN(variance) == false ? variance : this.videoPlayer.frame < this.GetStartFrame() + 5 ? 0 : throw new System.Exception($"no Variance! (frame {this.videoPlayer.frame})");
-    }
-
-    /*
-    private void ValidateCandidates() {
-        switch (this.work.Peek().algorithm) {
-            case Algorithm.RS_1KM:
-            case Algorithm.RS_2KM:
-                this.csHighlightRemoval.SetBuffer(this.kernelValidateCandidates, "cbuf_cluster_centers", this.clusteringRTsAndBuffers.cbufClusterCenters);
-                this.csHighlightRemoval.Dispatch(this.kernelValidateCandidates, 1, 1, 1);
-                break;
-            case Algorithm.RS_2KM_readback:
-                Vector4[] clusterCenters = this.clusteringRTsAndBuffers.clusterCenters;
-                int numClusters = this.work.Peek().numClusters;
-                for (int i = 0; i < numClusters; i++) {
-                    if (clusterCenters[i].z < clusterCenters[i + numClusters].z) {
-                        clusterCenters[i + numClusters] = clusterCenters[i];
-                    } else {
-                        clusterCenters[i] = clusterCenters[i + numClusters];
-                    }
-                }
-                this.clusteringRTsAndBuffers.cbufClusterCenters.SetData(clusterCenters);
-                break;
-            default:
-                throw new System.NotImplementedException();
-        }
-    }
-    */
 
     // Update is called once per frame
     private void Update() {
@@ -801,74 +635,6 @@ public class ClusteringTest : MonoBehaviour {
         }
         return iterations % iterationsKM == 1;
     }
-
-    /*
-    private void RandomSwapClustering(int iterationsKM) {
-        Debug.Assert(
-            this.ValidateRandomSwapParams(iterationsKM, this.work.Peek().numIterations)
-        );
-
-        this.csHighlightRemoval.SetBool("KHM", false);
-        this.KMeans(this.rtInput, true);
-
-        for (int i = 1; i < this.work.Peek().numIterations; i += iterationsKM) {
-            this.RandomSwap();
-            for (int k = 0; k < iterationsKM; k++) {
-                this.KMeans();
-            }
-            this.ValidateCandidates();
-        }
-    }
-    */
-
-    /*
-    private void RunClustering() {
-        switch (this.work.Peek().algorithm) {
-            case Algorithm.KM:
-                this.csHighlightRemoval.SetBool("KHM", false);
-
-                for (int i = 0; i < this.work.Peek().numIterations; i++) {
-                    this.KMeans();
-                }
-
-                break;
-            case Algorithm.KHM:
-                this.csHighlightRemoval.SetBool("KHM", true);
-
-                for (int i = 0; i < this.work.Peek().numIterations; i++) {
-                    this.KMeans();
-                }
-
-                break;
-            case Algorithm.RS_1KM:
-                this.RandomSwapClustering(1);
-                break;
-            case Algorithm.RS_2KM:
-            case Algorithm.RS_2KM_readback:
-                this.RandomSwapClustering(2);
-                break;
-            case Algorithm.Alternating:
-                for (int i = 0; i < this.work.Peek().numIterations; i++) {
-                    this.csHighlightRemoval.SetBool("KHM", this.toggleKHM);
-                    this.toggleKHM = !this.toggleKHM;
-                    this.KMeans();
-                }
-
-                break;
-            case Algorithm.OneKM:
-                for (int i = 0; i < this.work.Peek().numIterations; i++) {
-                    this.csHighlightRemoval.SetBool("KHM", i != 0);
-                    this.KMeans();
-                }
-
-                break;
-            default:
-                throw new System.NotImplementedException();
-        }
-
-        this.AttributeClusters(this.rtInput, true);
-    }
-    */
 
     private void WriteVarianceLog() {
         string fileName = $"Variance logs/{this.GetFileName()}";
@@ -977,11 +743,11 @@ public class ClusteringTest : MonoBehaviour {
                     (Time.frameCount / this.offsets.Length) % this.work.Peek().jitterSize
                 }
         );
-        this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_input", this.rtReference);
-        this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_output", this.rtInput);
+        this.csHighlightRemoval.SetTexture(this.kernelSubsample, "tex_input", this.rtReference);
+        this.csHighlightRemoval.SetTexture(this.kernelSubsample, "tex_output", this.rtInput);
         this.csHighlightRemoval.SetBool("downscale", this.work.Peek().doDownscale);
         this.csHighlightRemoval.Dispatch(
-            this.kernelsubsample,
+            this.kernelSubsample,
             this.work.Peek().textureSize / kernelSize,
             this.work.Peek().textureSize / kernelSize,
             1
@@ -1009,7 +775,11 @@ public class ClusteringTest : MonoBehaviour {
         }
 
         if (logType == LogType.Variance) {
-            this.frameLogVariance.Add(this.GetVariance());
+            this.frameLogVariance.Add(
+                this.work.Peek().clusteringAlgorithmDispatcher.GetVariance(
+                    this.clusteringRTsAndBuffers
+                )
+            );
         }
 
         this.RenderResult();

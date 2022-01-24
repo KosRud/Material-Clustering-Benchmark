@@ -3,12 +3,13 @@ using UnityEngine;
 public class ClusteringRTsAndBuffers {
     public const int max_num_clusters = 32;
 
-    public RenderTexture rtArr;
-    public RenderTexture rtVariance;
-    public ComputeBuffer cbufClusterCenters;
-    public ComputeBuffer cbufRandomPositions;
+    public readonly RenderTexture rtArr;
+    public readonly RenderTexture rtVariance;
+    public readonly ComputeBuffer cbufClusterCenters;
+    public readonly ComputeBuffer cbufRandomPositions;
+    public readonly Texture texReference;
 
-    private Position[] randomPositions;
+    private readonly Position[] randomPositions;
     private readonly System.Random random;
 
     private readonly Vector4[] _clusterCenters;
@@ -44,12 +45,19 @@ public class ClusteringRTsAndBuffers {
         this.cbufRandomPositions.SetData(this.randomPositions);
     }
 
-    public ClusteringRTsAndBuffers(int numClusters, int textureSize, int referenceTextureSize) {
+    public ClusteringRTsAndBuffers(
+        int numClusters,
+        int textureSize,
+        int referenceTextureSize,
+        Texture texReference
+    ) {
         this.random = new System.Random();
 
         this.cbufRandomPositions = new ComputeBuffer(max_num_clusters, sizeof(int) * 4);
         this.randomPositions = new Position[max_num_clusters];
         this.UpdateRandomPositions(textureSize);
+
+        this.texReference = texReference;
 
         var rtDesc = new RenderTextureDescriptor(
             textureSize,
@@ -89,15 +97,20 @@ public class ClusteringRTsAndBuffers {
 
         this._clusterCenters = new Vector4[numClusters * 2];
 
+        this.RandomizeClusterCenters();
+    }
+
+    public void RandomizeClusterCenters() {
         for (int i = 0; i < this._clusterCenters.Length; i++) {
-            // "old" cluster centers with infinite Variance
-            // to make sure new ones will overwrite them when validated
             var c = Color.HSVToRGB(
-                i / (float)(numClusters),
+                (float)this.random.NextDouble(),
                 1,
                 1
             );
             c *= 1.0f / (c.r + c.g + c.b);
+
+            // "old" cluster centers with infinite Variance
+            // to make sure new ones will overwrite them when validated
             this.clusterCenters[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0);
         }
         this.cbufClusterCenters.SetData(this.clusterCenters);
