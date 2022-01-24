@@ -35,7 +35,7 @@ public class ClusteringTest : MonoBehaviour {
     private ComputeBuffer cbufRandomPositions;
 
     // shader kernels
-    private int kernelAttributeClusters;
+    //private int kernelAttributeClusters;
     private int kernelGatherVariance;
     private int kernelGenerateVariance;
     private int kernelRandomSwap;
@@ -171,7 +171,7 @@ public class ClusteringTest : MonoBehaviour {
 
     private void FindKernels() {
         this.kernelShowResult = this.csHighlightRemoval.FindKernel("ShowResult");
-        this.kernelAttributeClusters = this.csHighlightRemoval.FindKernel("AttributeClusters");
+        //this.kernelAttributeClusters = this.csHighlightRemoval.FindKernel("AttributeClusters");
         this.kernelUpdateClusterCenters = this.csHighlightRemoval.FindKernel("UpdateClusterCenters");
         this.kernelRandomSwap = this.csHighlightRemoval.FindKernel("RandomSwap");
         this.kernelValidateCandidates = this.csHighlightRemoval.FindKernel("ValidateCandidates");
@@ -375,7 +375,7 @@ public class ClusteringTest : MonoBehaviour {
 
         {       // 6. KHM and random swap
 
-            for (int numIterations = 1; numIterations < 31; numIterations += 3) {
+            for (int numIterations = 1; numIterations < 31; numIterations += 5) {
 
                 foreach (UnityEngine.Video.VideoClip video in this.videos) {
 
@@ -412,8 +412,7 @@ public class ClusteringTest : MonoBehaviour {
                                 computeShader: this.csHighlightRemoval,
                                 numIterations: numIterations,
                                 doRandomizeEmptyClusters: false,
-                                numClusters: 6,
-                                paramKHMp: 3
+                                numClusters: 6
                             )
                         )
                     );
@@ -476,7 +475,9 @@ public class ClusteringTest : MonoBehaviour {
                     string fileName = $"Variance logs/{this.GetFileName()}";
 
                     if (System.IO.File.Exists(fileName)) {
+#if UNITY_EDITOR
                         UnityEditor.EditorApplication.isPlaying = false;
+#endif
                         throw new System.Exception($"File exists: {fileName}");
                     }
                 }
@@ -579,10 +580,10 @@ public class ClusteringTest : MonoBehaviour {
         this.videoPlayer.frame = this.GetStartFrame();
     }
 
-    private void AttributeClusters(Texture inputTex = null, bool final = false) {
-        inputTex ??= this.rtInput;
-
+    /*
+    private void AttributeClusters(Texture inputTex, bool final, bool khm) {
         this.csHighlightRemoval.SetBool("final", final);  // replace with define
+        this.csHighlightRemoval.SetBool("KHM", khm);
         this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_input", inputTex);
         this.csHighlightRemoval.SetTexture(
             this.kernelAttributeClusters,
@@ -606,6 +607,7 @@ public class ClusteringTest : MonoBehaviour {
             1
         );
     }
+    */
 
     private void UpdateClusterCenters(bool rejectOld) {
         this.UpdateRandomPositions();
@@ -635,14 +637,16 @@ public class ClusteringTest : MonoBehaviour {
         this.csHighlightRemoval.Dispatch(this.kernelUpdateClusterCenters, 1, 1, 1);
     }
 
+    /*
     private void KMeans(Texture texInput = null, bool rejectOld = false) {
-        this.AttributeClusters(texInput);
+        this.AttributeClusters(texInput, final: false, khm: false);
         this.clusteringRTsAndBuffers.rtArr.GenerateMips();
         this.clusteringRTsAndBuffers.rtVariance.GenerateMips();
         this.UpdateClusterCenters(rejectOld);
 
         //this.LogVariance();
     }
+    */
 
     private void RandomSwap() {
         this.UpdateRandomPositions();
@@ -855,7 +859,9 @@ public class ClusteringTest : MonoBehaviour {
         string fileName = $"Variance logs/{this.GetFileName()}";
 
         if (System.IO.File.Exists(fileName)) {
+#if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
+#endif
             throw new System.Exception($"File exists: {fileName}");
         }
 
@@ -930,7 +936,9 @@ public class ClusteringTest : MonoBehaviour {
             this.work.Pop();
 
             if (this.work.Count == 0) {
+#if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
+#endif
                 Destroy(this);
             }
 
@@ -974,14 +982,15 @@ public class ClusteringTest : MonoBehaviour {
         );
         this.work.Peek().clusteringAlgorithmDispatcher.AttributeClusters(
             this.rtInput,
-            this.clusteringRTsAndBuffers
+            this.clusteringRTsAndBuffers,
+            final: true,
+            khm: false
         );
 
         if (Time.time - this.timeLastIteration > timeStep) {
             this.timeLastIteration = Time.time;
             this.showReference = !this.showReference;
             this.showReference = false;
-            //this.LogVariance();
         }
 
         if (logType == LogType.Variance) {
