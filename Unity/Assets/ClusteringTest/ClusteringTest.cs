@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HighlightRemovalTest : MonoBehaviour {
+public class ClusteringTest : MonoBehaviour {
     // configuration
     enum LogType {
         FrameTime,
@@ -16,13 +16,11 @@ public class HighlightRemovalTest : MonoBehaviour {
     private readonly long? overrideEndFrame = null;
 
     // textures and buffers
-    private RenderTexture rtArr;
     private RenderTexture rtInput;
-    private RenderTexture rtVariance;
     private RenderTexture rtReference;
     private RenderTexture rtResult;
+    private ClusteringRTsAndBuffers clusteringRTsAndBuffers;
 
-    private ComputeBuffer cbufClusterCenters;
     private struct Position {
         public int x;
         public int y;
@@ -70,7 +68,6 @@ public class HighlightRemovalTest : MonoBehaviour {
     private Position[] randomPositions;
     private readonly System.Random random = new System.Random(1);
     private readonly System.Collections.Generic.List<float> frameLogVariance = new System.Collections.Generic.List<float>();
-    private Vector4[] clusterCenters;
     private float timeLastIteration = 0;
 
     private UnityEngine.Video.VideoPlayer videoPlayer;
@@ -148,22 +145,6 @@ public class HighlightRemovalTest : MonoBehaviour {
     }
 
     private void InitRTs() {
-        var rtDesc = new RenderTextureDescriptor(
-            this.work.Peek().textureSize,
-            this.work.Peek().textureSize,
-            RenderTextureFormat.ARGBFloat,
-            0
-        ) {
-            dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray,
-            volumeDepth = 16,
-            useMipMap = true,
-            autoGenerateMips = false
-        };
-
-        this.rtArr = new RenderTexture(rtDesc) {
-            enableRandomWrite = true
-        };
-
         this.rtReference = new RenderTexture(
             referenceTextureSize,
             referenceTextureSize,
@@ -180,17 +161,6 @@ public class HighlightRemovalTest : MonoBehaviour {
             enableRandomWrite = true
         };
 
-        this.rtVariance = new RenderTexture(
-            referenceTextureSize,
-            referenceTextureSize,
-            0,
-            RenderTextureFormat.RGFloat
-        ) {
-            enableRandomWrite = true,
-            useMipMap = true,
-            autoGenerateMips = false
-        };
-
         this.rtInput = new RenderTexture(
             this.work.Peek().textureSize,
             this.work.Peek().textureSize,
@@ -202,28 +172,7 @@ public class HighlightRemovalTest : MonoBehaviour {
     }
 
     private void InitCbufs() {
-        /*
-			second half of the buffer contains candidate cluster centers
-			first half contains current cluster centers
-
-			NVidia says structures not aligned to 128 bits are slow
-			https://developer.nvidia.com/content/understanding-structured-buffer-performance
-		*/
-        this.cbufClusterCenters = new ComputeBuffer(this.work.Peek().numClusters * 2, sizeof(float) * 4);
         this.cbufRandomPositions = new ComputeBuffer(this.work.Peek().numClusters, sizeof(int) * 4);
-
-        for (int i = 0; i < this.clusterCenters.Length; i++) {
-            // "old" cluster centers with infinite Variance
-            // to make sure new ones will overwrite them when validated
-            var c = Color.HSVToRGB(
-                i / (float)(this.work.Peek().numClusters),
-                1,
-                1
-            );
-            c *= 1.0f / (c.r + c.g + c.b);
-            this.clusterCenters[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0);
-        }
-        this.cbufClusterCenters.SetData(this.clusterCenters);
     }
 
     private void FindKernels() {
@@ -592,13 +541,17 @@ public class HighlightRemovalTest : MonoBehaviour {
         this.toggleKHM = false; // important to reset!
 
         this.randomPositions = new Position[this.work.Peek().numClusters];
-        this.clusterCenters = new Vector4[this.work.Peek().numClusters * 2];
 
         this.InitJitterOffsets();
         this.FindKernels();
         this.SetTextureSize();
         this.InitRTs();
         this.InitCbufs();
+        this.clusteringRTsAndBuffers = new ClusteringRTsAndBuffers(
+            this.work.Peek().numClusters,
+            this.work.Peek().textureSize,
+            referenceTextureSize
+        );
 
         this.videoPlayer = this.GetComponent<UnityEngine.Video.VideoPlayer>();
         this.videoPlayer.playbackSpeed = 0;
@@ -615,9 +568,21 @@ public class HighlightRemovalTest : MonoBehaviour {
 
         this.csHighlightRemoval.SetBool("final", final);  // replace with define
         this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_input", inputTex);
-        this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_variance", this.rtVariance);
-        this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_arr_clusters_rw", this.rtArr);
-        this.csHighlightRemoval.SetBuffer(this.kernelAttributeClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
+        this.csHighlightRemoval.SetTexture(
+            this.kernelAttributeClusters,
+            "tex_variance",
+            this.clusteringRTsAndBuffers.rtVariance
+        );
+        this.csHighlightRemoval.SetTexture(
+            this.kernelAttributeClusters,
+            "tex_arr_clusters_rw",
+            this.clusteringRTsAndBuffers.rtArr
+        );
+        this.csHighlightRemoval.SetBuffer(
+            this.kernelAttributeClusters,
+            "cbuf_cluster_centers",
+            this.clusteringRTsAndBuffers.cbufClusterCenters
+        );
         this.csHighlightRemoval.Dispatch(
             this.kernelAttributeClusters,
             inputTex.width / kernelSize,
@@ -630,18 +595,34 @@ public class HighlightRemovalTest : MonoBehaviour {
         this.UpdateRandomPositions();
 
         this.csHighlightRemoval.SetBool("reject_old", rejectOld);
-        this.csHighlightRemoval.SetTexture(this.kernelUpdateClusterCenters, "tex_arr_clusters_r", this.rtArr);
+        this.csHighlightRemoval.SetTexture(
+            this.kernelUpdateClusterCenters,
+            "tex_arr_clusters_r",
+            this.clusteringRTsAndBuffers.rtArr
+        );
         this.csHighlightRemoval.SetTexture(this.kernelUpdateClusterCenters, "tex_input", this.rtInput);
-        this.csHighlightRemoval.SetTexture(this.kernelUpdateClusterCenters, "tex_variance_maskernelr", this.rtVariance);
-        this.csHighlightRemoval.SetBuffer(this.kernelUpdateClusterCenters, "cbuf_cluster_centers", this.cbufClusterCenters);
-        this.csHighlightRemoval.SetBuffer(this.kernelUpdateClusterCenters, "cbuf_random_positions", this.cbufRandomPositions);
+        this.csHighlightRemoval.SetTexture(
+            this.kernelUpdateClusterCenters,
+            "tex_variance_maskernelr",
+            this.clusteringRTsAndBuffers.rtVariance
+        );
+        this.csHighlightRemoval.SetBuffer(
+            this.kernelUpdateClusterCenters,
+            "cbuf_cluster_centers",
+            this.clusteringRTsAndBuffers.cbufClusterCenters
+        );
+        this.csHighlightRemoval.SetBuffer(
+            this.kernelUpdateClusterCenters,
+            "cbuf_random_positions",
+            this.cbufRandomPositions
+        );
         this.csHighlightRemoval.Dispatch(this.kernelUpdateClusterCenters, 1, 1, 1);
     }
 
     private void KMeans(Texture texInput = null, bool rejectOld = false) {
         this.AttributeClusters(texInput);
-        this.rtArr.GenerateMips();
-        this.rtVariance.GenerateMips();
+        this.clusteringRTsAndBuffers.rtArr.GenerateMips();
+        this.clusteringRTsAndBuffers.rtVariance.GenerateMips();
         this.UpdateClusterCenters(rejectOld);
 
         //this.LogVariance();
@@ -650,7 +631,11 @@ public class HighlightRemovalTest : MonoBehaviour {
     private void RandomSwap() {
         this.UpdateRandomPositions();
 
-        this.csHighlightRemoval.SetBuffer(this.kernelRandomSwap, "cbuf_cluster_centers", this.cbufClusterCenters);
+        this.csHighlightRemoval.SetBuffer(
+            this.kernelRandomSwap,
+            "cbuf_cluster_centers",
+            this.clusteringRTsAndBuffers.cbufClusterCenters
+        );
         this.csHighlightRemoval.SetBuffer(this.kernelRandomSwap, "cbuf_random_positions", this.cbufRandomPositions);
         this.csHighlightRemoval.SetTexture(this.kernelRandomSwap, "tex_input", this.rtInput);
         this.csHighlightRemoval.SetInt("randomClusterCenter", this.random.Next(this.work.Peek().numClusters));
@@ -697,22 +682,40 @@ public class HighlightRemovalTest : MonoBehaviour {
     }
 
     private float GetVariance() {
-        this.csHighlightRemoval.SetTexture(this.kernelGenerateVariance, "tex_input", this.rtReference);
-        this.csHighlightRemoval.SetTexture(this.kernelGenerateVariance, "tex_variance_rw", this.rtVariance);
-        this.csHighlightRemoval.SetBuffer(this.kernelGenerateVariance, "cbuf_cluster_centers", this.cbufClusterCenters);
+        this.csHighlightRemoval.SetTexture(
+            this.kernelGenerateVariance,
+            "tex_input",
+            this.rtReference
+        );
+        this.csHighlightRemoval.SetTexture(
+            this.kernelGenerateVariance,
+            "tex_variance_rw",
+            this.clusteringRTsAndBuffers.rtVariance
+        );
+        this.csHighlightRemoval.SetBuffer(
+            this.kernelGenerateVariance,
+            "cbuf_cluster_centers",
+            this.clusteringRTsAndBuffers.cbufClusterCenters
+        );
         this.csHighlightRemoval.Dispatch(
             this.kernelGenerateVariance,
             referenceTextureSize / kernelSize,
             referenceTextureSize / kernelSize,
         1);
 
-        this.csHighlightRemoval.SetTexture(this.kernelGatherVariance, "tex_variance_r", this.rtVariance);
-        this.csHighlightRemoval.SetBuffer(this.kernelGatherVariance, "cbuf_cluster_centers", this.cbufClusterCenters);
+        this.csHighlightRemoval.SetTexture(
+            this.kernelGatherVariance,
+            "tex_variance_r",
+            this.clusteringRTsAndBuffers.rtVariance
+        );
+        this.csHighlightRemoval.SetBuffer(
+            this.kernelGatherVariance,
+            "cbuf_cluster_centers",
+            this.clusteringRTsAndBuffers.cbufClusterCenters
+        );
         this.csHighlightRemoval.Dispatch(this.kernelGatherVariance, 1, 1, 1);
 
-        this.cbufClusterCenters.GetData(this.clusterCenters);
-
-        float variance = this.clusterCenters[0].w;
+        float variance = this.clusteringRTsAndBuffers.clusterCenters[0].w;
         //return Variance;
         return float.IsNaN(variance) == false ? variance : this.videoPlayer.frame < this.GetStartFrame() + 5 ? 0 : throw new System.Exception($"no Variance! (frame {this.videoPlayer.frame})");
     }
@@ -721,20 +724,20 @@ public class HighlightRemovalTest : MonoBehaviour {
         switch (this.work.Peek().algorithm) {
             case Algorithm.RS_1KM:
             case Algorithm.RS_2KM:
-                this.csHighlightRemoval.SetBuffer(this.kernelValidateCandidates, "cbuf_cluster_centers", this.cbufClusterCenters);
+                this.csHighlightRemoval.SetBuffer(this.kernelValidateCandidates, "cbuf_cluster_centers", this.clusteringRTsAndBuffers.cbufClusterCenters);
                 this.csHighlightRemoval.Dispatch(this.kernelValidateCandidates, 1, 1, 1);
                 break;
             case Algorithm.RS_2KM_readback:
-                this.cbufClusterCenters.GetData(this.clusterCenters);
+                Vector4[] clusterCenters = this.clusteringRTsAndBuffers.clusterCenters;
                 int numClusters = this.work.Peek().numClusters;
                 for (int i = 0; i < numClusters; i++) {
-                    if (this.clusterCenters[i].z < this.clusterCenters[i + numClusters].z) {
-                        this.clusterCenters[i + numClusters] = this.clusterCenters[i];
+                    if (clusterCenters[i].z < clusterCenters[i + numClusters].z) {
+                        clusterCenters[i + numClusters] = clusterCenters[i];
                     } else {
-                        this.clusterCenters[i] = this.clusterCenters[i + numClusters];
+                        clusterCenters[i] = clusterCenters[i + numClusters];
                     }
                 }
-                this.cbufClusterCenters.SetData(this.clusterCenters);
+                this.clusteringRTsAndBuffers.cbufClusterCenters.SetData(clusterCenters);
                 break;
             default:
                 throw new System.NotImplementedException();
@@ -954,20 +957,18 @@ public class HighlightRemovalTest : MonoBehaviour {
     }
 
     private void OnDisable() {
-        this.rtArr?.Release();
-        this.rtResult?.Release();
-        this.rtInput?.Release();
-        this.rtVariance?.Release();
-        this.rtReference?.Release();
+        this.rtResult.Release();
+        this.rtInput.Release();
+        this.rtReference.Release();
+        this.cbufRandomPositions.Release();
 
-        this.cbufClusterCenters?.Release();
-        this.cbufRandomPositions?.Release();
+        this.clusteringRTsAndBuffers.Release();
     }
 
     private void RenderResult() {
-        this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_arr_clusters_r", this.rtArr);
+        this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_arr_clusters_r", this.clusteringRTsAndBuffers.rtArr);
         this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_output", this.rtResult);
-        this.csHighlightRemoval.SetBuffer(this.kernelShowResult, "cbuf_cluster_centers", this.cbufClusterCenters);
+        this.csHighlightRemoval.SetBuffer(this.kernelShowResult, "cbuf_cluster_centers", this.clusteringRTsAndBuffers.cbufClusterCenters);
         this.csHighlightRemoval.SetBool("show_reference", this.showReference);
         this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_input", this.rtInput);
         this.csHighlightRemoval.Dispatch(
