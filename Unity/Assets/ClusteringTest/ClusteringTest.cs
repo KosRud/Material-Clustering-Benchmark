@@ -79,36 +79,30 @@ public class ClusteringTest : MonoBehaviour {
     private class LaunchParameters {
         public readonly int textureSize;
         public readonly int numClusters;
-        public readonly bool doRandomizeEmptyClusters;
         public readonly bool staggeredJitter;
         public readonly int jitterSize;
         public readonly UnityEngine.Video.VideoClip video;
         public readonly bool doDownscale;
-        public readonly int numIterations;
-        public readonly Algorithm algorithm;
+        public readonly AClusteringAlgorithmDispatcher clusteringAlgorithmDispatcher;
 
         private LaunchParameters() { }
 
         public LaunchParameters(
             int textureSize,
             int numClusters,
-            bool doRandomizeEmptyClusters,
             bool staggeredJitter,
             int jitterSize,
             UnityEngine.Video.VideoClip video,
             bool doDownscale,
-            int numIterations,
-            Algorithm algorithm
+            AClusteringAlgorithmDispatcher clusteringAlgorithmDispatcher
         ) {
             this.textureSize = textureSize;
             this.numClusters = numClusters;
-            this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
             this.staggeredJitter = staggeredJitter;
             this.jitterSize = jitterSize;
             this.video = video;
             this.doDownscale = doDownscale;
-            this.numIterations = numIterations;
-            this.algorithm = algorithm;
+            this.clusteringAlgorithmDispatcher = clusteringAlgorithmDispatcher;
         }
     }
 
@@ -378,7 +372,7 @@ public class ClusteringTest : MonoBehaviour {
 		}
         */
 
-        /*
+
         {       // 6. KHM and random swap
 
             for (int numIterations = 1; numIterations < 31; numIterations++) {
@@ -389,70 +383,85 @@ public class ClusteringTest : MonoBehaviour {
                     this.work.Push(
                         new LaunchParameters(
                             textureSize: 64,
-                            numIterations: numIterations,
                             numClusters: 6,
-                            doRandomizeEmptyClusters: false,
                             staggeredJitter: false,
                             jitterSize: 1,
                             video: video,
                             doDownscale: false,
-                            algorithm: Algorithm.KM
+                            clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKM(
+                                kernelSize: kernelSize,
+                                computeShader: this.csHighlightRemoval,
+                                numIterations: numIterations,
+                                doRandomizeEmptyClusters: false,
+                                numClusters: 6
+                            )
                         )
                     );
-
-                    if (
-                        this.ValidateRandomSwapParams(1, numIterations)
-                    ) {
-                        // random swap
-                        this.work.Push(
-                            new LaunchParameters(
-                                textureSize: 64,
-                                numIterations: numIterations,
-                                numClusters: 6,
-                                doRandomizeEmptyClusters: false,
-                                staggeredJitter: false,
-                                jitterSize: 1,
-                                video: video,
-                                doDownscale: false,
-                                algorithm: Algorithm.RS_1KM
-                            )
-                        );
-                    }
-
-                    if (
-                        this.ValidateRandomSwapParams(2, numIterations)
-                    ) {
-                        // random swap
-                        this.work.Push(
-                            new LaunchParameters(
-                                textureSize: 64,
-                                numIterations: numIterations,
-                                numClusters: 6,
-                                doRandomizeEmptyClusters: false,
-                                staggeredJitter: false,
-                                jitterSize: 1,
-                                video: video,
-                                doDownscale: false,
-                                algorithm: Algorithm.RS_2KM
-                            )
-                        );
-                    }
 
                     // KHM
                     this.work.Push(
                         new LaunchParameters(
                             textureSize: 64,
-                            numIterations: numIterations,
                             numClusters: 6,
-                            doRandomizeEmptyClusters: false,
                             staggeredJitter: false,
                             jitterSize: 1,
                             video: video,
                             doDownscale: false,
-                            algorithm: Algorithm.KHM
+                            clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKHM(
+                                kernelSize: kernelSize,
+                                computeShader: this.csHighlightRemoval,
+                                numIterations: numIterations,
+                                doRandomizeEmptyClusters: false,
+                                numClusters: 6,
+                                paramKHMp: 3
+                            )
                         )
-
                     );
+
+                    // random swap
+                    {
+                        // 1KM
+                        if (ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(1, numIterations)) {
+                            new LaunchParameters(
+                                textureSize: 64,
+                                numClusters: 6,
+                                staggeredJitter: false,
+                                jitterSize: 1,
+                                video: video,
+                                doDownscale: false,
+                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                                    kernelSize: kernelSize,
+                                    computeShader: this.csHighlightRemoval,
+                                    numIterations: numIterations,
+                                    doRandomizeEmptyClusters: false,
+                                    numClusters: 6,
+                                    numIterationsKM: 1,
+                                    doReadback: false
+                                )
+                            );
+                        }
+
+                        //2KM
+                        if (ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(2, numIterations)) {
+                            new LaunchParameters(
+                                textureSize: 64,
+                                numClusters: 6,
+                                staggeredJitter: false,
+                                jitterSize: 1,
+                                video: video,
+                                doDownscale: false,
+                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                                    kernelSize: kernelSize,
+                                    computeShader: this.csHighlightRemoval,
+                                    numIterations: numIterations,
+                                    doRandomizeEmptyClusters: false,
+                                    numClusters: 6,
+                                    numIterationsKM: 2,
+                                    doReadback: false
+                                )
+                            );
+                        }
+                    }
 
                     string fileName = $"Variance logs/{this.GetFileName()}";
 
@@ -463,8 +472,8 @@ public class ClusteringTest : MonoBehaviour {
                 }
             }
         }
-        */
 
+        /*
         {       // frame time measurement for RS (dispatch vs readback) 
             for (int i = 0; i < 10; i++) {
                 foreach (UnityEngine.Video.VideoClip video in this.videos) {
@@ -511,7 +520,7 @@ public class ClusteringTest : MonoBehaviour {
                 }
             }
         }
-
+        */
 
     }
 
@@ -558,9 +567,6 @@ public class ClusteringTest : MonoBehaviour {
         this.videoPlayer.clip = this.work.Peek().video;
         this.videoPlayer.Play();
         this.videoPlayer.frame = this.GetStartFrame();
-
-        this.csHighlightRemoval.SetBool("do_random_sample_empty_clusters", this.work.Peek().doRandomizeEmptyClusters);
-        this.csHighlightRemoval.SetInt("num_clusters", this.work.Peek().numClusters);
     }
 
     private void AttributeClusters(Texture inputTex = null, bool final = false) {
@@ -643,15 +649,18 @@ public class ClusteringTest : MonoBehaviour {
     }
 
     private string GetFileName() {
-        string videoName = this.work.Peek().video.name;
-        int numIterations = this.work.Peek().numIterations;
-        int textureSize = this.work.Peek().textureSize;
-        int numClusters = this.work.Peek().numClusters;
-        bool doRandomizeEmptyClusters = this.work.Peek().doRandomizeEmptyClusters;
-        int jitterSize = this.work.Peek().jitterSize;
-        bool staggeredJitter = this.work.Peek().staggeredJitter;
-        bool doDownscale = this.work.Peek().doDownscale;
-        string algorithm;
+        LaunchParameters launchParams = this.work.Peek();
+
+        string videoName = launchParams.video.name;
+        int numIterations = launchParams.clusteringAlgorithmDispatcher.numIterations;
+        int textureSize = launchParams.textureSize;
+        int numClusters = launchParams.numClusters;
+        int jitterSize = launchParams.jitterSize;
+        bool staggeredJitter = launchParams.staggeredJitter;
+        bool doDownscale = launchParams.doDownscale;
+        string algorithm = launchParams.clusteringAlgorithmDispatcher.descriptionString;
+        bool doRandomizeEmptyClusters = launchParams.clusteringAlgorithmDispatcher.doRandomizeEmptyClusters;
+        /*
         switch (this.work.Peek().algorithm) {
             case Algorithm.KM:
                 algorithm = "KM";
@@ -677,6 +686,7 @@ public class ClusteringTest : MonoBehaviour {
             default:
                 throw new System.NotImplementedException();
         }
+        */
 
         return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{textureSize}|number of clusters:{numClusters}|randomize empty clusters:{doRandomizeEmptyClusters}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}|algorithm:{algorithm}.csv";
     }
@@ -703,6 +713,8 @@ public class ClusteringTest : MonoBehaviour {
             referenceTextureSize / kernelSize,
         1);
 
+        this.clusteringRTsAndBuffers.rtVariance.GenerateMips();
+
         this.csHighlightRemoval.SetTexture(
             this.kernelGatherVariance,
             "tex_variance_r",
@@ -720,6 +732,7 @@ public class ClusteringTest : MonoBehaviour {
         return float.IsNaN(variance) == false ? variance : this.videoPlayer.frame < this.GetStartFrame() + 5 ? 0 : throw new System.Exception($"no Variance! (frame {this.videoPlayer.frame})");
     }
 
+    /*
     private void ValidateCandidates() {
         switch (this.work.Peek().algorithm) {
             case Algorithm.RS_1KM:
@@ -743,6 +756,7 @@ public class ClusteringTest : MonoBehaviour {
                 throw new System.NotImplementedException();
         }
     }
+    */
 
     // Update is called once per frame
     private void Update() {
@@ -759,6 +773,7 @@ public class ClusteringTest : MonoBehaviour {
         return iterations % iterationsKM == 1;
     }
 
+    /*
     private void RandomSwapClustering(int iterationsKM) {
         Debug.Assert(
             this.ValidateRandomSwapParams(iterationsKM, this.work.Peek().numIterations)
@@ -775,7 +790,9 @@ public class ClusteringTest : MonoBehaviour {
             this.ValidateCandidates();
         }
     }
+    */
 
+    /*
     private void RunClustering() {
         switch (this.work.Peek().algorithm) {
             case Algorithm.KM:
@@ -822,6 +839,7 @@ public class ClusteringTest : MonoBehaviour {
 
         this.AttributeClusters(this.rtInput, true);
     }
+    */
 
     private void WriteVarianceLog() {
         string fileName = $"Variance logs/{this.GetFileName()}";
@@ -938,7 +956,16 @@ public class ClusteringTest : MonoBehaviour {
 
         this.videoPlayer.StepForward();
 
-        this.RunClustering();
+        //this.RunClustering();
+        this.work.Peek().clusteringAlgorithmDispatcher.RunClustering(
+            this.rtInput,
+            this.work.Peek().textureSize,
+            this.clusteringRTsAndBuffers
+        );
+        this.work.Peek().clusteringAlgorithmDispatcher.AttributeClusters(
+            this.rtInput,
+            this.clusteringRTsAndBuffers
+        );
 
         if (Time.time - this.timeLastIteration > timeStep) {
             this.timeLastIteration = Time.time;
