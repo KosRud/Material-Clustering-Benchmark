@@ -12,9 +12,6 @@ public class ClusteringAlgorithmDispatcherKM : AClusteringAlgorithmDispatcher {
         int textureSize,
         ClusteringRTsAndBuffers clusteringRTsAndBuffers
     ) {
-        this.computeShader.SetBool("do_random_sample_empty_clusters", this.doRandomizeEmptyClusters);
-        this.computeShader.SetInt("num_clusters", this.numClusters);
-
         for (int i = 0; i < this.numIterations; i++) {
             this.KMiteration(
                 inputTex, textureSize, clusteringRTsAndBuffers,
@@ -29,6 +26,9 @@ public class ClusteringAlgorithmDispatcherKM : AClusteringAlgorithmDispatcher {
         ClusteringRTsAndBuffers clusteringRTsAndBuffers,
         bool rejectOld
     ) {
+        this.computeShader.SetBool("do_random_sample_empty_clusters", this.doRandomizeEmptyClusters);
+        this.computeShader.SetInt("num_clusters", this.numClusters);
+
         this.AttributeClusters(inputTex, clusteringRTsAndBuffers, final: false, khm: false);
         clusteringRTsAndBuffers.rtArr.GenerateMips();
         this.UpdateClusterCenters(inputTex, textureSize, clusteringRTsAndBuffers, rejectOld);
