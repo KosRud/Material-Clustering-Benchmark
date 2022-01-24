@@ -10,7 +10,7 @@ public class ClusteringTest : MonoBehaviour {
     private const int referenceTextureSize = 512;
     private const int kernelSize = 4;
     private const float timeStep = 1f;
-    private const LogType logType = LogType.Variance;
+    private const LogType logType = LogType.FrameTime;
 
     private readonly long? overrideStartFrame = null;
     private readonly long? overrideEndFrame = null;
@@ -374,10 +374,9 @@ public class ClusteringTest : MonoBehaviour {
         /*
         {       // 6. KHM and random swap
 
-            for (int numIterations = 1; numIterations < 31; numIterations += 5) {
-
-                foreach (UnityEngine.Video.VideoClip video in this.videos) {
-                    // normal  K-Means
+            foreach (UnityEngine.Video.VideoClip video in this.videos) {
+                for (int numIterations = 1; numIterations < 31; numIterations += 5){
+                    // KM
                     this.work.Push(
                         new LaunchParameters(
                             textureSize: 64,
@@ -417,125 +416,65 @@ public class ClusteringTest : MonoBehaviour {
                     );
                     this.ThrowIfExists();
 
-                    // random swap
-                    {
-                        // 1KM
-                        if (
-                            ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(
-                                iterations: numIterations,
-                                iterationsKM: 1
-                            )
-                        ) {
-                            this.work.Push(
-                                new LaunchParameters(
-                                    textureSize: 64,
+                    // RS(1KM)
+                    if (
+                        ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(
+                            iterations: numIterations,
+                            iterationsKM: 1
+                        )
+                    ) {
+                        this.work.Push(
+                            new LaunchParameters(
+                                textureSize: 64,
+                                numClusters: 6,
+                                staggeredJitter: false,
+                                jitterSize: 1,
+                                video: video,
+                                doDownscale: false,
+                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                                    kernelSize: kernelSize,
+                                    computeShader: this.csHighlightRemoval,
+                                    numIterations: numIterations,
+                                    doRandomizeEmptyClusters: false,
                                     numClusters: 6,
-                                    staggeredJitter: false,
-                                    jitterSize: 1,
-                                    video: video,
-                                    doDownscale: false,
-                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
-                                        kernelSize: kernelSize,
-                                        computeShader: this.csHighlightRemoval,
-                                        numIterations: numIterations,
-                                        doRandomizeEmptyClusters: false,
-                                        numClusters: 6,
-                                        numIterationsKM: 1,
-                                        doReadback: false
-                                    )
+                                    numIterationsKM: 1,
+                                    doReadback: false
                                 )
-                            );
-                            this.ThrowIfExists();
-                        }
-
-                        //2KM
-                        if (
-                            ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(
-                                iterations: numIterations,
-                                iterationsKM: 2
                             )
-                        ) {
-                            this.work.Push(
-                                new LaunchParameters(
-                                    textureSize: 64,
-                                    numClusters: 6,
-                                    staggeredJitter: false,
-                                    jitterSize: 1,
-                                    video: video,
-                                    doDownscale: false,
-                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
-                                        kernelSize: kernelSize,
-                                        computeShader: this.csHighlightRemoval,
-                                        numIterations: numIterations,
-                                        doRandomizeEmptyClusters: false,
-                                        numClusters: 6,
-                                        numIterationsKM: 2,
-                                        doReadback: false
-                                    )
-                                )
-                            );
-                            this.ThrowIfExists();
-                        }
+                        );
+                        this.ThrowIfExists();
                     }
 
-
-                }
-            }
-        }
-        */
-
-        /*
-        {       // frame time measurement for RS (dispatch vs readback) 
-            for (int i = 0; i < 10; i++) {
-                foreach (UnityEngine.Video.VideoClip video in this.videos) {
-                    foreach (int textureSize in new int[] { 512, 64 }) {
-                        foreach (
-                            Algorithm algorithm in new Algorithm[] {
-                            Algorithm.KM, Algorithm.KHM, Algorithm.RS_2KM, Algorithm.RS_2KM_readback
-                            }
-                        ) {
-                            this.work.Push(
-                                new LaunchParameters(
-                                    textureSize: textureSize,
-                                    numIterations: 3,
-                                    numClusters: 6,
+                    //RS(2KM)
+                    if (
+                        ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(
+                            iterations: numIterations,
+                            iterationsKM: 2
+                        )
+                    ) {
+                        this.work.Push(
+                            new LaunchParameters(
+                                textureSize: 64,
+                                numClusters: 6,
+                                staggeredJitter: false,
+                                jitterSize: 1,
+                                video: video,
+                                doDownscale: false,
+                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                                    kernelSize: kernelSize,
+                                    computeShader: this.csHighlightRemoval,
+                                    numIterations: numIterations,
                                     doRandomizeEmptyClusters: false,
-                                    staggeredJitter: false,
-                                    jitterSize: 1,
-                                    video: video,
-                                    doDownscale: false,
-                                    algorithm: algorithm
-                                )
-                            );
-                        }
-                        foreach (
-                            Algorithm algorithm in new Algorithm[] {
-                            Algorithm.KM, Algorithm.KHM,
-                            }
-                        ) {
-                            this.work.Push(
-                                new LaunchParameters(
-                                    textureSize: textureSize,
-                                    numIterations: 1,
                                     numClusters: 6,
-                                    doRandomizeEmptyClusters: false,
-                                    staggeredJitter: false,
-                                    jitterSize: 1,
-                                    video: video,
-                                    doDownscale: false,
-                                    algorithm: algorithm
+                                    numIterationsKM: 2,
+                                    doReadback: false
                                 )
-                            );
-                        }
+                            )
+                        );
+                        this.ThrowIfExists();
                     }
                 }
-            }
-        }
-        */
-
-        {       // Knecht
-            foreach (UnityEngine.Video.VideoClip video in this.videos) {
-                // normal  K-Means
+                // Knecht
                 this.work.Push(
                     new LaunchParameters(
                         textureSize: 64,
@@ -555,7 +494,167 @@ public class ClusteringTest : MonoBehaviour {
                 this.ThrowIfExists();
             }
         }
+        */
 
+        {       // frame time measurements
+            for (int i = 0; i < 10; i++) {
+                foreach (UnityEngine.Video.VideoClip video in this.videos) {
+                    foreach (int textureSize in new int[] { 512, 64 }) {
+                        // 3 iterations
+                        {
+                            const int numIterations = 3;
+
+                            // KM
+                            this.work.Push(
+                                new LaunchParameters(
+                                    textureSize: 64,
+                                    numClusters: 6,
+                                    staggeredJitter: false,
+                                    jitterSize: 1,
+                                    video: video,
+                                    doDownscale: false,
+                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKM(
+                                        kernelSize: kernelSize,
+                                        computeShader: this.csHighlightRemoval,
+                                        numIterations: numIterations,
+                                        doRandomizeEmptyClusters: false,
+                                        numClusters: 6
+                                    )
+                                )
+                            );
+                            this.ThrowIfExists();
+
+                            // KHM
+                            this.work.Push(
+                                new LaunchParameters(
+                                    textureSize: 64,
+                                    numClusters: 6,
+                                    staggeredJitter: false,
+                                    jitterSize: 1,
+                                    video: video,
+                                    doDownscale: false,
+                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKHM(
+                                        kernelSize: kernelSize,
+                                        computeShader: this.csHighlightRemoval,
+                                        numIterations: numIterations,
+                                        doRandomizeEmptyClusters: false,
+                                        numClusters: 6
+                                    )
+                                )
+                            );
+                            this.ThrowIfExists();
+
+                            // RS(1KM)
+                            this.work.Push(
+                                 new LaunchParameters(
+                                     textureSize: 64,
+                                     numClusters: 6,
+                                     staggeredJitter: false,
+                                     jitterSize: 1,
+                                     video: video,
+                                     doDownscale: false,
+                                     clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                                         kernelSize: kernelSize,
+                                         computeShader: this.csHighlightRemoval,
+                                         numIterations: numIterations,
+                                         doRandomizeEmptyClusters: false,
+                                         numClusters: 6,
+                                         numIterationsKM: 1,
+                                         doReadback: false
+                                     )
+                                 )
+                             );
+                            this.ThrowIfExists();
+
+                            // RS(2KM)
+                            this.work.Push(
+                                 new LaunchParameters(
+                                     textureSize: 64,
+                                     numClusters: 6,
+                                     staggeredJitter: false,
+                                     jitterSize: 1,
+                                     video: video,
+                                     doDownscale: false,
+                                     clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                                         kernelSize: kernelSize,
+                                         computeShader: this.csHighlightRemoval,
+                                         numIterations: numIterations,
+                                         doRandomizeEmptyClusters: false,
+                                         numClusters: 6,
+                                         numIterationsKM: 2,
+                                         doReadback: false
+                                     )
+                                 )
+                             );
+                            this.ThrowIfExists();
+                        }
+
+                        // 1 iteration
+                        {
+                            const int numIterations = 3;
+
+                            // KM
+                            this.work.Push(
+                                new LaunchParameters(
+                                    textureSize: 64,
+                                    numClusters: 6,
+                                    staggeredJitter: false,
+                                    jitterSize: 1,
+                                    video: video,
+                                    doDownscale: false,
+                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKM(
+                                        kernelSize: kernelSize,
+                                        computeShader: this.csHighlightRemoval,
+                                        numIterations: numIterations,
+                                        doRandomizeEmptyClusters: false,
+                                        numClusters: 6
+                                    )
+                                )
+                            );
+                            this.ThrowIfExists();
+
+                            // KHM
+                            this.work.Push(
+                                new LaunchParameters(
+                                    textureSize: 64,
+                                    numClusters: 6,
+                                    staggeredJitter: false,
+                                    jitterSize: 1,
+                                    video: video,
+                                    doDownscale: false,
+                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKHM(
+                                        kernelSize: kernelSize,
+                                        computeShader: this.csHighlightRemoval,
+                                        numIterations: numIterations,
+                                        doRandomizeEmptyClusters: false,
+                                        numClusters: 6
+                                    )
+                                )
+                            );
+                            this.ThrowIfExists();
+                        }
+                        // Knecht
+                        this.work.Push(
+                            new LaunchParameters(
+                                textureSize: 64,
+                                numClusters: 6,
+                                staggeredJitter: false,
+                                jitterSize: 1,
+                                video: video,
+                                doDownscale: false,
+                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKnecht(
+                                    kernelSize: kernelSize,
+                                    computeShader: this.csHighlightRemoval,
+                                    doRandomizeEmptyClusters: false,
+                                    numClusters: 6
+                                )
+                            )
+                        );
+                        this.ThrowIfExists();
+                    }
+                }
+            }
+        }
     }
 
     private void InitJitterOffsets() {
