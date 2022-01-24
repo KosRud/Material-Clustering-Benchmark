@@ -13,7 +13,10 @@ public class ClusteringAlgorithmDispatcherRS : ClusteringAlgorithmDispatcherKM {
         bool doReadback
     ) : base(kernelSize, computeShader, numIterations, doRandomizeEmptyClusters, numClusters) {
         Debug.Assert(
-            IsNumIterationsValid(numIterations, numIterationsKM)
+            IsNumIterationsValid(
+                iterationsKM: numIterationsKM,
+                iterations: numIterations
+            )
         );
         this.iterationsKM = numIterationsKM;
         this.kernelHandleRandomSwap = this.computeShader.FindKernel("RandomSwap");

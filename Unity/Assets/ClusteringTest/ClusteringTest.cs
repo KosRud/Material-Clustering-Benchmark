@@ -10,7 +10,7 @@ public class ClusteringTest : MonoBehaviour {
     private const int referenceTextureSize = 512;
     private const int kernelSize = 4;
     private const float timeStep = 1f;
-    private const LogType logType = LogType.FrameTime;
+    private const LogType logType = LogType.Variance;
 
     private readonly long? overrideStartFrame = null;
     private readonly long? overrideEndFrame = null;
@@ -375,7 +375,7 @@ public class ClusteringTest : MonoBehaviour {
 
         {       // 6. KHM and random swap
 
-            for (int numIterations = 1; numIterations < 31; numIterations++) {
+            for (int numIterations = 1; numIterations < 31; numIterations += 3) {
 
                 foreach (UnityEngine.Video.VideoClip video in this.videos) {
 
@@ -421,7 +421,12 @@ public class ClusteringTest : MonoBehaviour {
                     // random swap
                     {
                         // 1KM
-                        if (ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(1, numIterations)) {
+                        if (
+                            ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(
+                                iterations: numIterations,
+                                iterationsKM: 1
+                            )
+                        ) {
                             new LaunchParameters(
                                 textureSize: 64,
                                 numClusters: 6,
@@ -442,7 +447,12 @@ public class ClusteringTest : MonoBehaviour {
                         }
 
                         //2KM
-                        if (ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(2, numIterations)) {
+                        if (
+                            ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(
+                                iterations: numIterations,
+                                iterationsKM: 2
+                            )
+                        ) {
                             new LaunchParameters(
                                 textureSize: 64,
                                 numClusters: 6,
