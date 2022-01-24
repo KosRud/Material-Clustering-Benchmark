@@ -657,6 +657,24 @@ public class ClusteringTest : MonoBehaviour {
                 }
             }
         }
+
+        this.work.Push(
+            new LaunchParameters(
+                textureSize: 64,
+                numClusters: 6,
+                staggeredJitter: false,
+                jitterSize: 1,
+                video: this.videos[0],
+                doDownscale: false,
+                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKHM(
+                    kernelSize: kernelSize,
+                    computeShader: this.csHighlightRemoval,
+                    numIterations: 3,
+                    doRandomizeEmptyClusters: false,
+                    numClusters: 6
+                )
+            )
+        );
     }
 
     private void InitJitterOffsets() {
