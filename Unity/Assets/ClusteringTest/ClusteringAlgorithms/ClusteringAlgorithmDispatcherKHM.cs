@@ -17,6 +17,15 @@ public class ClusteringAlgorithmDispatcherKHM : ClusteringAlgorithmDispatcherKM 
         int textureSize,
         ClusteringRTsAndBuffers clusteringRTsAndBuffers
     ) {
-        base.RunClustering(inputTex, textureSize, clusteringRTsAndBuffers);
+        this.computeShader.SetBool("do_random_sample_empty_clusters", this.doRandomizeEmptyClusters);
+        this.computeShader.SetInt("num_clusters", this.numClusters);
+        this.computeShader.SetBool("KHM", true);
+
+        for (int i = 0; i < this.numIterations; i++) {
+            this.KMiteration(
+                inputTex, textureSize, clusteringRTsAndBuffers,
+                rejectOld: false
+            );
+        }
     }
 }
