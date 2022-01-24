@@ -544,49 +544,51 @@ public class ClusteringTest : MonoBehaviour {
                             );
                             this.ThrowIfExists();
 
-                            // RS(1KM)
-                            this.work.Push(
-                                 new LaunchParameters(
-                                     textureSize: 64,
-                                     numClusters: 6,
-                                     staggeredJitter: false,
-                                     jitterSize: 1,
-                                     video: video,
-                                     doDownscale: false,
-                                     clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
-                                         kernelSize: kernelSize,
-                                         computeShader: this.csHighlightRemoval,
-                                         numIterations: numIterations,
-                                         doRandomizeEmptyClusters: false,
+                            foreach (bool doReadback in new bool[] { true, false }) {
+                                // RS(1KM)
+                                this.work.Push(
+                                     new LaunchParameters(
+                                         textureSize: 64,
                                          numClusters: 6,
-                                         numIterationsKM: 1,
-                                         doReadback: false
+                                         staggeredJitter: false,
+                                         jitterSize: 1,
+                                         video: video,
+                                         doDownscale: false,
+                                         clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                                             kernelSize: kernelSize,
+                                             computeShader: this.csHighlightRemoval,
+                                             numIterations: numIterations,
+                                             doRandomizeEmptyClusters: false,
+                                             numClusters: 6,
+                                             numIterationsKM: 1,
+                                             doReadback: doReadback
+                                         )
                                      )
-                                 )
-                             );
-                            this.ThrowIfExists();
+                                 );
+                                this.ThrowIfExists();
 
-                            // RS(2KM)
-                            this.work.Push(
-                                 new LaunchParameters(
-                                     textureSize: 64,
-                                     numClusters: 6,
-                                     staggeredJitter: false,
-                                     jitterSize: 1,
-                                     video: video,
-                                     doDownscale: false,
-                                     clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
-                                         kernelSize: kernelSize,
-                                         computeShader: this.csHighlightRemoval,
-                                         numIterations: numIterations,
-                                         doRandomizeEmptyClusters: false,
+                                // RS(2KM)
+                                this.work.Push(
+                                     new LaunchParameters(
+                                         textureSize: 64,
                                          numClusters: 6,
-                                         numIterationsKM: 2,
-                                         doReadback: false
+                                         staggeredJitter: false,
+                                         jitterSize: 1,
+                                         video: video,
+                                         doDownscale: false,
+                                         clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                                             kernelSize: kernelSize,
+                                             computeShader: this.csHighlightRemoval,
+                                             numIterations: numIterations,
+                                             doRandomizeEmptyClusters: false,
+                                             numClusters: 6,
+                                             numIterationsKM: 2,
+                                             doReadback: doReadback
+                                         )
                                      )
-                                 )
-                             );
-                            this.ThrowIfExists();
+                                 );
+                                this.ThrowIfExists();
+                            }
                         }
 
                         // 1 iteration
