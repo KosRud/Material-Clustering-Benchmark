@@ -24,7 +24,7 @@ public class ClusteringAlgorithmDispatcherRS : ClusteringAlgorithmDispatcherKM {
         this.doReadback = doReadback;
     }
 
-    public override string descriptionString => $"RS";
+    public override string descriptionString => $"RS({this.iterationsKM}KM)";
 
     public override void RunClustering(
         Texture inputTex,
