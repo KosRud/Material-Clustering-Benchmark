@@ -5,7 +5,7 @@ public class ClusteringAlgorithmDispatcherKHM : AClusteringAlgorithmDispatcher {
         int kernelSize, ComputeShader computeShader, int numIterations, bool doRandomizeEmptyClusters, int numClusters
     ) : base(kernelSize, computeShader, numIterations, doRandomizeEmptyClusters, numClusters) { }
 
-    public override string descriptionString => "KHM";
+    public override string descriptionString => "KHM(3)";
 
     public override void RunClustering(
         Texture inputTex,
@@ -28,7 +28,6 @@ public class ClusteringAlgorithmDispatcherKHM : AClusteringAlgorithmDispatcher {
         ClusteringRTsAndBuffers clusteringRTsAndBuffers
     ) {
         this.AttributeClusters(inputTex, clusteringRTsAndBuffers, final: false, khm: true);
-        clusteringRTsAndBuffers.rtArr.GenerateMips();
         this.UpdateClusterCenters(inputTex, textureSize, clusteringRTsAndBuffers, rejectOld: false);
     }
 }

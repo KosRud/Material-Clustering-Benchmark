@@ -94,9 +94,7 @@ public class ClusteringRTsAndBuffers {
 			https://developer.nvidia.com/content/understanding-structured-buffer-performance
 		*/
         this.cbufClusterCenters = new ComputeBuffer(numClusters * 2, sizeof(float) * 4);
-
         this._clusterCenters = new Vector4[numClusters * 2];
-
         this.RandomizeClusterCenters();
     }
 
@@ -111,9 +109,9 @@ public class ClusteringRTsAndBuffers {
 
             // "old" cluster centers with infinite Variance
             // to make sure new ones will overwrite them when validated
-            this.clusterCenters[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0);
+            this._clusterCenters[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0);
         }
-        this.cbufClusterCenters.SetData(this.clusterCenters);
+        this.cbufClusterCenters.SetData(this._clusterCenters);
     }
 
     public void Release() {

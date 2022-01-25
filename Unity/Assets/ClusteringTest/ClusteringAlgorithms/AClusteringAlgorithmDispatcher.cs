@@ -95,6 +95,8 @@ public abstract class AClusteringAlgorithmDispatcher {
             inputTex.height / this.kernelSize,
             1
         );
+
+        clusteringRTsAndBuffers.rtArr.GenerateMips();
     }
 
     public float GetVariance(ClusteringRTsAndBuffers clusteringRTsAndBuffers) {

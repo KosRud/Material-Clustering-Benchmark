@@ -30,7 +30,6 @@ public class ClusteringAlgorithmDispatcherKM : AClusteringAlgorithmDispatcher {
         this.computeShader.SetInt("num_clusters", this.numClusters);
 
         this.AttributeClusters(inputTex, clusteringRTsAndBuffers, final: false, khm: false);
-        clusteringRTsAndBuffers.rtArr.GenerateMips();
         this.UpdateClusterCenters(inputTex, textureSize, clusteringRTsAndBuffers, rejectOld);
     }
 }

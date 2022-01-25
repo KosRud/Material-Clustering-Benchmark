@@ -497,7 +497,7 @@ public class ClusteringTest : MonoBehaviour {
         */
 
         {       // frame time measurements
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 3; i++) {
                 foreach (UnityEngine.Video.VideoClip video in this.videos) {
                     foreach (int textureSize in new int[] { 512, 64 }) {
                         // 3 iterations
@@ -545,28 +545,6 @@ public class ClusteringTest : MonoBehaviour {
                             this.ThrowIfExists();
 
                             foreach (bool doReadback in new bool[] { true, false }) {
-                                // RS(1KM)
-                                this.work.Push(
-                                     new LaunchParameters(
-                                         textureSize: 64,
-                                         numClusters: 6,
-                                         staggeredJitter: false,
-                                         jitterSize: 1,
-                                         video: video,
-                                         doDownscale: false,
-                                         clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
-                                             kernelSize: kernelSize,
-                                             computeShader: this.csHighlightRemoval,
-                                             numIterations: numIterations,
-                                             doRandomizeEmptyClusters: false,
-                                             numClusters: 6,
-                                             numIterationsKM: 1,
-                                             doReadback: doReadback
-                                         )
-                                     )
-                                 );
-                                this.ThrowIfExists();
-
                                 // RS(2KM)
                                 this.work.Push(
                                      new LaunchParameters(
@@ -657,24 +635,6 @@ public class ClusteringTest : MonoBehaviour {
                 }
             }
         }
-
-        this.work.Push(
-            new LaunchParameters(
-                textureSize: 64,
-                numClusters: 6,
-                staggeredJitter: false,
-                jitterSize: 1,
-                video: this.videos[0],
-                doDownscale: false,
-                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKHM(
-                    kernelSize: kernelSize,
-                    computeShader: this.csHighlightRemoval,
-                    numIterations: 3,
-                    doRandomizeEmptyClusters: false,
-                    numClusters: 6
-                )
-            )
-        );
     }
 
     private void InitJitterOffsets() {
@@ -872,12 +832,12 @@ public class ClusteringTest : MonoBehaviour {
 
         this.videoPlayer.StepForward();
 
-        //this.RunClustering();
         this.work.Peek().clusteringAlgorithmDispatcher.RunClustering(
             this.rtInput,
             this.work.Peek().textureSize,
             this.clusteringRTsAndBuffers
         );
+
         this.work.Peek().clusteringAlgorithmDispatcher.AttributeClusters(
             this.rtInput,
             this.clusteringRTsAndBuffers,
@@ -914,7 +874,10 @@ public class ClusteringTest : MonoBehaviour {
     }
 
     private void RenderResult() {
-        this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_arr_clusters_r", this.clusteringRTsAndBuffers.rtArr);
+        this.csHighlightRemoval.SetTexture(
+            this.kernelShowResult, "tex_arr_clusters_r",
+            this.clusteringRTsAndBuffers.rtArr
+        );
         this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_output", this.rtResult);
         this.csHighlightRemoval.SetBuffer(this.kernelShowResult, "cbuf_cluster_centers", this.clusteringRTsAndBuffers.cbufClusterCenters);
         this.csHighlightRemoval.SetBool("show_reference", this.showReference);
