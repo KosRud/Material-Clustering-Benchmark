@@ -118,5 +118,6 @@ public class ClusteringRTsAndBuffers {
         this.rtArr.Release();
         this.rtVariance.Release();
         this.cbufClusterCenters.Release();
+        this.cbufRandomPositions.Release();
     }
 }
