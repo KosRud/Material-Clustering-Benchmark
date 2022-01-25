@@ -507,7 +507,7 @@ public class ClusteringTest : MonoBehaviour {
                             // KM
                             this.work.Push(
                                 new LaunchParameters(
-                                    textureSize: 64,
+                                    textureSize: textureSize,
                                     numClusters: 6,
                                     staggeredJitter: false,
                                     jitterSize: 1,
@@ -527,7 +527,7 @@ public class ClusteringTest : MonoBehaviour {
                             // KHM
                             this.work.Push(
                                 new LaunchParameters(
-                                    textureSize: 64,
+                                    textureSize: textureSize,
                                     numClusters: 6,
                                     staggeredJitter: false,
                                     jitterSize: 1,
@@ -548,7 +548,7 @@ public class ClusteringTest : MonoBehaviour {
                                 // RS(2KM)
                                 this.work.Push(
                                      new LaunchParameters(
-                                         textureSize: 64,
+                                         textureSize: textureSize,
                                          numClusters: 6,
                                          staggeredJitter: false,
                                          jitterSize: 1,
@@ -571,12 +571,12 @@ public class ClusteringTest : MonoBehaviour {
 
                         // 1 iteration
                         {
-                            const int numIterations = 3;
+                            const int numIterations = 1;
 
                             // KM
                             this.work.Push(
                                 new LaunchParameters(
-                                    textureSize: 64,
+                                    textureSize: textureSize,
                                     numClusters: 6,
                                     staggeredJitter: false,
                                     jitterSize: 1,
@@ -596,7 +596,7 @@ public class ClusteringTest : MonoBehaviour {
                             // KHM
                             this.work.Push(
                                 new LaunchParameters(
-                                    textureSize: 64,
+                                    textureSize: textureSize,
                                     numClusters: 6,
                                     staggeredJitter: false,
                                     jitterSize: 1,
@@ -616,7 +616,7 @@ public class ClusteringTest : MonoBehaviour {
                         // Knecht
                         this.work.Push(
                             new LaunchParameters(
-                                textureSize: 64,
+                                textureSize: textureSize,
                                 numClusters: 6,
                                 staggeredJitter: false,
                                 jitterSize: 1,
