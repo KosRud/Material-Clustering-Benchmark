@@ -1,720 +1,252 @@
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Frame time: 2.566 ms
+
 video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.096 ms
+Frame time: 1.876 ms
 
 video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.076 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.215 ms
+Frame time: 1.893 ms
 
 video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.335 ms
+Frame time: 2.274 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 2.078 ms
 
 video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.397 ms
+Frame time: 2.254 ms
 
 video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.391 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.936 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.932 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 4.014 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.983 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.111 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.985 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.125 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.102 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.227 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.361 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.381 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.362 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.841 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.807 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 4.060 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.998 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.137 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.995 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.157 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.117 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
 Frame time: 2.283 ms
 
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.379 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.402 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.372 ms
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Frame time: 6.185 ms
 
 video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.956 ms
+Frame time: 3.023 ms
 
 video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.890 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 3.996 ms
+Frame time: 3.024 ms
 
 video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.961 ms
+Frame time: 4.374 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 4.896 ms
 
 video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.088 ms
+Frame time: 4.418 ms
 
 video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.958 ms
+Frame time: 4.378 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Frame time: 3.444 ms
 
 video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.123 ms
+Frame time: 1.983 ms
 
 video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.127 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.213 ms
+Frame time: 1.981 ms
 
 video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.353 ms
+Frame time: 2.370 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 2.134 ms
 
 video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.367 ms
+Frame time: 2.324 ms
 
 video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.334 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.922 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.833 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 4.076 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.992 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.147 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.973 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.133 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.141 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.250 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.360 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.326 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.382 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.931 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.942 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 3.989 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.961 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.089 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.974 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.114 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.103 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.222 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.344 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.360 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.372 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.871 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.801 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 4.079 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.960 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.135 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.972 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.131 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.103 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.221 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.318 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.321 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.307 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.888 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.932 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 3.998 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.977 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.107 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.949 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.114 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.115 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.211 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.361 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.378 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.326 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.863 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.837 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 4.049 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.991 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.156 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.965 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.147 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.135 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.216 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.343 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.322 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.326 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.910 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.891 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 3.988 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.972 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.108 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.967 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.115 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.106 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.215 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.346 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.318 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.302 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.871 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.793 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 4.079 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 4.003 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.117 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 4.008 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.128 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.121 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.184 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.310 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.442 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.395 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.969 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.832 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 4.002 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.988 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.080 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.954 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.116 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.100 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.197 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.373 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.367 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.343 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.900 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.859 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 4.043 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 4.001 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.160 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.967 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.106 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.125 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.221 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.362 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.417 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.365 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.930 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.845 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 3.985 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.997 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.080 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.965 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.091 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.046 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.182 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.190 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.156 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.107 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.693 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.645 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 4.028 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.983 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.131 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.937 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.080 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.066 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.233 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.373 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.394 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.409 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.968 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.927 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 3.991 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.991 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.099 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.961 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.100 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.094 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.206 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.356 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.353 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.344 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.827 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.797 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 4.054 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.982 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.131 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.964 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.100 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.074 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.226 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.321 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.319 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.297 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.964 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.906 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 3.988 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.971 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.091 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.986 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.102 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.099 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.206 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
 Frame time: 2.366 ms
 
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.371 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.327 ms
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Frame time: 9.700 ms
 
 video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.908 ms
+Frame time: 3.031 ms
 
 video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.847 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 4.055 ms
+Frame time: 3.039 ms
 
 video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 4.015 ms
+Frame time: 4.443 ms
+
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 4.940 ms
 
 video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.136 ms
+Frame time: 4.486 ms
 
 video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.983 ms
+Frame time: 4.452 ms
+
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Frame time: 2.545 ms
 
 video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.103 ms
+Frame time: 1.911 ms
 
 video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.111 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.146 ms
+Frame time: 1.913 ms
 
 video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.400 ms
+Frame time: 2.319 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 2.094 ms
 
 video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.396 ms
+Frame time: 2.308 ms
 
 video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.395 ms
+Frame time: 2.278 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Frame time: 6.162 ms
 
 video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.950 ms
+Frame time: 3.018 ms
 
 video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.884 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 4.037 ms
+Frame time: 3.022 ms
 
 video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 3.976 ms
+Frame time: 4.364 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 4.894 ms
 
 video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.086 ms
+Frame time: 4.397 ms
 
 video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 3.982 ms
+Frame time: 4.380 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Frame time: 3.479 ms
 
 video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.113 ms
+Frame time: 1.926 ms
 
 video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.106 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 2.240 ms
+Frame time: 1.986 ms
 
 video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 2.361 ms
+Frame time: 2.284 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 2.118 ms
 
 video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.381 ms
+Frame time: 2.354 ms
 
 video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.332 ms
+Frame time: 2.359 ms
+
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Frame time: 10.123 ms
 
 video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 2.850 ms
+Frame time: 3.031 ms
 
 video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 2.857 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Frame time: 4.050 ms
+Frame time: 3.038 ms
 
 video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Frame time: 4.013 ms
+Frame time: 4.443 ms
+
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 4.955 ms
 
 video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Frame time: 4.150 ms
+Frame time: 4.505 ms
 
 video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Frame time: 4.003 ms
+Frame time: 4.416 ms
+
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Frame time: 2.507 ms
+
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Frame time: 1.911 ms
+
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Frame time: 1.916 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 2.331 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 2.080 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Frame time: 2.323 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Frame time: 2.311 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Frame time: 6.152 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Frame time: 3.018 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Frame time: 3.016 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 4.362 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 4.897 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Frame time: 4.433 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Frame time: 4.370 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Frame time: 3.420 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Frame time: 1.943 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Frame time: 1.929 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 2.278 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 2.131 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Frame time: 2.366 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Frame time: 2.321 ms
+
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Frame time: 10.015 ms
+
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Frame time: 3.033 ms
+
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Frame time: 3.033 ms
+
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 4.444 ms
+
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Frame time: 4.939 ms
+
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Frame time: 4.484 ms
+
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Frame time: 4.444 ms
 
