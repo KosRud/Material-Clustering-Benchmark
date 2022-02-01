@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class HighlightRemovalTest : MonoBehaviour {
+public class ClusteringTest : MonoBehaviour {
     // configuration
-    enum LogType {
+    private enum LogType {
         FrameTime,
         Variance
     }
@@ -16,13 +16,11 @@ public class HighlightRemovalTest : MonoBehaviour {
     private readonly long? overrideEndFrame = null;
 
     // textures and buffers
-    private RenderTexture rtArr;
     private RenderTexture rtInput;
-    private RenderTexture rtVariance;
     private RenderTexture rtReference;
     private RenderTexture rtResult;
+    private ClusteringRTsAndBuffers clusteringRTsAndBuffers;
 
-    private ComputeBuffer cbufClusterCenters;
     private struct Position {
         public int x;
         public int y;
@@ -37,14 +35,9 @@ public class HighlightRemovalTest : MonoBehaviour {
     private ComputeBuffer cbufRandomPositions;
 
     // shader kernels
-    private int kernelAttributeClusters;
-    private int kernelGatherVariance;
-    private int kernelGenerateVariance;
-    private int kernelRandomSwap;
+    //private int kernelAttributeClusters;
     private int kernelShowResult;
-    private int kernelsubsample;
-    private int kernelUpdateClusterCenters;
-    private int kernelValidateCandidates;
+    private int kernelSubsample;
 
     // inner workings
     private float? timeStart;
@@ -63,14 +56,12 @@ public class HighlightRemovalTest : MonoBehaviour {
     private readonly System.Collections.Generic.Stack<LaunchParameters> work =
         new System.Collections.Generic.Stack<LaunchParameters>();
 
-    private bool toggleKHM = false;
     private bool awaitingRestart = false;
     private bool showReference = false;
     private int[][] offsets;
     private Position[] randomPositions;
     private readonly System.Random random = new System.Random(1);
     private readonly System.Collections.Generic.List<float> frameLogVariance = new System.Collections.Generic.List<float>();
-    private Vector4[] clusterCenters;
     private float timeLastIteration = 0;
 
     private UnityEngine.Video.VideoPlayer videoPlayer;
@@ -82,36 +73,30 @@ public class HighlightRemovalTest : MonoBehaviour {
     private class LaunchParameters {
         public readonly int textureSize;
         public readonly int numClusters;
-        public readonly bool doRandomizeEmptyClusters;
         public readonly bool staggeredJitter;
         public readonly int jitterSize;
         public readonly UnityEngine.Video.VideoClip video;
         public readonly bool doDownscale;
-        public readonly int numIterations;
-        public readonly Algorithm algorithm;
+        public readonly AClusteringAlgorithmDispatcher clusteringAlgorithmDispatcher;
 
         private LaunchParameters() { }
 
         public LaunchParameters(
             int textureSize,
             int numClusters,
-            bool doRandomizeEmptyClusters,
             bool staggeredJitter,
             int jitterSize,
             UnityEngine.Video.VideoClip video,
             bool doDownscale,
-            int numIterations,
-            Algorithm algorithm
+            AClusteringAlgorithmDispatcher clusteringAlgorithmDispatcher
         ) {
             this.textureSize = textureSize;
             this.numClusters = numClusters;
-            this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
             this.staggeredJitter = staggeredJitter;
             this.jitterSize = jitterSize;
             this.video = video;
             this.doDownscale = doDownscale;
-            this.numIterations = numIterations;
-            this.algorithm = algorithm;
+            this.clusteringAlgorithmDispatcher = clusteringAlgorithmDispatcher;
         }
     }
 
@@ -148,22 +133,6 @@ public class HighlightRemovalTest : MonoBehaviour {
     }
 
     private void InitRTs() {
-        var rtDesc = new RenderTextureDescriptor(
-            this.work.Peek().textureSize,
-            this.work.Peek().textureSize,
-            RenderTextureFormat.ARGBFloat,
-            0
-        ) {
-            dimension = UnityEngine.Rendering.TextureDimension.Tex2DArray,
-            volumeDepth = 16,
-            useMipMap = true,
-            autoGenerateMips = false
-        };
-
-        this.rtArr = new RenderTexture(rtDesc) {
-            enableRandomWrite = true
-        };
-
         this.rtReference = new RenderTexture(
             referenceTextureSize,
             referenceTextureSize,
@@ -180,17 +149,6 @@ public class HighlightRemovalTest : MonoBehaviour {
             enableRandomWrite = true
         };
 
-        this.rtVariance = new RenderTexture(
-            referenceTextureSize,
-            referenceTextureSize,
-            0,
-            RenderTextureFormat.RGFloat
-        ) {
-            enableRandomWrite = true,
-            useMipMap = true,
-            autoGenerateMips = false
-        };
-
         this.rtInput = new RenderTexture(
             this.work.Peek().textureSize,
             this.work.Peek().textureSize,
@@ -202,45 +160,29 @@ public class HighlightRemovalTest : MonoBehaviour {
     }
 
     private void InitCbufs() {
-        /*
-			second half of the buffer contains candidate cluster centers
-			first half contains current cluster centers
-
-			NVidia says structures not aligned to 128 bits are slow
-			https://developer.nvidia.com/content/understanding-structured-buffer-performance
-		*/
-        this.cbufClusterCenters = new ComputeBuffer(this.work.Peek().numClusters * 2, sizeof(float) * 4);
         this.cbufRandomPositions = new ComputeBuffer(this.work.Peek().numClusters, sizeof(int) * 4);
-
-        for (int i = 0; i < this.clusterCenters.Length; i++) {
-            // "old" cluster centers with infinite Variance
-            // to make sure new ones will overwrite them when validated
-            var c = Color.HSVToRGB(
-                i / (float)(this.work.Peek().numClusters),
-                1,
-                1
-            );
-            c *= 1.0f / (c.r + c.g + c.b);
-            this.clusterCenters[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0);
-        }
-        this.cbufClusterCenters.SetData(this.clusterCenters);
     }
 
     private void FindKernels() {
         this.kernelShowResult = this.csHighlightRemoval.FindKernel("ShowResult");
-        this.kernelAttributeClusters = this.csHighlightRemoval.FindKernel("AttributeClusters");
-        this.kernelUpdateClusterCenters = this.csHighlightRemoval.FindKernel("UpdateClusterCenters");
-        this.kernelRandomSwap = this.csHighlightRemoval.FindKernel("RandomSwap");
-        this.kernelValidateCandidates = this.csHighlightRemoval.FindKernel("ValidateCandidates");
-        this.kernelsubsample = this.csHighlightRemoval.FindKernel("SubSample");
-        this.kernelGenerateVariance = this.csHighlightRemoval.FindKernel("GenerateVariance");
-        this.kernelGatherVariance = this.csHighlightRemoval.FindKernel("GatherVariance");
+        this.kernelSubsample = this.csHighlightRemoval.FindKernel("SubSample");
     }
 
     private void PopIfExists() {
         string fileName = $"Variance logs/{this.GetFileName()}";
         if (System.IO.File.Exists(fileName)) {
             this.work.Pop();
+        }
+    }
+
+    private void ThrowIfExists() {
+        string fileName = $"Variance logs/{this.GetFileName()}";
+
+        if (System.IO.File.Exists(fileName)) {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            throw new System.Exception($"File exists: {fileName}");
         }
     }
 
@@ -432,138 +374,267 @@ public class HighlightRemovalTest : MonoBehaviour {
         /*
         {       // 6. KHM and random swap
 
-            for (int numIterations = 1; numIterations < 31; numIterations++) {
-
-                foreach (UnityEngine.Video.VideoClip video in this.videos) {
-
-                    // normal  K-Means
+            foreach (UnityEngine.Video.VideoClip video in this.videos) {
+                for (int numIterations = 1; numIterations < 31; numIterations += 5){
+                    // KM
                     this.work.Push(
                         new LaunchParameters(
                             textureSize: 64,
-                            numIterations: numIterations,
                             numClusters: 6,
-                            doRandomizeEmptyClusters: false,
                             staggeredJitter: false,
                             jitterSize: 1,
                             video: video,
                             doDownscale: false,
-                            algorithm: Algorithm.KM
+                            clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKM(
+                                kernelSize: kernelSize,
+                                computeShader: this.csHighlightRemoval,
+                                numIterations: numIterations,
+                                doRandomizeEmptyClusters: false,
+                                numClusters: 6
+                            )
                         )
                     );
-
-                    if (
-                        this.ValidateRandomSwapParams(1, numIterations)
-                    ) {
-                        // random swap
-                        this.work.Push(
-                            new LaunchParameters(
-                                textureSize: 64,
-                                numIterations: numIterations,
-                                numClusters: 6,
-                                doRandomizeEmptyClusters: false,
-                                staggeredJitter: false,
-                                jitterSize: 1,
-                                video: video,
-                                doDownscale: false,
-                                algorithm: Algorithm.RS_1KM
-                            )
-                        );
-                    }
-
-                    if (
-                        this.ValidateRandomSwapParams(2, numIterations)
-                    ) {
-                        // random swap
-                        this.work.Push(
-                            new LaunchParameters(
-                                textureSize: 64,
-                                numIterations: numIterations,
-                                numClusters: 6,
-                                doRandomizeEmptyClusters: false,
-                                staggeredJitter: false,
-                                jitterSize: 1,
-                                video: video,
-                                doDownscale: false,
-                                algorithm: Algorithm.RS_2KM
-                            )
-                        );
-                    }
+                    this.ThrowIfExists();
 
                     // KHM
                     this.work.Push(
                         new LaunchParameters(
                             textureSize: 64,
-                            numIterations: numIterations,
                             numClusters: 6,
-                            doRandomizeEmptyClusters: false,
                             staggeredJitter: false,
                             jitterSize: 1,
                             video: video,
                             doDownscale: false,
-                            algorithm: Algorithm.KHM
+                            clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKHM(
+                                kernelSize: kernelSize,
+                                computeShader: this.csHighlightRemoval,
+                                numIterations: numIterations,
+                                doRandomizeEmptyClusters: false,
+                                numClusters: 6
+                            )
                         )
-
                     );
+                    this.ThrowIfExists();
 
-                    string fileName = $"Variance logs/{this.GetFileName()}";
+                    // RS(1KM)
+                    if (
+                        ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(
+                            iterations: numIterations,
+                            iterationsKM: 1
+                        )
+                    ) {
+                        this.work.Push(
+                            new LaunchParameters(
+                                textureSize: 64,
+                                numClusters: 6,
+                                staggeredJitter: false,
+                                jitterSize: 1,
+                                video: video,
+                                doDownscale: false,
+                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                                    kernelSize: kernelSize,
+                                    computeShader: this.csHighlightRemoval,
+                                    numIterations: numIterations,
+                                    doRandomizeEmptyClusters: false,
+                                    numClusters: 6,
+                                    numIterationsKM: 1,
+                                    doReadback: false
+                                )
+                            )
+                        );
+                        this.ThrowIfExists();
+                    }
 
-                    if (System.IO.File.Exists(fileName)) {
-                        UnityEditor.EditorApplication.isPlaying = false;
-                        throw new System.Exception($"File exists: {fileName}");
+                    //RS(2KM)
+                    if (
+                        ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(
+                            iterations: numIterations,
+                            iterationsKM: 2
+                        )
+                    ) {
+                        this.work.Push(
+                            new LaunchParameters(
+                                textureSize: 64,
+                                numClusters: 6,
+                                staggeredJitter: false,
+                                jitterSize: 1,
+                                video: video,
+                                doDownscale: false,
+                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                                    kernelSize: kernelSize,
+                                    computeShader: this.csHighlightRemoval,
+                                    numIterations: numIterations,
+                                    doRandomizeEmptyClusters: false,
+                                    numClusters: 6,
+                                    numIterationsKM: 2,
+                                    doReadback: false
+                                )
+                            )
+                        );
+                        this.ThrowIfExists();
                     }
                 }
+                // Knecht
+                this.work.Push(
+                    new LaunchParameters(
+                        textureSize: 64,
+                        numClusters: 6,
+                        staggeredJitter: false,
+                        jitterSize: 1,
+                        video: video,
+                        doDownscale: false,
+                        clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKnecht(
+                            kernelSize: kernelSize,
+                            computeShader: this.csHighlightRemoval,
+                            doRandomizeEmptyClusters: false,
+                            numClusters: 6
+                        )
+                    )
+                );
+                this.ThrowIfExists();
             }
         }
         */
 
-        {       // frame time measurement for RS (dispatch vs readback) 
-            for (int i = 0; i < 10; i++) {
+        {       // frame time measurements
+            for (int i = 0; i < 3; i++) {
                 foreach (UnityEngine.Video.VideoClip video in this.videos) {
                     foreach (int textureSize in new int[] { 512, 64 }) {
-                        foreach (
-                            Algorithm algorithm in new Algorithm[] {
-                            Algorithm.KM, Algorithm.KHM, Algorithm.RS_2KM, Algorithm.RS_2KM_readback
-                            }
-                        ) {
+                        // 3 iterations
+                        {
+                            const int numIterations = 3;
+
+                            // KM
                             this.work.Push(
                                 new LaunchParameters(
                                     textureSize: textureSize,
-                                    numIterations: 3,
                                     numClusters: 6,
-                                    doRandomizeEmptyClusters: false,
                                     staggeredJitter: false,
                                     jitterSize: 1,
                                     video: video,
                                     doDownscale: false,
-                                    algorithm: algorithm
+                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKM(
+                                        kernelSize: kernelSize,
+                                        computeShader: this.csHighlightRemoval,
+                                        numIterations: numIterations,
+                                        doRandomizeEmptyClusters: false,
+                                        numClusters: 6
+                                    )
                                 )
                             );
-                        }
-                        foreach (
-                            Algorithm algorithm in new Algorithm[] {
-                            Algorithm.KM, Algorithm.KHM,
-                            }
-                        ) {
+                            this.ThrowIfExists();
+
+                            // KHM
                             this.work.Push(
                                 new LaunchParameters(
                                     textureSize: textureSize,
-                                    numIterations: 1,
                                     numClusters: 6,
-                                    doRandomizeEmptyClusters: false,
                                     staggeredJitter: false,
                                     jitterSize: 1,
                                     video: video,
                                     doDownscale: false,
-                                    algorithm: algorithm
+                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKHM(
+                                        kernelSize: kernelSize,
+                                        computeShader: this.csHighlightRemoval,
+                                        numIterations: numIterations,
+                                        doRandomizeEmptyClusters: false,
+                                        numClusters: 6
+                                    )
                                 )
                             );
+                            this.ThrowIfExists();
+
+                            foreach (bool doReadback in new bool[] { true, false }) {
+                                // RS(2KM)
+                                this.work.Push(
+                                     new LaunchParameters(
+                                         textureSize: textureSize,
+                                         numClusters: 6,
+                                         staggeredJitter: false,
+                                         jitterSize: 1,
+                                         video: video,
+                                         doDownscale: false,
+                                         clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                                             kernelSize: kernelSize,
+                                             computeShader: this.csHighlightRemoval,
+                                             numIterations: numIterations,
+                                             doRandomizeEmptyClusters: false,
+                                             numClusters: 6,
+                                             numIterationsKM: 2,
+                                             doReadback: doReadback
+                                         )
+                                     )
+                                 );
+                                this.ThrowIfExists();
+                            }
                         }
+
+                        // 1 iteration
+                        {
+                            const int numIterations = 1;
+
+                            // KM
+                            this.work.Push(
+                                new LaunchParameters(
+                                    textureSize: textureSize,
+                                    numClusters: 6,
+                                    staggeredJitter: false,
+                                    jitterSize: 1,
+                                    video: video,
+                                    doDownscale: false,
+                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKM(
+                                        kernelSize: kernelSize,
+                                        computeShader: this.csHighlightRemoval,
+                                        numIterations: numIterations,
+                                        doRandomizeEmptyClusters: false,
+                                        numClusters: 6
+                                    )
+                                )
+                            );
+                            this.ThrowIfExists();
+
+                            // KHM
+                            this.work.Push(
+                                new LaunchParameters(
+                                    textureSize: textureSize,
+                                    numClusters: 6,
+                                    staggeredJitter: false,
+                                    jitterSize: 1,
+                                    video: video,
+                                    doDownscale: false,
+                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKHM(
+                                        kernelSize: kernelSize,
+                                        computeShader: this.csHighlightRemoval,
+                                        numIterations: numIterations,
+                                        doRandomizeEmptyClusters: false,
+                                        numClusters: 6
+                                    )
+                                )
+                            );
+                            this.ThrowIfExists();
+                        }
+                        // Knecht
+                        this.work.Push(
+                            new LaunchParameters(
+                                textureSize: textureSize,
+                                numClusters: 6,
+                                staggeredJitter: false,
+                                jitterSize: 1,
+                                video: video,
+                                doDownscale: false,
+                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKnecht(
+                                    kernelSize: kernelSize,
+                                    computeShader: this.csHighlightRemoval,
+                                    doRandomizeEmptyClusters: false,
+                                    numClusters: 6
+                                )
+                            )
+                        );
+                        this.ThrowIfExists();
                     }
                 }
             }
         }
-
-
     }
 
     private void InitJitterOffsets() {
@@ -589,156 +660,42 @@ public class HighlightRemovalTest : MonoBehaviour {
         this.frameLogVariance.Clear();
         this.framesProcessed = 0;
         this.timeStart = null;
-        this.toggleKHM = false; // important to reset!
 
         this.randomPositions = new Position[this.work.Peek().numClusters];
-        this.clusterCenters = new Vector4[this.work.Peek().numClusters * 2];
 
         this.InitJitterOffsets();
         this.FindKernels();
         this.SetTextureSize();
         this.InitRTs();
         this.InitCbufs();
+        this.clusteringRTsAndBuffers = new ClusteringRTsAndBuffers(
+            this.work.Peek().numClusters,
+            this.work.Peek().textureSize,
+            referenceTextureSize,
+            this.rtReference
+        );
 
         this.videoPlayer = this.GetComponent<UnityEngine.Video.VideoPlayer>();
         this.videoPlayer.playbackSpeed = 0;
         this.videoPlayer.clip = this.work.Peek().video;
         this.videoPlayer.Play();
         this.videoPlayer.frame = this.GetStartFrame();
-
-        this.csHighlightRemoval.SetBool("do_random_sample_empty_clusters", this.work.Peek().doRandomizeEmptyClusters);
-        this.csHighlightRemoval.SetInt("num_clusters", this.work.Peek().numClusters);
-    }
-
-    private void AttributeClusters(Texture inputTex = null, bool final = false) {
-        inputTex ??= this.rtInput;
-
-        this.csHighlightRemoval.SetBool("final", final);  // replace with define
-        this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_input", inputTex);
-        this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_variance", this.rtVariance);
-        this.csHighlightRemoval.SetTexture(this.kernelAttributeClusters, "tex_arr_clusters_rw", this.rtArr);
-        this.csHighlightRemoval.SetBuffer(this.kernelAttributeClusters, "cbuf_cluster_centers", this.cbufClusterCenters);
-        this.csHighlightRemoval.Dispatch(
-            this.kernelAttributeClusters,
-            inputTex.width / kernelSize,
-            inputTex.height / kernelSize,
-            1
-        );
-    }
-
-    private void UpdateClusterCenters(bool rejectOld) {
-        this.UpdateRandomPositions();
-
-        this.csHighlightRemoval.SetBool("reject_old", rejectOld);
-        this.csHighlightRemoval.SetTexture(this.kernelUpdateClusterCenters, "tex_arr_clusters_r", this.rtArr);
-        this.csHighlightRemoval.SetTexture(this.kernelUpdateClusterCenters, "tex_input", this.rtInput);
-        this.csHighlightRemoval.SetTexture(this.kernelUpdateClusterCenters, "tex_variance_maskernelr", this.rtVariance);
-        this.csHighlightRemoval.SetBuffer(this.kernelUpdateClusterCenters, "cbuf_cluster_centers", this.cbufClusterCenters);
-        this.csHighlightRemoval.SetBuffer(this.kernelUpdateClusterCenters, "cbuf_random_positions", this.cbufRandomPositions);
-        this.csHighlightRemoval.Dispatch(this.kernelUpdateClusterCenters, 1, 1, 1);
-    }
-
-    private void KMeans(Texture texInput = null, bool rejectOld = false) {
-        this.AttributeClusters(texInput);
-        this.rtArr.GenerateMips();
-        this.rtVariance.GenerateMips();
-        this.UpdateClusterCenters(rejectOld);
-
-        //this.LogVariance();
-    }
-
-    private void RandomSwap() {
-        this.UpdateRandomPositions();
-
-        this.csHighlightRemoval.SetBuffer(this.kernelRandomSwap, "cbuf_cluster_centers", this.cbufClusterCenters);
-        this.csHighlightRemoval.SetBuffer(this.kernelRandomSwap, "cbuf_random_positions", this.cbufRandomPositions);
-        this.csHighlightRemoval.SetTexture(this.kernelRandomSwap, "tex_input", this.rtInput);
-        this.csHighlightRemoval.SetInt("randomClusterCenter", this.random.Next(this.work.Peek().numClusters));
-        this.csHighlightRemoval.Dispatch(this.kernelRandomSwap, 1, 1, 1);
     }
 
     private string GetFileName() {
-        string videoName = this.work.Peek().video.name;
-        int numIterations = this.work.Peek().numIterations;
-        int textureSize = this.work.Peek().textureSize;
-        int numClusters = this.work.Peek().numClusters;
-        bool doRandomizeEmptyClusters = this.work.Peek().doRandomizeEmptyClusters;
-        int jitterSize = this.work.Peek().jitterSize;
-        bool staggeredJitter = this.work.Peek().staggeredJitter;
-        bool doDownscale = this.work.Peek().doDownscale;
-        string algorithm;
-        switch (this.work.Peek().algorithm) {
-            case Algorithm.KM:
-                algorithm = "KM";
-                break;
-            case Algorithm.KHM:
-                algorithm = "KHM(3)";
-                break;
-            case Algorithm.RS_1KM:
-                algorithm = "RS(1KM)";
-                break;
-            case Algorithm.RS_2KM:
-                algorithm = "RS(2KM)";
-                break;
-            case Algorithm.RS_2KM_readback:
-                algorithm = "RS(2KM)_readback";
-                break;
-            case Algorithm.Alternating:
-                algorithm = "KM+KHM(3)";
-                break;
-            case Algorithm.OneKM:
-                algorithm = "1xKM+KHM(3)";
-                break;
-            default:
-                throw new System.NotImplementedException();
-        }
+        LaunchParameters launchParams = this.work.Peek();
+
+        string videoName = launchParams.video.name;
+        int numIterations = launchParams.clusteringAlgorithmDispatcher.numIterations;
+        int textureSize = launchParams.textureSize;
+        int numClusters = launchParams.numClusters;
+        int jitterSize = launchParams.jitterSize;
+        bool staggeredJitter = launchParams.staggeredJitter;
+        bool doDownscale = launchParams.doDownscale;
+        string algorithm = launchParams.clusteringAlgorithmDispatcher.descriptionString;
+        bool doRandomizeEmptyClusters = launchParams.clusteringAlgorithmDispatcher.doRandomizeEmptyClusters;
 
         return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{textureSize}|number of clusters:{numClusters}|randomize empty clusters:{doRandomizeEmptyClusters}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}|algorithm:{algorithm}.csv";
-    }
-
-    private float GetVariance() {
-        this.csHighlightRemoval.SetTexture(this.kernelGenerateVariance, "tex_input", this.rtReference);
-        this.csHighlightRemoval.SetTexture(this.kernelGenerateVariance, "tex_variance_rw", this.rtVariance);
-        this.csHighlightRemoval.SetBuffer(this.kernelGenerateVariance, "cbuf_cluster_centers", this.cbufClusterCenters);
-        this.csHighlightRemoval.Dispatch(
-            this.kernelGenerateVariance,
-            referenceTextureSize / kernelSize,
-            referenceTextureSize / kernelSize,
-        1);
-
-        this.csHighlightRemoval.SetTexture(this.kernelGatherVariance, "tex_variance_r", this.rtVariance);
-        this.csHighlightRemoval.SetBuffer(this.kernelGatherVariance, "cbuf_cluster_centers", this.cbufClusterCenters);
-        this.csHighlightRemoval.Dispatch(this.kernelGatherVariance, 1, 1, 1);
-
-        this.cbufClusterCenters.GetData(this.clusterCenters);
-
-        float variance = this.clusterCenters[0].w;
-        //return Variance;
-        return float.IsNaN(variance) == false ? variance : this.videoPlayer.frame < this.GetStartFrame() + 5 ? 0 : throw new System.Exception($"no Variance! (frame {this.videoPlayer.frame})");
-    }
-
-    private void ValidateCandidates() {
-        switch (this.work.Peek().algorithm) {
-            case Algorithm.RS_1KM:
-            case Algorithm.RS_2KM:
-                this.csHighlightRemoval.SetBuffer(this.kernelValidateCandidates, "cbuf_cluster_centers", this.cbufClusterCenters);
-                this.csHighlightRemoval.Dispatch(this.kernelValidateCandidates, 1, 1, 1);
-                break;
-            case Algorithm.RS_2KM_readback:
-                this.cbufClusterCenters.GetData(this.clusterCenters);
-                int numClusters = this.work.Peek().numClusters;
-                for (int i = 0; i < numClusters; i++) {
-                    if (this.clusterCenters[i].z < this.clusterCenters[i + numClusters].z) {
-                        this.clusterCenters[i + numClusters] = this.clusterCenters[i];
-                    } else {
-                        this.clusterCenters[i] = this.clusterCenters[i + numClusters];
-                    }
-                }
-                this.cbufClusterCenters.SetData(this.clusterCenters);
-                break;
-            default:
-                throw new System.NotImplementedException();
-        }
     }
 
     // Update is called once per frame
@@ -756,75 +713,13 @@ public class HighlightRemovalTest : MonoBehaviour {
         return iterations % iterationsKM == 1;
     }
 
-    private void RandomSwapClustering(int iterationsKM) {
-        Debug.Assert(
-            this.ValidateRandomSwapParams(iterationsKM, this.work.Peek().numIterations)
-        );
-
-        this.csHighlightRemoval.SetBool("KHM", false);
-        this.KMeans(this.rtInput, true);
-
-        for (int i = 1; i < this.work.Peek().numIterations; i += iterationsKM) {
-            this.RandomSwap();
-            for (int k = 0; k < iterationsKM; k++) {
-                this.KMeans();
-            }
-            this.ValidateCandidates();
-        }
-    }
-
-    private void RunClustering() {
-        switch (this.work.Peek().algorithm) {
-            case Algorithm.KM:
-                this.csHighlightRemoval.SetBool("KHM", false);
-
-                for (int i = 0; i < this.work.Peek().numIterations; i++) {
-                    this.KMeans();
-                }
-
-                break;
-            case Algorithm.KHM:
-                this.csHighlightRemoval.SetBool("KHM", true);
-
-                for (int i = 0; i < this.work.Peek().numIterations; i++) {
-                    this.KMeans();
-                }
-
-                break;
-            case Algorithm.RS_1KM:
-                this.RandomSwapClustering(1);
-                break;
-            case Algorithm.RS_2KM:
-            case Algorithm.RS_2KM_readback:
-                this.RandomSwapClustering(2);
-                break;
-            case Algorithm.Alternating:
-                for (int i = 0; i < this.work.Peek().numIterations; i++) {
-                    this.csHighlightRemoval.SetBool("KHM", this.toggleKHM);
-                    this.toggleKHM = !this.toggleKHM;
-                    this.KMeans();
-                }
-
-                break;
-            case Algorithm.OneKM:
-                for (int i = 0; i < this.work.Peek().numIterations; i++) {
-                    this.csHighlightRemoval.SetBool("KHM", i != 0);
-                    this.KMeans();
-                }
-
-                break;
-            default:
-                throw new System.NotImplementedException();
-        }
-
-        this.AttributeClusters(this.rtInput, true);
-    }
-
     private void WriteVarianceLog() {
         string fileName = $"Variance logs/{this.GetFileName()}";
 
         if (System.IO.File.Exists(fileName)) {
+#if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
+#endif
             throw new System.Exception($"File exists: {fileName}");
         }
 
@@ -899,7 +794,9 @@ public class HighlightRemovalTest : MonoBehaviour {
             this.work.Pop();
 
             if (this.work.Count == 0) {
+#if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
+#endif
                 Destroy(this);
             }
 
@@ -923,11 +820,11 @@ public class HighlightRemovalTest : MonoBehaviour {
                     (Time.frameCount / this.offsets.Length) % this.work.Peek().jitterSize
                 }
         );
-        this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_input", this.rtReference);
-        this.csHighlightRemoval.SetTexture(this.kernelsubsample, "tex_output", this.rtInput);
+        this.csHighlightRemoval.SetTexture(this.kernelSubsample, "tex_input", this.rtReference);
+        this.csHighlightRemoval.SetTexture(this.kernelSubsample, "tex_output", this.rtInput);
         this.csHighlightRemoval.SetBool("downscale", this.work.Peek().doDownscale);
         this.csHighlightRemoval.Dispatch(
-            this.kernelsubsample,
+            this.kernelSubsample,
             this.work.Peek().textureSize / kernelSize,
             this.work.Peek().textureSize / kernelSize,
             1
@@ -935,17 +832,31 @@ public class HighlightRemovalTest : MonoBehaviour {
 
         this.videoPlayer.StepForward();
 
-        this.RunClustering();
+        this.work.Peek().clusteringAlgorithmDispatcher.RunClustering(
+            this.rtInput,
+            this.work.Peek().textureSize,
+            this.clusteringRTsAndBuffers
+        );
+
+        this.work.Peek().clusteringAlgorithmDispatcher.AttributeClusters(
+            this.rtInput,
+            this.clusteringRTsAndBuffers,
+            final: true,
+            khm: false
+        );
 
         if (Time.time - this.timeLastIteration > timeStep) {
             this.timeLastIteration = Time.time;
             this.showReference = !this.showReference;
             this.showReference = false;
-            //this.LogVariance();
         }
 
         if (logType == LogType.Variance) {
-            this.frameLogVariance.Add(this.GetVariance());
+            this.frameLogVariance.Add(
+                this.work.Peek().clusteringAlgorithmDispatcher.GetVariance(
+                    this.clusteringRTsAndBuffers
+                )
+            );
         }
 
         this.RenderResult();
@@ -954,20 +865,21 @@ public class HighlightRemovalTest : MonoBehaviour {
     }
 
     private void OnDisable() {
-        this.rtArr?.Release();
-        this.rtResult?.Release();
-        this.rtInput?.Release();
-        this.rtVariance?.Release();
-        this.rtReference?.Release();
+        this.rtResult.Release();
+        this.rtInput.Release();
+        this.rtReference.Release();
+        this.cbufRandomPositions.Release();
 
-        this.cbufClusterCenters?.Release();
-        this.cbufRandomPositions?.Release();
+        this.clusteringRTsAndBuffers.Release();
     }
 
     private void RenderResult() {
-        this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_arr_clusters_r", this.rtArr);
+        this.csHighlightRemoval.SetTexture(
+            this.kernelShowResult, "tex_arr_clusters_r",
+            this.clusteringRTsAndBuffers.rtArr
+        );
         this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_output", this.rtResult);
-        this.csHighlightRemoval.SetBuffer(this.kernelShowResult, "cbuf_cluster_centers", this.cbufClusterCenters);
+        this.csHighlightRemoval.SetBuffer(this.kernelShowResult, "cbuf_cluster_centers", this.clusteringRTsAndBuffers.cbufClusterCenters);
         this.csHighlightRemoval.SetBool("show_reference", this.showReference);
         this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_input", this.rtInput);
         this.csHighlightRemoval.Dispatch(
