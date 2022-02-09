@@ -59,15 +59,14 @@ public class ClusteringAlgorithmDispatcherRS : ClusteringAlgorithmDispatcherKM {
     private void ValidateCandidates(ClusteringRTsAndBuffers clusteringRTsAndBuffers) {
         if (this.doReadback) {
             Vector4[] clusterCenters = clusteringRTsAndBuffers.clusterCenters;
-            int numClusters = this.numClusters;
-            for (int i = 0; i < numClusters; i++) {
-                if (clusterCenters[i].z < clusterCenters[i + numClusters].z) {
-                    clusterCenters[i + numClusters] = clusterCenters[i];
+            for (int i = 0; i < this.numClusters; i++) {
+                if (clusterCenters[i].z < clusterCenters[i + this.numClusters].z) {
+                    clusterCenters[i + this.numClusters] = clusterCenters[i];
                 } else {
-                    clusterCenters[i] = clusterCenters[i + numClusters];
+                    clusterCenters[i] = clusterCenters[i + this.numClusters];
                 }
             }
-            clusteringRTsAndBuffers.cbufClusterCenters.SetData(clusterCenters);
+            clusteringRTsAndBuffers.clusterCenters = clusterCenters;
         } else {
             this.computeShader.SetBuffer(
                 this.kernelHandleValidateCandidates,
