@@ -1,8 +1,7 @@
 using UnityEngine;
 
 public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcherKM {
-    private readonly int kernelHandleRandomSwap;
-    private readonly int kernelHandleValidateCandidates;
+    private readonly KMuntilConvergesResult kMuntilConvergesResult = new KMuntilConvergesResult();
 
     private int frameCounter;
 
@@ -65,9 +64,22 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
     }
 
     private class KMuntilConvergesResult {
-        public readonly float variance;
-        public readonly bool converged;
-        public readonly Vector4[] clusterCenters;
+        public float variance;
+        public bool converged;
+        public Vector4[] clusterCenters {
+            get {
+                if (this._clusterCenters == null) {
+                    throw new System.NullReferenceException("requesting cluster centers before assigning");
+                }
+                return this._clusterCenters;
+            }
+            set => this._clusterCenters = value;
+        }
+        private Vector4[] _clusterCenters;
+
+        public KMuntilConvergesResult() {
+
+        }
 
         public KMuntilConvergesResult(
             float variance,
@@ -101,12 +113,18 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
             newVariance = clusteringRTsAndBuffers.clusterCenters[0].w;
 
             if (variance - newVariance < 1e-4) {
-                return new KMuntilConvergesResult(newVariance, true, newClusterCenters);
+                this.kMuntilConvergesResult.variance = newVariance;
+                this.kMuntilConvergesResult.converged = true;
+                this.kMuntilConvergesResult.clusterCenters = newClusterCenters;
+                return this.kMuntilConvergesResult;
             }
         }
 
         Debug.Assert(newClusterCenters != null);
 
-        return new KMuntilConvergesResult(newVariance, false, newClusterCenters);
+        this.kMuntilConvergesResult.variance = newVariance;
+        this.kMuntilConvergesResult.converged = false;
+        this.kMuntilConvergesResult.clusterCenters = newClusterCenters;
+        return this.kMuntilConvergesResult;
     }
 }
