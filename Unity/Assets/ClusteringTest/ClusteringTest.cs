@@ -60,8 +60,6 @@ public class ClusteringTest : MonoBehaviour {
     private bool showReference = false;
     private int[][] offsets;
     private readonly int[] scanlinePixelOffset = new int[2];
-    private Position[] randomPositions;
-    private readonly System.Random random = new System.Random(1);
     private readonly System.Collections.Generic.List<float> frameLogVariance = new System.Collections.Generic.List<float>();
     private float timeLastIteration = 0;
     private LaunchParameters currentWorkParameters;
@@ -785,6 +783,8 @@ public class ClusteringTest : MonoBehaviour {
                         (Time.time - (float)this.timeStart) / this.framesProcessed * 1000
                     );
                     break;
+                default:
+                    throw new System.NotImplementedException();
             }
 
             if (this.work.Count == 0) {
