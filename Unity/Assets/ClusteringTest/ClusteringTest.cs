@@ -59,10 +59,12 @@ public class ClusteringTest : MonoBehaviour {
     private bool awaitingRestart = false;
     private bool showReference = false;
     private int[][] offsets;
+    private readonly int[] scanlinePixelOffset = new int[2];
     private Position[] randomPositions;
     private readonly System.Random random = new System.Random(1);
     private readonly System.Collections.Generic.List<float> frameLogVariance = new System.Collections.Generic.List<float>();
     private float timeLastIteration = 0;
+    private LaunchParameters currentWorkParameters;
 
     private UnityEngine.Video.VideoPlayer videoPlayer;
 
@@ -100,14 +102,6 @@ public class ClusteringTest : MonoBehaviour {
         }
     }
 
-    private void UpdateRandomPositions() {
-        for (int k = 0; k < this.work.Peek().numClusters; k++) {
-            this.randomPositions[k].x = this.random.Next(this.work.Peek().textureSize);
-            this.randomPositions[k].y = this.random.Next(this.work.Peek().textureSize);
-        }
-        this.cbufRandomPositions.SetData(this.randomPositions);
-    }
-
     private int MipLevel(int textureSize) {
         int mipLevel = 0;
         int targetSize = 1;
@@ -121,15 +115,15 @@ public class ClusteringTest : MonoBehaviour {
     private void SetTextureSize() {
         Debug.Assert(
             (
-                this.work.Peek().textureSize & (this.work.Peek().textureSize - 1)
-            ) == 0 && this.work.Peek().textureSize > 0
+                this.currentWorkParameters.textureSize & (this.currentWorkParameters.textureSize - 1)
+            ) == 0 && this.currentWorkParameters.textureSize > 0
         ); // positive power of 2
-        Debug.Assert(this.work.Peek().textureSize <= referenceTextureSize);
+        Debug.Assert(this.currentWorkParameters.textureSize <= referenceTextureSize);
 
-        this.csHighlightRemoval.SetInt("mip_level", this.MipLevel(this.work.Peek().textureSize));
+        this.csHighlightRemoval.SetInt("mip_level", this.MipLevel(this.currentWorkParameters.textureSize));
         this.csHighlightRemoval.SetInt("ref_mip_level", this.MipLevel(referenceTextureSize));
 
-        this.csHighlightRemoval.SetInt("texture_size", this.work.Peek().textureSize);
+        this.csHighlightRemoval.SetInt("texture_size", this.currentWorkParameters.textureSize);
     }
 
     private void InitRTs() {
@@ -141,8 +135,8 @@ public class ClusteringTest : MonoBehaviour {
         );
 
         this.rtResult = new RenderTexture(
-            this.work.Peek().textureSize,
-            this.work.Peek().textureSize,
+            this.currentWorkParameters.textureSize,
+            this.currentWorkParameters.textureSize,
             0,
             RenderTextureFormat.ARGBFloat
         ) {
@@ -150,8 +144,8 @@ public class ClusteringTest : MonoBehaviour {
         };
 
         this.rtInput = new RenderTexture(
-            this.work.Peek().textureSize,
-            this.work.Peek().textureSize,
+            this.currentWorkParameters.textureSize,
+            this.currentWorkParameters.textureSize,
             0,
             RenderTextureFormat.ARGBFloat
         ) {
@@ -160,7 +154,7 @@ public class ClusteringTest : MonoBehaviour {
     }
 
     private void InitCbufs() {
-        this.cbufRandomPositions = new ComputeBuffer(this.work.Peek().numClusters, sizeof(int) * 4);
+        this.cbufRandomPositions = new ComputeBuffer(this.currentWorkParameters.numClusters, sizeof(int) * 4);
     }
 
     private void FindKernels() {
@@ -169,14 +163,14 @@ public class ClusteringTest : MonoBehaviour {
     }
 
     private void PopIfExists() {
-        string fileName = $"Variance logs/{this.GetFileName()}";
+        string fileName = $"Variance logs/{this.GetFileName(this.work.Peek())}";
         if (System.IO.File.Exists(fileName)) {
             this.work.Pop();
         }
     }
 
     private void ThrowIfExists() {
-        string fileName = $"Variance logs/{this.GetFileName()}";
+        string fileName = $"Variance logs/{this.GetFileName(this.work.Peek())}";
 
         if (System.IO.File.Exists(fileName)) {
 #if UNITY_EDITOR
@@ -223,7 +217,7 @@ public class ClusteringTest : MonoBehaviour {
 							)
 						);
 
-						string fileName = $"Variance logs/{this.GetFileName()}";
+						string fileName = $"Variance logs/{this.GetFileName(this.currentWorkParameters)}";
 
 						if (System.IO.File.Exists(fileName)) {
 							UnityEditor.EditorApplication.isPlaying = false;
@@ -255,7 +249,7 @@ public class ClusteringTest : MonoBehaviour {
 							)
 						);
 
-						string fileName = $"Variance logs/{this.GetFileName()}";
+						string fileName = $"Variance logs/{this.GetFileName(this.currentWorkParameters)}";
 
 						if (System.IO.File.Exists(fileName)) {
 							UnityEditor.EditorApplication.isPlaying = false;
@@ -291,7 +285,7 @@ public class ClusteringTest : MonoBehaviour {
 							)
 						);
 
-						string fileName = $"Variance logs/{this.GetFileName()}";
+						string fileName = $"Variance logs/{this.GetFileName(this.currentWorkParameters)}";
 
 						if (System.IO.File.Exists(fileName)) {
 							UnityEditor.EditorApplication.isPlaying = false;
@@ -327,7 +321,7 @@ public class ClusteringTest : MonoBehaviour {
 							)
 						);
 
-						string fileName = $"Variance logs/{this.GetFileName()}";
+						string fileName = $"Variance logs/{this.GetFileName(this.currentWorkParameters)}";
 
 						if (System.IO.File.Exists(fileName)) {
 							UnityEditor.EditorApplication.isPlaying = false;
@@ -359,7 +353,7 @@ public class ClusteringTest : MonoBehaviour {
 							)
 						);
 
-						string fileName = $"Variance logs/{this.GetFileName()}";
+						string fileName = $"Variance logs/{this.GetFileName(this.currentWorkParameters)}";
 
 						if (System.IO.File.Exists(fileName)) {
 							UnityEditor.EditorApplication.isPlaying = false;
@@ -635,10 +629,12 @@ public class ClusteringTest : MonoBehaviour {
                 }
             }
         }
+
+        this.work.Pop();
     }
 
     private void InitJitterOffsets() {
-        this.offsets = JitterPattern.Get(this.work.Peek().jitterSize);
+        this.offsets = JitterPattern.Get(this.currentWorkParameters.jitterSize);
     }
 
     private long GetStartFrame() {
@@ -654,14 +650,16 @@ public class ClusteringTest : MonoBehaviour {
             return;
         }
 
+        this.currentWorkParameters = this.work.Pop();
+
         Debug.Log($"work left: {this.work.Count}");
-        Debug.Log($"processing: {this.GetFileName()}");
+        Debug.Log($"processing: {this.GetFileName(this.currentWorkParameters)}");
 
         this.frameLogVariance.Clear();
         this.framesProcessed = 0;
         this.timeStart = null;
 
-        this.randomPositions = new Position[this.work.Peek().numClusters];
+        this.randomPositions = new Position[this.currentWorkParameters.numClusters];
 
         this.InitJitterOffsets();
         this.FindKernels();
@@ -669,22 +667,20 @@ public class ClusteringTest : MonoBehaviour {
         this.InitRTs();
         this.InitCbufs();
         this.clusteringRTsAndBuffers = new ClusteringRTsAndBuffers(
-            this.work.Peek().numClusters,
-            this.work.Peek().textureSize,
+            this.currentWorkParameters.numClusters,
+            this.currentWorkParameters.textureSize,
             referenceTextureSize,
             this.rtReference
         );
 
         this.videoPlayer = this.GetComponent<UnityEngine.Video.VideoPlayer>();
         this.videoPlayer.playbackSpeed = 0;
-        this.videoPlayer.clip = this.work.Peek().video;
+        this.videoPlayer.clip = this.currentWorkParameters.video;
         this.videoPlayer.Play();
         this.videoPlayer.frame = this.GetStartFrame();
     }
 
-    private string GetFileName() {
-        LaunchParameters launchParams = this.work.Peek();
-
+    private string GetFileName(LaunchParameters launchParams) {
         string videoName = launchParams.video.name;
         int numIterations = launchParams.clusteringAlgorithmDispatcher.numIterations;
         int textureSize = launchParams.textureSize;
@@ -714,7 +710,7 @@ public class ClusteringTest : MonoBehaviour {
     }
 
     private void WriteVarianceLog() {
-        string fileName = $"Variance logs/{this.GetFileName()}";
+        string fileName = $"Variance logs/{this.GetFileName(this.currentWorkParameters)}";
 
         if (System.IO.File.Exists(fileName)) {
 #if UNITY_EDITOR
@@ -753,7 +749,7 @@ public class ClusteringTest : MonoBehaviour {
                 fileName, System.IO.FileMode.Append
             );
         using var sw = new System.IO.StreamWriter(fs);
-        sw.WriteLine(this.GetFileName());
+        sw.WriteLine(this.GetFileName(this.currentWorkParameters));
         sw.WriteLine($"Frame time: {frameTime:0.000} ms");
         sw.WriteLine();
     }
@@ -791,8 +787,6 @@ public class ClusteringTest : MonoBehaviour {
                     break;
             }
 
-            this.work.Pop();
-
             if (this.work.Count == 0) {
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
@@ -808,37 +802,41 @@ public class ClusteringTest : MonoBehaviour {
 
         Graphics.Blit(this.videoPlayer.texture, this.rtReference);
 
-        this.csHighlightRemoval.SetInt("sub_sample_multiplier", referenceTextureSize / this.work.Peek().textureSize);
-        this.csHighlightRemoval.SetInts(
-            "sub_sample_offset",
-            this.work.Peek().staggeredJitter ?
+        this.csHighlightRemoval.SetInt("sub_sample_multiplier", referenceTextureSize / this.currentWorkParameters.textureSize);
+        if (this.currentWorkParameters.staggeredJitter) {
+            this.csHighlightRemoval.SetInts(
+                "sub_sample_offset",
                 this.offsets[
                     Time.frameCount % this.offsets.Length
-                ] :
-                new int[] {
-                    Time.frameCount % this.work.Peek().jitterSize,
-                    (Time.frameCount / this.offsets.Length) % this.work.Peek().jitterSize
-                }
-        );
+                ]
+            );
+        } else {
+            this.scanlinePixelOffset[0] = Time.frameCount % this.currentWorkParameters.jitterSize;
+            this.scanlinePixelOffset[1] = (Time.frameCount / this.offsets.Length) % this.currentWorkParameters.jitterSize;
+            this.csHighlightRemoval.SetInts(
+                "sub_sample_offset",
+                this.scanlinePixelOffset
+            );
+        }
         this.csHighlightRemoval.SetTexture(this.kernelSubsample, "tex_input", this.rtReference);
         this.csHighlightRemoval.SetTexture(this.kernelSubsample, "tex_output", this.rtInput);
-        this.csHighlightRemoval.SetBool("downscale", this.work.Peek().doDownscale);
+        this.csHighlightRemoval.SetBool("downscale", this.currentWorkParameters.doDownscale);
         this.csHighlightRemoval.Dispatch(
             this.kernelSubsample,
-            this.work.Peek().textureSize / kernelSize,
-            this.work.Peek().textureSize / kernelSize,
+            this.currentWorkParameters.textureSize / kernelSize,
+            this.currentWorkParameters.textureSize / kernelSize,
             1
         );
 
         this.videoPlayer.StepForward();
 
-        this.work.Peek().clusteringAlgorithmDispatcher.RunClustering(
+        this.currentWorkParameters.clusteringAlgorithmDispatcher.RunClustering(
             this.rtInput,
-            this.work.Peek().textureSize,
+            this.currentWorkParameters.textureSize,
             this.clusteringRTsAndBuffers
         );
 
-        this.work.Peek().clusteringAlgorithmDispatcher.AttributeClusters(
+        this.currentWorkParameters.clusteringAlgorithmDispatcher.AttributeClusters(
             this.rtInput,
             this.clusteringRTsAndBuffers,
             final: true,
@@ -853,7 +851,7 @@ public class ClusteringTest : MonoBehaviour {
 
         if (logType == LogType.Variance) {
             this.frameLogVariance.Add(
-                this.work.Peek().clusteringAlgorithmDispatcher.GetVariance(
+                this.currentWorkParameters.clusteringAlgorithmDispatcher.GetVariance(
                     this.clusteringRTsAndBuffers
                 )
             );
@@ -884,8 +882,8 @@ public class ClusteringTest : MonoBehaviour {
         this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_input", this.rtInput);
         this.csHighlightRemoval.Dispatch(
             this.kernelShowResult,
-            this.work.Peek().textureSize / kernelSize,
-            this.work.Peek().textureSize / kernelSize,
+            this.currentWorkParameters.textureSize / kernelSize,
+            this.currentWorkParameters.textureSize / kernelSize,
             1
         );
     }
