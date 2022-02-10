@@ -657,8 +657,6 @@ public class ClusteringTest : MonoBehaviour {
         this.framesProcessed = 0;
         this.timeStart = null;
 
-        this.randomPositions = new Position[this.currentWorkParameters.numClusters];
-
         this.InitJitterOffsets();
         this.FindKernels();
         this.SetTextureSize();
