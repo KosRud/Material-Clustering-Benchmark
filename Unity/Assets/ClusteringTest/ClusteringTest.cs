@@ -627,8 +627,6 @@ public class ClusteringTest : MonoBehaviour {
                 }
             }
         }
-
-        this.work.Pop();
     }
 
     private void InitJitterOffsets() {
