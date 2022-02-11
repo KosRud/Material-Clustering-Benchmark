@@ -122,7 +122,7 @@ public class ClusteringRTsAndBuffers {
     }
 
     public void RandomizeClusterCenters() {
-        for (int i = 0; i < this._clusterCenters.Length; i++) {
+        for (int i = 0; i < this.numClusters; i++) {
             var c = Color.HSVToRGB(
                 (float)this.random.NextDouble(),
                 1,
@@ -132,7 +132,8 @@ public class ClusteringRTsAndBuffers {
 
             // "old" cluster centers with infinite Variance
             // to make sure new ones will overwrite them when validated
-            this._clusterCenters[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0);
+            this._clusterCenters[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0); // "new"
+            this._clusterCenters[i + this.numClusters] = new Vector4(c.r, c.g, Mathf.Infinity, 0); // "old"
         }
         this.cbufClusterCenters.SetData(this._clusterCenters);
     }
