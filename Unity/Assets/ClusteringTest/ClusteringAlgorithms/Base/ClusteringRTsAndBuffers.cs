@@ -9,6 +9,7 @@ public class ClusteringRTsAndBuffers {
     public readonly ComputeBuffer cbufClusterCenters;
     public readonly ComputeBuffer cbufRandomPositions;
     public readonly Texture texReference;
+    public readonly int numClusters;
 
     private readonly Position[] randomPositions;
     private readonly System.Random random;
@@ -52,6 +53,8 @@ public class ClusteringRTsAndBuffers {
         int referenceTextureSize,
         Texture texReference
     ) {
+        this.numClusters = numClusters;
+
         this.random = new System.Random();
 
         this.cbufRandomPositions = new ComputeBuffer(max_num_clusters, sizeof(int) * 4);
@@ -94,31 +97,32 @@ public class ClusteringRTsAndBuffers {
 			NVidia says structures not aligned to 128 bits are slow
 			https://developer.nvidia.com/content/understanding-structured-buffer-performance
 		*/
-        this.cbufClusterCenters = new ComputeBuffer(numClusters * 2, sizeof(float) * 4);
-        this._clusterCenters = new Vector4[numClusters * 2];
+        this.cbufClusterCenters = new ComputeBuffer(this.numClusters * 2, sizeof(float) * 4);
+        this._clusterCenters = new Vector4[this.numClusters * 2];
         if (randomInit) {
             this.RandomizeClusterCenters();
         } else {
-            this.DeterministicClusterCenters(numClusters);
+            this.DeterministicClusterCenters();
         }
     }
 
-    public void DeterministicClusterCenters(int numClusters) {
-        for (int i = 0; i < this._clusterCenters.Length; i++) {
+    public void DeterministicClusterCenters() {
+        for (int i = 0; i < this.numClusters; i++) {
             var c = Color.HSVToRGB(
-                i / (float)(numClusters),
+                i / (float)(this.numClusters),
                 1,
                 1
             );
             c *= 1.0f / (c.r + c.g + c.b);
-            // "old" cluster centers with infinite Variance
-            // to make sure new ones will overwrite them when validated
-            this.clusterCenters[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0);
+            // variance infinity to ensure new cluster centers will replace these ones
+            this._clusterCenters[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0); // "new"
+            this._clusterCenters[i + this.numClusters] = new Vector4(c.r, c.g, Mathf.Infinity, 0); // "old"
         }
-        this.cbufClusterCenters.SetData(this.clusterCenters);
+        this.cbufClusterCenters.SetData(this._clusterCenters);
     }
 
     public void RandomizeClusterCenters() {
+        Debug.Log("randomize!");
         for (int i = 0; i < this._clusterCenters.Length; i++) {
             var c = Color.HSVToRGB(
                 (float)this.random.NextDouble(),
