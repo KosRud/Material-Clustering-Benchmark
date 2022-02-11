@@ -114,6 +114,7 @@ public class ClusteringRTsAndBuffers {
                 1
             );
             c *= 1.0f / (c.r + c.g + c.b);
+
             // variance infinity to ensure new cluster centers will replace these ones
             this._clusterCenters[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0); // "new"
             this._clusterCenters[i + this.numClusters] = new Vector4(c.r, c.g, Mathf.Infinity, 0); // "old"
@@ -130,8 +131,7 @@ public class ClusteringRTsAndBuffers {
             );
             c *= 1.0f / (c.r + c.g + c.b);
 
-            // "old" cluster centers with infinite Variance
-            // to make sure new ones will overwrite them when validated
+            // variance infinity to ensure new cluster centers will replace these ones
             this._clusterCenters[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0); // "new"
             this._clusterCenters[i + this.numClusters] = new Vector4(c.r, c.g, Mathf.Infinity, 0); // "old"
         }
