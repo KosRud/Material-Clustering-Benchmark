@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ClusteringRTsAndBuffers {
     public const int max_num_clusters = 32;
+    public const bool randomInit = false;
 
     public readonly RenderTexture rtArr;
     public readonly RenderTexture rtVariance;
@@ -95,7 +96,26 @@ public class ClusteringRTsAndBuffers {
 		*/
         this.cbufClusterCenters = new ComputeBuffer(numClusters * 2, sizeof(float) * 4);
         this._clusterCenters = new Vector4[numClusters * 2];
-        this.RandomizeClusterCenters();
+        if (randomInit) {
+            this.RandomizeClusterCenters();
+        } else {
+            this.DeterministicClusterCenters(numClusters);
+        }
+    }
+
+    public void DeterministicClusterCenters(int numClusters) {
+        for (int i = 0; i < this._clusterCenters.Length; i++) {
+            var c = Color.HSVToRGB(
+                i / (float)(numClusters),
+                1,
+                1
+            );
+            c *= 1.0f / (c.r + c.g + c.b);
+            // "old" cluster centers with infinite Variance
+            // to make sure new ones will overwrite them when validated
+            this.clusterCenters[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0);
+        }
+        this.cbufClusterCenters.SetData(this.clusterCenters);
     }
 
     public void RandomizeClusterCenters() {
