@@ -72,7 +72,6 @@ public class ClusteringTest : MonoBehaviour {
 
     private class LaunchParameters {
         public readonly int textureSize;
-        public readonly int numClusters;
         public readonly bool staggeredJitter;
         public readonly int jitterSize;
         public readonly UnityEngine.Video.VideoClip video;
@@ -91,7 +90,6 @@ public class ClusteringTest : MonoBehaviour {
             AClusteringAlgorithmDispatcher clusteringAlgorithmDispatcher
         ) {
             this.textureSize = textureSize;
-            this.numClusters = numClusters;
             this.staggeredJitter = staggeredJitter;
             this.jitterSize = jitterSize;
             this.video = video;
@@ -152,7 +150,10 @@ public class ClusteringTest : MonoBehaviour {
     }
 
     private void InitCbufs() {
-        this.cbufRandomPositions = new ComputeBuffer(this.currentWorkParameters.numClusters, sizeof(int) * 4);
+        this.cbufRandomPositions = new ComputeBuffer(
+            this.currentWorkParameters.clusteringAlgorithmDispatcher.numClusters,
+            sizeof(int) * 4
+        );
     }
 
     private void FindKernels() {
@@ -687,7 +688,7 @@ public class ClusteringTest : MonoBehaviour {
         this.InitRTs();
         this.InitCbufs();
         this.clusteringRTsAndBuffers = new ClusteringRTsAndBuffers(
-            this.currentWorkParameters.numClusters,
+            this.currentWorkParameters.clusteringAlgorithmDispatcher.numClusters,
             this.currentWorkParameters.textureSize,
             referenceTextureSize,
             this.rtReference
@@ -704,7 +705,7 @@ public class ClusteringTest : MonoBehaviour {
         string videoName = launchParams.video.name;
         int numIterations = launchParams.clusteringAlgorithmDispatcher.numIterations;
         int textureSize = launchParams.textureSize;
-        int numClusters = launchParams.numClusters;
+        int numClusters = launchParams.clusteringAlgorithmDispatcher.numClusters;
         int jitterSize = launchParams.jitterSize;
         bool staggeredJitter = launchParams.staggeredJitter;
         bool doDownscale = launchParams.doDownscale;
