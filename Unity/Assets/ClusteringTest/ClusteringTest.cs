@@ -10,7 +10,7 @@ public class ClusteringTest : MonoBehaviour {
     private const int referenceTextureSize = 512;
     private const int kernelSize = 4;
     private const float timeStep = 1f;
-    private const LogType logType = LogType.FrameTime;
+    private const LogType logType = LogType.Variance;
 
     private readonly long? overrideStartFrame = null;
     private readonly long? overrideEndFrame = null;
@@ -488,6 +488,7 @@ public class ClusteringTest : MonoBehaviour {
         }
         */
 
+        /*
         {       // frame time measurements
             for (int i = 0; i < 3; i++) {
                 foreach (UnityEngine.Video.VideoClip video in this.videos) {
@@ -625,6 +626,31 @@ public class ClusteringTest : MonoBehaviour {
                         this.ThrowIfExists();
                     }
                 }
+            }
+        }
+        */
+
+        {       // 6. KHM and random swap
+
+            foreach (UnityEngine.Video.VideoClip video in this.videos) {
+                // Knecht
+                this.work.Push(
+                    new LaunchParameters(
+                        textureSize: 64,
+                        numClusters: 6,
+                        staggeredJitter: false,
+                        jitterSize: 1,
+                        video: video,
+                        doDownscale: false,
+                        clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKnecht(
+                            kernelSize: kernelSize,
+                            computeShader: this.csHighlightRemoval,
+                            doRandomizeEmptyClusters: false,
+                            numClusters: 6
+                        )
+                    )
+                );
+                this.ThrowIfExists();
             }
         }
     }

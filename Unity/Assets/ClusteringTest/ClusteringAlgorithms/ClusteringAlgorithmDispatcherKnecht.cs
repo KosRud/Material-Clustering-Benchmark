@@ -1,9 +1,10 @@
 using UnityEngine;
 
 public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcherKM {
-    private readonly KMuntilConvergesResult kMuntilConvergesResult = new KMuntilConvergesResult();
+    private const int randomInitEveryNiterations = 5;
 
-    private int frameCounter;
+    private readonly KMuntilConvergesResult kMuntilConvergesResult = new KMuntilConvergesResult();
+    private int frameCounter = 0;
 
     public ClusteringAlgorithmDispatcherKnecht(
         int kernelSize, ComputeShader computeShader,
@@ -21,46 +22,58 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
     ) {
         this.frameCounter++;
 
-        if (this.frameCounter % 5 == 0) {
+        if (this.frameCounter == randomInitEveryNiterations) {
             this.frameCounter = 0;
-            KMuntilConvergesResult result1 = this.KMuntilConverges(
-                inputTex, textureSize, clusteringRTsAndBuffers
-            );
 
-            if (result1.converged) {
-                return;
-            }
-
-            Debug.Log("Knecht's KM did not converge in 20 iterations!");
-
-            clusteringRTsAndBuffers.RandomizeClusterCenters();
-            KMuntilConvergesResult result2 = this.KMuntilConverges(
-                inputTex, textureSize, clusteringRTsAndBuffers
-            );
-
-            if (result1.variance < result2.variance) {
-                clusteringRTsAndBuffers.clusterCenters = result1.clusterCenters;
-                Debug.Log("Knech's KM: failed exploration");
-            } else {
-                Debug.Log("Knecht's KM: successful exploration");
-            }
+            this.KnechtExplorationIteration(inputTex, textureSize, clusteringRTsAndBuffers);
+        } else {
+            this.KnechtNormalIteration(inputTex, textureSize, clusteringRTsAndBuffers);
         }
+    }
 
-        Vector4[] oldClusterCenters = clusteringRTsAndBuffers.clusterCenters;
-        float oldVariance = this.KMuntilConverges(
+    private void KnechtNormalIteration(
+        Texture inputTex,
+        int textureSize,
+        ClusteringRTsAndBuffers clusteringRTsAndBuffers
+    ) {
+        KMuntilConvergesResult result = this.KMuntilConverges(
             inputTex, textureSize, clusteringRTsAndBuffers
-        ).variance;
+        );
 
+        if (result.converged) {
+            return;
+        } else {
+            this.DoExploration(inputTex, textureSize, clusteringRTsAndBuffers, result);
+        }
+    }
+
+    private void KnechtExplorationIteration(
+        Texture inputTex,
+        int textureSize,
+        ClusteringRTsAndBuffers clusteringRTsAndBuffers
+    ) {
+        KMuntilConvergesResult result = this.KMuntilConverges(
+            inputTex, textureSize, clusteringRTsAndBuffers
+        );
+
+        this.DoExploration(inputTex, textureSize, clusteringRTsAndBuffers, result);
+    }
+
+    private void DoExploration(
+        Texture inputTex,
+        int textureSize,
+        ClusteringRTsAndBuffers clusteringRTsAndBuffers,
+        KMuntilConvergesResult currentResult
+    ) {
         clusteringRTsAndBuffers.RandomizeClusterCenters();
 
-        float newVariance = this.KMuntilConverges(
+        KMuntilConvergesResult newResult = this.KMuntilConverges(
             inputTex, textureSize, clusteringRTsAndBuffers
-        ).variance;
+        );
 
-        if (oldVariance < newVariance) {
-            clusteringRTsAndBuffers.clusterCenters = oldClusterCenters;
+        if (currentResult.variance < newResult.variance) {
+            clusteringRTsAndBuffers.clusterCenters = currentResult.clusterCenters;
         }
-
     }
 
     private class KMuntilConvergesResult {
