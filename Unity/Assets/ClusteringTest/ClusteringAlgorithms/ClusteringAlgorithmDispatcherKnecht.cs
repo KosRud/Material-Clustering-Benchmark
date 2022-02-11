@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcherKM {
     private const int randomInitEveryNiterations = 5;
+    private const float varianceChangeThreshold = 1e-4f;
 
     private readonly KMuntilConvergesResult kMuntilConvergesResult = new KMuntilConvergesResult();
     private int frameCounter = 0;
@@ -44,6 +45,7 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
             return;
         } else {
             this.DoExploration(inputTex, textureSize, clusteringRTsAndBuffers, result);
+            Debug.Log("did not converge");
         }
     }
 
@@ -115,7 +117,7 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
 
         for (int i = 0; i < 20; i++) {
             Vector4[] clusterCenters = clusteringRTsAndBuffers.clusterCenters;
-            float variance = clusterCenters[0].w;
+            float variance = clusterCenters[0].z;
 
             this.KMiteration(
                 inputTex, textureSize, clusteringRTsAndBuffers,
@@ -123,9 +125,9 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
             );
 
             newClusterCenters = clusteringRTsAndBuffers.clusterCenters;
-            newVariance = clusteringRTsAndBuffers.clusterCenters[0].w;
+            newVariance = clusteringRTsAndBuffers.clusterCenters[0].z;
 
-            if (variance - newVariance < 1e-4) {
+            if (variance - newVariance < varianceChangeThreshold) {
                 this.kMuntilConvergesResult.variance = newVariance;
                 this.kMuntilConvergesResult.converged = true;
                 this.kMuntilConvergesResult.clusterCenters = newClusterCenters;
