@@ -113,34 +113,38 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
         int textureSize,
         ClusteringRTsAndBuffers clusteringRTsAndBuffers
     ) {
-        float newVariance = 0;
-        Vector4[] newClusterCenters = null;
+        this.KMiteration(
+            inputTex, textureSize, clusteringRTsAndBuffers,
+            rejectOld: false
+        );
 
-        for (int i = 0; i < maxKMiterations; i++) {
-            Vector4[] clusterCenters = clusteringRTsAndBuffers.clusterCenters;
-            float variance = clusterCenters[0].z;
+        Vector4[] clusterCenters = clusteringRTsAndBuffers.clusterCenters;
+        float newVariance = clusterCenters[0].z;
+
+        for (int i = 1; i < maxKMiterations; i++) {
+            float oldVariance = newVariance;
 
             this.KMiteration(
                 inputTex, textureSize, clusteringRTsAndBuffers,
                 rejectOld: false
             );
 
-            newClusterCenters = clusteringRTsAndBuffers.clusterCenters;
-            newVariance = clusteringRTsAndBuffers.clusterCenters[0].z;
+            clusterCenters = clusteringRTsAndBuffers.clusterCenters;
+            newVariance = clusterCenters[0].z;
 
-            if (variance - newVariance < varianceChangeThreshold) {
+            if (oldVariance - newVariance < varianceChangeThreshold) {
                 this.kMuntilConvergesResult.variance = newVariance;
                 this.kMuntilConvergesResult.converged = true;
-                this.kMuntilConvergesResult.clusterCenters = newClusterCenters;
+                this.kMuntilConvergesResult.clusterCenters = clusterCenters;
                 return this.kMuntilConvergesResult;
             }
         }
 
-        Debug.Assert(newClusterCenters != null);
+        Debug.Assert(clusterCenters != null);
 
         this.kMuntilConvergesResult.variance = newVariance;
         this.kMuntilConvergesResult.converged = false;
-        this.kMuntilConvergesResult.clusterCenters = newClusterCenters;
+        this.kMuntilConvergesResult.clusterCenters = clusterCenters;
         return this.kMuntilConvergesResult;
     }
 }
