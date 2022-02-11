@@ -122,7 +122,6 @@ public class ClusteringRTsAndBuffers {
     }
 
     public void RandomizeClusterCenters() {
-        Debug.Log("randomize!");
         for (int i = 0; i < this._clusterCenters.Length; i++) {
             var c = Color.HSVToRGB(
                 (float)this.random.NextDouble(),
