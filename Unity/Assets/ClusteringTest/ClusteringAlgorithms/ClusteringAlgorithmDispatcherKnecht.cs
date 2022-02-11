@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcherKM {
     private const int randomInitEveryNiterations = 5;
+    private const int maxKMiterations = 20;
     private const float varianceChangeThreshold = 1e-4f;
 
     private readonly KMuntilConvergesResult kMuntilConvergesResult = new KMuntilConvergesResult();
@@ -115,7 +116,7 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
         float newVariance = 0;
         Vector4[] newClusterCenters = null;
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < maxKMiterations; i++) {
             Vector4[] clusterCenters = clusteringRTsAndBuffers.clusterCenters;
             float variance = clusterCenters[0].z;
 
