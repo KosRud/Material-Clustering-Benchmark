@@ -8,7 +8,7 @@ public class ClusteringTest : MonoBehaviour {
     }
 
     private const int referenceTextureSize = 512;
-    private const int kernelSize = 4;
+    private const int kernelSize = 16;
     private const float timeStep = 1f;
     private const LogType logType = LogType.Variance;
 
