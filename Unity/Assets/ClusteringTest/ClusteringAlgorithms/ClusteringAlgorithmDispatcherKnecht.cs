@@ -4,8 +4,7 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
     private const int randomInitEveryNiterations = 5;
     private const int maxKMiterations = 20;
     private const float varianceChangeThreshold = 1e-4f;
-
-    private readonly KMuntilConvergesResult kMuntilConvergesResult = new KMuntilConvergesResult();
+    private readonly Vector4[] oldClusterCenters;
     private int frameCounter = 0;
 
     public ClusteringAlgorithmDispatcherKnecht(
@@ -13,6 +12,7 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
         bool doRandomizeEmptyClusters, int numClusters
     ) : base(kernelSize, computeShader, 1, doRandomizeEmptyClusters, numClusters) {
         this.frameCounter = 0;
+        this.oldClusterCenters = new Vector4[numClusters * 2];
     }
 
     public override string descriptionString => $"Knecht";
@@ -22,44 +22,24 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
         int textureSize,
         ClusteringRTsAndBuffers clusteringRTsAndBuffers
     ) {
+        KMuntilConvergesResult.AssertEmpty();
+
         this.frameCounter++;
 
-        if (this.frameCounter == randomInitEveryNiterations) {
-            this.frameCounter = 0;
+        using (
+            KMuntilConvergesResult result = this.KMuntilConverges(inputTex, textureSize, clusteringRTsAndBuffers)
+        ) {
+            if (
+                result.converged == false ||
+                this.frameCounter == randomInitEveryNiterations
+            ) {
+                this.DoExploration(inputTex, textureSize, clusteringRTsAndBuffers, result);
+            }
 
-            this.KnechtExplorationIteration(inputTex, textureSize, clusteringRTsAndBuffers);
-        } else {
-            this.KnechtNormalIteration(inputTex, textureSize, clusteringRTsAndBuffers);
+            if (this.frameCounter == randomInitEveryNiterations) {
+                this.frameCounter = 0;
+            }
         }
-    }
-
-    private void KnechtNormalIteration(
-        Texture inputTex,
-        int textureSize,
-        ClusteringRTsAndBuffers clusteringRTsAndBuffers
-    ) {
-        KMuntilConvergesResult result = this.KMuntilConverges(
-            inputTex, textureSize, clusteringRTsAndBuffers
-        );
-
-        if (result.converged) {
-            return;
-        } else {
-            this.DoExploration(inputTex, textureSize, clusteringRTsAndBuffers, result);
-            Debug.Log("did not converge");
-        }
-    }
-
-    private void KnechtExplorationIteration(
-        Texture inputTex,
-        int textureSize,
-        ClusteringRTsAndBuffers clusteringRTsAndBuffers
-    ) {
-        KMuntilConvergesResult result = this.KMuntilConverges(
-            inputTex, textureSize, clusteringRTsAndBuffers
-        );
-
-        this.DoExploration(inputTex, textureSize, clusteringRTsAndBuffers, result);
     }
 
     private void DoExploration(
@@ -68,18 +48,25 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
         ClusteringRTsAndBuffers clusteringRTsAndBuffers,
         KMuntilConvergesResult currentResult
     ) {
+        this.CopyClusterCenters(currentResult.clusterCenters, this.oldClusterCenters);
+
+        // alters (currentResult.clusterCenters) - same array is filled with new data and re-used
         clusteringRTsAndBuffers.RandomizeClusterCenters();
 
-        KMuntilConvergesResult newResult = this.KMuntilConverges(
+        using (
+            KMuntilConvergesResult newResult = this.KMuntilConverges(
             inputTex, textureSize, clusteringRTsAndBuffers
-        );
-
-        if (currentResult.variance < newResult.variance) {
-            clusteringRTsAndBuffers.clusterCenters = currentResult.clusterCenters;
+            )
+        ) {
+            if (currentResult.variance < newResult.variance) {
+                clusteringRTsAndBuffers.clusterCenters = this.oldClusterCenters;
+            }
         }
     }
 
-    private class KMuntilConvergesResult {
+    private class KMuntilConvergesResult : System.IDisposable {
+        private const int maxActive = 2;
+
         public float variance;
         public bool converged;
         public Vector4[] clusterCenters {
@@ -93,18 +80,43 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
         }
         private Vector4[] _clusterCenters;
 
-        public KMuntilConvergesResult() {
+        private readonly static UnityEngine.Pool.ObjectPool<KMuntilConvergesResult> pool = new UnityEngine.Pool.ObjectPool<KMuntilConvergesResult>(
+            () => new KMuntilConvergesResult()
+        );
+
+        private KMuntilConvergesResult() {
 
         }
 
-        public KMuntilConvergesResult(
+        void System.IDisposable.Dispose() {
+            pool.Release(this);
+        }
+
+        private static void AssertMaxActive() {
+            Debug.Assert(pool.CountActive <= maxActive);
+        }
+
+        public static KMuntilConvergesResult Get() {
+            AssertMaxActive();
+            return pool.Get();
+        }
+
+        public static KMuntilConvergesResult Get(
             float variance,
             bool converged,
             Vector4[] clusterCenters
         ) {
-            this.variance = variance;
-            this.converged = converged;
-            this.clusterCenters = clusterCenters;
+            AssertMaxActive();
+
+            KMuntilConvergesResult obj = pool.Get();
+            obj.variance = variance;
+            obj.converged = converged;
+            obj.clusterCenters = clusterCenters;
+            return obj;
+        }
+
+        public static void AssertEmpty() {
+            Debug.Assert(pool.CountActive == 0);
         }
     }
 
@@ -133,18 +145,26 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
             newVariance = clusterCenters[0].z;
 
             if (oldVariance - newVariance < varianceChangeThreshold) {
-                this.kMuntilConvergesResult.variance = newVariance;
-                this.kMuntilConvergesResult.converged = true;
-                this.kMuntilConvergesResult.clusterCenters = clusterCenters;
-                return this.kMuntilConvergesResult;
+                return KMuntilConvergesResult.Get(
+                    variance: newVariance,
+                    converged: true,
+                    clusterCenters: clusterCenters
+                );
             }
         }
 
-        Debug.Assert(clusterCenters != null);
+        return KMuntilConvergesResult.Get(
+            variance: newVariance,
+            converged: false,
+            clusterCenters: clusterCenters
+        );
+    }
 
-        this.kMuntilConvergesResult.variance = newVariance;
-        this.kMuntilConvergesResult.converged = false;
-        this.kMuntilConvergesResult.clusterCenters = clusterCenters;
-        return this.kMuntilConvergesResult;
+    Vector4[] CopyClusterCenters(Vector4[] from, Vector4[] to) {
+        Debug.Assert(from.Length == to.Length);
+        for (int i = 0; i < from.Length; i++) {
+            to[i] = from[i];
+        }
+        return to;
     }
 }
