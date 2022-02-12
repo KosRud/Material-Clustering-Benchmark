@@ -108,6 +108,10 @@ public class ClusteringTest : MonoBehaviour {
         return mipLevel;
     }
 
+    private float PortionUsed(int textureSize) {
+        return textureSize / (float)(referenceTextureSize);
+    }
+
     private void SetTextureSize() {
         Debug.Assert(
             (
@@ -117,8 +121,8 @@ public class ClusteringTest : MonoBehaviour {
         Debug.Assert(this.currentWorkParameters.textureSize <= referenceTextureSize);
 
         this.csHighlightRemoval.SetInt("mip_level", this.MipLevel(this.currentWorkParameters.textureSize));
+        this.csHighlightRemoval.SetFloat("portion_used", this.PortionUsed(this.currentWorkParameters.textureSize));
         this.csHighlightRemoval.SetInt("ref_mip_level", this.MipLevel(referenceTextureSize));
-
         this.csHighlightRemoval.SetInt("texture_size", this.currentWorkParameters.textureSize);
     }
 

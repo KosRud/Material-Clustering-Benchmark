@@ -23,6 +23,7 @@ uint randomClusterCenter;
 uint mip_level;
 uint ref_mip_level;
 uint texture_size;
+float portion_used;
 
 uint num_clusters;
 
@@ -177,7 +178,7 @@ void SubSample (uint3 id : SV_DispatchThreadID)
             float2(
                 (id.xy + 0.5) / texture_size
             ),
-            ref_mip_level
+            ref_mip_level - mip_level
         );
     }
 }
@@ -299,9 +300,11 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 		return;
 	}
 
+    float2 samplePos = 0.5 * portion_used;
+
     float4 aggregatedColor = tex_arr_clusters_r.SampleLevel(
 		sampler_tex_arr_clusters_r,
-		float3(0.5, 0.5, id.x),
+		float3(samplePos, samplePos, id.x),
 		mip_level
 	);
 
@@ -371,7 +374,7 @@ void GatherVariance (uint3 id : SV_DispatchThreadID)
 	);
 
 	float4 clusterCenter = cbuf_cluster_centers[id.x];
-	clusterCenter.w = variance_sample.r / variance_sample.g;
+	clusterCenter.z = variance_sample.r / variance_sample.g;
 
 	cbuf_cluster_centers[id.x] = clusterCenter;
 }
