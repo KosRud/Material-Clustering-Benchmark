@@ -138,9 +138,7 @@ public abstract class AClusteringAlgorithmDispatcher {
         using (
             ClusterCenters clusterCenters = clusteringRTsAndBuffers.GetClusterCenters()
         ) {
-            float variance = clusterCenters.variance;
-
-            return variance;
+            return clusterCenters.variance;
         }
     }
 }

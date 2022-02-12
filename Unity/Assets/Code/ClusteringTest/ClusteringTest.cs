@@ -364,11 +364,9 @@ public class ClusteringTest : MonoBehaviour {
 		}
         */
 
-        /*
         {       // 6. KHM and random swap
-
             foreach (UnityEngine.Video.VideoClip video in this.videos) {
-                for (int numIterations = 1; numIterations < 31; numIterations += 5){
+                for (int numIterations = 1; numIterations < 31; numIterations += 1) {
                     // KM
                     this.work.Push(
                         new LaunchParameters(
@@ -487,7 +485,6 @@ public class ClusteringTest : MonoBehaviour {
                 this.ThrowIfExists();
             }
         }
-        */
 
         /*
         {       // frame time measurements
@@ -630,53 +627,6 @@ public class ClusteringTest : MonoBehaviour {
             }
         }
         */
-
-        {       // 6. KHM and random swap
-
-            foreach (UnityEngine.Video.VideoClip video in this.videos) {
-                /*
-                // KM
-                this.work.Push(
-                    new LaunchParameters(
-                        textureSize: 64,
-                        numClusters: 6,
-                        staggeredJitter: false,
-                        jitterSize: 1,
-                        video: video,
-                        doDownscale: false,
-                        clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKM(
-                            kernelSize: kernelSize,
-                            numIterations: 1,
-                            computeShader: this.csHighlightRemoval,
-                            doRandomizeEmptyClusters: false,
-                            numClusters: 6
-                        )
-                    )
-                );
-                this.ThrowIfExists();
-                */
-
-                // Knecht
-                this.work.Push(
-                    new LaunchParameters(
-                        textureSize: 64,
-                        numClusters: 6,
-                        staggeredJitter: false,
-                        jitterSize: 1,
-                        video: video,
-                        doDownscale: false,
-                        clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKnecht(
-                            kernelSize: kernelSize,
-                            computeShader: this.csHighlightRemoval,
-                            doRandomizeEmptyClusters: false,
-                            numClusters: 6
-                        )
-                    )
-                );
-
-                this.ThrowIfExists();
-            }
-        }
     }
 
     private void InitJitterOffsets() {
