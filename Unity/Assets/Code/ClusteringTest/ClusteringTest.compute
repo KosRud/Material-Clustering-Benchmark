@@ -300,7 +300,7 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 		return;
 	}
 
-    float2 samplePos = 0.5 * portion_used;
+    float samplePos = 0.5 * portion_used;
 
     float4 aggregatedColor = tex_arr_clusters_r.SampleLevel(
 		sampler_tex_arr_clusters_r,
