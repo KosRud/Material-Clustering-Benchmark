@@ -13,17 +13,16 @@ public class ClusterCenters : System.IDisposable {
         new System.Collections.Generic.Dictionary<int, UnityEngine.Pool.IObjectPool<ClusterCenters>>();
 
     private static UnityEngine.Pool.IObjectPool<ClusterCenters> GetPool(int numClusters) {
-        if (pools.ContainsKey(numClusters)) {
-            return pools[numClusters];
+        if (pools.ContainsKey(numClusters) == false) {
+            int localNumClusters = numClusters; // local copy prevent variable capture in lambda
+            pools.Add(
+                numClusters,
+                new ObjectPoolMaxAssert<ClusterCenters>(
+                    createFunc: () => new ClusterCenters(localNumClusters),
+                    maxActive: 3
+                )
+            );
         }
-
-        pools.Add(
-            numClusters,
-            new ObjectPoolMaxAssert<ClusterCenters>(
-                createFunc: () => new ClusterCenters(numClusters),
-                maxActive: 3
-            )
-        );
 
         return pools[numClusters];
     }
@@ -33,12 +32,13 @@ public class ClusterCenters : System.IDisposable {
         this.centers = new Vector4[this.numClusters * 2];
     }
 
-    void System.IDisposable.Dispose() {
+    public void Dispose() {
         pools[this.numClusters].Release(this);
     }
 
     public static ClusterCenters Get(int numClusters, Vector4[] centersBufferData) {
         ClusterCenters obj = GetPool(numClusters).Get();
+
         centersBufferData.CopyTo(obj.centers, 0);
 
         foreach (Vector4 center in centersBufferData) {

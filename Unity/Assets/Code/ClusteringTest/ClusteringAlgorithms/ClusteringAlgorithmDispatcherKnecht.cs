@@ -72,8 +72,8 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
 
         }
 
-        void System.IDisposable.Dispose() {
-            ((System.IDisposable)this.clusterCenters).Dispose();
+        public void Dispose() {
+            this.clusterCenters.Dispose();
             pool.Release(this);
         }
 
@@ -103,7 +103,7 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
         ClusterCenters newClusterCenters = clusteringRTsAndBuffers.GetClusterCenters();
 
         for (int i = 1; i < maxKMiterations; i++) {
-            ((System.IDisposable)clusterCenters)?.Dispose();
+            clusterCenters?.Dispose();
             clusterCenters = newClusterCenters;
 
             this.KMiteration(
@@ -114,7 +114,7 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
             newClusterCenters = clusteringRTsAndBuffers.GetClusterCenters();
 
             if (clusterCenters.variance - newClusterCenters.variance < varianceChangeThreshold) {
-                ((System.IDisposable)clusterCenters).Dispose();
+                clusterCenters.Dispose();
                 return KMuntilConvergesResult.Get(
                     converged: true,
                     clusterCenters: newClusterCenters
@@ -122,7 +122,7 @@ public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcher
             }
         }
 
-        ((System.IDisposable)clusterCenters).Dispose();
+        clusterCenters.Dispose();
         return KMuntilConvergesResult.Get(
             converged: false,
             clusterCenters: newClusterCenters

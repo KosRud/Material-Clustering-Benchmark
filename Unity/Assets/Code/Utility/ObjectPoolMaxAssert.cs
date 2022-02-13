@@ -12,25 +12,25 @@ where T : class {
         this.pool = new UnityEngine.Pool.ObjectPool<T>(createFunc);
     }
 
-    T UnityEngine.Pool.IObjectPool<T>.Get() {
+    public T Get() {
         T obj = this.pool.Get();
         UnityEngine.Debug.Assert(this.pool.CountActive <= this.maxActive);
         return obj;
     }
 
-    UnityEngine.Pool.PooledObject<T> UnityEngine.Pool.IObjectPool<T>.Get(out T obj) {
+    public UnityEngine.Pool.PooledObject<T> Get(out T obj) {
         UnityEngine.Pool.PooledObject<T> pooledObj = this.pool.Get(out obj);
         UnityEngine.Debug.Assert(this.pool.CountActive <= this.maxActive);
         return pooledObj;
     }
 
-    void UnityEngine.Pool.IObjectPool<T>.Release(T obj) {
+    public void Release(T obj) {
         this.pool.Release(obj);
     }
 
-    void UnityEngine.Pool.IObjectPool<T>.Clear() {
+    public void Clear() {
         this.pool.Clear();
     }
 
-    int UnityEngine.Pool.IObjectPool<T>.CountInactive => this.pool.CountInactive;
+    public int CountInactive => this.pool.CountInactive;
 }
