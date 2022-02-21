@@ -192,6 +192,8 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 	uint clusterID;
 
 	float3 col = tex_input[id.xy].rgb;
+    float2 projCol = project(col);
+
 	bool included = test(col) > threshold;
 
 	float dist_list[max_num_clusters];
@@ -199,7 +201,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 	for (uint i = 0; i < num_clusters; i++) {
 		float dist = length(
 			cbuf_cluster_centers[i].rg -
-			project(col)
+			projCol
 		);
 
 		dist_list[i] = dist;
