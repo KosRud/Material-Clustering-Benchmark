@@ -363,6 +363,7 @@ public class ClusteringTest : MonoBehaviour {
 		}
         */
 
+        /*
         {       // 6. KHM and random swap
             foreach (UnityEngine.Video.VideoClip video in this.videos) {
                 for (int numIterations = 1; numIterations < 31; numIterations += 1) {
@@ -484,10 +485,11 @@ public class ClusteringTest : MonoBehaviour {
                 this.ThrowIfExists();
             }
         }
+        */
 
-        /*
+
         {       // frame time measurements
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 9; i++) {
                 foreach (UnityEngine.Video.VideoClip video in this.videos) {
                     foreach (int textureSize in new int[] { 512, 64 }) {
                         // 3 iterations
@@ -625,7 +627,6 @@ public class ClusteringTest : MonoBehaviour {
                 }
             }
         }
-        */
     }
 
     private void InitJitterOffsets() {
