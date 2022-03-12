@@ -10,7 +10,7 @@ public class ClusteringTest : MonoBehaviour {
     private const int referenceTextureSize = 512;
     private const int kernelSize = 16;
     private const float timeStep = 1f;
-    private const LogType logType = LogType.Variance;
+    private const LogType logType = LogType.FrameTime;
 
     private readonly long? overrideStartFrame = null;
     private readonly long? overrideEndFrame = null;
@@ -489,7 +489,7 @@ public class ClusteringTest : MonoBehaviour {
 
 
         {       // frame time measurements
-            for (int i = 0; i < 9; i++) {
+            for (int i = 0; i < 20; i++) {
                 foreach (UnityEngine.Video.VideoClip video in this.videos) {
                     foreach (int textureSize in new int[] { 512, 64 }) {
                         // 3 iterations
@@ -618,6 +618,23 @@ public class ClusteringTest : MonoBehaviour {
                                     kernelSize: kernelSize,
                                     computeShader: this.csHighlightRemoval,
                                     doRandomizeEmptyClusters: false,
+                                    numClusters: 6
+                                )
+                            )
+                        );
+                        this.ThrowIfExists();
+
+                        // Dummy
+                        this.work.Push(
+                            new LaunchParameters(
+                                textureSize: textureSize,
+                                numClusters: 6,
+                                staggeredJitter: false,
+                                jitterSize: 1,
+                                video: video,
+                                doDownscale: false,
+                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherDummy(
+                                    computeShader: this.csHighlightRemoval,
                                     numClusters: 6
                                 )
                             )
