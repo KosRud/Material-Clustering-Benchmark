@@ -24,13 +24,6 @@ public class ClusteringTest : MonoBehaviour {
     private struct Position {
         public int x;
         public int y;
-
-        /*
-			NVidia says structures not aligned to 128 bits are slow
-			https://developer.nvidia.com/content/understanding-structured-buffer-performance
-		*/
-        private readonly int padding_1;
-        private readonly int padding_2;
     }
     private ComputeBuffer cbufRandomPositions;
 
@@ -70,7 +63,34 @@ public class ClusteringTest : MonoBehaviour {
     public ComputeShader csHighlightRemoval;
     public UnityEngine.Video.VideoClip[] videos;
 
-    private class LaunchParameters {
+    public class LaunchParameters {
+        public string GetFileName() {
+            string videoName = this.video.name;
+            int numIterations = this.clusteringAlgorithmDispatcher.numIterations;
+            int textureSize = this.textureSize;
+            int numClusters = this.clusteringAlgorithmDispatcher.numClusters;
+            int jitterSize = this.jitterSize;
+            bool staggeredJitter = this.staggeredJitter;
+            bool doDownscale = this.doDownscale;
+            string algorithm = this.clusteringAlgorithmDispatcher.descriptionString;
+            bool doRandomizeEmptyClusters = this.clusteringAlgorithmDispatcher.doRandomizeEmptyClusters;
+
+            return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{textureSize}|number of clusters:{numClusters}|randomize empty clusters:{doRandomizeEmptyClusters}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}|algorithm:{algorithm}.csv";
+        }
+
+        public LaunchParameters ThrowIfExists() {
+            string fileName = $"Variance logs/{this.GetFileName()}";
+
+            if (System.IO.File.Exists(fileName)) {
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#endif
+                throw new System.Exception($"File exists: {fileName}");
+            }
+
+            return this;
+        }
+
         public readonly int textureSize;
         public readonly bool staggeredJitter;
         public readonly int jitterSize;
@@ -82,7 +102,6 @@ public class ClusteringTest : MonoBehaviour {
 
         public LaunchParameters(
             int textureSize,
-            int numClusters,
             bool staggeredJitter,
             int jitterSize,
             UnityEngine.Video.VideoClip video,
@@ -160,490 +179,9 @@ public class ClusteringTest : MonoBehaviour {
         this.kernelSubsample = this.csHighlightRemoval.FindKernel("SubSample");
     }
 
-    private void PopIfExists() {
-        string fileName = $"Variance logs/{this.GetFileName(this.work.Peek())}";
-        if (System.IO.File.Exists(fileName)) {
-            this.work.Pop();
-        }
-    }
-
-    private void ThrowIfExists() {
-        string fileName = $"Variance logs/{this.GetFileName(this.work.Peek())}";
-
-        if (System.IO.File.Exists(fileName)) {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#endif
-            throw new System.Exception($"File exists: {fileName}");
-        }
-    }
-
     private void Awake() {
         Debug.Assert(this.videos.Length != 0);
-
-        /*
-            for (int textureSize = 1024; textureSize >= 8; textureSize /= 2) {
-                for (
-                    int jitterSize = 1;
-                    jitterSize <= 16 && jitterSize * textureSize <= 1024;
-                    jitterSize *= 2
-                ) {
-                    foreach (bool staggeredJitter in new bool[] { true, false }) {
-                    if (jitterSize == 1 && staggeredJitter) {
-                        continue;
-                    }
-        */
-
-
-        /*
-		{       // 1. subsampling
-			foreach (UnityEngine.Video.VideoClip video in this.videos) {
-				for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
-					foreach (int numClusters in new int[] { 4, 6, 8, 12, 16 }) {
-						this.work.Push(
-							new LaunchParameters(
-								textureSize: textureSize,
-								numIterations: 3,
-								numClusters: numClusters,
-								doRandomSwap: false,
-								doRandomizeEmptyClusters: false,
-								doKHM: false,
-								staggeredJitter: false,
-								jitterSize: 1,
-								video: video,
-								doDownscale: false
-							)
-						);
-
-						string fileName = $"Variance logs/{this.GetFileName(this.currentWorkParameters)}";
-
-						if (System.IO.File.Exists(fileName)) {
-							UnityEditor.EditorApplication.isPlaying = false;
-							throw new System.Exception($"File exists: {fileName}");
-						}
-					}
-				}
-			}
-		}
-        */
-
-        /*
-		{       // 2. scaling vs subsampling
-			foreach (UnityEngine.Video.VideoClip video in this.videos) {
-				for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
-					foreach (bool doDownscale in new bool[] { true, false }) {
-						this.work.Push(
-							new LaunchParameters(
-								textureSize: textureSize,
-								numIterations: 3,
-								numClusters: 6,
-								doRandomSwap: false,
-								doRandomizeEmptyClusters: false,
-								doKHM: false,
-								staggeredJitter: false,
-								jitterSize: 1,
-								video: video,
-								doDownscale: doDownscale
-							)
-						);
-
-						string fileName = $"Variance logs/{this.GetFileName(this.currentWorkParameters)}";
-
-						if (System.IO.File.Exists(fileName)) {
-							UnityEditor.EditorApplication.isPlaying = false;
-							throw new System.Exception($"File exists: {fileName}");
-						}
-					}
-				}
-			}
-		}
-        */
-
-        /*
-		{       // 3. staggered jitter
-			foreach (UnityEngine.Video.VideoClip video in this.videos) {
-				for (int textureSize = 64; textureSize >= 4; textureSize /= 2) {
-					for (
-							int jitterSize = 1;
-							jitterSize <= 16 && jitterSize * textureSize <= 64;
-							jitterSize *= 2
-						) {
-						this.work.Push(
-							new LaunchParameters(
-								textureSize: textureSize,
-								numIterations: 3,
-								numClusters: 6,
-								doRandomSwap: false,
-								doRandomizeEmptyClusters: false,
-								doKHM: false,
-								staggeredJitter: true,
-								jitterSize: jitterSize,
-								video: video,
-								doDownscale: false
-							)
-						);
-
-						string fileName = $"Variance logs/{this.GetFileName(this.currentWorkParameters)}";
-
-						if (System.IO.File.Exists(fileName)) {
-							UnityEditor.EditorApplication.isPlaying = false;
-							throw new System.Exception($"File exists: {fileName}");
-						}
-					}
-				}
-			}
-		}
-        */
-
-        /*
-		{       // 4. scanline jitter
-			foreach (UnityEngine.Video.VideoClip video in this.videos) {
-				for (int textureSize = 64; textureSize >= 4; textureSize /= 2) {
-					for (
-							int jitterSize = 1;
-							jitterSize <= 16 && jitterSize * textureSize <= 64;
-							jitterSize *= 2
-						) {
-						this.work.Push(
-							new LaunchParameters(
-								textureSize: textureSize,
-								numIterations: 3,
-								numClusters: 6,
-								doRandomSwap: false,
-								doRandomizeEmptyClusters: false,
-								doKHM: false,
-								staggeredJitter: false,
-								jitterSize: jitterSize,
-								video: video,
-								doDownscale: false
-							)
-						);
-
-						string fileName = $"Variance logs/{this.GetFileName(this.currentWorkParameters)}";
-
-						if (System.IO.File.Exists(fileName)) {
-							UnityEditor.EditorApplication.isPlaying = false;
-							throw new System.Exception($"File exists: {fileName}");
-						}
-					}
-				}
-			}
-		}
-        */
-
-        /*
-		{       // 5. empty cluster randomization
-			foreach (UnityEngine.Video.VideoClip video in this.videos) {
-				for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
-					foreach (bool doRandomizeEmptyClusters in new bool[] { true, false }) {
-						this.work.Push(
-							new LaunchParameters(
-								textureSize: textureSize,
-								numIterations: 3,
-								numClusters: 6,
-								doRandomSwap: false,
-								doRandomizeEmptyClusters: doRandomizeEmptyClusters,
-								doKHM: false,
-								staggeredJitter: false,
-								jitterSize: 1,
-								video: video,
-								doDownscale: false
-							)
-						);
-
-						string fileName = $"Variance logs/{this.GetFileName(this.currentWorkParameters)}";
-
-						if (System.IO.File.Exists(fileName)) {
-							UnityEditor.EditorApplication.isPlaying = false;
-							throw new System.Exception($"File exists: {fileName}");
-						}
-					}
-				}
-			}
-		}
-        */
-
-        /*
-        {       // 6. KHM and random swap
-            foreach (UnityEngine.Video.VideoClip video in this.videos) {
-                for (int numIterations = 1; numIterations < 31; numIterations += 1) {
-                    // KM
-                    this.work.Push(
-                        new LaunchParameters(
-                            textureSize: 64,
-                            numClusters: 6,
-                            staggeredJitter: false,
-                            jitterSize: 1,
-                            video: video,
-                            doDownscale: false,
-                            clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKM(
-                                kernelSize: kernelSize,
-                                computeShader: this.csHighlightRemoval,
-                                numIterations: numIterations,
-                                doRandomizeEmptyClusters: false,
-                                numClusters: 6
-                            )
-                        )
-                    );
-                    this.ThrowIfExists();
-
-                    // KHM
-                    this.work.Push(
-                        new LaunchParameters(
-                            textureSize: 64,
-                            numClusters: 6,
-                            staggeredJitter: false,
-                            jitterSize: 1,
-                            video: video,
-                            doDownscale: false,
-                            clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKHM(
-                                kernelSize: kernelSize,
-                                computeShader: this.csHighlightRemoval,
-                                numIterations: numIterations,
-                                doRandomizeEmptyClusters: false,
-                                numClusters: 6
-                            )
-                        )
-                    );
-                    this.ThrowIfExists();
-
-                    // RS(1KM)
-                    if (
-                        ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(
-                            iterations: numIterations,
-                            iterationsKM: 1
-                        )
-                    ) {
-                        this.work.Push(
-                            new LaunchParameters(
-                                textureSize: 64,
-                                numClusters: 6,
-                                staggeredJitter: false,
-                                jitterSize: 1,
-                                video: video,
-                                doDownscale: false,
-                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
-                                    kernelSize: kernelSize,
-                                    computeShader: this.csHighlightRemoval,
-                                    numIterations: numIterations,
-                                    doRandomizeEmptyClusters: false,
-                                    numClusters: 6,
-                                    numIterationsKM: 1,
-                                    doReadback: false
-                                )
-                            )
-                        );
-                        this.ThrowIfExists();
-                    }
-
-                    //RS(2KM)
-                    if (
-                        ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(
-                            iterations: numIterations,
-                            iterationsKM: 2
-                        )
-                    ) {
-                        this.work.Push(
-                            new LaunchParameters(
-                                textureSize: 64,
-                                numClusters: 6,
-                                staggeredJitter: false,
-                                jitterSize: 1,
-                                video: video,
-                                doDownscale: false,
-                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
-                                    kernelSize: kernelSize,
-                                    computeShader: this.csHighlightRemoval,
-                                    numIterations: numIterations,
-                                    doRandomizeEmptyClusters: false,
-                                    numClusters: 6,
-                                    numIterationsKM: 2,
-                                    doReadback: false
-                                )
-                            )
-                        );
-                        this.ThrowIfExists();
-                    }
-                }
-                // Knecht
-                this.work.Push(
-                    new LaunchParameters(
-                        textureSize: 64,
-                        numClusters: 6,
-                        staggeredJitter: false,
-                        jitterSize: 1,
-                        video: video,
-                        doDownscale: false,
-                        clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKnecht(
-                            kernelSize: kernelSize,
-                            computeShader: this.csHighlightRemoval,
-                            doRandomizeEmptyClusters: false,
-                            numClusters: 6
-                        )
-                    )
-                );
-                this.ThrowIfExists();
-            }
-        }
-        */
-
-
-        {       // frame time measurements
-            for (int i = 0; i < 20; i++) {
-                foreach (UnityEngine.Video.VideoClip video in this.videos) {
-                    foreach (int textureSize in new int[] { 512, 64 }) {
-                        // 3 iterations
-                        {
-                            const int numIterations = 3;
-
-                            // KM
-                            this.work.Push(
-                                new LaunchParameters(
-                                    textureSize: textureSize,
-                                    numClusters: 6,
-                                    staggeredJitter: false,
-                                    jitterSize: 1,
-                                    video: video,
-                                    doDownscale: false,
-                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKM(
-                                        kernelSize: kernelSize,
-                                        computeShader: this.csHighlightRemoval,
-                                        numIterations: numIterations,
-                                        doRandomizeEmptyClusters: false,
-                                        numClusters: 6
-                                    )
-                                )
-                            );
-                            this.ThrowIfExists();
-
-                            // KHM
-                            this.work.Push(
-                                new LaunchParameters(
-                                    textureSize: textureSize,
-                                    numClusters: 6,
-                                    staggeredJitter: false,
-                                    jitterSize: 1,
-                                    video: video,
-                                    doDownscale: false,
-                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKHM(
-                                        kernelSize: kernelSize,
-                                        computeShader: this.csHighlightRemoval,
-                                        numIterations: numIterations,
-                                        doRandomizeEmptyClusters: false,
-                                        numClusters: 6
-                                    )
-                                )
-                            );
-                            this.ThrowIfExists();
-
-                            foreach (bool doReadback in new bool[] { true, false }) {
-                                // RS(2KM)
-                                this.work.Push(
-                                     new LaunchParameters(
-                                         textureSize: textureSize,
-                                         numClusters: 6,
-                                         staggeredJitter: false,
-                                         jitterSize: 1,
-                                         video: video,
-                                         doDownscale: false,
-                                         clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
-                                             kernelSize: kernelSize,
-                                             computeShader: this.csHighlightRemoval,
-                                             numIterations: numIterations,
-                                             doRandomizeEmptyClusters: false,
-                                             numClusters: 6,
-                                             numIterationsKM: 2,
-                                             doReadback: doReadback
-                                         )
-                                     )
-                                 );
-                                this.ThrowIfExists();
-                            }
-                        }
-
-                        // 1 iteration
-                        {
-                            const int numIterations = 1;
-
-                            // KM
-                            this.work.Push(
-                                new LaunchParameters(
-                                    textureSize: textureSize,
-                                    numClusters: 6,
-                                    staggeredJitter: false,
-                                    jitterSize: 1,
-                                    video: video,
-                                    doDownscale: false,
-                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKM(
-                                        kernelSize: kernelSize,
-                                        computeShader: this.csHighlightRemoval,
-                                        numIterations: numIterations,
-                                        doRandomizeEmptyClusters: false,
-                                        numClusters: 6
-                                    )
-                                )
-                            );
-                            this.ThrowIfExists();
-
-                            // KHM
-                            this.work.Push(
-                                new LaunchParameters(
-                                    textureSize: textureSize,
-                                    numClusters: 6,
-                                    staggeredJitter: false,
-                                    jitterSize: 1,
-                                    video: video,
-                                    doDownscale: false,
-                                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKHM(
-                                        kernelSize: kernelSize,
-                                        computeShader: this.csHighlightRemoval,
-                                        numIterations: numIterations,
-                                        doRandomizeEmptyClusters: false,
-                                        numClusters: 6
-                                    )
-                                )
-                            );
-                            this.ThrowIfExists();
-                        }
-                        // Knecht
-                        this.work.Push(
-                            new LaunchParameters(
-                                textureSize: textureSize,
-                                numClusters: 6,
-                                staggeredJitter: false,
-                                jitterSize: 1,
-                                video: video,
-                                doDownscale: false,
-                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKnecht(
-                                    kernelSize: kernelSize,
-                                    computeShader: this.csHighlightRemoval,
-                                    doRandomizeEmptyClusters: false,
-                                    numClusters: 6
-                                )
-                            )
-                        );
-                        this.ThrowIfExists();
-
-                        // Dummy
-                        this.work.Push(
-                            new LaunchParameters(
-                                textureSize: textureSize,
-                                numClusters: 6,
-                                staggeredJitter: false,
-                                jitterSize: 1,
-                                video: video,
-                                doDownscale: false,
-                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherDummy(
-                                    computeShader: this.csHighlightRemoval,
-                                    numClusters: 6
-                                )
-                            )
-                        );
-                        this.ThrowIfExists();
-                    }
-                }
-            }
-        }
+        WorkGenerator.GenerateWorkFrameTime(this.work, kernelSize, this.videos, this.csHighlightRemoval);
     }
 
     private void InitJitterOffsets() {
@@ -666,7 +204,7 @@ public class ClusteringTest : MonoBehaviour {
         this.currentWorkParameters = this.work.Pop();
 
         Debug.Log($"work left: {this.work.Count}");
-        Debug.Log($"processing: {this.GetFileName(this.currentWorkParameters)}");
+        Debug.Log($"processing: {this.currentWorkParameters.GetFileName()}");
 
         this.frameLogVariance.Clear();
         this.framesProcessed = 0;
@@ -691,20 +229,6 @@ public class ClusteringTest : MonoBehaviour {
         this.videoPlayer.frame = this.GetStartFrame();
     }
 
-    private string GetFileName(LaunchParameters launchParams) {
-        string videoName = launchParams.video.name;
-        int numIterations = launchParams.clusteringAlgorithmDispatcher.numIterations;
-        int textureSize = launchParams.textureSize;
-        int numClusters = launchParams.clusteringAlgorithmDispatcher.numClusters;
-        int jitterSize = launchParams.jitterSize;
-        bool staggeredJitter = launchParams.staggeredJitter;
-        bool doDownscale = launchParams.doDownscale;
-        string algorithm = launchParams.clusteringAlgorithmDispatcher.descriptionString;
-        bool doRandomizeEmptyClusters = launchParams.clusteringAlgorithmDispatcher.doRandomizeEmptyClusters;
-
-        return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{textureSize}|number of clusters:{numClusters}|randomize empty clusters:{doRandomizeEmptyClusters}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}|algorithm:{algorithm}.csv";
-    }
-
     // Update is called once per frame
     private void Update() {
 
@@ -714,14 +238,11 @@ public class ClusteringTest : MonoBehaviour {
         if (iterations <= 1) {
             return false;
         }
-        if (iterationsKM == 1) {
-            return true;
-        }
-        return iterations % iterationsKM == 1;
+        return iterationsKM == 1 ? true : iterations % iterationsKM == 1;
     }
 
     private void WriteVarianceLog() {
-        string fileName = $"Variance logs/{this.GetFileName(this.currentWorkParameters)}";
+        string fileName = $"Variance logs/{this.currentWorkParameters.GetFileName()}";
 
         if (System.IO.File.Exists(fileName)) {
 #if UNITY_EDITOR
@@ -760,7 +281,7 @@ public class ClusteringTest : MonoBehaviour {
                 fileName, System.IO.FileMode.Append
             );
         using var sw = new System.IO.StreamWriter(fs);
-        sw.WriteLine(this.GetFileName(this.currentWorkParameters));
+        sw.WriteLine(this.currentWorkParameters.GetFileName());
         sw.WriteLine($"Frame time: {frameTime:0.000} ms");
         sw.WriteLine();
     }
@@ -789,8 +310,6 @@ public class ClusteringTest : MonoBehaviour {
 
             switch (logType) {
                 case LogType.Variance:
-                    this.WriteVarianceLog();
-                    break;
                 case LogType.FrameTime:
                     this.WriteFrameTimeLog(
                         (Time.time - (float)this.timeStart) / this.framesProcessed * 1000
@@ -861,15 +380,10 @@ public class ClusteringTest : MonoBehaviour {
         }
 
         if (logType == LogType.Variance) {
-            this.frameLogVariance.Add(
-                this.currentWorkParameters.clusteringAlgorithmDispatcher.GetVariance(
-                    this.clusteringRTsAndBuffers
-                )
-            );
         }
 
         this.RenderResult();
-        if (this.currentWorkParameters.clusteringAlgorithmDispatcher is ClusteringAlgorithmDispatcherDummy){
+        if (this.currentWorkParameters.clusteringAlgorithmDispatcher is ClusteringAlgorithmDispatcherDummy) {
             Graphics.Blit(this.videoPlayer.texture, dest);
         } else {
             Graphics.Blit(this.rtResult, dest);
