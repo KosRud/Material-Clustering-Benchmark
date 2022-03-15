@@ -9,8 +9,9 @@ public class ClusteringTest : MonoBehaviour {
 
     private const int referenceTextureSize = 512;
     private const int kernelSize = 16;
-    private const float timeStep = 1f;
     private const LogType logType = LogType.FrameTime;
+
+    private const string varianceLogPath = "Variance logs";
 
     private readonly long? overrideStartFrame = null;
     private readonly long? overrideEndFrame = null;
@@ -79,7 +80,7 @@ public class ClusteringTest : MonoBehaviour {
         }
 
         public LaunchParameters ThrowIfExists() {
-            string fileName = $"Variance logs/{this.GetFileName()}";
+            string fileName = $"{varianceLogPath}/{this.GetFileName()}";
 
             if (System.IO.File.Exists(fileName)) {
 #if UNITY_EDITOR
@@ -240,11 +241,11 @@ public class ClusteringTest : MonoBehaviour {
         if (iterations <= 1) {
             return false;
         }
-        return iterationsKM == 1 ? true : iterations % iterationsKM == 1;
+        return iterationsKM == 1 || iterations % iterationsKM == 1;
     }
 
     private void WriteVarianceLog() {
-        string fileName = $"Variance logs/{this.currentWorkParameters.GetFileName()}";
+        string fileName = $"{varianceLogPath}/{this.currentWorkParameters.GetFileName()}";
 
         if (System.IO.File.Exists(fileName)) {
 #if UNITY_EDITOR
