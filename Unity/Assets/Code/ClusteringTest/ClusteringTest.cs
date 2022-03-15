@@ -34,6 +34,8 @@ public class ClusteringTest : MonoBehaviour {
 
     // inner workings
     private float? timeStart;
+    private float? timePreviousFrame;
+    private float durationLongestFrame;
     private long framesProcessed;
 
     private enum Algorithm {
@@ -50,11 +52,9 @@ public class ClusteringTest : MonoBehaviour {
         new System.Collections.Generic.Stack<LaunchParameters>();
 
     private bool awaitingRestart = false;
-    private bool showReference = false;
     private int[][] offsets;
     private readonly int[] scanlinePixelOffset = new int[2];
     private readonly System.Collections.Generic.List<float> frameLogVariance = new System.Collections.Generic.List<float>();
-    private float timeLastIteration = 0;
     private LaunchParameters currentWorkParameters;
 
     private UnityEngine.Video.VideoPlayer videoPlayer;
@@ -209,6 +209,8 @@ public class ClusteringTest : MonoBehaviour {
         this.frameLogVariance.Clear();
         this.framesProcessed = 0;
         this.timeStart = null;
+        this.timePreviousFrame = null;
+        this.durationLongestFrame = 0;
 
         this.InitJitterOffsets();
         this.FindKernels();
@@ -274,7 +276,7 @@ public class ClusteringTest : MonoBehaviour {
         Debug.Log($"file written: {fileName}");
     }
 
-    private void WriteFrameTimeLog(float frameTime) {
+    private void WriteFrameTimeLog(float avgFrameTime, float peakFrameTime) {
         string fileName = "Frame time log.txt";
 
         using System.IO.FileStream fs = System.IO.File.Open(
@@ -282,7 +284,8 @@ public class ClusteringTest : MonoBehaviour {
             );
         using var sw = new System.IO.StreamWriter(fs);
         sw.WriteLine(this.currentWorkParameters.GetFileName());
-        sw.WriteLine($"Frame time: {frameTime:0.000} ms");
+        sw.WriteLine($"Average frame time: {avgFrameTime:0.000} ms");
+        sw.WriteLine($"   Peak frame time: {peakFrameTime:0.000} ms");
         sw.WriteLine();
     }
 
@@ -301,6 +304,13 @@ public class ClusteringTest : MonoBehaviour {
             return;
         }
 
+        this.timePreviousFrame ??= Time.time;
+        this.durationLongestFrame = Mathf.Max(
+            this.durationLongestFrame,
+            Time.time - (float)this.timePreviousFrame
+        );
+        this.timePreviousFrame = Time.time;
+
         this.timeStart ??= Time.time;
         this.framesProcessed++;
 
@@ -312,7 +322,8 @@ public class ClusteringTest : MonoBehaviour {
                 case LogType.Variance:
                 case LogType.FrameTime:
                     this.WriteFrameTimeLog(
-                        (Time.time - (float)this.timeStart) / this.framesProcessed * 1000
+                        avgFrameTime: (Time.time - (float)this.timeStart) / this.framesProcessed * 1000,
+                        peakFrameTime: this.durationLongestFrame
                     );
                     break;
                 default:
@@ -373,12 +384,6 @@ public class ClusteringTest : MonoBehaviour {
             khm: false
         );
 
-        if (Time.time - this.timeLastIteration > timeStep) {
-            this.timeLastIteration = Time.time;
-            this.showReference = !this.showReference;
-            this.showReference = false;
-        }
-
         if (logType == LogType.Variance) {
         }
 
@@ -409,7 +414,7 @@ public class ClusteringTest : MonoBehaviour {
         );
         this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_output", this.rtResult);
         this.csHighlightRemoval.SetBuffer(this.kernelShowResult, "cbuf_cluster_centers", this.clusteringRTsAndBuffers.cbufClusterCenters);
-        this.csHighlightRemoval.SetBool("show_reference", this.showReference);
+        this.csHighlightRemoval.SetBool("show_reference", false);
         this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_input", this.rtInput);
         this.csHighlightRemoval.Dispatch(
             this.kernelShowResult,
