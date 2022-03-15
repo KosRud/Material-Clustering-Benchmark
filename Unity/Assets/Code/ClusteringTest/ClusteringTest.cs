@@ -841,8 +841,6 @@ public class ClusteringTest : MonoBehaviour {
             1
         );
 
-        this.videoPlayer.StepForward();
-
         this.currentWorkParameters.clusteringAlgorithmDispatcher.RunClustering(
             this.rtInput,
             this.currentWorkParameters.textureSize,
@@ -871,8 +869,14 @@ public class ClusteringTest : MonoBehaviour {
         }
 
         this.RenderResult();
-        Graphics.Blit(this.rtResult, dest);
+        if (this.currentWorkParameters.clusteringAlgorithmDispatcher is ClusteringAlgorithmDispatcherDummy){
+            Graphics.Blit(this.videoPlayer.texture, dest);
+        } else {
+            Graphics.Blit(this.rtResult, dest);
+        }
         this.rtResult.DiscardContents();
+
+        this.videoPlayer.StepForward();
     }
 
     private void OnDisable() {
