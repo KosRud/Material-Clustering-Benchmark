@@ -324,7 +324,7 @@ public class ClusteringTest : MonoBehaviour {
                 case LogType.FrameTime:
                     this.WriteFrameTimeLog(
                         avgFrameTime: (Time.time - (float)this.timeStart) / this.framesProcessed * 1000,
-                        peakFrameTime: this.durationLongestFrame
+                        peakFrameTime: this.durationLongestFrame * 1000
                     );
                     break;
                 default:
