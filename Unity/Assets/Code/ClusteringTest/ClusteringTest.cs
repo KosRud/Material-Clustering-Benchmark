@@ -7,6 +7,8 @@ public class ClusteringTest : MonoBehaviour {
         Variance
     }
 
+    public bool skip = false;
+
     private const int referenceTextureSize = 512;
     private const int kernelSize = 16;
     private const LogType logType = LogType.FrameTime;
@@ -315,7 +317,9 @@ public class ClusteringTest : MonoBehaviour {
         this.timeStart ??= Time.time;
         this.framesProcessed++;
 
-        if (this.videoPlayer.frame == this.GetEndFrame()) {
+        if (this.videoPlayer.frame == this.GetEndFrame() || this.skip) {
+            this.skip = false;
+
             this.awaitingRestart = true;
             Graphics.Blit(src, dest);
 
