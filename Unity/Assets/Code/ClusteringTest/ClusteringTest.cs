@@ -185,6 +185,13 @@ public class ClusteringTest : MonoBehaviour {
     private void Awake() {
         Debug.Assert(this.videos.Length != 0);
         WorkGenerator.GenerateWorkFrameTime(this.work, kernelSize, this.videos, this.csHighlightRemoval);
+
+        // check timer precision
+        if (System.Diagnostics.Stopwatch.IsHighResolution == false) {
+            throw new System.NotSupportedException("High resolution timer not available!");
+        } else {
+            Debug.Log("High resolution timer support check: OK");
+        }
     }
 
     private void InitJitterOffsets() {
