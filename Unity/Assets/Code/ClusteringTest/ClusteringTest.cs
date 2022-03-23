@@ -376,12 +376,28 @@ public class ClusteringTest : MonoBehaviour {
             1
         );
 
+        /*
+            in order to re-start the clustering "from scratch"
+            all we need to do is to reset the cluster centers
+
+            clustering only edits:
+                * attribution texture array
+                * cluster centers ComputeBuffer
+
+            clustering starts with attribution
+            so the texture array will be messed by the reset of cluster centers
+        */
+
         this.currentWorkParameters.clusteringAlgorithmDispatcher.RunClustering(
             this.rtInput,
             this.currentWorkParameters.textureSize,
             this.clusteringRTsAndBuffers
         );
 
+        /*
+            one final attribution is required,
+            because RunClustering finishes with updating cluster centers
+        */
         this.currentWorkParameters.clusteringAlgorithmDispatcher.AttributeClusters(
             this.rtInput,
             this.clusteringRTsAndBuffers,

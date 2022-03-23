@@ -20,6 +20,10 @@ public class ClusteringAlgorithmDispatcherKM : AClusteringAlgorithmDispatcher {
         }
     }
 
+    /// <summary>
+    /// First attributes clusters to 
+    /// In order to use the result, one final cluster attribution is required!
+    /// </summary>
     protected void KMiteration(
         Texture inputTex,
         int textureSize,
