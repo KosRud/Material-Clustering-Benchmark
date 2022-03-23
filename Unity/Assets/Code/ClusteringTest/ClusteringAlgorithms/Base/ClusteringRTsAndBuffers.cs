@@ -19,7 +19,7 @@ public class ClusterCenters : System.IDisposable {
                 numClusters,
                 new ObjectPoolMaxAssert<ClusterCenters>(
                     createFunc: () => new ClusterCenters(localNumClusters),
-                    maxActive: 3
+                    maxActive: 4
                 )
             );
         }
@@ -36,6 +36,10 @@ public class ClusterCenters : System.IDisposable {
         pools[this.numClusters].Release(this);
     }
 
+    /// <summary>
+    /// Gets a pooled instance of ClusterCenters. The data is copied, making is safe to edit. Don't forget to dispose!
+    /// </summary>
+    /// <returns></returns>
     public static ClusterCenters Get(int numClusters, Vector4[] centersBufferData) {
         ClusterCenters obj = GetPool(numClusters).Get();
 
@@ -48,7 +52,17 @@ public class ClusterCenters : System.IDisposable {
             }
         }
 
-        throw new System.IndexOutOfRangeException("all clusters are invalid");
+        throw new InvalidClustersException("all clusters are invalid");
+    }
+
+    public class InvalidClustersException : System.Exception {
+        public InvalidClustersException() : base() {
+
+        }
+
+        public InvalidClustersException(string message) : base(message) {
+
+        }
     }
 }
 
@@ -63,11 +77,19 @@ public class ClusteringRTsAndBuffers {
     public readonly Texture texReference;
     public readonly int numClusters;
 
+    /// <summary>
+    /// Get a pooled instance of ClusterCenters with a copy of the data from ComputeBuffer. Safe to modify. Don't forget to dispose!
+    /// </summary>
+    /// <returns></returns>
     public ClusterCenters GetClusterCenters() {
         this.cbufClusterCenters.GetData(this.clusterCentersBufferData);
         return ClusterCenters.Get(this.numClusters, this.clusterCentersBufferData);
     }
 
+    /// <summary>
+    /// Reads the cluster centers data from the array and loads it into the ComputeBuffer.
+    /// </summary>
+    /// <param name="clusterCentersBufferData"></param>
     public void SetClusterCenters(Vector4[] clusterCentersBufferData) {
         this.cbufClusterCenters.SetData(clusterCentersBufferData);
     }

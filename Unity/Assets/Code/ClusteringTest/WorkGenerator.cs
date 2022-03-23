@@ -434,21 +434,6 @@ public static class WorkGenerator {
                             )
                         ).ThrowIfExists()
                     );
-
-                    // Dummy
-                    workStack.Push(
-                        new ClusteringTest.LaunchParameters(
-                            textureSize: textureSize,
-                            staggeredJitter: false,
-                            jitterSize: 1,
-                            video: video,
-                            doDownscale: false,
-                            clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherDummy(
-                                computeShader: csHighlightRemoval,
-                                numClusters: 6
-                            )
-                        ).ThrowIfExists()
-                    );
                 }
             }
         }

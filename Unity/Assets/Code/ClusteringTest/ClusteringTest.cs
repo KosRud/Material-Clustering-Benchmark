@@ -36,10 +36,10 @@ public class ClusteringTest : MonoBehaviour {
     private int kernelSubsample;
 
     // inner workings
-    private float? timeStart;
-    private float? timePreviousFrame;
-    private float durationLongestFrame;
-    private long framesProcessed;
+    private float peakFrameTime;
+    private float totalTime;
+    private long framesMeasured;
+    private bool firstFrameProcessed;
 
     private enum Algorithm {
         KM,
@@ -217,10 +217,10 @@ public class ClusteringTest : MonoBehaviour {
         Debug.Log($"processing: {this.currentWorkParameters.GetFileName()}");
 
         this.frameLogVariance.Clear();
-        this.framesProcessed = 0;
-        this.timeStart = null;
-        this.timePreviousFrame = null;
-        this.durationLongestFrame = 0;
+        this.framesMeasured = 0;
+        this.totalTime = 0;
+        this.peakFrameTime = 0;
+        this.firstFrameProcessed = false;
 
         this.InitJitterOffsets();
         this.FindKernels();
@@ -314,16 +314,6 @@ public class ClusteringTest : MonoBehaviour {
             return;
         }
 
-        this.timePreviousFrame ??= Time.time;
-        this.durationLongestFrame = Mathf.Max(
-            this.durationLongestFrame,
-            Time.time - (float)this.timePreviousFrame
-        );
-        this.timePreviousFrame = Time.time;
-
-        this.timeStart ??= Time.time;
-        this.framesProcessed++;
-
         if (this.videoPlayer.frame == this.GetEndFrame() || this.skip) {
             this.skip = false;
 
@@ -334,8 +324,8 @@ public class ClusteringTest : MonoBehaviour {
                 case LogType.Variance:
                 case LogType.FrameTime:
                     this.WriteFrameTimeLog(
-                        avgFrameTime: (Time.time - (float)this.timeStart) / this.framesProcessed * 1000,
-                        peakFrameTime: this.durationLongestFrame * 1000
+                        avgFrameTime: this.totalTime / this.framesMeasured,
+                        peakFrameTime: this.peakFrameTime
                     );
                     break;
                 default:
@@ -383,18 +373,53 @@ public class ClusteringTest : MonoBehaviour {
             1
         );
 
-        /*
-            in order to re-start the clustering "from scratch"
-            all we need to do is to reset the cluster centers
+        if (logType == LogType.Variance || this.firstFrameProcessed == false) {
+            this.RunDispatcher();
+            this.firstFrameProcessed = true;
+        } else {
+            /*
+                in order to re-start the clustering "from scratch"
+                all we need to do is to reset the cluster centers
 
-            clustering only edits:
-                * attribution texture array
-                * cluster centers ComputeBuffer
+                clustering only edits:
+                    * attribution texture array
+                    * cluster centers ComputeBuffer
 
-            clustering starts with attribution
-            so the texture array will be messed by the reset of cluster centers
-        */
+                clustering starts with attribution
+                so the texture array will be messed by the reset of cluster centers
+            */
 
+            using (
+                ClusterCenters clusterCenters = this.clusteringRTsAndBuffers.GetClusterCenters()
+            ) {
+                var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
+                const int numRepetitions = 10;
+
+                for (int i = 0; i < numRepetitions; i++) {
+                    this.clusteringRTsAndBuffers.SetClusterCenters(clusterCenters.centers);
+                    this.RunDispatcher();
+                }
+
+                float measuredtimeMS = (float)stopwatch.Elapsed.TotalMilliseconds;
+                float avgTime = measuredtimeMS / numRepetitions;
+
+                this.totalTime += avgTime;
+                this.peakFrameTime = Mathf.Max(
+                    this.peakFrameTime,
+                    avgTime
+                );
+
+                this.framesMeasured++;
+            }
+        }
+
+        this.RenderResult(dest);
+
+        this.videoPlayer.StepForward();
+    }
+
+    private void RunDispatcher() {
         this.currentWorkParameters.clusteringAlgorithmDispatcher.RunClustering(
             this.rtInput,
             this.currentWorkParameters.textureSize,
@@ -411,19 +436,6 @@ public class ClusteringTest : MonoBehaviour {
             final: true,
             khm: false
         );
-
-        if (logType == LogType.Variance) {
-        }
-
-        this.RenderResult();
-        if (this.currentWorkParameters.clusteringAlgorithmDispatcher is ClusteringAlgorithmDispatcherDummy) {
-            Graphics.Blit(this.videoPlayer.texture, dest);
-        } else {
-            Graphics.Blit(this.rtResult, dest);
-        }
-        this.rtResult.DiscardContents();
-
-        this.videoPlayer.StepForward();
     }
 
     private void OnDisable() {
@@ -435,7 +447,7 @@ public class ClusteringTest : MonoBehaviour {
         this.clusteringRTsAndBuffers.Release();
     }
 
-    private void RenderResult() {
+    private void RenderResult(RenderTexture target) {
         this.csHighlightRemoval.SetTexture(
             this.kernelShowResult, "tex_arr_clusters_r",
             this.clusteringRTsAndBuffers.rtArr
@@ -450,5 +462,8 @@ public class ClusteringTest : MonoBehaviour {
             this.currentWorkParameters.textureSize / kernelSize,
             1
         );
+
+        Graphics.Blit(this.rtResult, target);
+        this.rtResult.DiscardContents();
     }
 }
