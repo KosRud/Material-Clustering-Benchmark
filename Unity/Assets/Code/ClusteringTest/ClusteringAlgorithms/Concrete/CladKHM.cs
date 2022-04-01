@@ -1,7 +1,7 @@
 using UnityEngine;
 
-public class ClusteringAlgorithmDispatcherKHM : AClusteringAlgorithmDispatcher {
-    public ClusteringAlgorithmDispatcherKHM(
+public class CladKHM : AClad {
+    public CladKHM(
         int kernelSize, ComputeShader computeShader, int numIterations, bool doRandomizeEmptyClusters, int numClusters
     ) : base(kernelSize, computeShader, numIterations, doRandomizeEmptyClusters, numClusters) { }
 

@@ -18,7 +18,7 @@ public static class WorkGenerator {
                             jitterSize: 1,
                             video: video,
                             doDownscale: false,
-                            clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKM(
+                            clad: new CladKM(
                                 kernelSize: kernelSize,
                                 computeShader: csHighlightRemoval,
                                 numIterations: 3,
@@ -49,7 +49,7 @@ public static class WorkGenerator {
                             jitterSize: 1,
                             video: video,
                             doDownscale: doDownscale,
-                            clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKM(
+                            clad: new CladKM(
                                 kernelSize: kernelSize,
                                 computeShader: csHighlightRemoval,
                                 numIterations: 3,
@@ -200,7 +200,7 @@ public static class WorkGenerator {
                         jitterSize: 1,
                         video: video,
                         doDownscale: false,
-                        clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKM(
+                        clad: new CladKM(
                             kernelSize: kernelSize,
                             computeShader: csHighlightRemoval,
                             numIterations: numIterations,
@@ -219,7 +219,7 @@ public static class WorkGenerator {
                         jitterSize: 1,
                         video: video,
                         doDownscale: false,
-                        clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKHM(
+                        clad: new CladKHM(
                             kernelSize: kernelSize,
                             computeShader: csHighlightRemoval,
                             numIterations: numIterations,
@@ -231,7 +231,7 @@ public static class WorkGenerator {
 
                 // RS(1KM)
                 if (
-                    ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(
+                    CladRS.IsNumIterationsValid(
                         iterations: numIterations,
                         iterationsKM: 1
                     )
@@ -244,7 +244,7 @@ public static class WorkGenerator {
                             jitterSize: 1,
                             video: video,
                             doDownscale: false,
-                            clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                            clad: new CladRS(
                                 kernelSize: kernelSize,
                                 computeShader: csHighlightRemoval,
                                 numIterations: numIterations,
@@ -259,7 +259,7 @@ public static class WorkGenerator {
 
                 //RS(2KM)
                 if (
-                    ClusteringAlgorithmDispatcherRS.IsNumIterationsValid(
+                    CladRS.IsNumIterationsValid(
                         iterations: numIterations,
                         iterationsKM: 2
                     )
@@ -272,7 +272,7 @@ public static class WorkGenerator {
                             jitterSize: 1,
                             video: video,
                             doDownscale: false,
-                            clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                            clad: new CladRS(
                                 kernelSize: kernelSize,
                                 computeShader: csHighlightRemoval,
                                 numIterations: numIterations,
@@ -294,7 +294,7 @@ public static class WorkGenerator {
                     jitterSize: 1,
                     video: video,
                     doDownscale: false,
-                    clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKnecht(
+                    clad: new CladKnecht(
                         kernelSize: kernelSize,
                         computeShader: csHighlightRemoval,
                         doRandomizeEmptyClusters: false,
@@ -327,7 +327,7 @@ public static class WorkGenerator {
                                 jitterSize: 1,
                                 video: video,
                                 doDownscale: false,
-                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKM(
+                                clad: new CladKM(
                                     kernelSize: kernelSize,
                                     computeShader: csHighlightRemoval,
                                     numIterations: numIterations,
@@ -345,7 +345,7 @@ public static class WorkGenerator {
                                 jitterSize: 1,
                                 video: video,
                                 doDownscale: false,
-                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKHM(
+                                clad: new CladKHM(
                                     kernelSize: kernelSize,
                                     computeShader: csHighlightRemoval,
                                     numIterations: numIterations,
@@ -364,7 +364,7 @@ public static class WorkGenerator {
                                      jitterSize: 1,
                                      video: video,
                                      doDownscale: false,
-                                     clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherRS(
+                                     clad: new CladRS(
                                          kernelSize: kernelSize,
                                          computeShader: csHighlightRemoval,
                                          numIterations: numIterations,
@@ -390,7 +390,7 @@ public static class WorkGenerator {
                                 jitterSize: 1,
                                 video: video,
                                 doDownscale: false,
-                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKM(
+                                clad: new CladKM(
                                     kernelSize: kernelSize,
                                     computeShader: csHighlightRemoval,
                                     numIterations: numIterations,
@@ -408,7 +408,7 @@ public static class WorkGenerator {
                                 jitterSize: 1,
                                 video: video,
                                 doDownscale: false,
-                                clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKHM(
+                                clad: new CladKHM(
                                     kernelSize: kernelSize,
                                     computeShader: csHighlightRemoval,
                                     numIterations: numIterations,
@@ -426,7 +426,7 @@ public static class WorkGenerator {
                             jitterSize: 1,
                             video: video,
                             doDownscale: false,
-                            clusteringAlgorithmDispatcher: new ClusteringAlgorithmDispatcherKnecht(
+                            clad: new CladKnecht(
                                 kernelSize: kernelSize,
                                 computeShader: csHighlightRemoval,
                                 doRandomizeEmptyClusters: false,

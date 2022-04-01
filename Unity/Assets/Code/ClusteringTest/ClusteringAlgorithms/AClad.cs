@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class AClusteringAlgorithmDispatcher {
+public abstract class AClad {
 
     // reported in the file
     public readonly int numClusters;
@@ -19,7 +19,7 @@ public abstract class AClusteringAlgorithmDispatcher {
     private readonly int kernelGenerateVariance;
     private readonly int kernelGatherVariance;
 
-    protected AClusteringAlgorithmDispatcher(int kernelSize, ComputeShader computeShader, int numIterations, bool doRandomizeEmptyClusters, int numClusters) {
+    protected AClad(int kernelSize, ComputeShader computeShader, int numIterations, bool doRandomizeEmptyClusters, int numClusters) {
         this.kernelSize = kernelSize;
         this.computeShader = computeShader;
         this.kernelHandleAttributeClusters = this.computeShader.FindKernel("AttributeClusters");

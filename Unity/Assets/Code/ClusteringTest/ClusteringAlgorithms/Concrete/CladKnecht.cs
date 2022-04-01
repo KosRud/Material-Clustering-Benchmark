@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class ClusteringAlgorithmDispatcherKnecht : ClusteringAlgorithmDispatcherKM {
+public class CladKnecht : CladKM {
     private const int randomInitEveryNiterations = 5;
     private const int maxKMiterations = 20;
     private const float varianceChangeThreshold = 1e-4f;
     private int frameCounter = 0;
 
-    public ClusteringAlgorithmDispatcherKnecht(
+    public CladKnecht(
         int kernelSize, ComputeShader computeShader,
         bool doRandomizeEmptyClusters, int numClusters
     ) : base(kernelSize, computeShader, 1, doRandomizeEmptyClusters, numClusters) {

@@ -1,7 +1,7 @@
 using UnityEngine;
 
-public class ClusteringAlgorithmDispatcherDummy : AClusteringAlgorithmDispatcher {
-    public ClusteringAlgorithmDispatcherDummy(ComputeShader computeShader, int numClusters) : base(
+public class CladDummy : AClad {
+    public CladDummy(ComputeShader computeShader, int numClusters) : base(
         kernelSize: 4,
         computeShader: computeShader,
         numIterations: 1,
