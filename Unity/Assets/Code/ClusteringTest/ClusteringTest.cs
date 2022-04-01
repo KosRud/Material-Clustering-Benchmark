@@ -327,6 +327,8 @@ public class ClusteringTest : MonoBehaviour {
 
             switch (logType) {
                 case LogType.Variance:
+                    this.WriteVarianceLog();
+                    break;
                 case LogType.FrameTime:
                     this.WriteFrameTimeLog(
                         avgFrameTime: this.totalTime / this.framesMeasured,
