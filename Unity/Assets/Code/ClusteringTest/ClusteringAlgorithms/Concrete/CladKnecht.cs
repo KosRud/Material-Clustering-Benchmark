@@ -3,7 +3,7 @@ using UnityEngine;
 public class CladKnecht : CladKM {
     private const int randomInitEveryNiterations = 5;
     private const int maxKMiterations = 20;
-    private const float varianceChangeThreshold = 1e-4f;
+    public const float varianceChangeThreshold = 1e-4f;
     private int frameCounter = 0;
 
     public CladKnecht(

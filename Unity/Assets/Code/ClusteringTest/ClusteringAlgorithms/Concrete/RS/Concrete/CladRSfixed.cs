@@ -1,20 +1,20 @@
 using UnityEngine;
 
-public class CladFixedIterationsRS : ACladRS {
+public class CladRSfixed : ACladRS {
     public readonly bool doReadback;
 
-    public CladFixedIterationsRS(
-            int kernelSize, ComputeShader computeShader, int numIterations,
-            bool doRandomizeEmptyClusters, int numClusters, int numIterationsKM,
-            bool doReadback
-        ) : base(
-            kernelSize: kernelSize,
-            computeShader: computeShader,
-            numIterations: numIterations,
-            doRandomizeEmptyClusters: doRandomizeEmptyClusters,
-            numClusters: numClusters,
-            numIterationsKM: numIterationsKM
-        ) {
+    public CladRSfixed(
+        int kernelSize, ComputeShader computeShader, int numIterations,
+        bool doRandomizeEmptyClusters, int numClusters, int numIterationsKM,
+        bool doReadback
+    ) : base(
+        kernelSize: kernelSize,
+        computeShader: computeShader,
+        numIterations: numIterations,
+        doRandomizeEmptyClusters: doRandomizeEmptyClusters,
+        numClusters: numClusters,
+        numIterationsKM: numIterationsKM
+    ) {
         Debug.Assert(
             IsNumIterationsValid(
                 iterationsKM: numIterationsKM,
@@ -46,6 +46,7 @@ public class CladFixedIterationsRS : ACladRS {
 
         for (int i = 1; i < this.numIterations; i += this.iterationsKM) {
             this.RandomSwap(inputTex, textureSize, clusteringRTsAndBuffers);
+
             for (int k = 0; k < this.iterationsKM; k++) {
                 this.KMiteration(
                     inputTex, textureSize, clusteringRTsAndBuffers,

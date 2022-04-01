@@ -184,7 +184,12 @@ public class ClusteringTest : MonoBehaviour {
 
     private void Awake() {
         Debug.Assert(this.videos.Length != 0);
-        WorkGenerator.GenerateWorkFrameTime(this.work, kernelSize, this.videos, this.csHighlightRemoval);
+        WorkGenerator.GenerateWorkRSstopCondition(
+            this.work,
+            kernelSize,
+            this.videos,
+            this.csHighlightRemoval
+        );
 
         // check timer precision
         if (System.Diagnostics.Stopwatch.IsHighResolution == false) {

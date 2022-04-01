@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class ClusterCenters : System.IDisposable {
-    private const int invalidVariance = 10; // 2-dimensional values in range [0, 1] => 10 is impossibly large
+    public const int invalidVariance = 10; // 2-dimensional values in range [0, 1] => 10 is impossibly large
 
     public Vector4[] centers;
     public float variance;

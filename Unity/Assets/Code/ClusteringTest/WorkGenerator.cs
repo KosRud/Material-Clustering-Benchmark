@@ -364,7 +364,7 @@ public static class WorkGenerator {
                                      jitterSize: 1,
                                      video: video,
                                      doDownscale: false,
-                                     clad: new CladRS(
+                                     clad: new CladRSfixed(
                                          kernelSize: kernelSize,
                                          computeShader: csHighlightRemoval,
                                          numIterations: numIterations,
@@ -431,6 +431,39 @@ public static class WorkGenerator {
                                 computeShader: csHighlightRemoval,
                                 doRandomizeEmptyClusters: false,
                                 numClusters: 6
+                            )
+                        ).ThrowIfExists()
+                    );
+                }
+            }
+        }
+
+    }
+
+    public static void GenerateWorkRSstopCondition(
+        System.Collections.Generic.Stack<ClusteringTest.LaunchParameters> workStack,
+        int kernelSize,
+        UnityEngine.Video.VideoClip[] videos,
+        ComputeShader csHighlightRemoval
+    ) {
+        for (int i = 0; i < 20; i++) {
+            foreach (UnityEngine.Video.VideoClip video in videos) {
+                foreach (int textureSize in new int[] { 512, 64 }) {
+                    // RS stop condition
+                    workStack.Push(
+                        new ClusteringTest.LaunchParameters(
+                            textureSize: textureSize,
+                            staggeredJitter: false,
+                            jitterSize: 1,
+                            video: video,
+                            doDownscale: false,
+                            clad: new CladRSstopCondition(
+                                kernelSize: kernelSize,
+                                computeShader: csHighlightRemoval,
+                                doRandomizeEmptyClusters: false,
+                                numClusters: 6,
+                                numIterationsKM: 2,
+                                maxFailedSwaps: 1
                             )
                         ).ThrowIfExists()
                     );

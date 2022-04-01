@@ -21,25 +21,28 @@ public abstract class ACladRS : CladKM {
         ClusteringRTsAndBuffers clusteringRTsAndBuffers
     );
 
-    protected enum ClusterValidationResult {
-        Unknown,
-        Improved,
-        NotImproved
-    }
 
-    protected ClusterValidationResult ValidateCandidatesReadback(
+    protected float ValidateCandidatesReadback(
         ClusteringRTsAndBuffers clusteringRTsAndBuffers
     ) {
-        bool success = false;
+        float varianceChange = ClusterCenters.invalidVariance;
 
         using (
                 ClusterCenters clusterCenters = clusteringRTsAndBuffers.GetClusterCenters()
             ) {
             for (int i = 0; i < this.numClusters; i++) {
+                if (
+                    clusterCenters.centers[i].z < ClusterCenters.invalidVariance &&
+                    clusterCenters.centers[i + this.numClusters].z <
+                        ClusterCenters.invalidVariance
+                ) {
+                    varianceChange =
+                        clusterCenters.centers[i].z -
+                        clusterCenters.centers[i + this.numClusters].z;
+                }
+
                 if (clusterCenters.centers[i].z < clusterCenters.centers[i + this.numClusters].z) {
                     clusterCenters.centers[i + this.numClusters] = clusterCenters.centers[i];
-
-                    success = true;
                 } else {
                     clusterCenters.centers[i] = clusterCenters.centers[i + this.numClusters];
                 }
@@ -47,14 +50,14 @@ public abstract class ACladRS : CladKM {
             clusteringRTsAndBuffers.SetClusterCenters(clusterCenters.centers);
         }
 
-        if (success) {
-            return ClusterValidationResult.Improved;
-        } else {
-            return ClusterValidationResult.NotImproved;
+        if (varianceChange == ClusterCenters.invalidVariance) {
+            throw new ClusterCenters.InvalidClustersException("all clusters are invalid");
         }
+
+        return varianceChange;
     }
 
-    protected ClusterValidationResult ValidateCandidatesGPU(
+    protected void ValidateCandidatesGPU(
         ClusteringRTsAndBuffers clusteringRTsAndBuffers
     ) {
         this.computeShader.SetBuffer(
@@ -63,8 +66,6 @@ public abstract class ACladRS : CladKM {
             clusteringRTsAndBuffers.cbufClusterCenters
         );
         this.computeShader.Dispatch(this.kernelHandleValidateCandidates, 1, 1, 1);
-
-        return ClusterValidationResult.Unknown;
     }
 
     protected void RandomSwap(Texture inputTex, int textureSize, ClusteringRTsAndBuffers clusteringRTsAndBuffers) {
