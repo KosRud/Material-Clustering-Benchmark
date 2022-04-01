@@ -49,11 +49,9 @@ public class CladRSstopCondition : ACladRS {
                 failedSwaps++;
 
                 if (failedSwaps == this.maxFailedSwaps) {
-                    Debug.Log("swaps");
                     return;
                 }
             } else if (-varianceChange < CladKnecht.varianceChangeThreshold) {
-                Debug.Log("variance");
                 return;
             } else {
                 failedSwaps = 0;
