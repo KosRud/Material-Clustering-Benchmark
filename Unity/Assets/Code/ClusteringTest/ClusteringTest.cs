@@ -69,14 +69,14 @@ public class ClusteringTest : MonoBehaviour {
     public class LaunchParameters {
         public string GetFileName() {
             string videoName = this.video.name;
-            int numIterations = this.clad.numIterations;
+            int numIterations = this.dispatcher.numIterations;
             int textureSize = this.textureSize;
-            int numClusters = this.clad.numClusters;
+            int numClusters = this.dispatcher.numClusters;
             int jitterSize = this.jitterSize;
             bool staggeredJitter = this.staggeredJitter;
             bool doDownscale = this.doDownscale;
-            string algorithm = this.clad.descriptionString;
-            bool doRandomizeEmptyClusters = this.clad.doRandomizeEmptyClusters;
+            string algorithm = this.dispatcher.descriptionString;
+            bool doRandomizeEmptyClusters = this.dispatcher.doRandomizeEmptyClusters;
 
             return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{textureSize}|number of clusters:{numClusters}|randomize empty clusters:{doRandomizeEmptyClusters}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}|algorithm:{algorithm}.csv";
         }
@@ -99,7 +99,7 @@ public class ClusteringTest : MonoBehaviour {
         public readonly int jitterSize;
         public readonly UnityEngine.Video.VideoClip video;
         public readonly bool doDownscale;
-        public readonly AClad clad;
+        public readonly ADispatcher dispatcher;
 
         private LaunchParameters() { }
 
@@ -109,14 +109,14 @@ public class ClusteringTest : MonoBehaviour {
             int jitterSize,
             UnityEngine.Video.VideoClip video,
             bool doDownscale,
-            AClad clad
+            ADispatcher dispatcher
         ) {
             this.textureSize = textureSize;
             this.staggeredJitter = staggeredJitter;
             this.jitterSize = jitterSize;
             this.video = video;
             this.doDownscale = doDownscale;
-            this.clad = clad;
+            this.dispatcher = dispatcher;
         }
     }
 
@@ -172,7 +172,7 @@ public class ClusteringTest : MonoBehaviour {
 
     private void InitCbufs() {
         this.cbufRandomPositions = new ComputeBuffer(
-            this.currentWorkParameters.clad.numClusters,
+            this.currentWorkParameters.dispatcher.numClusters,
             sizeof(int) * 4
         );
     }
@@ -233,7 +233,7 @@ public class ClusteringTest : MonoBehaviour {
         this.InitRTs();
         this.InitCbufs();
         this.clusteringRTsAndBuffers = new ClusteringRTsAndBuffers(
-            this.currentWorkParameters.clad.numClusters,
+            this.currentWorkParameters.dispatcher.numClusters,
             this.currentWorkParameters.textureSize,
             referenceTextureSize,
             this.rtReference
@@ -427,7 +427,7 @@ public class ClusteringTest : MonoBehaviour {
     }
 
     private void RunDispatcher() {
-        this.currentWorkParameters.clad.RunClustering(
+        this.currentWorkParameters.dispatcher.RunClustering(
             this.rtInput,
             this.currentWorkParameters.textureSize,
             this.clusteringRTsAndBuffers
@@ -446,7 +446,7 @@ public class ClusteringTest : MonoBehaviour {
             one final attribution is required,
             because RunClustering finishes with updating cluster centers
         */
-        this.currentWorkParameters.clad.AttributeClusters(
+        this.currentWorkParameters.dispatcher.AttributeClusters(
             this.rtInput,
             this.clusteringRTsAndBuffers,
             final: true,

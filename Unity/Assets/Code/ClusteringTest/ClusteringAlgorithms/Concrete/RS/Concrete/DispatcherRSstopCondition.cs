@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class CladRSstopCondition : ACladRS {
+public class DispatcherRSstopCondition : ADispatcherRS {
     private readonly int maxFailedSwaps;
 
-    public CladRSstopCondition(
+    public DispatcherRSstopCondition(
             int kernelSize, ComputeShader computeShader,
             bool doRandomizeEmptyClusters, int numClusters,
             int numIterationsKM, int maxFailedSwaps
@@ -50,7 +50,7 @@ public class CladRSstopCondition : ACladRS {
                 if (failedSwaps == this.maxFailedSwaps) {
                     return;
                 }
-            } else if (-varianceChange < CladKnecht.varianceChangeThreshold) {
+            } else if (-varianceChange < DispatcherKnecht.varianceChangeThreshold) {
                 return;
             } else {
                 failedSwaps = 0;

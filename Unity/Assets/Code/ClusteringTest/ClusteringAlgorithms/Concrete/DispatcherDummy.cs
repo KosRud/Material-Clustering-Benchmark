@@ -1,7 +1,7 @@
 using UnityEngine;
 
-public class CladDummy : AClad {
-    public CladDummy(ComputeShader computeShader, int numClusters) : base(
+public class DispatcherDummy : ADispatcher {
+    public DispatcherDummy(ComputeShader computeShader, int numClusters) : base(
         kernelSize: 4,
         computeShader: computeShader,
         numIterations: 1,

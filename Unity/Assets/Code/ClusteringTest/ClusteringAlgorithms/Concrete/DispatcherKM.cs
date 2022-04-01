@@ -1,7 +1,7 @@
 using UnityEngine;
 
-public class CladKM : AClad {
-    public CladKM(
+public class DispatcherKM : ADispatcher {
+    public DispatcherKM(
         int kernelSize, ComputeShader computeShader, int numIterations, bool doRandomizeEmptyClusters, int numClusters
     ) : base(kernelSize, computeShader, numIterations, doRandomizeEmptyClusters, numClusters) { }
 

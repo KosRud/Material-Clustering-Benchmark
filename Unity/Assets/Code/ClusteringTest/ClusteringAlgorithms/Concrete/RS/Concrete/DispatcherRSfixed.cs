@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class CladRSfixed : ACladRS {
+public class DispatcherRSfixed : ADispatcherRS {
     public readonly bool doReadback;
 
-    public CladRSfixed(
+    public DispatcherRSfixed(
         int kernelSize, ComputeShader computeShader, int numIterations,
         bool doRandomizeEmptyClusters, int numClusters, int numIterationsKM,
         bool doReadback

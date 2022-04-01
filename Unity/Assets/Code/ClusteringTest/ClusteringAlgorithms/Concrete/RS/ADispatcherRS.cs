@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public abstract class ACladRS : CladKM {
+public abstract class ADispatcherRS : DispatcherKM {
     public readonly int iterationsKM;
 
     protected readonly int kernelHandleRandomSwap;
     protected readonly int kernelHandleValidateCandidates;
 
-    public ACladRS(
+    public ADispatcherRS(
         int kernelSize, ComputeShader computeShader, int numIterations,
         bool doRandomizeEmptyClusters, int numClusters, int numIterationsKM
     ) : base(kernelSize, computeShader, numIterations, doRandomizeEmptyClusters, numClusters) {
