@@ -433,6 +433,15 @@ public class ClusteringTest : MonoBehaviour {
             this.clusteringRTsAndBuffers
         );
 
+        if (logType == LogType.Variance) {
+            using (
+                ClusterCenters clusterCenters =
+                    this.clusteringRTsAndBuffers.GetClusterCenters()
+            ) {
+                this.frameLogVariance.Add(clusterCenters.variance);
+            }
+        }
+
         /*
             one final attribution is required,
             because RunClustering finishes with updating cluster centers
