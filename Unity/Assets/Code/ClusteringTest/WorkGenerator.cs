@@ -446,28 +446,26 @@ public static class WorkGenerator {
         UnityEngine.Video.VideoClip[] videos,
         ComputeShader csHighlightRemoval
     ) {
-        for (int i = 0; i < 20; i++) {
-            foreach (UnityEngine.Video.VideoClip video in videos) {
-                foreach (int textureSize in new int[] { 512, 64 }) {
-                    // RS stop condition
-                    workStack.Push(
-                        new ClusteringTest.LaunchParameters(
-                            textureSize: textureSize,
-                            staggeredJitter: false,
-                            jitterSize: 1,
-                            video: video,
-                            doDownscale: false,
-                            clad: new CladRSstopCondition(
-                                kernelSize: kernelSize,
-                                computeShader: csHighlightRemoval,
-                                doRandomizeEmptyClusters: false,
-                                numClusters: 6,
-                                numIterationsKM: 2,
-                                maxFailedSwaps: 1
-                            )
-                        ).ThrowIfExists()
-                    );
-                }
+        foreach (UnityEngine.Video.VideoClip video in videos) {
+            foreach (int textureSize in new int[] { 512, 64 }) {
+                // RS stop condition
+                workStack.Push(
+                    new ClusteringTest.LaunchParameters(
+                        textureSize: textureSize,
+                        staggeredJitter: false,
+                        jitterSize: 1,
+                        video: video,
+                        doDownscale: false,
+                        clad: new CladRSstopCondition(
+                            kernelSize: kernelSize,
+                            computeShader: csHighlightRemoval,
+                            doRandomizeEmptyClusters: false,
+                            numClusters: 6,
+                            numIterationsKM: 2,
+                            maxFailedSwaps: 1
+                        )
+                    ).ThrowIfExists()
+                );
             }
         }
 

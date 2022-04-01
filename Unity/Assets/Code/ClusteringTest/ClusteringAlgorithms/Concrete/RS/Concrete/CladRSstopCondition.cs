@@ -33,7 +33,6 @@ public class CladRSstopCondition : ACladRS {
         int failedSwaps = 0;
 
         for (int i = 1; ; i += this.iterationsKM) {
-            Debug.Log(i);
             this.RandomSwap(inputTex, textureSize, clusteringRTsAndBuffers);
 
             for (int k = 0; k < this.iterationsKM; k++) {
