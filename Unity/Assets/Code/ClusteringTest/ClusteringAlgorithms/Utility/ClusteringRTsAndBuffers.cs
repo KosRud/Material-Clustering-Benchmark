@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace ClusteringAlgorithms {
 
@@ -11,8 +12,8 @@ public class ClusterCenters : System.IDisposable {
   private readonly int numClusters;
 
   private static readonly
-  System.Collections.Generic.Dictionary<int, UnityEngine.Pool.IObjectPool<ClusterCenters>> pools =
-        new System.Collections.Generic.Dictionary<int, UnityEngine.Pool.IObjectPool<ClusterCenters>>();
+  Dictionary<int, UnityEngine.Pool.IObjectPool<ClusterCenters>> pools =
+        new Dictionary<int, UnityEngine.Pool.IObjectPool<ClusterCenters>>();
 
   private static UnityEngine.Pool.IObjectPool<ClusterCenters> GetPool(int numClusters) {
     if (pools.ContainsKey(numClusters) == false) {
