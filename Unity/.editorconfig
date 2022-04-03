@@ -110,28 +110,6 @@ csharp_using_directive_placement = outside_namespace:warning
 
 #### C# Formatting Rules ####
 
-dotnet_diagnostic.IDE0001.severity = suggestion
-dotnet_diagnostic.IDE0003.severity = suggestion
-dotnet_diagnostic.IDE0004.severity = suggestion
-dotnet_diagnostic.IDE0005.severity = suggestion
-dotnet_diagnostic.IDE0006.severity = suggestion
-dotnet_diagnostic.IDE0007.severity = suggestion
-dotnet_diagnostic.IDE0008.severity = suggestion
-dotnet_diagnostic.IDE0009.severity = suggestion
-dotnet_diagnostic.IDE0010.severity = suggestion
-dotnet_diagnostic.IDE0011.severity = suggestion
-dotnet_diagnostic.IDE0012.severity = suggestion
-dotnet_diagnostic.IDE0013.severity = suggestion
-dotnet_diagnostic.IDE0014.severity = suggestion
-dotnet_diagnostic.IDE0015.severity = suggestion
-dotnet_diagnostic.IDE0016.severity = suggestion
-dotnet_diagnostic.IDE0017.severity = suggestion
-dotnet_diagnostic.IDE0018.severity = suggestion
-dotnet_diagnostic.IDE0019.severity = suggestion
-dotnet_diagnostic.IDE0020.severity = suggestion
-dotnet_diagnostic.IDE0021.severity = warning
-dotnet_diagnostic.IDE0021.severity = warning
-
 dotnet_diagnostic.IDE0055.severity = suggestion
 
 # New line preferences
