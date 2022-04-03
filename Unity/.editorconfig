@@ -7,9 +7,9 @@ root = true
 #### Core EditorConfig Options ####
 
 # Indentation and spacing
-indent_size = 4
+indent_size = 2
 indent_style = space
-tab_width = 4
+tab_width = 2
 
 # New line preferences
 end_of_line = crlf
@@ -61,7 +61,7 @@ dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggesti
 dotnet_style_readonly_field = true:warning
 
 # Parameter preferences
-dotnet_code_quality_unused_parameters = all:suggestion
+dotnet_code_quality_unused_parameters = all:warning
 
 #### C# Coding Conventions ####
 
@@ -105,11 +105,30 @@ csharp_style_unused_value_assignment_preference = discard_variable:suggestion
 csharp_style_unused_value_expression_statement_preference = discard_variable:none
 
 # 'using' directive preferences
-csharp_using_directive_placement = outside_namespace:silent
+csharp_using_directive_placement = outside_namespace:warning
 
 #### C# Formatting Rules ####
 
-dotnet_diagnostic.IDE0055.severity = warning
+dotnet_diagnostic.IDE0001.severity = suggestion
+dotnet_diagnostic.IDE0003.severity = suggestion
+dotnet_diagnostic.IDE0004.severity = suggestion
+dotnet_diagnostic.IDE0005.severity = suggestion
+dotnet_diagnostic.IDE0006.severity = suggestion
+dotnet_diagnostic.IDE0007.severity = suggestion
+dotnet_diagnostic.IDE0008.severity = suggestion
+dotnet_diagnostic.IDE0009.severity = suggestion
+dotnet_diagnostic.IDE0010.severity = suggestion
+dotnet_diagnostic.IDE0011.severity = suggestion
+dotnet_diagnostic.IDE0012.severity = suggestion
+dotnet_diagnostic.IDE0013.severity = suggestion
+dotnet_diagnostic.IDE0014.severity = suggestion
+dotnet_diagnostic.IDE0015.severity = suggestion
+dotnet_diagnostic.IDE0016.severity = suggestion
+dotnet_diagnostic.IDE0017.severity = suggestion
+dotnet_diagnostic.IDE0018.severity = suggestion
+dotnet_diagnostic.IDE0019.severity = suggestion
+dotnet_diagnostic.IDE0020.severity = suggestion
+dotnet_diagnostic.IDE0021.severity = warning
 
 # New line preferences
 csharp_new_line_before_catch = false

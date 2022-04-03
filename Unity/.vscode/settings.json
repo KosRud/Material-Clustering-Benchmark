@@ -1,0 +1,12 @@
+{
+    "[csharp]": {
+        "editor.defaultFormatter": "jkillian.custom-local-formatters",
+        "editor.tabSize": 2
+    },
+    "customLocalFormatters.formatters": [
+        {
+            "command": "astyle --options=.astylerc",
+            "languages": ["csharp"]
+        }
+    ]
+}
