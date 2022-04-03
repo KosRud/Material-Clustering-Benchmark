@@ -13,7 +13,7 @@ public class ClusteringTest : MonoBehaviour {
 
   private const int referenceTextureSize = 512;
   private const int kernelSize = 16;
-  private const LogType logType = LogType.FrameTime;
+  private const LogType logType = LogType.Variance;
 
   private const string varianceLogPath = "Variance logs";
 
@@ -449,24 +449,58 @@ public class ClusteringTest : MonoBehaviour {
     );
 
     if (logType == LogType.Variance) {
-      using (
-        ClusterCenters clusterCenters =
-          this.clusteringRTsAndBuffers.GetClusterCenters()
-      ) {
-        this.frameLogVariance.Add(clusterCenters.variance);
-      }
-    }
-
-    /*
+      /*
         one final attribution is required,
         because RunClustering finishes with updating cluster centers
-    */
-    this.currentWorkParameters.dispatcher.AttributeClusters(
-      this.rtInput,
-      this.clusteringRTsAndBuffers,
-      final: true,
-      khm: false
-    );
+      */
+      this.currentWorkParameters.dispatcher.AttributeClusters(
+        this.rtInput,
+        this.clusteringRTsAndBuffers,
+        final: true,
+        khm: false
+      );
+
+      // save cluster centers
+      using (
+        ClusterCenters backupClusterCenters =
+          this.clusteringRTsAndBuffers.GetClusterCenters()
+      ) {
+        /*
+          the variance computation is delayed by 1 iteration
+
+          after updating cluster centers for the 1st time
+          we get the variance of 0 iterations
+
+          so in order to get current variance,
+          we need one more cluster center update
+
+          additionally, we want to get tha variance
+          from attribution with "final: true"
+          which disables thresholding of dark pixels
+        */
+        this.currentWorkParameters.dispatcher.UpdateClusterCenters(
+          this.rtInput,
+          this.currentWorkParameters.textureSize,
+          this.clusteringRTsAndBuffers,
+          rejectOld: false
+        );
+        // write log
+        this.frameLogVariance.Add(backupClusterCenters.variance);
+        // restore cluster centers after doing a "bonus" iteration
+        this.clusteringRTsAndBuffers.SetClusterCenters(backupClusterCenters.centers);
+      }
+    } else {
+      /*
+        one final attribution is required,
+        because RunClustering finishes with updating cluster centers
+      */
+      this.currentWorkParameters.dispatcher.AttributeClusters(
+        this.rtInput,
+        this.clusteringRTsAndBuffers,
+        final: true,
+        khm: false
+      );
+    }
   }
 
   private void OnDisable() {

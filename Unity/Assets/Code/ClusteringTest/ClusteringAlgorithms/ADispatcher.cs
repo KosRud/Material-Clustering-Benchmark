@@ -42,7 +42,7 @@ namespace ClusteringAlgorithms {
       ClusteringRTsAndBuffers clusteringRTsAndBuffers
     );
 
-    protected void UpdateClusterCenters(
+    public void UpdateClusterCenters(
       Texture inputTex,
       int textureSize,
       ClusteringRTsAndBuffers clusteringRTsAndBuffers,
