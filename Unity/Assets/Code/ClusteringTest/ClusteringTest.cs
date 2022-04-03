@@ -59,7 +59,7 @@ public class ClusteringTest : MonoBehaviour {
   private bool awaitingRestart = false;
   private int[][] offsets;
   private readonly int[] scanlinePixelOffset = new int[2];
-  private readonly System.Collections.Generic.List<float> frameLogVariance = new System.Collections.Generic.List<float>();
+  private readonly List<float> frameLogVariance = new List<float>();
   private LaunchParameters currentWorkParameters;
 
   private UnityEngine.Video.VideoPlayer videoPlayer;
@@ -135,14 +135,18 @@ public class ClusteringTest : MonoBehaviour {
   private void SetTextureSize() {
     Debug.Assert(
       (
-        this.currentWorkParameters.textureSize & (this.currentWorkParameters.textureSize - 1)
+        this.currentWorkParameters.textureSize & (this.currentWorkParameters.textureSize
+          - 1)
       ) == 0 && this.currentWorkParameters.textureSize > 0
     ); // positive power of 2
     Debug.Assert(this.currentWorkParameters.textureSize <= referenceTextureSize);
 
-    this.csHighlightRemoval.SetInt("mip_level", this.MipLevel(this.currentWorkParameters.textureSize));
-    this.csHighlightRemoval.SetInt("ref_mip_level", this.MipLevel(referenceTextureSize));
-    this.csHighlightRemoval.SetInt("texture_size", this.currentWorkParameters.textureSize);
+    this.csHighlightRemoval.SetInt("mip_level",
+      this.MipLevel(this.currentWorkParameters.textureSize));
+    this.csHighlightRemoval.SetInt("ref_mip_level",
+      this.MipLevel(referenceTextureSize));
+    this.csHighlightRemoval.SetInt("texture_size",
+      this.currentWorkParameters.textureSize);
   }
 
   private void InitRTs() {
@@ -263,7 +267,8 @@ public class ClusteringTest : MonoBehaviour {
   }
 
   private void WriteVarianceLog() {
-    string fileName = $"{varianceLogPath}/{this.currentWorkParameters.GetFileName()}";
+    string fileName =
+      $"{varianceLogPath}/{this.currentWorkParameters.GetFileName()}";
 
     if (System.IO.File.Exists(fileName)) {
 #if UNITY_EDITOR
@@ -274,8 +279,8 @@ public class ClusteringTest : MonoBehaviour {
 
     using (
       System.IO.FileStream fs = System.IO.File.Open(
-                                  fileName, System.IO.FileMode.OpenOrCreate
-                                )
+          fileName, System.IO.FileMode.OpenOrCreate
+        )
     ) {
       using var sw = new System.IO.StreamWriter(fs);
       sw.WriteLine("Frame,Variance");
@@ -299,8 +304,8 @@ public class ClusteringTest : MonoBehaviour {
     string fileName = "Frame time log.txt";
 
     using System.IO.FileStream fs = System.IO.File.Open(
-                                      fileName, System.IO.FileMode.Append
-                                    );
+        fileName, System.IO.FileMode.Append
+      );
     using var sw = new System.IO.StreamWriter(fs);
     sw.WriteLine(this.currentWorkParameters.GetFileName());
     sw.WriteLine($"Average frame time: {avgFrameTime:0.000} ms");
@@ -358,7 +363,8 @@ public class ClusteringTest : MonoBehaviour {
 
     Graphics.Blit(this.videoPlayer.texture, this.rtReference);
 
-    this.csHighlightRemoval.SetInt("sub_sample_multiplier", referenceTextureSize / this.currentWorkParameters.textureSize);
+    this.csHighlightRemoval.SetInt("sub_sample_multiplier",
+      referenceTextureSize / this.currentWorkParameters.textureSize);
     if (this.currentWorkParameters.staggeredJitter) {
       this.csHighlightRemoval.SetInts(
         "sub_sample_offset",
@@ -367,16 +373,21 @@ public class ClusteringTest : MonoBehaviour {
       ]
       );
     } else {
-      this.scanlinePixelOffset[0] = Time.frameCount % this.currentWorkParameters.jitterSize;
-      this.scanlinePixelOffset[1] = (Time.frameCount / this.offsets.Length) % this.currentWorkParameters.jitterSize;
+      this.scanlinePixelOffset[0] = Time.frameCount %
+        this.currentWorkParameters.jitterSize;
+      this.scanlinePixelOffset[1] = (Time.frameCount / this.offsets.Length) %
+        this.currentWorkParameters.jitterSize;
       this.csHighlightRemoval.SetInts(
         "sub_sample_offset",
         this.scanlinePixelOffset
       );
     }
-    this.csHighlightRemoval.SetTexture(this.kernelSubsample, "tex_input", this.rtReference);
-    this.csHighlightRemoval.SetTexture(this.kernelSubsample, "tex_output", this.rtInput);
-    this.csHighlightRemoval.SetBool("downscale", this.currentWorkParameters.doDownscale);
+    this.csHighlightRemoval.SetTexture(this.kernelSubsample, "tex_input",
+      this.rtReference);
+    this.csHighlightRemoval.SetTexture(this.kernelSubsample, "tex_output",
+      this.rtInput);
+    this.csHighlightRemoval.SetBool("downscale",
+      this.currentWorkParameters.doDownscale);
     this.csHighlightRemoval.Dispatch(
       this.kernelSubsample,
       this.currentWorkParameters.textureSize / kernelSize,
@@ -417,9 +428,9 @@ public class ClusteringTest : MonoBehaviour {
 
         this.totalTime += avgTime;
         this.peakFrameTime = Mathf.Max(
-                               this.peakFrameTime,
-                               avgTime
-                             );
+            this.peakFrameTime,
+            avgTime
+          );
 
         this.framesMeasured++;
       }
@@ -472,10 +483,13 @@ public class ClusteringTest : MonoBehaviour {
       this.kernelShowResult, "tex_arr_clusters_r",
       this.clusteringRTsAndBuffers.rtArr
     );
-    this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_output", this.rtResult);
-    this.csHighlightRemoval.SetBuffer(this.kernelShowResult, "cbuf_cluster_centers", this.clusteringRTsAndBuffers.cbufClusterCenters);
+    this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_output",
+      this.rtResult);
+    this.csHighlightRemoval.SetBuffer(this.kernelShowResult, "cbuf_cluster_centers",
+      this.clusteringRTsAndBuffers.cbufClusterCenters);
     this.csHighlightRemoval.SetBool("show_reference", false);
-    this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_input", this.rtInput);
+    this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_input",
+      this.rtInput);
     this.csHighlightRemoval.Dispatch(
       this.kernelShowResult,
       this.currentWorkParameters.textureSize / kernelSize,

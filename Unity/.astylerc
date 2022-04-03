@@ -1,2 +1,9 @@
 indent=spaces=2
+--style=java
 --indent-switches
+--indent-cases
+--indent-namespaces
+--indent-after-parens
+--pad-comma
+--add-braces
+--max-code-length=80
