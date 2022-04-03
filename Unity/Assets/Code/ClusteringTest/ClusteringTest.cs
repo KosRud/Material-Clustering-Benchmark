@@ -1,5 +1,6 @@
 using UnityEngine;
 using ClusteringAlgorithms;
+using System.Collections.Generic;
 
 public class ClusteringTest : MonoBehaviour {
   // configuration
@@ -52,8 +53,8 @@ public class ClusteringTest : MonoBehaviour {
     OneKM
   }
 
-  private readonly System.Collections.Generic.Stack<LaunchParameters> work =
-    new System.Collections.Generic.Stack<LaunchParameters>();
+  private readonly Stack<LaunchParameters> work =
+    new Stack<LaunchParameters>();
 
   private bool awaitingRestart = false;
   private int[][] offsets;
