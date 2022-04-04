@@ -18,7 +18,7 @@ namespace WorkGenerator {
     public override void GenerateWork(
       Stack<ClusteringTest.LaunchParameters> workStack
     ) {
-      for (int i = 0; i < 20; i++) {
+      for (int i = 0; i < 5; i++) {
         foreach (UnityEngine.Video.VideoClip video in this.videos) {
           foreach (int textureSize in new int[] { 512, 64 }) {
             // 3 iterations
