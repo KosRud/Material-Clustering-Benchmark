@@ -13,7 +13,7 @@ public class ClusteringTest : MonoBehaviour {
 
   private const int referenceTextureSize = 512;
   private const int kernelSize = 16;
-  private const LogType logType = LogType.Variance;
+  private const LogType logType = LogType.FrameTime;
 
   private const string varianceLogPath = "Variance logs";
 
@@ -42,6 +42,7 @@ public class ClusteringTest : MonoBehaviour {
   private float totalTime;
   private long framesMeasured;
   private bool firstFrameProcessed;
+  private System.Diagnostics.Stopwatch stopwatch;
 
   private enum Algorithm {
     KM,
@@ -191,7 +192,7 @@ public class ClusteringTest : MonoBehaviour {
   private void Awake() {
     Debug.Assert(this.videos.Length != 0);
 
-    new WorkGenerator.AlgorithmsConvergence(
+    new WorkGenerator.FrameTime(
       kernelSize: kernelSize,
       videos: this.videos,
       csHighlightRemoval: this.csHighlightRemoval
@@ -205,6 +206,9 @@ public class ClusteringTest : MonoBehaviour {
     } else {
       Debug.Log("High resolution timer support check: OK");
     }
+
+    this.stopwatch = new System.Diagnostics.Stopwatch();
+    this.FindKernels();
   }
 
   private void InitJitterOffsets() {
@@ -236,7 +240,6 @@ public class ClusteringTest : MonoBehaviour {
     this.firstFrameProcessed = false;
 
     this.InitJitterOffsets();
-    this.FindKernels();
     this.SetTextureSize();
     this.InitRTs();
     this.InitCbufs();
@@ -414,16 +417,26 @@ public class ClusteringTest : MonoBehaviour {
       using (
         ClusterCenters clusterCenters = this.clusteringRTsAndBuffers.GetClusterCenters()
       ) {
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-
         const int numRepetitions = 10;
 
-        for (int i = 0; i < numRepetitions; i++) {
-          this.clusteringRTsAndBuffers.SetClusterCenters(clusterCenters.centers);
-          this.RunDispatcher();
-        }
+        this.stopwatch.Reset();
+        this.stopwatch.Start();
+        // measured section
+        {
+          for (int i = 0; i < numRepetitions; i++) {
+            this.clusteringRTsAndBuffers.SetClusterCenters(clusterCenters.centers);
+            this.RunDispatcher();
+          }
 
-        float measuredtimeMS = (float)stopwatch.Elapsed.TotalMilliseconds;
+          using (
+            ClusterCenters temp = this.clusteringRTsAndBuffers.GetClusterCenters()
+          ) {
+            // force current thread to wait until GPU finishes computations
+          }
+        }
+        this.stopwatch.Stop();
+
+        float measuredtimeMS = (float)this.stopwatch.Elapsed.TotalMilliseconds;
         float avgTime = measuredtimeMS / numRepetitions;
 
         this.totalTime += avgTime;
