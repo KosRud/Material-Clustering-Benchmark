@@ -5,7 +5,6 @@ namespace ClusteringAlgorithms {
   public class DispatcherKnecht : DispatcherKM {
     private const int randomInitEveryNiterations = 5;
     private const int maxKMiterations = 20;
-    public const float varianceChangeThreshold = 1e-4f;
     private int frameCounter = 0;
 
     public DispatcherKnecht(
@@ -118,7 +117,7 @@ namespace ClusteringAlgorithms {
         newClusterCenters = clusteringRTsAndBuffers.GetClusterCenters();
 
         if (clusterCenters.variance - newClusterCenters.variance <
-          varianceChangeThreshold) {
+          StopCondition.varianceChangeThreshold) {
           clusterCenters.Dispose();
           return KMuntilConvergesResult.Get(
               converged: true,

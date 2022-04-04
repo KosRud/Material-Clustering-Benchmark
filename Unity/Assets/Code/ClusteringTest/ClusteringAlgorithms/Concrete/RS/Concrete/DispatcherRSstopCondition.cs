@@ -3,12 +3,10 @@ using UnityEngine;
 namespace ClusteringAlgorithms {
 
   public class DispatcherRSstopCondition : ADispatcherRS {
-    private readonly int maxFailedSwaps;
-
     public DispatcherRSstopCondition(
       int kernelSize, ComputeShader computeShader,
       bool doRandomizeEmptyClusters, int numClusters,
-      int numIterationsKM, int maxFailedSwaps
+      int numIterationsKM
     ) : base(
         kernelSize: kernelSize,
         computeShader: computeShader,
@@ -16,9 +14,7 @@ namespace ClusteringAlgorithms {
         doRandomizeEmptyClusters: doRandomizeEmptyClusters,
         numClusters: numClusters,
         numIterationsKM: numIterationsKM
-      ) {
-      this.maxFailedSwaps = maxFailedSwaps;
-    }
+      ) { }
 
     public override string descriptionString => $"RS({this.iterationsKM}KM)_stop";
 
@@ -49,10 +45,10 @@ namespace ClusteringAlgorithms {
         if (varianceChange > 0) {
           failedSwaps++;
 
-          if (failedSwaps == this.maxFailedSwaps) {
+          if (failedSwaps == StopCondition.maxConsecutiveFailedSwaps) {
             return;
           }
-        } else if (-varianceChange < DispatcherKnecht.varianceChangeThreshold) {
+        } else if (-varianceChange < StopCondition.varianceChangeThreshold) {
           return;
         } else {
           failedSwaps = 0;

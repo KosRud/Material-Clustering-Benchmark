@@ -33,8 +33,7 @@ namespace WorkGenerator {
                   computeShader: this.csHighlightRemoval,
                   doRandomizeEmptyClusters: false,
                   numClusters: 6,
-                  numIterationsKM: 2,
-                  maxFailedSwaps: 1
+                  numIterationsKM: 2
                 )
               ).ThrowIfExists()
             );
