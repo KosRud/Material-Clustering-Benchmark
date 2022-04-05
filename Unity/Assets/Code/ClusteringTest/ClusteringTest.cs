@@ -400,6 +400,11 @@ public class ClusteringTest : MonoBehaviour {
 
     if (logType == LogType.Variance || this.firstFrameProcessed == false) {
       this.RunDispatcher();
+
+      if (logType == LogType.Variance) {
+        this.LogVariance();
+      }
+
       this.firstFrameProcessed = true;
     } else {
       /*
@@ -431,6 +436,7 @@ public class ClusteringTest : MonoBehaviour {
           using (
             ClusterCenters temp = this.clusteringRTsAndBuffers.GetClusterCenters()
           ) {
+            temp.centers[0] = temp.centers[1];
             // force current thread to wait until GPU finishes computations
           }
         }
@@ -454,6 +460,38 @@ public class ClusteringTest : MonoBehaviour {
     this.videoPlayer.StepForward();
   }
 
+  private void LogVariance() {
+    // save cluster centers
+    using (
+      ClusterCenters backupClusterCenters =
+        this.clusteringRTsAndBuffers.GetClusterCenters()
+    ) {
+      /*
+        the variance computation is delayed by 1 iteration
+
+        after updating cluster centers for the 1st time
+        we get the variance of 0 iterations
+
+        so in order to get current variance,
+        we need one more cluster center update
+
+        additionally, we want to get tha variance
+        from attribution with "final: true"
+        which disables thresholding of dark pixels
+      */
+      this.currentWorkParameters.dispatcher.UpdateClusterCenters(
+        this.rtInput,
+        this.currentWorkParameters.textureSize,
+        this.clusteringRTsAndBuffers,
+        rejectOld: false
+      );
+      // write log
+      this.frameLogVariance.Add(backupClusterCenters.variance);
+      // restore cluster centers after doing a "bonus" iteration
+      this.clusteringRTsAndBuffers.SetClusterCenters(backupClusterCenters.centers);
+    }
+  }
+
   private void RunDispatcher() {
     this.currentWorkParameters.dispatcher.RunClustering(
       this.rtInput,
@@ -461,59 +499,16 @@ public class ClusteringTest : MonoBehaviour {
       this.clusteringRTsAndBuffers
     );
 
-    if (logType == LogType.Variance) {
-      /*
+    /*
         one final attribution is required,
         because RunClustering finishes with updating cluster centers
-      */
-      this.currentWorkParameters.dispatcher.AttributeClusters(
-        this.rtInput,
-        this.clusteringRTsAndBuffers,
-        final: true,
-        khm: false
-      );
-
-      // save cluster centers
-      using (
-        ClusterCenters backupClusterCenters =
-          this.clusteringRTsAndBuffers.GetClusterCenters()
-      ) {
-        /*
-          the variance computation is delayed by 1 iteration
-
-          after updating cluster centers for the 1st time
-          we get the variance of 0 iterations
-
-          so in order to get current variance,
-          we need one more cluster center update
-
-          additionally, we want to get tha variance
-          from attribution with "final: true"
-          which disables thresholding of dark pixels
-        */
-        this.currentWorkParameters.dispatcher.UpdateClusterCenters(
-          this.rtInput,
-          this.currentWorkParameters.textureSize,
-          this.clusteringRTsAndBuffers,
-          rejectOld: false
-        );
-        // write log
-        this.frameLogVariance.Add(backupClusterCenters.variance);
-        // restore cluster centers after doing a "bonus" iteration
-        this.clusteringRTsAndBuffers.SetClusterCenters(backupClusterCenters.centers);
-      }
-    } else {
-      /*
-        one final attribution is required,
-        because RunClustering finishes with updating cluster centers
-      */
-      this.currentWorkParameters.dispatcher.AttributeClusters(
-        this.rtInput,
-        this.clusteringRTsAndBuffers,
-        final: true,
-        khm: false
-      );
-    }
+    */
+    this.currentWorkParameters.dispatcher.AttributeClusters(
+      this.rtInput,
+      this.clusteringRTsAndBuffers,
+      final: true,
+      khm: false
+    );
   }
 
   private void OnDisable() {
