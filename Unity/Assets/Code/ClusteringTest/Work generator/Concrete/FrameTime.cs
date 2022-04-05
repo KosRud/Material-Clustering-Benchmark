@@ -150,8 +150,8 @@ namespace WorkGenerator {
                 video: video,
                 doDownscale: false,
                 dispatcher: new DispatcherRSstopCondition(
-                  kernelSize: kernelSize,
-                  computeShader: csHighlightRemoval,
+                  kernelSize: this.kernelSize,
+                  computeShader: this.csHighlightRemoval,
                   doRandomizeEmptyClusters: false,
                   numClusters: 6,
                   numIterationsKM: 2
