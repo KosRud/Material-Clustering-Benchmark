@@ -511,7 +511,7 @@ public class ClusteringTest : MonoBehaviour {
     this.csHighlightRemoval.SetBuffer(this.kernelShowResult, "cbuf_cluster_centers",
       this.clusteringRTsAndBuffers.cbufClusterCenters);
     this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_input",
-      this.rtInputFullSize);
+      this.rtInput);
     this.csHighlightRemoval.Dispatch(
       this.kernelShowResult,
       this.rtResult.width / kernelSize,

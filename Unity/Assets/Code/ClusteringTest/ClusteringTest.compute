@@ -6,7 +6,7 @@
 #pragma kernel ValidateCandidates
 #pragma kernel SubSample
 
-#define threshold 0.05
+#define threshold 0.03
 #define max_num_clusters 16
 #define invalid_variance 100 // impossibly large distance to indicate empty cluster
 
@@ -280,22 +280,6 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 	if (id.x >= num_clusters) {
 		return;
 	}
-
-    /*
-        FIXME
-
-        this causes the bug
-        tex_arr_clusters_r has extra size
-        for the case of computing variance for
-        original (reference) texture size
-
-        need to somehow pass the info about it's actual size
-        or substitute for a different texture
-
-        may be just create an entirely new rtArr
-        just for this purpose
-        in the clustering RTs class
-    */
 
     float4 aggregatedColor = tex_arr_clusters_r.SampleLevel(
 		sampler_tex_arr_clusters_r,
