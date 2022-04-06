@@ -1,640 +1,640 @@
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
+Average frame time: 0.628 ms
+   Peak frame time: 1.504 ms
+
 video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 0.881 ms
-   Peak frame time: 2.886 ms
+Average frame time: 0.860 ms
+   Peak frame time: 2.739 ms
 
 video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.167 ms
-   Peak frame time: 0.381 ms
+Average frame time: 0.169 ms
+   Peak frame time: 0.362 ms
 
 video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.154 ms
-   Peak frame time: 0.361 ms
+Average frame time: 0.157 ms
+   Peak frame time: 0.315 ms
 
 video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 0.315 ms
-   Peak frame time: 0.535 ms
+Average frame time: 0.313 ms
+   Peak frame time: 0.484 ms
 
 video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 0.482 ms
-   Peak frame time: 0.787 ms
+Average frame time: 0.479 ms
+   Peak frame time: 0.810 ms
 
 video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.345 ms
-   Peak frame time: 0.575 ms
+Average frame time: 0.315 ms
+   Peak frame time: 0.505 ms
 
 video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.313 ms
-   Peak frame time: 0.521 ms
+Average frame time: 0.308 ms
+   Peak frame time: 0.483 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
+Average frame time: 3.842 ms
+   Peak frame time: 8.308 ms
 
 video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 3.346 ms
-   Peak frame time: 10.517 ms
+Average frame time: 3.342 ms
+   Peak frame time: 10.567 ms
 
 video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 1.329 ms
-   Peak frame time: 1.491 ms
+Average frame time: 1.333 ms
+   Peak frame time: 1.523 ms
 
 video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 1.336 ms
-   Peak frame time: 1.534 ms
+Average frame time: 1.341 ms
+   Peak frame time: 1.495 ms
 
 video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 2.502 ms
-   Peak frame time: 2.813 ms
+Average frame time: 2.491 ms
+   Peak frame time: 2.685 ms
 
 video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 2.866 ms
-   Peak frame time: 3.338 ms
+Average frame time: 3.144 ms
+   Peak frame time: 3.363 ms
 
 video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 2.496 ms
-   Peak frame time: 2.720 ms
+Average frame time: 2.481 ms
+   Peak frame time: 2.703 ms
 
 video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 2.490 ms
-   Peak frame time: 2.634 ms
+Average frame time: 2.480 ms
+   Peak frame time: 2.671 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
+Average frame time: 0.727 ms
+   Peak frame time: 1.786 ms
 
 video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 1.053 ms
-   Peak frame time: 2.961 ms
+Average frame time: 1.042 ms
+   Peak frame time: 2.774 ms
 
 video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.169 ms
-   Peak frame time: 0.363 ms
+Average frame time: 0.171 ms
+   Peak frame time: 0.320 ms
 
 video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.155 ms
-   Peak frame time: 0.359 ms
+Average frame time: 0.153 ms
+   Peak frame time: 0.302 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Average frame time: 0.314 ms
+   Peak frame time: 0.593 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
+Average frame time: 0.478 ms
+   Peak frame time: 0.730 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 0.322 ms
+   Peak frame time: 0.532 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 0.311 ms
+   Peak frame time: 0.480 ms
+
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
+Average frame time: 4.365 ms
+   Peak frame time: 8.006 ms
+
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Average frame time: 3.903 ms
+   Peak frame time: 12.501 ms
+
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 1.362 ms
+   Peak frame time: 1.490 ms
+
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 1.366 ms
+   Peak frame time: 1.514 ms
+
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Average frame time: 2.553 ms
+   Peak frame time: 2.700 ms
+
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
+Average frame time: 3.193 ms
+   Peak frame time: 3.388 ms
+
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 2.546 ms
+   Peak frame time: 2.653 ms
+
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 2.539 ms
+   Peak frame time: 2.714 ms
+
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
+Average frame time: 0.630 ms
+   Peak frame time: 1.759 ms
+
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Average frame time: 0.864 ms
+   Peak frame time: 2.715 ms
+
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 0.171 ms
+   Peak frame time: 0.353 ms
+
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 0.158 ms
+   Peak frame time: 0.319 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Average frame time: 0.314 ms
+   Peak frame time: 0.493 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
+Average frame time: 0.478 ms
+   Peak frame time: 0.737 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 0.318 ms
+   Peak frame time: 0.502 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 0.307 ms
+   Peak frame time: 0.606 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
+Average frame time: 3.854 ms
+   Peak frame time: 9.468 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Average frame time: 3.339 ms
+   Peak frame time: 11.267 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 1.330 ms
+   Peak frame time: 1.505 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 1.337 ms
+   Peak frame time: 1.509 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Average frame time: 2.491 ms
+   Peak frame time: 2.638 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
+Average frame time: 3.143 ms
+   Peak frame time: 3.361 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 2.481 ms
+   Peak frame time: 2.630 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 2.481 ms
+   Peak frame time: 2.670 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
+Average frame time: 0.731 ms
+   Peak frame time: 1.724 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Average frame time: 1.034 ms
+   Peak frame time: 2.994 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 0.171 ms
+   Peak frame time: 0.492 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 0.157 ms
+   Peak frame time: 0.320 ms
 
 video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
 Average frame time: 0.315 ms
-   Peak frame time: 0.520 ms
+   Peak frame time: 0.478 ms
 
 video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 0.496 ms
-   Peak frame time: 0.779 ms
+Average frame time: 0.476 ms
+   Peak frame time: 0.736 ms
 
 video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.323 ms
-   Peak frame time: 0.540 ms
+Average frame time: 0.317 ms
+   Peak frame time: 0.518 ms
 
 video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.313 ms
-   Peak frame time: 0.505 ms
+Average frame time: 0.308 ms
+   Peak frame time: 0.524 ms
+
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
+Average frame time: 4.358 ms
+   Peak frame time: 8.402 ms
 
 video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 3.774 ms
-   Peak frame time: 11.655 ms
+Average frame time: 3.880 ms
+   Peak frame time: 11.415 ms
 
 video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
 Average frame time: 1.353 ms
-   Peak frame time: 1.500 ms
+   Peak frame time: 1.498 ms
 
 video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 1.355 ms
-   Peak frame time: 1.501 ms
+Average frame time: 1.365 ms
+   Peak frame time: 1.477 ms
 
 video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 2.555 ms
-   Peak frame time: 2.720 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 2.930 ms
-   Peak frame time: 3.171 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 2.558 ms
-   Peak frame time: 2.705 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 2.549 ms
-   Peak frame time: 2.697 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 0.878 ms
-   Peak frame time: 2.810 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.168 ms
-   Peak frame time: 0.378 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.155 ms
-   Peak frame time: 0.358 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 0.315 ms
-   Peak frame time: 0.474 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 0.494 ms
-   Peak frame time: 0.773 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.322 ms
-   Peak frame time: 0.520 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.311 ms
-   Peak frame time: 0.514 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 3.326 ms
-   Peak frame time: 10.757 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 1.329 ms
-   Peak frame time: 1.535 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 1.334 ms
-   Peak frame time: 1.558 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 2.501 ms
-   Peak frame time: 2.655 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 2.871 ms
-   Peak frame time: 3.250 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 2.491 ms
-   Peak frame time: 2.677 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 2.489 ms
+Average frame time: 2.552 ms
    Peak frame time: 2.666 ms
 
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 1.031 ms
-   Peak frame time: 3.056 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.169 ms
-   Peak frame time: 0.368 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.156 ms
-   Peak frame time: 0.353 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 0.314 ms
-   Peak frame time: 0.480 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 0.504 ms
-   Peak frame time: 0.791 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.322 ms
-   Peak frame time: 0.529 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.313 ms
-   Peak frame time: 0.520 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 3.850 ms
-   Peak frame time: 11.930 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 1.354 ms
-   Peak frame time: 1.520 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 1.356 ms
-   Peak frame time: 1.494 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 2.556 ms
-   Peak frame time: 2.719 ms
-
 video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 2.931 ms
-   Peak frame time: 3.219 ms
+Average frame time: 3.196 ms
+   Peak frame time: 3.398 ms
 
 video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 2.556 ms
-   Peak frame time: 2.749 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
 Average frame time: 2.547 ms
-   Peak frame time: 2.848 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 0.872 ms
-   Peak frame time: 2.610 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.169 ms
-   Peak frame time: 0.373 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.155 ms
-   Peak frame time: 0.371 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 0.316 ms
-   Peak frame time: 0.531 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 0.507 ms
-   Peak frame time: 0.770 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.322 ms
-   Peak frame time: 0.529 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.313 ms
-   Peak frame time: 0.475 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 3.313 ms
-   Peak frame time: 10.799 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 1.328 ms
-   Peak frame time: 1.499 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 1.334 ms
-   Peak frame time: 1.459 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 2.501 ms
-   Peak frame time: 2.697 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 2.840 ms
-   Peak frame time: 3.176 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 2.491 ms
-   Peak frame time: 2.677 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 2.490 ms
-   Peak frame time: 2.675 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 1.058 ms
-   Peak frame time: 2.955 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.167 ms
-   Peak frame time: 0.381 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.156 ms
-   Peak frame time: 0.360 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 0.315 ms
-   Peak frame time: 0.536 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 0.483 ms
-   Peak frame time: 0.771 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.323 ms
-   Peak frame time: 0.605 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.314 ms
-   Peak frame time: 0.491 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 3.863 ms
-   Peak frame time: 11.321 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 1.355 ms
-   Peak frame time: 1.494 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 1.352 ms
-   Peak frame time: 1.494 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 2.556 ms
-   Peak frame time: 2.717 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 2.933 ms
-   Peak frame time: 3.335 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 2.556 ms
-   Peak frame time: 2.759 ms
+   Peak frame time: 2.681 ms
 
 video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 2.548 ms
-   Peak frame time: 2.739 ms
+Average frame time: 2.536 ms
+   Peak frame time: 2.666 ms
+
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
+Average frame time: 0.632 ms
+   Peak frame time: 1.796 ms
 
 video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 0.877 ms
-   Peak frame time: 2.673 ms
+Average frame time: 0.862 ms
+   Peak frame time: 2.933 ms
 
 video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.169 ms
-   Peak frame time: 0.391 ms
+Average frame time: 0.170 ms
+   Peak frame time: 0.320 ms
 
 video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.155 ms
-   Peak frame time: 0.351 ms
+Average frame time: 0.160 ms
+   Peak frame time: 0.367 ms
 
 video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
 Average frame time: 0.315 ms
-   Peak frame time: 0.500 ms
+   Peak frame time: 0.501 ms
 
 video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 0.503 ms
-   Peak frame time: 0.791 ms
+Average frame time: 0.477 ms
+   Peak frame time: 0.732 ms
 
 video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.322 ms
-   Peak frame time: 0.508 ms
+Average frame time: 0.317 ms
+   Peak frame time: 0.644 ms
 
 video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.313 ms
-   Peak frame time: 0.478 ms
+Average frame time: 0.310 ms
+   Peak frame time: 0.484 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
+Average frame time: 3.842 ms
+   Peak frame time: 11.099 ms
 
 video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 3.330 ms
-   Peak frame time: 10.753 ms
+Average frame time: 3.332 ms
+   Peak frame time: 10.502 ms
 
 video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
 Average frame time: 1.329 ms
-   Peak frame time: 1.506 ms
+   Peak frame time: 1.502 ms
 
 video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 1.334 ms
-   Peak frame time: 1.489 ms
+Average frame time: 1.338 ms
+   Peak frame time: 1.455 ms
 
 video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 2.500 ms
+Average frame time: 2.491 ms
    Peak frame time: 2.694 ms
 
 video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 2.868 ms
-   Peak frame time: 3.198 ms
+Average frame time: 3.144 ms
+   Peak frame time: 3.350 ms
 
 video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 2.492 ms
-   Peak frame time: 2.680 ms
+Average frame time: 2.480 ms
+   Peak frame time: 2.691 ms
 
 video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 2.489 ms
-   Peak frame time: 2.650 ms
+Average frame time: 2.480 ms
+   Peak frame time: 2.611 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
+Average frame time: 0.738 ms
+   Peak frame time: 2.063 ms
 
 video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 1.055 ms
-   Peak frame time: 2.826 ms
+Average frame time: 1.042 ms
+   Peak frame time: 3.007 ms
 
 video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.168 ms
-   Peak frame time: 0.367 ms
+Average frame time: 0.170 ms
+   Peak frame time: 0.383 ms
 
 video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.155 ms
-   Peak frame time: 0.341 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 0.316 ms
-   Peak frame time: 0.523 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 0.484 ms
-   Peak frame time: 0.756 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.323 ms
-   Peak frame time: 0.507 ms
-
-video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.313 ms
-   Peak frame time: 0.462 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 3.751 ms
-   Peak frame time: 11.784 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 1.353 ms
-   Peak frame time: 1.508 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 1.355 ms
-   Peak frame time: 1.503 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 2.556 ms
-   Peak frame time: 2.802 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 2.927 ms
-   Peak frame time: 3.157 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 2.557 ms
-   Peak frame time: 2.709 ms
-
-video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 2.548 ms
-   Peak frame time: 2.707 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 0.882 ms
-   Peak frame time: 2.688 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.167 ms
-   Peak frame time: 0.372 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.154 ms
-   Peak frame time: 0.357 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 0.316 ms
-   Peak frame time: 0.466 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 0.421 ms
-   Peak frame time: 0.779 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.291 ms
-   Peak frame time: 0.412 ms
-
-video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.273 ms
-   Peak frame time: 0.412 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 3.322 ms
-   Peak frame time: 11.204 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 1.327 ms
-   Peak frame time: 1.483 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 1.336 ms
-   Peak frame time: 1.467 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 2.502 ms
-   Peak frame time: 2.696 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 2.866 ms
-   Peak frame time: 3.102 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 2.492 ms
-   Peak frame time: 2.659 ms
-
-video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 2.489 ms
-   Peak frame time: 2.673 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 1.049 ms
-   Peak frame time: 2.904 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.168 ms
-   Peak frame time: 0.369 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.155 ms
-   Peak frame time: 0.342 ms
+Average frame time: 0.159 ms
+   Peak frame time: 0.336 ms
 
 video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
 Average frame time: 0.315 ms
-   Peak frame time: 0.489 ms
+   Peak frame time: 0.499 ms
 
 video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 0.483 ms
-   Peak frame time: 0.772 ms
+Average frame time: 0.479 ms
+   Peak frame time: 0.752 ms
 
 video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 0.323 ms
-   Peak frame time: 0.530 ms
+Average frame time: 0.319 ms
+   Peak frame time: 0.548 ms
 
 video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 0.313 ms
-   Peak frame time: 0.505 ms
+Average frame time: 0.299 ms
+   Peak frame time: 0.552 ms
+
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
+Average frame time: 4.377 ms
+   Peak frame time: 8.844 ms
 
 video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
-Average frame time: 3.869 ms
-   Peak frame time: 12.169 ms
+Average frame time: 3.877 ms
+   Peak frame time: 12.560 ms
 
 video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 1.355 ms
-   Peak frame time: 1.524 ms
+Average frame time: 1.359 ms
+   Peak frame time: 1.490 ms
 
 video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 1.356 ms
-   Peak frame time: 1.503 ms
+Average frame time: 1.364 ms
+   Peak frame time: 1.472 ms
 
 video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
-Average frame time: 2.555 ms
-   Peak frame time: 2.714 ms
+Average frame time: 2.551 ms
+   Peak frame time: 2.700 ms
 
 video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
-Average frame time: 2.931 ms
-   Peak frame time: 3.235 ms
+Average frame time: 3.190 ms
+   Peak frame time: 3.379 ms
 
 video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
-Average frame time: 2.557 ms
-   Peak frame time: 2.718 ms
+Average frame time: 2.545 ms
+   Peak frame time: 2.680 ms
 
 video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
-Average frame time: 2.549 ms
-   Peak frame time: 2.746 ms
+Average frame time: 2.535 ms
+   Peak frame time: 2.636 ms
 
 video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 0.609 ms
-   Peak frame time: 1.673 ms
+Average frame time: 0.632 ms
+   Peak frame time: 1.590 ms
+
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Average frame time: 0.860 ms
+   Peak frame time: 2.836 ms
+
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 0.170 ms
+   Peak frame time: 0.326 ms
+
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 0.159 ms
+   Peak frame time: 0.321 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Average frame time: 0.315 ms
+   Peak frame time: 0.503 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
+Average frame time: 0.478 ms
+   Peak frame time: 0.724 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 0.319 ms
+   Peak frame time: 0.551 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 0.309 ms
+   Peak frame time: 0.468 ms
 
 video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 3.750 ms
-   Peak frame time: 10.133 ms
+Average frame time: 3.836 ms
+   Peak frame time: 9.298 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Average frame time: 3.345 ms
+   Peak frame time: 10.926 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 1.328 ms
+   Peak frame time: 1.481 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 1.340 ms
+   Peak frame time: 1.497 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Average frame time: 2.491 ms
+   Peak frame time: 2.650 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
+Average frame time: 3.143 ms
+   Peak frame time: 3.368 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 2.479 ms
+   Peak frame time: 2.664 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 2.481 ms
+   Peak frame time: 2.667 ms
 
 video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 0.703 ms
-   Peak frame time: 1.650 ms
+Average frame time: 0.731 ms
+   Peak frame time: 1.615 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Average frame time: 1.038 ms
+   Peak frame time: 2.840 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 0.171 ms
+   Peak frame time: 0.348 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 0.158 ms
+   Peak frame time: 0.316 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Average frame time: 0.314 ms
+   Peak frame time: 0.497 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
+Average frame time: 0.414 ms
+   Peak frame time: 0.725 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 0.279 ms
+   Peak frame time: 0.492 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 0.262 ms
+   Peak frame time: 0.412 ms
 
 video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 4.301 ms
-   Peak frame time: 8.098 ms
+Average frame time: 4.350 ms
+   Peak frame time: 8.591 ms
+
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Average frame time: 3.887 ms
+   Peak frame time: 12.135 ms
+
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 1.362 ms
+   Peak frame time: 1.486 ms
+
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 1.365 ms
+   Peak frame time: 1.477 ms
+
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Average frame time: 2.552 ms
+   Peak frame time: 2.698 ms
+
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
+Average frame time: 3.199 ms
+   Peak frame time: 3.386 ms
+
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 2.546 ms
+   Peak frame time: 2.710 ms
+
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 2.537 ms
+   Peak frame time: 2.670 ms
 
 video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 0.609 ms
-   Peak frame time: 1.645 ms
+Average frame time: 0.634 ms
+   Peak frame time: 1.694 ms
+
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Average frame time: 0.859 ms
+   Peak frame time: 2.781 ms
+
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 0.169 ms
+   Peak frame time: 0.326 ms
+
+video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 0.158 ms
+   Peak frame time: 0.317 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Average frame time: 0.317 ms
+   Peak frame time: 0.565 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
+Average frame time: 0.479 ms
+   Peak frame time: 0.726 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 0.318 ms
+   Peak frame time: 0.517 ms
+
+video file:2|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 0.309 ms
+   Peak frame time: 0.554 ms
 
 video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 3.743 ms
-   Peak frame time: 7.986 ms
+Average frame time: 3.851 ms
+   Peak frame time: 8.306 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Average frame time: 3.353 ms
+   Peak frame time: 10.735 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 1.330 ms
+   Peak frame time: 1.524 ms
+
+video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 1.339 ms
+   Peak frame time: 1.520 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Average frame time: 2.492 ms
+   Peak frame time: 2.642 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
+Average frame time: 3.102 ms
+   Peak frame time: 3.348 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 2.480 ms
+   Peak frame time: 2.639 ms
+
+video file:2|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 2.480 ms
+   Peak frame time: 2.697 ms
 
 video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 0.712 ms
-   Peak frame time: 1.577 ms
+Average frame time: 0.730 ms
+   Peak frame time: 1.680 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Average frame time: 1.033 ms
+   Peak frame time: 2.995 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 0.171 ms
+   Peak frame time: 0.418 ms
+
+video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 0.158 ms
+   Peak frame time: 0.319 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Average frame time: 0.314 ms
+   Peak frame time: 0.502 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
+Average frame time: 0.475 ms
+   Peak frame time: 0.747 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 0.318 ms
+   Peak frame time: 0.538 ms
+
+video file:1|number of iterations:3|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 0.310 ms
+   Peak frame time: 0.489 ms
 
 video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 4.317 ms
-   Peak frame time: 9.299 ms
+Average frame time: 4.370 ms
+   Peak frame time: 8.752 ms
 
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 0.611 ms
-   Peak frame time: 1.851 ms
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:Knecht.csv
+Average frame time: 3.896 ms
+   Peak frame time: 11.852 ms
 
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 3.743 ms
-   Peak frame time: 8.634 ms
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 1.360 ms
+   Peak frame time: 1.501 ms
 
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 0.707 ms
-   Peak frame time: 1.599 ms
+video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 1.362 ms
+   Peak frame time: 1.590 ms
 
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 4.230 ms
-   Peak frame time: 9.208 ms
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM).csv
+Average frame time: 2.554 ms
+   Peak frame time: 2.698 ms
 
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 0.534 ms
-   Peak frame time: 1.308 ms
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_readback.csv
+Average frame time: 3.193 ms
+   Peak frame time: 3.384 ms
 
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 3.728 ms
-   Peak frame time: 8.328 ms
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KHM(3).csv
+Average frame time: 2.545 ms
+   Peak frame time: 2.652 ms
 
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 0.707 ms
-   Peak frame time: 1.518 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 4.237 ms
-   Peak frame time: 8.442 ms
-
-video file:2|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 0.613 ms
-   Peak frame time: 1.532 ms
-
-video file:2|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 3.665 ms
-   Peak frame time: 9.371 ms
-
-video file:1|number of iterations:1|texture size:64|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 0.708 ms
-   Peak frame time: 1.719 ms
-
-video file:1|number of iterations:1|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:RS(2KM)_stop.csv
-Average frame time: 4.241 ms
-   Peak frame time: 9.547 ms
+video file:1|number of iterations:3|texture size:512|number of clusters:6|randomize empty clusters:False|jitter size:1|staggered jitter:False|downscale:False|algorithm:KM.csv
+Average frame time: 2.540 ms
+   Peak frame time: 2.656 ms
 
