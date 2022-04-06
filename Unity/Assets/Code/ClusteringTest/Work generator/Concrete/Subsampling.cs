@@ -22,7 +22,7 @@ namespace WorkGenerator {
           foreach (int numClusters in new int[] { 4, 6, 8, 12, 16 }) {
             workStack.Push(
               new ClusteringTest.LaunchParameters(
-                textureSize: textureSize,
+                workingTextureSize: textureSize,
                 staggeredJitter: false,
                 jitterSize: 1,
                 video: video,

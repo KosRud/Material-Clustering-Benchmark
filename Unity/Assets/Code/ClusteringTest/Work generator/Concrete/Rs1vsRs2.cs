@@ -55,7 +55,7 @@ namespace WorkGenerator {
       ) {
         workStack.Push(
           new ClusteringTest.LaunchParameters(
-            textureSize: 64,
+            workingTextureSize: 64,
             staggeredJitter: false,
             jitterSize: 1,
             video: video,

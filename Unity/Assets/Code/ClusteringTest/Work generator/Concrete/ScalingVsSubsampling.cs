@@ -22,7 +22,7 @@ namespace WorkGenerator {
           foreach (bool doDownscale in new bool[] { true, false }) {
             workStack.Push(
               new ClusteringTest.LaunchParameters(
-                textureSize: textureSize,
+                workingTextureSize: textureSize,
                 staggeredJitter: false,
                 jitterSize: 1,
                 video: video,

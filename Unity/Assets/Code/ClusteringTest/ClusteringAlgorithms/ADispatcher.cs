@@ -18,8 +18,6 @@ namespace ClusteringAlgorithms {
     protected readonly ComputeShader computeShader;
     private readonly int kernelHandleAttributeClusters;
     private readonly int kernelUpdateClusterCenters;
-    private readonly int kernelGenerateVariance;
-    private readonly int kernelGatherVariance;
 
     protected ADispatcher(int kernelSize, ComputeShader computeShader,
       int numIterations, bool doRandomizeEmptyClusters, int numClusters) {
@@ -29,8 +27,6 @@ namespace ClusteringAlgorithms {
         this.computeShader.FindKernel("AttributeClusters");
       this.kernelUpdateClusterCenters =
         computeShader.FindKernel("UpdateClusterCenters");
-      this.kernelGenerateVariance = this.computeShader.FindKernel("GenerateVariance");
-      this.kernelGatherVariance = this.computeShader.FindKernel("GatherVariance");
       this.numClusters = numClusters;
       this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
       this.numIterations = numIterations;
@@ -38,7 +34,7 @@ namespace ClusteringAlgorithms {
 
     public abstract void RunClustering(
       Texture inputTex,
-      int textureSize,
+      int textureSize,  // ToDo put it inside clusteringRTsAndBuffers
       ClusteringRTsAndBuffers clusteringRTsAndBuffers
     );
 
@@ -48,6 +44,8 @@ namespace ClusteringAlgorithms {
       ClusteringRTsAndBuffers clusteringRTsAndBuffers,
       bool rejectOld
     ) {
+      Debug.Assert(inputTex.width == textureSize); // ToDo redundant argument
+
       clusteringRTsAndBuffers.UpdateRandomPositions(textureSize);
 
       this.computeShader.SetBool("reject_old", rejectOld);
@@ -103,49 +101,6 @@ namespace ClusteringAlgorithms {
       );
 
       clusteringRTsAndBuffers.rtArr.GenerateMips();
-    }
-
-    public float GetVariance(ClusteringRTsAndBuffers clusteringRTsAndBuffers) {
-      this.computeShader.SetTexture(
-        this.kernelGenerateVariance,
-        "tex_input",
-        clusteringRTsAndBuffers.texReference
-      );
-      this.computeShader.SetTexture(
-        this.kernelGenerateVariance,
-        "tex_variance_rw",
-        clusteringRTsAndBuffers.rtVariance
-      );
-      this.computeShader.SetBuffer(
-        this.kernelGenerateVariance,
-        "cbuf_cluster_centers",
-        clusteringRTsAndBuffers.cbufClusterCenters
-      );
-      this.computeShader.Dispatch(
-        this.kernelGenerateVariance,
-        clusteringRTsAndBuffers.texReference.width / this.kernelSize,
-        clusteringRTsAndBuffers.texReference.height / this.kernelSize,
-        1);
-
-      clusteringRTsAndBuffers.rtVariance.GenerateMips();
-
-      this.computeShader.SetTexture(
-        this.kernelGatherVariance,
-        "tex_variance_r",
-        clusteringRTsAndBuffers.rtVariance
-      );
-      this.computeShader.SetBuffer(
-        this.kernelGatherVariance,
-        "cbuf_cluster_centers",
-        clusteringRTsAndBuffers.cbufClusterCenters
-      );
-      this.computeShader.Dispatch(this.kernelGatherVariance, 1, 1, 1);
-
-      using (
-        ClusterCenters clusterCenters = clusteringRTsAndBuffers.GetClusterCenters()
-      ) {
-        return clusterCenters.variance;
-      }
     }
   }
 }

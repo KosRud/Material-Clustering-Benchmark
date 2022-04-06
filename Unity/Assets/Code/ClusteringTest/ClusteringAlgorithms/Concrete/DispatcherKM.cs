@@ -16,6 +16,7 @@ namespace ClusteringAlgorithms {
       int textureSize,
       ClusteringRTsAndBuffers clusteringRTsAndBuffers
     ) {
+      Debug.Assert(textureSize == inputTex.width); // ToDo redundant argument
       for (int i = 0; i < this.numIterations; i++) {
         this.KMiteration(
           inputTex, textureSize, clusteringRTsAndBuffers,

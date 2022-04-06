@@ -23,7 +23,7 @@ namespace WorkGenerator {
             // RS stop condition
             workStack.Push(
               new ClusteringTest.LaunchParameters(
-                textureSize: textureSize,
+                workingTextureSize: textureSize,
                 staggeredJitter: false,
                 jitterSize: 1,
                 video: video,

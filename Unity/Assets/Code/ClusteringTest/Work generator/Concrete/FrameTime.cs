@@ -28,7 +28,7 @@ namespace WorkGenerator {
               // KM
               workStack.Push(
                 new ClusteringTest.LaunchParameters(
-                  textureSize: textureSize,
+                  workingTextureSize: textureSize,
                   staggeredJitter: false,
                   jitterSize: 1,
                   video: video,
@@ -46,7 +46,7 @@ namespace WorkGenerator {
               // KHM
               workStack.Push(
                 new ClusteringTest.LaunchParameters(
-                  textureSize: textureSize,
+                  workingTextureSize: textureSize,
                   staggeredJitter: false,
                   jitterSize: 1,
                   video: video,
@@ -65,7 +65,7 @@ namespace WorkGenerator {
                 // RS(2KM)
                 workStack.Push(
                   new ClusteringTest.LaunchParameters(
-                    textureSize: textureSize,
+                    workingTextureSize: textureSize,
                     staggeredJitter: false,
                     jitterSize: 1,
                     video: video,
@@ -91,7 +91,7 @@ namespace WorkGenerator {
               // KM
               workStack.Push(
                 new ClusteringTest.LaunchParameters(
-                  textureSize: textureSize,
+                  workingTextureSize: textureSize,
                   staggeredJitter: false,
                   jitterSize: 1,
                   video: video,
@@ -109,7 +109,7 @@ namespace WorkGenerator {
               // KHM
               workStack.Push(
                 new ClusteringTest.LaunchParameters(
-                  textureSize: textureSize,
+                  workingTextureSize: textureSize,
                   staggeredJitter: false,
                   jitterSize: 1,
                   video: video,
@@ -127,7 +127,7 @@ namespace WorkGenerator {
             // Knecht
             workStack.Push(
               new ClusteringTest.LaunchParameters(
-                textureSize: textureSize,
+                workingTextureSize: textureSize,
                 staggeredJitter: false,
                 jitterSize: 1,
                 video: video,
@@ -144,7 +144,7 @@ namespace WorkGenerator {
             // RS stop condition
             workStack.Push(
               new ClusteringTest.LaunchParameters(
-                textureSize: textureSize,
+                workingTextureSize: textureSize,
                 staggeredJitter: false,
                 jitterSize: 1,
                 video: video,
