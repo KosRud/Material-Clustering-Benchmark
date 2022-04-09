@@ -15,15 +15,15 @@ namespace ClusteringAlgorithms {
       int numIterationsKM,
       ClusteringRTsAndBuffers clusteringRTsAndBuffers
     ) : base(
-      computeShader,
-      numIterations,
-      doRandomizeEmptyClusters,
-      clusteringRTsAndBuffers
-    ) {
+        computeShader,
+        numIterations,
+        doRandomizeEmptyClusters,
+        clusteringRTsAndBuffers
+      ) {
       this.iterationsKM = numIterationsKM;
       this.kernelHandleRandomSwap = this.computeShader.FindKernel("RandomSwap");
       this.kernelHandleValidateCandidates =
-      this.computeShader.FindKernel("ValidateCandidates");
+        this.computeShader.FindKernel("ValidateCandidates");
     }
 
     public abstract override void RunClustering(
@@ -49,9 +49,11 @@ namespace ClusteringAlgorithms {
 
           if (clusterCenters.centers[i].z < clusterCenters.centers[i +
               this.clusteringRTsAndBuffers.numClusters].z) {
-            clusterCenters.centers[i + this.clusteringRTsAndBuffers.numClusters] = clusterCenters.centers[i];
+            clusterCenters.centers[i + this.clusteringRTsAndBuffers.numClusters] =
+              clusterCenters.centers[i];
           } else {
-            clusterCenters.centers[i] = clusterCenters.centers[i + this.clusteringRTsAndBuffers.numClusters];
+            clusterCenters.centers[i] = clusterCenters.centers[i +
+                this.clusteringRTsAndBuffers.numClusters];
           }
         }
         this.clusteringRTsAndBuffers.SetClusterCenters(clusterCenters.centers);
@@ -90,7 +92,8 @@ namespace ClusteringAlgorithms {
         clusteringTextures.rtInput);
       this.computeShader.SetInt(
         "randomClusterCenter",
-        this.clusteringRTsAndBuffers.PickRandomCluster(this.clusteringRTsAndBuffers.numClusters)
+        this.clusteringRTsAndBuffers.PickRandomCluster(
+          this.clusteringRTsAndBuffers.numClusters)
       );
       this.computeShader.Dispatch(this.kernelHandleRandomSwap, 1, 1, 1);
     }

@@ -13,11 +13,11 @@ namespace ClusteringAlgorithms {
       bool doRandomizeEmptyClusters,
       ClusteringRTsAndBuffers clusteringRTsAndBuffers
     ) : base(
-      computeShader,
-      1,
-      doRandomizeEmptyClusters,
-      clusteringRTsAndBuffers
-    ) {
+        computeShader,
+        1,
+        doRandomizeEmptyClusters,
+        clusteringRTsAndBuffers
+      ) {
       this.frameCounter = 0;
     }
 

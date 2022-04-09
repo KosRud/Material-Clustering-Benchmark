@@ -1,6 +1,6 @@
 {
     "[csharp]": {
-        "editor.defaultFormatter": "ms-dotnettools.csharp",
+        "editor.defaultFormatter": "jkillian.custom-local-formatters",
         "editor.tabSize": 2
     },
     "customLocalFormatters.formatters": [

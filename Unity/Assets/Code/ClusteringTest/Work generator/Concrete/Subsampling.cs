@@ -13,7 +13,8 @@ namespace WorkGenerator {
     ) : base(
         kernelSize: kernelSize,
         videos: videos,
-        csHighlightRemoval: csHighlightRemoval) { }
+        csHighlightRemoval: csHighlightRemoval
+      ) { }
 
     public override void GenerateWork(
       Stack<ClusteringTest.LaunchParameters> workStack

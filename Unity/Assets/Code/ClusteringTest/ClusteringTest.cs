@@ -377,7 +377,8 @@ public class ClusteringTest : MonoBehaviour {
         // measured section
         {
           for (int i = 0; i < numRepetitions; i++) {
-            this.currentWorkParameters.dispatcher.clusteringRTsAndBuffers.SetClusterCenters(clusterCenters.centers);
+            this.currentWorkParameters.dispatcher.clusteringRTsAndBuffers.SetClusterCenters(
+              clusterCenters.centers);
             this.RunDispatcher();
           }
 
@@ -444,13 +445,13 @@ public class ClusteringTest : MonoBehaviour {
     this.csHighlightRemoval.SetTexture(
       this.kernelShowResult, "tex_arr_clusters_r",
       this.currentWorkParameters.dispatcher
-        .clusteringRTsAndBuffers.texturesWorkRes.rtInput
+      .clusteringRTsAndBuffers.texturesWorkRes.rtInput
     );
     this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_output",
       this.rtResult);
     this.csHighlightRemoval.SetBuffer(this.kernelShowResult, "cbuf_cluster_centers",
       this.currentWorkParameters.dispatcher
-        .clusteringRTsAndBuffers.cbufClusterCenters);
+      .clusteringRTsAndBuffers.cbufClusterCenters);
     this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_input",
       this.rtInput);
     this.csHighlightRemoval.Dispatch(

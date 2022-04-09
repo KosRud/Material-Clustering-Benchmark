@@ -33,7 +33,8 @@ namespace ClusteringAlgorithms {
     ) {
       this.computeShader.SetBool("do_random_sample_empty_clusters",
         this.doRandomizeEmptyClusters);
-      this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
+      this.computeShader.SetInt("num_clusters",
+        this.clusteringRTsAndBuffers.numClusters);
 
       this.AttributeClusters(
         textures,
