@@ -7,7 +7,6 @@
 #pragma kernel SubSample
 
 #define threshold 0.03
-#define final_threshold 0.001
 #define max_num_clusters 16
 #define invalid_variance 100 // impossibly large distance to indicate empty cluster
 
@@ -73,7 +72,14 @@ float2 project(float3 col)
 			col.b
 		)
 	);
-	col /= dot(1, col);
+    /*
+        Add a small bias to prevent division by zero
+
+        using a threshold on a very low-res image
+        can create a situation, where all pixels are ignored
+        which means we can not get variance for this frame
+    */
+	col /= dot(1, col + 0.00001);
 	return col.rg;
 }
 
@@ -170,7 +176,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 	// difference calculated on 2 coordinates within [0,1] range
 	// theoretical maximum distance is sqrt(2)
 	
-	uint clusterID;
+	uint clusterID = 0;
 
 	float3 col = tex_input[id.xy].rgb;
     float2 projCol = project(col);

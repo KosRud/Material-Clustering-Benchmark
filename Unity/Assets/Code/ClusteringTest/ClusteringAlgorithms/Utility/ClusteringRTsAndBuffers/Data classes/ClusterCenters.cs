@@ -51,7 +51,28 @@ namespace ClusteringAlgorithms {
 
       centersBufferData.CopyTo(obj.centers, 0);
 
-      foreach (Vector4 center in centersBufferData) {
+      for (int i = 0; i < numClusters; i++) {
+        Vector4 center = centersBufferData[i];
+
+        if (
+          float.IsNaN(center.x) ||
+          float.IsNaN(center.y)
+        ) {
+          throw new System.Exception("NaN in shader");
+        }
+      }
+
+      /*
+        return first valid variance
+        they are all equal
+
+        each cluster center contains overall variance
+        not just for this cluster center
+      */
+
+      for (int i = 0; i < numClusters; i++) {
+        Vector4 center = centersBufferData[i];
+
         if (center.z < invalidVariance) {
           obj.variance = center.z;
           return obj;
