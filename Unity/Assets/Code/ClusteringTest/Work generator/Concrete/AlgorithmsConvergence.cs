@@ -33,7 +33,6 @@ namespace WorkGenerator {
         }
         this.AddStopCondtion(
           workStack,
-          this.kernelSize,
           video,
           this.csHighlightRemoval
         );
@@ -117,7 +116,6 @@ namespace WorkGenerator {
 
     private void AddStopCondtion(
       Stack<ClusteringTest.LaunchParameters> workStack,
-      int kernelSize,
       UnityEngine.Video.VideoClip video,
       ComputeShader csHighlightRemoval
     ) {

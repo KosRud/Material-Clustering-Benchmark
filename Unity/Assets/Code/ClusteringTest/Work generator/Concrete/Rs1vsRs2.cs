@@ -28,7 +28,6 @@ namespace WorkGenerator {
           ) {
             this.AddRs(
               workStack: workStack,
-              kernelSize: this.kernelSize,
               video: video,
               numIterations: numIterations,
               csHighlightRemoval: this.csHighlightRemoval,
@@ -41,7 +40,6 @@ namespace WorkGenerator {
 
     private void AddRs(
       Stack<ClusteringTest.LaunchParameters> workStack,
-      int kernelSize,
       UnityEngine.Video.VideoClip video,
       int numIterations,
       ComputeShader csHighlightRemoval,
