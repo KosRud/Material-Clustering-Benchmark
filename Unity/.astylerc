@@ -7,3 +7,4 @@ indent=spaces=2
 --pad-comma
 --add-braces
 --max-code-length=80
+--indent-continuation

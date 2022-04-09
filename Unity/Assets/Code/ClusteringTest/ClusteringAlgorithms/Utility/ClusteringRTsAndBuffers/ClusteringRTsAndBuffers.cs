@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ClusteringAlgorithms {
 
-  public class ClusteringRTsAndBuffers {
+  public class ClusteringRTsAndBuffers : System.IDisposable {
     public const int max_num_clusters = 32;
     public const bool randomInit = false;
 
@@ -210,7 +210,7 @@ namespace ClusteringAlgorithms {
       );
     }
 
-    public void Release() {
+    public void Dispose() {
       this.cbufClusterCenters.Release();
       this.cbufRandomPositions.Release();
       this.texturesFullRes.Dispose();

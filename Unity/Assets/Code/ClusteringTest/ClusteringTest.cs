@@ -24,8 +24,6 @@ public class ClusteringTest : MonoBehaviour {
   private readonly long? overrideEndFrame = null;
 
   // textures and buffers
-  private RenderTexture rtInput;
-  private RenderTexture rtInputFullRes;
   private RenderTexture rtResult;
 
   private struct Position {
@@ -71,15 +69,17 @@ public class ClusteringTest : MonoBehaviour {
     public string GetFileName() {
       string videoName = this.video.name;
       int numIterations = this.dispatcher.numIterations;
-      int textureSize = this.workingTextureSize;
+      int workingTextureSize =
+        this.dispatcher.clusteringRTsAndBuffers.texturesWorkRes.size;
       int numClusters = this.dispatcher.clusteringRTsAndBuffers.numClusters;
-      int jitterSize = this.jitterSize;
+      int jitterSize =
+        this.dispatcher.clusteringRTsAndBuffers.jitterSize;
       bool staggeredJitter = this.staggeredJitter;
       bool doDownscale = this.doDownscale;
       string algorithm = this.dispatcher.descriptionString;
       bool doRandomizeEmptyClusters = this.dispatcher.doRandomizeEmptyClusters;
 
-      return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{textureSize}|number of clusters:{numClusters}|randomize empty clusters:{doRandomizeEmptyClusters}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}|algorithm:{algorithm}.csv";
+      return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{workingTextureSize}|number of clusters:{numClusters}|randomize empty clusters:{doRandomizeEmptyClusters}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}|algorithm:{algorithm}.csv";
     }
 
     public LaunchParameters ThrowIfExists() {
@@ -95,14 +95,10 @@ public class ClusteringTest : MonoBehaviour {
       return this;
     }
 
-    public readonly int workingTextureSize;
     public readonly bool staggeredJitter;
-    public readonly int jitterSize;
     public readonly UnityEngine.Video.VideoClip video;
     public readonly bool doDownscale;
     public readonly ADispatcher dispatcher;
-
-    private LaunchParameters() { }
 
     public LaunchParameters(
       bool staggeredJitter,
@@ -128,43 +124,47 @@ public class ClusteringTest : MonoBehaviour {
   }
 
   private void SetTextureSize() {
-    Debug.Assert(
-      (
-        this.currentWorkParameters.workingTextureSize &
-        (this.currentWorkParameters.workingTextureSize
-          - 1)
-      ) == 0 && this.currentWorkParameters.workingTextureSize > 0
-    ); // positive power of 2
-    Debug.Assert(this.currentWorkParameters.workingTextureSize <= fullTextureSize);
+    int workingTextureSize =
+      this.currentWorkParameters.dispatcher
+      .clusteringRTsAndBuffers.texturesWorkRes.size;
 
-    this.csHighlightRemoval.SetInt("mip_level",
-      this.MipLevel(this.currentWorkParameters.workingTextureSize));
-    this.csHighlightRemoval.SetInt("ref_mip_level",
-      this.MipLevel(fullTextureSize));
-    this.csHighlightRemoval.SetInt("texture_size",
-      this.currentWorkParameters.workingTextureSize);
+    int fullTextureSize =
+      this.currentWorkParameters.dispatcher
+      .clusteringRTsAndBuffers.texturesFullRes.size;
+
+    Debug.Assert(
+      // positive power of 2
+      (
+        workingTextureSize &
+        (workingTextureSize - 1)
+      ) == 0 && workingTextureSize > 0
+    );
+    Debug.Assert(workingTextureSize <= fullTextureSize);
+
+    this.csHighlightRemoval.SetInt(
+      "mip_level",
+      this.MipLevel(workingTextureSize)
+    );
+
+    this.csHighlightRemoval.SetInt(
+      "ref_mip_level",
+      this.MipLevel(fullTextureSize)
+    );
+
+    this.csHighlightRemoval.SetInt(
+      "texture_size",
+      workingTextureSize
+    );
   }
 
   private void InitRTs() {
-    this.rtInputFullRes = new RenderTexture(
-      fullTextureSize,
-      fullTextureSize,
-      0,
-      RenderTextureFormat.ARGBFloat
-    );
+    int workingTextureSize =
+      this.currentWorkParameters.dispatcher
+      .clusteringRTsAndBuffers.texturesWorkRes.size;
 
     this.rtResult = new RenderTexture(
-      this.currentWorkParameters.workingTextureSize,
-      this.currentWorkParameters.workingTextureSize,
-      0,
-      RenderTextureFormat.ARGBFloat
-    ) {
-      enableRandomWrite = true
-    };
-
-    this.rtInput = new RenderTexture(
-      this.currentWorkParameters.workingTextureSize,
-      this.currentWorkParameters.workingTextureSize,
+      workingTextureSize,
+      workingTextureSize,
       0,
       RenderTextureFormat.ARGBFloat
     ) {
@@ -435,10 +435,7 @@ public class ClusteringTest : MonoBehaviour {
 
   private void OnDisable() {
     this.rtResult.Release();
-    this.rtInput.Release();
-    this.rtInputFullRes.Release();
-
-    this.currentWorkParameters.dispatcher.clusteringRTsAndBuffers.Release();
+    this.currentWorkParameters.dispatcher.clusteringRTsAndBuffers.Dispose();
   }
 
   private void RenderResult(RenderTexture target) {
@@ -447,13 +444,25 @@ public class ClusteringTest : MonoBehaviour {
       this.currentWorkParameters.dispatcher
       .clusteringRTsAndBuffers.texturesWorkRes.rtInput
     );
-    this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_output",
-      this.rtResult);
-    this.csHighlightRemoval.SetBuffer(this.kernelShowResult, "cbuf_cluster_centers",
+
+    this.csHighlightRemoval.SetTexture(
+      this.kernelShowResult, "tex_output",
+      this.rtResult
+    );
+
+    this.csHighlightRemoval.SetBuffer(
+      this.kernelShowResult, "cbuf_cluster_centers",
       this.currentWorkParameters.dispatcher
-      .clusteringRTsAndBuffers.cbufClusterCenters);
-    this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_input",
-      this.rtInput);
+      .clusteringRTsAndBuffers.cbufClusterCenters
+    );
+
+    this.csHighlightRemoval.SetTexture(
+      this.kernelShowResult,
+      "tex_input",
+      this.currentWorkParameters.dispatcher
+      .clusteringRTsAndBuffers.texturesWorkRes.rtArr
+    );
+
     this.csHighlightRemoval.Dispatch(
       this.kernelShowResult,
       this.rtResult.width / kernelSize,
