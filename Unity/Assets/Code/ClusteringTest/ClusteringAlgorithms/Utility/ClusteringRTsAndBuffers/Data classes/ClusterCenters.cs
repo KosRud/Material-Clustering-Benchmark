@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace ClusteringAlgorithms {
 
   public class ClusterCenters : System.IDisposable {
-    public const int invalidVariance =
-      10; // 2-dimensional values in range [0, 1] => 10 is impossibly large
+    // 2-dimensional values in range [0, 1] => 10 is impossibly large
+    public const int invalidVariance = 10;
 
     public Vector4[] centers;
     public float variance;
@@ -60,6 +60,13 @@ namespace ClusteringAlgorithms {
         ) {
           throw new System.Exception("NaN in shader");
         }
+
+        if (
+          center.x < 0 || center.x > 1.0 ||
+          center.y < 0 || center.y > 1.0
+        ) {
+          throw new System.Exception($"invalid cluster center record: {center}");
+        }
       }
 
       /*
@@ -77,6 +84,12 @@ namespace ClusteringAlgorithms {
           obj.variance = center.z;
           return obj;
         }
+      }
+
+      for (int i = 0; i < numClusters; i++) {
+        Vector4 center = centersBufferData[i];
+
+        Debug.Log(center);
       }
 
       throw new InvalidClustersException("all clusters are invalid");

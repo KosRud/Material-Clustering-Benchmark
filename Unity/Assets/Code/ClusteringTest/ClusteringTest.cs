@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class ClusteringTest : MonoBehaviour {
   public const int maxNumClusters = 16; // ! do not change
-  public const int kernelSize = 16; // ! must match shader
+  public const int kernelSize = 8; // ! must match shader
   public const int fullTextureSize = 512;
 
   // configuration
