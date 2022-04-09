@@ -22,17 +22,19 @@ namespace WorkGenerator {
           foreach (bool doDownscale in new bool[] { true, false }) {
             workStack.Push(
               new ClusteringTest.LaunchParameters(
-                workingTextureSize: textureSize,
                 staggeredJitter: false,
-                jitterSize: 1,
                 video: video,
                 doDownscale: doDownscale,
                 dispatcher: new DispatcherKM(
-                  kernelSize: this.kernelSize,
                   computeShader: this.csHighlightRemoval,
                   numIterations: 3,
                   doRandomizeEmptyClusters: false,
-                  numClusters: 6
+                  clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                    numClusters: 6,
+                    workingSize: textureSize,
+                    fullSize: ClusteringTest.fullTextureSize,
+                    jitterSize: 1
+                  )
                 )
               ).ThrowIfExists()
             );

@@ -24,17 +24,19 @@ namespace WorkGenerator {
           ) {
             workStack.Push(
               new ClusteringTest.LaunchParameters(
-                workingTextureSize: textureSize,
                 staggeredJitter: false,
-                jitterSize: 1,
                 video: video,
                 doDownscale: false,
                 dispatcher: new DispatcherKM(
-                  kernelSize: this.kernelSize,
                   computeShader: this.csHighlightRemoval,
                   numIterations: 3,
                   doRandomizeEmptyClusters: doRandomizeEmptyClusters,
-                  numClusters: 6
+                  clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                    numClusters: 6,
+                    workingSize: textureSize,
+                    fullSize: ClusteringTest.fullTextureSize,
+                    jitterSize: 1
+                  )
                 )
               ).ThrowIfExists()
             );

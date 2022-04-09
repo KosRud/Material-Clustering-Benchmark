@@ -4,24 +4,22 @@ namespace ClusteringAlgorithms {
 
   public class DispatcherKM : ADispatcher {
     public DispatcherKM(
-      int kernelSize, ComputeShader computeShader, int numIterations,
-      bool doRandomizeEmptyClusters, int numClusters
-    ) : base(kernelSize, computeShader, numIterations, doRandomizeEmptyClusters,
-        numClusters) { }
+      ComputeShader computeShader,
+      int numIterations,
+      bool doRandomizeEmptyClusters,
+      ClusteringRTsAndBuffers clusteringRTsAndBuffers
+    ) : base(
+        computeShader,
+        numIterations,
+        doRandomizeEmptyClusters,
+        clusteringRTsAndBuffers
+      ) { }
 
     public override string descriptionString => "KM";
 
-    public override void RunClustering(
-      Texture inputTex,
-      int textureSize,
-      ClusteringRTsAndBuffers clusteringRTsAndBuffers
-    ) {
-      Debug.Assert(textureSize == inputTex.width); // ToDo redundant argument
+    public override void RunClustering(ClusteringTextures clusteringTextures) {
       for (int i = 0; i < this.numIterations; i++) {
-        this.KMiteration(
-          inputTex, textureSize, clusteringRTsAndBuffers,
-          rejectOld: false
-        );
+        this.KMiteration(clusteringTextures, rejectOld: false);
       }
     }
 
@@ -30,19 +28,22 @@ namespace ClusteringAlgorithms {
     /// In order to use the result, one final cluster attribution is required!
     /// </summary>
     protected void KMiteration(
-      Texture inputTex,
-      int textureSize,
-      ClusteringRTsAndBuffers clusteringRTsAndBuffers,
+      ClusteringTextures textures,
       bool rejectOld
     ) {
       this.computeShader.SetBool("do_random_sample_empty_clusters",
         this.doRandomizeEmptyClusters);
-      this.computeShader.SetInt("num_clusters", this.numClusters);
+      this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
 
-      this.AttributeClusters(inputTex, clusteringRTsAndBuffers, final: false,
-        khm: false);
-      this.UpdateClusterCenters(inputTex, textureSize, clusteringRTsAndBuffers,
-        rejectOld);
+      this.AttributeClusters(
+        textures,
+        final: false,
+        khm: false
+      );
+      this.UpdateClusterCenters(
+        textures,
+        rejectOld
+      );
     }
   }
 }

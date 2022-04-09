@@ -3,22 +3,21 @@ using UnityEngine;
 namespace ClusteringAlgorithms {
 
   public class DispatcherDummy : ADispatcher {
-    public DispatcherDummy(ComputeShader computeShader, int numClusters) : base(
-        kernelSize: 4,
+    public DispatcherDummy(
+      ComputeShader computeShader,
+      ClusteringRTsAndBuffers clusteringRTsAndBuffers
+    ) : base(
         computeShader: computeShader,
         numIterations: 1,
         doRandomizeEmptyClusters: false,
-        numClusters: numClusters) {
+        clusteringRTsAndBuffers: clusteringRTsAndBuffers
+      ) {
 
     }
 
     public override string descriptionString => "Null";
 
-    public override void RunClustering(
-      Texture inputTex,
-      int textureSize,
-      ClusteringRTsAndBuffers clusteringRTsAndBuffers
-    ) {
+    public override void RunClustering(ClusteringTextures clusteringTextures) {
       // do nothing
     }
   }

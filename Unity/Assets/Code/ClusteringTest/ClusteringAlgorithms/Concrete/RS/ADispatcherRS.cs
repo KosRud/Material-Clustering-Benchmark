@@ -9,50 +9,52 @@ namespace ClusteringAlgorithms {
     protected readonly int kernelHandleValidateCandidates;
 
     public ADispatcherRS(
-      int kernelSize, ComputeShader computeShader, int numIterations,
-      bool doRandomizeEmptyClusters, int numClusters, int numIterationsKM
-    ) : base(kernelSize, computeShader, numIterations, doRandomizeEmptyClusters,
-        numClusters) {
+      ComputeShader computeShader,
+      int numIterations,
+      bool doRandomizeEmptyClusters,
+      int numIterationsKM,
+      ClusteringRTsAndBuffers clusteringRTsAndBuffers
+    ) : base(
+      computeShader,
+      numIterations,
+      doRandomizeEmptyClusters,
+      clusteringRTsAndBuffers
+    ) {
       this.iterationsKM = numIterationsKM;
       this.kernelHandleRandomSwap = this.computeShader.FindKernel("RandomSwap");
       this.kernelHandleValidateCandidates =
-        this.computeShader.FindKernel("ValidateCandidates");
+      this.computeShader.FindKernel("ValidateCandidates");
     }
 
     public abstract override void RunClustering(
-      Texture inputTex,
-      int textureSize,
-      ClusteringRTsAndBuffers clusteringRTsAndBuffers
+      ClusteringTextures clusteringTextures
     );
 
-
-    protected float ValidateCandidatesReadback(
-      ClusteringRTsAndBuffers clusteringRTsAndBuffers
-    ) {
+    protected float ValidateCandidatesReadback() {
       float varianceChange = ClusterCenters.invalidVariance;
 
       using (
-        ClusterCenters clusterCenters = clusteringRTsAndBuffers.GetClusterCenters()
+        ClusterCenters clusterCenters = this.clusteringRTsAndBuffers.GetClusterCenters()
       ) {
-        for (int i = 0; i < this.numClusters; i++) {
+        for (int i = 0; i < this.clusteringRTsAndBuffers.numClusters; i++) {
           if (
             clusterCenters.centers[i].z < ClusterCenters.invalidVariance &&
-            clusterCenters.centers[i + this.numClusters].z <
+            clusterCenters.centers[i + this.clusteringRTsAndBuffers.numClusters].z <
             ClusterCenters.invalidVariance
           ) {
             varianceChange =
               clusterCenters.centers[i].z -
-              clusterCenters.centers[i + this.numClusters].z;
+              clusterCenters.centers[i + this.clusteringRTsAndBuffers.numClusters].z;
           }
 
           if (clusterCenters.centers[i].z < clusterCenters.centers[i +
-              this.numClusters].z) {
-            clusterCenters.centers[i + this.numClusters] = clusterCenters.centers[i];
+              this.clusteringRTsAndBuffers.numClusters].z) {
+            clusterCenters.centers[i + this.clusteringRTsAndBuffers.numClusters] = clusterCenters.centers[i];
           } else {
-            clusterCenters.centers[i] = clusterCenters.centers[i + this.numClusters];
+            clusterCenters.centers[i] = clusterCenters.centers[i + this.clusteringRTsAndBuffers.numClusters];
           }
         }
-        clusteringRTsAndBuffers.SetClusterCenters(clusterCenters.centers);
+        this.clusteringRTsAndBuffers.SetClusterCenters(clusterCenters.centers);
       }
 
       if (varianceChange == ClusterCenters.invalidVariance) {
@@ -62,36 +64,33 @@ namespace ClusteringAlgorithms {
       return varianceChange;
     }
 
-    protected void ValidateCandidatesGPU(
-      ClusteringRTsAndBuffers clusteringRTsAndBuffers
-    ) {
+    protected void ValidateCandidatesGPU() {
       this.computeShader.SetBuffer(
         this.kernelHandleValidateCandidates,
         "cbuf_cluster_centers",
-        clusteringRTsAndBuffers.cbufClusterCenters
+        this.clusteringRTsAndBuffers.cbufClusterCenters
       );
       this.computeShader.Dispatch(this.kernelHandleValidateCandidates, 1, 1, 1);
     }
 
-    protected void RandomSwap(Texture inputTex, int textureSize,
-      ClusteringRTsAndBuffers clusteringRTsAndBuffers) {
-      clusteringRTsAndBuffers.UpdateRandomPositions(textureSize);
+    protected void RandomSwap(ClusteringTextures clusteringTextures) {
+      this.clusteringRTsAndBuffers.UpdateRandomPositions();
 
       this.computeShader.SetBuffer(
         this.kernelHandleRandomSwap,
         "cbuf_cluster_centers",
-        clusteringRTsAndBuffers.cbufClusterCenters
+        this.clusteringRTsAndBuffers.cbufClusterCenters
       );
       this.computeShader.SetBuffer(
         this.kernelHandleRandomSwap,
         "cbuf_random_positions",
-        clusteringRTsAndBuffers.cbufRandomPositions
+        this.clusteringRTsAndBuffers.cbufRandomPositions
       );
       this.computeShader.SetTexture(this.kernelHandleRandomSwap, "tex_input",
-        inputTex);
+        clusteringTextures.rtInput);
       this.computeShader.SetInt(
         "randomClusterCenter",
-        clusteringRTsAndBuffers.PickRandomCluster(this.numClusters)
+        this.clusteringRTsAndBuffers.PickRandomCluster(this.clusteringRTsAndBuffers.numClusters)
       );
       this.computeShader.Dispatch(this.kernelHandleRandomSwap, 1, 1, 1);
     }

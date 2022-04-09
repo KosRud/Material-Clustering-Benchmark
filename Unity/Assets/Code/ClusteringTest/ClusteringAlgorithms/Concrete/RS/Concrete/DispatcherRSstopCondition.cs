@@ -4,43 +4,39 @@ namespace ClusteringAlgorithms {
 
   public class DispatcherRSstopCondition : ADispatcherRS {
     public DispatcherRSstopCondition(
-      int kernelSize, ComputeShader computeShader,
-      bool doRandomizeEmptyClusters, int numClusters,
-      int numIterationsKM
+      ComputeShader computeShader,
+      bool doRandomizeEmptyClusters,
+      int numIterationsKM,
+      ClusteringRTsAndBuffers clusteringRTsAndBuffers
     ) : base(
-        kernelSize: kernelSize,
         computeShader: computeShader,
         numIterations: 1,
         doRandomizeEmptyClusters: doRandomizeEmptyClusters,
-        numClusters: numClusters,
-        numIterationsKM: numIterationsKM
+        numIterationsKM: numIterationsKM,
+        clusteringRTsAndBuffers: clusteringRTsAndBuffers
       ) { }
 
     public override string descriptionString => $"RS({this.iterationsKM}KM)_stop";
 
-    public override void RunClustering(
-      Texture inputTex,
-      int textureSize,
-      ClusteringRTsAndBuffers clusteringRTsAndBuffers
-    ) {
+    public override void RunClustering(ClusteringTextures clusteringTextures) {
       this.KMiteration(
-        inputTex, textureSize, clusteringRTsAndBuffers,
+        clusteringTextures,
         rejectOld: true
       );
 
       int failedSwaps = 0;
 
       for (int i = 1; ; i += this.iterationsKM) {
-        this.RandomSwap(inputTex, textureSize, clusteringRTsAndBuffers);
+        this.RandomSwap(clusteringTextures);
 
         for (int k = 0; k < this.iterationsKM; k++) {
           this.KMiteration(
-            inputTex, textureSize, clusteringRTsAndBuffers,
+            clusteringTextures,
             rejectOld: false
           );
         }
 
-        float varianceChange = this.ValidateCandidatesReadback(clusteringRTsAndBuffers);
+        float varianceChange = this.ValidateCandidatesReadback();
 
         if (varianceChange > 0) {
           failedSwaps++;

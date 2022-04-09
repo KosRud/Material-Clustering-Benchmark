@@ -55,19 +55,21 @@ namespace WorkGenerator {
       ) {
         workStack.Push(
           new ClusteringTest.LaunchParameters(
-            workingTextureSize: 64,
             staggeredJitter: false,
-            jitterSize: 1,
             video: video,
             doDownscale: false,
             dispatcher: new DispatcherRSfixed(
-              kernelSize: kernelSize,
               computeShader: csHighlightRemoval,
               numIterations: numIterations,
               doRandomizeEmptyClusters: false,
-              numClusters: 6,
               numIterationsKM: numIterationsKM,
-              doReadback: false
+              doReadback: false,
+              clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                numClusters: 6,
+                workingSize: 64,
+                fullSize: ClusteringTest.fullTextureSize,
+                jitterSize: 1
+              )
             )
           ).ThrowIfExists()
         );

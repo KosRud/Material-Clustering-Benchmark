@@ -25,20 +25,17 @@ public class ClusteringTest : MonoBehaviour {
 
   // textures and buffers
   private RenderTexture rtInput;
-  private RenderTexture rtInputFullSize;
+  private RenderTexture rtInputFullRes;
   private RenderTexture rtResult;
-  private ClusteringRTsAndBuffers clusteringRTsAndBuffers;
 
   private struct Position {
     public int x;
     public int y;
   }
-  private ComputeBuffer cbufRandomPositions;
 
   // shader kernels
   //private int kernelAttributeClusters;
   private int kernelShowResult;
-  private int kernelSubsample;
 
   // inner workings
   private float peakFrameTime;
@@ -46,8 +43,6 @@ public class ClusteringTest : MonoBehaviour {
   private long framesMeasured;
   private bool firstFrameProcessed;
   private System.Diagnostics.Stopwatch stopwatch;
-
-  private DispatcherKM kmDispatcherFullSize;
 
   private enum Algorithm {
     KM,
@@ -63,8 +58,6 @@ public class ClusteringTest : MonoBehaviour {
     new Stack<LaunchParameters>();
 
   private bool awaitingRestart = false;
-  private int[][] offsets;
-  private readonly int[] scanlinePixelOffset = new int[2];
   private readonly List<float> frameLogVariance = new List<float>();
   private LaunchParameters currentWorkParameters;
 
@@ -79,7 +72,7 @@ public class ClusteringTest : MonoBehaviour {
       string videoName = this.video.name;
       int numIterations = this.dispatcher.numIterations;
       int textureSize = this.workingTextureSize;
-      int numClusters = this.dispatcher.numClusters;
+      int numClusters = this.dispatcher.clusteringRTsAndBuffers.numClusters;
       int jitterSize = this.jitterSize;
       bool staggeredJitter = this.staggeredJitter;
       bool doDownscale = this.doDownscale;
@@ -112,16 +105,12 @@ public class ClusteringTest : MonoBehaviour {
     private LaunchParameters() { }
 
     public LaunchParameters(
-      int workingTextureSize,
       bool staggeredJitter,
-      int jitterSize,
       UnityEngine.Video.VideoClip video,
       bool doDownscale,
       ADispatcher dispatcher
     ) {
-      this.workingTextureSize = workingTextureSize;
       this.staggeredJitter = staggeredJitter;
-      this.jitterSize = jitterSize;
       this.video = video;
       this.doDownscale = doDownscale;
       this.dispatcher = dispatcher;
@@ -157,7 +146,7 @@ public class ClusteringTest : MonoBehaviour {
   }
 
   private void InitRTs() {
-    this.rtInputFullSize = new RenderTexture(
+    this.rtInputFullRes = new RenderTexture(
       fullTextureSize,
       fullTextureSize,
       0,
@@ -183,16 +172,8 @@ public class ClusteringTest : MonoBehaviour {
     };
   }
 
-  private void InitCbufs() {
-    this.cbufRandomPositions = new ComputeBuffer(
-      this.currentWorkParameters.dispatcher.numClusters,
-      sizeof(int) * 4
-    );
-  }
-
   private void FindKernels() {
     this.kernelShowResult = this.csHighlightRemoval.FindKernel("ShowResult");
-    this.kernelSubsample = this.csHighlightRemoval.FindKernel("SubSample");
   }
 
   private void Awake() {
@@ -215,10 +196,6 @@ public class ClusteringTest : MonoBehaviour {
 
     this.stopwatch = new System.Diagnostics.Stopwatch();
     this.FindKernels();
-  }
-
-  private void InitJitterOffsets() {
-    this.offsets = JitterPattern.Get(this.currentWorkParameters.jitterSize);
   }
 
   private long GetStartFrame() {
@@ -245,29 +222,14 @@ public class ClusteringTest : MonoBehaviour {
     this.peakFrameTime = 0;
     this.firstFrameProcessed = false;
 
-    this.InitJitterOffsets();
     this.SetTextureSize();
     this.InitRTs();
-    this.InitCbufs();
-    this.clusteringRTsAndBuffers = new ClusteringRTsAndBuffers(
-      this.currentWorkParameters.dispatcher.numClusters,
-      this.currentWorkParameters.workingTextureSize,
-      this.csHighlightRemoval
-    );
 
     this.videoPlayer = this.GetComponent<UnityEngine.Video.VideoPlayer>();
     this.videoPlayer.playbackSpeed = 0;
     this.videoPlayer.clip = this.currentWorkParameters.video;
     this.videoPlayer.Play();
     this.videoPlayer.frame = this.GetStartFrame();
-
-    this.kmDispatcherFullSize = new DispatcherKM(
-      kernelSize: kernelSize,
-      computeShader: this.csHighlightRemoval,
-      numIterations: 1,
-      doRandomizeEmptyClusters: false,
-      numClusters: this.currentWorkParameters.dispatcher.numClusters
-    );
   }
 
   // Update is called once per frame
@@ -372,38 +334,14 @@ public class ClusteringTest : MonoBehaviour {
       return;
     }
 
-    Graphics.Blit(this.videoPlayer.texture, this.rtInputFullSize);
-
-    this.csHighlightRemoval.SetInt("sub_sample_multiplier",
-      fullTextureSize / this.currentWorkParameters.workingTextureSize);
-    if (this.currentWorkParameters.staggeredJitter) {
-      this.csHighlightRemoval.SetInts(
-        "sub_sample_offset",
-        this.offsets[
-      Time.frameCount % this.offsets.Length
-      ]
-      );
-    } else {
-      this.scanlinePixelOffset[0] = Time.frameCount %
-        this.currentWorkParameters.jitterSize;
-      this.scanlinePixelOffset[1] = (Time.frameCount / this.offsets.Length) %
-        this.currentWorkParameters.jitterSize;
-      this.csHighlightRemoval.SetInts(
-        "sub_sample_offset",
-        this.scanlinePixelOffset
-      );
-    }
-    this.csHighlightRemoval.SetTexture(this.kernelSubsample, "tex_input",
-      this.rtInputFullSize);
-    this.csHighlightRemoval.SetTexture(this.kernelSubsample, "tex_output",
-      this.rtInput);
-    this.csHighlightRemoval.SetBool("downscale",
-      this.currentWorkParameters.doDownscale);
-    this.csHighlightRemoval.Dispatch(
-      this.kernelSubsample,
-      this.currentWorkParameters.workingTextureSize / kernelSize,
-      this.currentWorkParameters.workingTextureSize / kernelSize,
-      1
+    Graphics.Blit(
+      this.videoPlayer.texture,
+      this.currentWorkParameters.dispatcher.clusteringRTsAndBuffers.texturesFullRes.rtInput
+    );
+    this.currentWorkParameters.dispatcher.clusteringRTsAndBuffers.Downsample(
+      this.csHighlightRemoval,
+      staggeredJitter: this.currentWorkParameters.staggeredJitter,
+      doDownscale: this.currentWorkParameters.doDownscale
     );
 
     if (logType == LogType.Variance || this.firstFrameProcessed == false) {
@@ -428,7 +366,9 @@ public class ClusteringTest : MonoBehaviour {
       */
 
       using (
-        ClusterCenters clusterCenters = this.clusteringRTsAndBuffers.GetClusterCenters()
+        ClusterCenters clusterCenters =
+          this.currentWorkParameters.dispatcher
+          .clusteringRTsAndBuffers.GetClusterCenters()
       ) {
         const int numRepetitions = 10;
 
@@ -437,12 +377,14 @@ public class ClusteringTest : MonoBehaviour {
         // measured section
         {
           for (int i = 0; i < numRepetitions; i++) {
-            this.clusteringRTsAndBuffers.SetClusterCenters(clusterCenters.centers);
+            this.currentWorkParameters.dispatcher.clusteringRTsAndBuffers.SetClusterCenters(clusterCenters.centers);
             this.RunDispatcher();
           }
 
           using (
-            ClusterCenters temp = this.clusteringRTsAndBuffers.GetClusterCenters()
+            ClusterCenters temp =
+              this.currentWorkParameters.dispatcher
+              .clusteringRTsAndBuffers.GetClusterCenters()
           ) {
             temp.centers[0] = temp.centers[1];
             // force current thread to wait until GPU finishes computations
@@ -469,24 +411,22 @@ public class ClusteringTest : MonoBehaviour {
   }
 
   private void MakeVarianceLogEntry() {
-    this.frameLogVariance.Add(this.clusteringRTsAndBuffers.GetVariance(
-        this.rtInputFullSize));
+    this.frameLogVariance.Add(
+      this.currentWorkParameters.dispatcher.GetVariance()
+    );
   }
 
   private void RunDispatcher() {
     this.currentWorkParameters.dispatcher.RunClustering(
-      this.rtInput,
-      this.currentWorkParameters.workingTextureSize,
-      this.clusteringRTsAndBuffers
+      this.currentWorkParameters.dispatcher.clusteringRTsAndBuffers.texturesWorkRes
     );
 
     /*
         one final attribution is required,
         because RunClustering finishes with updating cluster centers
     */
-    this.kmDispatcherFullSize.AttributeClusters(
-      this.rtInput,
-      this.clusteringRTsAndBuffers,
+    this.currentWorkParameters.dispatcher.AttributeClusters(
+      this.currentWorkParameters.dispatcher.clusteringRTsAndBuffers.texturesWorkRes,
       final: true,
       khm: false
     );
@@ -495,21 +435,22 @@ public class ClusteringTest : MonoBehaviour {
   private void OnDisable() {
     this.rtResult.Release();
     this.rtInput.Release();
-    this.rtInputFullSize.Release();
-    this.cbufRandomPositions.Release();
+    this.rtInputFullRes.Release();
 
-    this.clusteringRTsAndBuffers.Release();
+    this.currentWorkParameters.dispatcher.clusteringRTsAndBuffers.Release();
   }
 
   private void RenderResult(RenderTexture target) {
     this.csHighlightRemoval.SetTexture(
       this.kernelShowResult, "tex_arr_clusters_r",
-      this.clusteringRTsAndBuffers.rtArr
+      this.currentWorkParameters.dispatcher
+        .clusteringRTsAndBuffers.texturesWorkRes.rtInput
     );
     this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_output",
       this.rtResult);
     this.csHighlightRemoval.SetBuffer(this.kernelShowResult, "cbuf_cluster_centers",
-      this.clusteringRTsAndBuffers.cbufClusterCenters);
+      this.currentWorkParameters.dispatcher
+        .clusteringRTsAndBuffers.cbufClusterCenters);
     this.csHighlightRemoval.SetTexture(this.kernelShowResult, "tex_input",
       this.rtInput);
     this.csHighlightRemoval.Dispatch(

@@ -23,17 +23,19 @@ namespace WorkGenerator {
             // RS stop condition
             workStack.Push(
               new ClusteringTest.LaunchParameters(
-                workingTextureSize: textureSize,
                 staggeredJitter: false,
-                jitterSize: 1,
                 video: video,
                 doDownscale: false,
                 dispatcher: new DispatcherRSstopCondition(
-                  kernelSize: this.kernelSize,
                   computeShader: this.csHighlightRemoval,
                   doRandomizeEmptyClusters: false,
-                  numClusters: 6,
-                  numIterationsKM: 2
+                  numIterationsKM: 2,
+                  clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                    numClusters: 6,
+                    workingSize: textureSize,
+                    fullSize: ClusteringTest.fullTextureSize,
+                    jitterSize: 1
+                  )
                 )
               ).ThrowIfExists()
             );

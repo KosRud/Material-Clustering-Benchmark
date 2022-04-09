@@ -6,16 +6,18 @@ namespace ClusteringAlgorithms {
     public readonly bool doReadback;
 
     public DispatcherRSfixed(
-      int kernelSize, ComputeShader computeShader, int numIterations,
-      bool doRandomizeEmptyClusters, int numClusters, int numIterationsKM,
-      bool doReadback
+      ComputeShader computeShader,
+      int numIterations,
+      bool doRandomizeEmptyClusters,
+      int numIterationsKM,
+      bool doReadback,
+      ClusteringRTsAndBuffers clusteringRTsAndBuffers
     ) : base(
-        kernelSize: kernelSize,
         computeShader: computeShader,
         numIterations: numIterations,
         doRandomizeEmptyClusters: doRandomizeEmptyClusters,
-        numClusters: numClusters,
-        numIterationsKM: numIterationsKM
+        numIterationsKM: numIterationsKM,
+        clusteringRTsAndBuffers: clusteringRTsAndBuffers
       ) {
       Debug.Assert(
         IsNumIterationsValid(
@@ -36,29 +38,25 @@ namespace ClusteringAlgorithms {
       }
     }
 
-    public override void RunClustering(
-      Texture inputTex,
-      int textureSize,
-      ClusteringRTsAndBuffers clusteringRTsAndBuffers
-    ) {
+    public override void RunClustering(ClusteringTextures clusteringTextures) {
       this.KMiteration(
-        inputTex, textureSize, clusteringRTsAndBuffers,
+        clusteringTextures,
         rejectOld: true
       );
 
       for (int i = 1; i < this.numIterations; i += this.iterationsKM) {
-        this.RandomSwap(inputTex, textureSize, clusteringRTsAndBuffers);
+        this.RandomSwap(clusteringTextures);
 
         for (int k = 0; k < this.iterationsKM; k++) {
           this.KMiteration(
-            inputTex, textureSize, clusteringRTsAndBuffers,
+            clusteringTextures,
             rejectOld: false
           );
         }
         if (this.doReadback) {
-          this.ValidateCandidatesReadback(clusteringRTsAndBuffers);
+          this.ValidateCandidatesReadback();
         } else {
-          this.ValidateCandidatesGPU(clusteringRTsAndBuffers);
+          this.ValidateCandidatesGPU();
         }
       }
     }

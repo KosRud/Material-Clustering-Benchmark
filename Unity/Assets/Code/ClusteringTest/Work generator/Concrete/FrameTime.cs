@@ -28,17 +28,19 @@ namespace WorkGenerator {
               // KM
               workStack.Push(
                 new ClusteringTest.LaunchParameters(
-                  workingTextureSize: textureSize,
                   staggeredJitter: false,
-                  jitterSize: 1,
                   video: video,
                   doDownscale: false,
                   dispatcher: new DispatcherKM(
-                    kernelSize: this.kernelSize,
                     computeShader: this.csHighlightRemoval,
                     numIterations: numIterations,
                     doRandomizeEmptyClusters: false,
-                    numClusters: 6
+                    clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                      numClusters: 6,
+                      workingSize: textureSize,
+                      fullSize: ClusteringTest.fullTextureSize,
+                      jitterSize: 1
+                    )
                   )
                 ).ThrowIfExists()
               );
@@ -46,17 +48,19 @@ namespace WorkGenerator {
               // KHM
               workStack.Push(
                 new ClusteringTest.LaunchParameters(
-                  workingTextureSize: textureSize,
                   staggeredJitter: false,
-                  jitterSize: 1,
                   video: video,
                   doDownscale: false,
                   dispatcher: new DispatcherKHM(
-                    kernelSize: this.kernelSize,
                     computeShader: this.csHighlightRemoval,
                     numIterations: numIterations,
                     doRandomizeEmptyClusters: false,
-                    numClusters: 6
+                    clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                      numClusters: 6,
+                      workingSize: textureSize,
+                      fullSize: ClusteringTest.fullTextureSize,
+                      jitterSize: 1
+                    )
                   )
                 ).ThrowIfExists()
               );
@@ -65,19 +69,21 @@ namespace WorkGenerator {
                 // RS(2KM)
                 workStack.Push(
                   new ClusteringTest.LaunchParameters(
-                    workingTextureSize: textureSize,
                     staggeredJitter: false,
-                    jitterSize: 1,
                     video: video,
                     doDownscale: false,
                     dispatcher: new DispatcherRSfixed(
-                      kernelSize: this.kernelSize,
                       computeShader: this.csHighlightRemoval,
                       numIterations: numIterations,
                       doRandomizeEmptyClusters: false,
-                      numClusters: 6,
                       numIterationsKM: 2,
-                      doReadback: doReadback
+                      doReadback: doReadback,
+                      clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                        numClusters: 6,
+                        workingSize: textureSize,
+                        fullSize: ClusteringTest.fullTextureSize,
+                        jitterSize: 1
+                      )
                     )
                   ).ThrowIfExists()
                 );
@@ -91,17 +97,19 @@ namespace WorkGenerator {
               // KM
               workStack.Push(
                 new ClusteringTest.LaunchParameters(
-                  workingTextureSize: textureSize,
                   staggeredJitter: false,
-                  jitterSize: 1,
                   video: video,
                   doDownscale: false,
                   dispatcher: new DispatcherKM(
-                    kernelSize: this.kernelSize,
                     computeShader: this.csHighlightRemoval,
                     numIterations: numIterations,
                     doRandomizeEmptyClusters: false,
-                    numClusters: 6
+                    clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                      numClusters: 6,
+                      workingSize: textureSize,
+                      fullSize: ClusteringTest.fullTextureSize,
+                      jitterSize: 1
+                    )
                   )
                 ).ThrowIfExists()
               );
@@ -109,17 +117,19 @@ namespace WorkGenerator {
               // KHM
               workStack.Push(
                 new ClusteringTest.LaunchParameters(
-                  workingTextureSize: textureSize,
                   staggeredJitter: false,
-                  jitterSize: 1,
                   video: video,
                   doDownscale: false,
                   dispatcher: new DispatcherKHM(
-                    kernelSize: this.kernelSize,
                     computeShader: this.csHighlightRemoval,
                     numIterations: numIterations,
                     doRandomizeEmptyClusters: false,
-                    numClusters: 6
+                    clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                      numClusters: 6,
+                      workingSize: textureSize,
+                      fullSize: ClusteringTest.fullTextureSize,
+                      jitterSize: 1
+                    )
                   )
                 ).ThrowIfExists()
               );
@@ -127,16 +137,18 @@ namespace WorkGenerator {
             // Knecht
             workStack.Push(
               new ClusteringTest.LaunchParameters(
-                workingTextureSize: textureSize,
                 staggeredJitter: false,
-                jitterSize: 1,
                 video: video,
                 doDownscale: false,
                 dispatcher: new DispatcherKnecht(
-                  kernelSize: this.kernelSize,
                   computeShader: this.csHighlightRemoval,
                   doRandomizeEmptyClusters: false,
-                  numClusters: 6
+                  clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                    numClusters: 6,
+                    workingSize: textureSize,
+                    fullSize: ClusteringTest.fullTextureSize,
+                    jitterSize: 1
+                  )
                 )
               ).ThrowIfExists()
             );
@@ -144,17 +156,19 @@ namespace WorkGenerator {
             // RS stop condition
             workStack.Push(
               new ClusteringTest.LaunchParameters(
-                workingTextureSize: textureSize,
                 staggeredJitter: false,
-                jitterSize: 1,
                 video: video,
                 doDownscale: false,
                 dispatcher: new DispatcherRSstopCondition(
-                  kernelSize: this.kernelSize,
                   computeShader: this.csHighlightRemoval,
                   doRandomizeEmptyClusters: false,
-                  numClusters: 6,
-                  numIterationsKM: 2
+                  numIterationsKM: 2,
+                  clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                    numClusters: 6,
+                    workingSize: textureSize,
+                    fullSize: ClusteringTest.fullTextureSize,
+                    jitterSize: 1
+                  )
                 )
               ).ThrowIfExists()
             );
