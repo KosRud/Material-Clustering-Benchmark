@@ -179,7 +179,7 @@ public class ClusteringTest : MonoBehaviour {
   private void Awake() {
     Debug.Assert(this.videos.Length != 0);
 
-    new WorkGenerator.Subsampling(
+    new WorkGenerator.ScalingVsSubsampling(
       kernelSize: kernelSize,
       videos: this.videos,
       csHighlightRemoval: this.csHighlightRemoval
