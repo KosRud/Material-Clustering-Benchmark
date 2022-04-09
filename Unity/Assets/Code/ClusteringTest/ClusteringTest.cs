@@ -442,7 +442,7 @@ public class ClusteringTest : MonoBehaviour {
     this.csHighlightRemoval.SetTexture(
       this.kernelShowResult, "tex_arr_clusters_r",
       this.currentWorkParameters.dispatcher
-      .clusteringRTsAndBuffers.texturesWorkRes.rtInput
+      .clusteringRTsAndBuffers.texturesWorkRes.rtArr
     );
 
     this.csHighlightRemoval.SetTexture(
@@ -460,7 +460,7 @@ public class ClusteringTest : MonoBehaviour {
       this.kernelShowResult,
       "tex_input",
       this.currentWorkParameters.dispatcher
-      .clusteringRTsAndBuffers.texturesWorkRes.rtArr
+      .clusteringRTsAndBuffers.texturesWorkRes.rtInput
     );
 
     this.csHighlightRemoval.Dispatch(
