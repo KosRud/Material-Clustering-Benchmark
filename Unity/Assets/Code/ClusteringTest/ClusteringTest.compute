@@ -79,7 +79,7 @@ float2 project(float3 col)
         can create a situation, where all pixels are ignored
         which means we can not get variance for this frame
     */
-	col /= dot(1, col + 0.00001);
+	col /= dot(1, col + 0.0001);
 	return col.rg;
 }
 
