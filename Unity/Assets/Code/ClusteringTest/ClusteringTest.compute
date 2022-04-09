@@ -181,10 +181,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 	float3 col = tex_input[id.xy].rgb;
     float2 projCol = project(col);
 
-	bool included = test(col) > (
-        final ?
-            final_threshold : threshold
-    );
+	bool included = test(col) > threshold;
 
 	float dist_list[max_num_clusters];
 
@@ -235,7 +232,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
         // bias from included flag remains constant and does not affect choice
         result.z = pow2(min_dist);
 
-		if (!included) {
+		if (!included && !final) {
 			result = 0;
 		}
 
