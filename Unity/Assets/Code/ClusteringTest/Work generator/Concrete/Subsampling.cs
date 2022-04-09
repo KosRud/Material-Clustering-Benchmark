@@ -20,7 +20,10 @@ namespace WorkGenerator {
       Stack<ClusteringTest.LaunchParameters> workStack
     ) {
       foreach (UnityEngine.Video.VideoClip video in this.videos) {
-        for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
+        /*
+          ! lowest textureSize must be no less, than kernel size
+        */
+        for (int textureSize = 512; textureSize >= 16; textureSize /= 2) {
           foreach (int numClusters in new int[] { 4, 6, 8, 12, 16 }) {
             workStack.Push(
               new ClusteringTest.LaunchParameters(
