@@ -15,8 +15,8 @@ public class ClusteringTest : MonoBehaviour {
 
   public bool skip = false;
 
-  private const LogType logType =
-    LogType.Variance; // ToDo put it inside "work" instance
+  // ToDo put it inside "work" instance
+  private const LogType logType = LogType.Variance;
 
   private const string varianceLogPath = "Variance logs";
 
@@ -179,7 +179,7 @@ public class ClusteringTest : MonoBehaviour {
   private void Awake() {
     Debug.Assert(this.videos.Length != 0);
 
-    new WorkGenerator.AlgorithmsConvergence(
+    new WorkGenerator.Subsampling(
       kernelSize: kernelSize,
       videos: this.videos,
       csHighlightRemoval: this.csHighlightRemoval
