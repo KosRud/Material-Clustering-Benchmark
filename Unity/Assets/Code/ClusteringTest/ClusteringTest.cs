@@ -179,7 +179,7 @@ public class ClusteringTest : MonoBehaviour {
   private void Awake() {
     Debug.Assert(this.videos.Length != 0);
 
-    new WorkGenerator.ScanlineJitter(
+    new WorkGenerator.StaggeredJitter(
       kernelSize: kernelSize,
       videos: this.videos,
       csHighlightRemoval: this.csHighlightRemoval

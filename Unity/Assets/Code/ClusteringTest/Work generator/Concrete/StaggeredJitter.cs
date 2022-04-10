@@ -37,7 +37,7 @@ namespace WorkGenerator {
                     numClusters: 6,
                     workingSize: textureSize,
                     fullSize: ClusteringTest.fullTextureSize,
-                    jitterSize: 1
+                    jitterSize: jitterSize
                   )
                 )
               ).ThrowIfExists()
