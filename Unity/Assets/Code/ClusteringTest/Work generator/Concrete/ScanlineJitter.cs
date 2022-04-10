@@ -42,7 +42,6 @@ namespace WorkGenerator {
                 )
               ).ThrowIfExists()
             );
-            Debug.Log(workStack.Peek().GetFileName());
           }
         }
       }
