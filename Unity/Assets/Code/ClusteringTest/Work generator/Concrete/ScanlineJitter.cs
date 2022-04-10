@@ -18,10 +18,10 @@ namespace WorkGenerator {
       Stack<ClusteringTest.LaunchParameters> workStack
     ) {
       foreach (UnityEngine.Video.VideoClip video in this.videos) {
-        for (int textureSize = 64; textureSize >= 4; textureSize /= 2) {
+        for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
           for (
             int jitterSize = 1;
-            jitterSize <= 16 && jitterSize * textureSize <= 64;
+            jitterSize * textureSize <= 512 && jitterSize <= 16;
             jitterSize *= 2
           ) {
             workStack.Push(
@@ -37,11 +37,12 @@ namespace WorkGenerator {
                     numClusters: 6,
                     workingSize: textureSize,
                     fullSize: ClusteringTest.fullTextureSize,
-                    jitterSize: 1
+                    jitterSize: jitterSize
                   )
                 )
               ).ThrowIfExists()
             );
+            Debug.Log(workStack.Peek().GetFileName());
           }
         }
       }
