@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using WorkGeneration;
+using UnityEngine;
 
 /*
   BenchmarkReportCollection {
@@ -35,7 +36,7 @@ using WorkGeneration;
 */
 
 [Serializable]
-public abstract class ABenchmarkMeasurement {}
+public abstract class ABenchmarkMeasurement : ScriptableObject {}
 
 [Serializable]
 public class BenchmarkMeasurementVariance : ABenchmarkMeasurement {
