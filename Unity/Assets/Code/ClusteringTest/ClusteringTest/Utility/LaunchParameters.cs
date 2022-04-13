@@ -8,15 +8,15 @@ namespace WorkGeneration {
   public class LaunchParameters {
     [Serializable]
     private class SerializableLaunchParameters {
-      public readonly string videoName;
-      public readonly int numIterations;
-      public readonly int workingTextureSize;
-      public readonly int numClusters;
-      public readonly int jitterSize;
-      public readonly bool staggeredJitter;
-      public readonly bool doDownscale;
-      public readonly string algorithm;
-      public readonly bool doRandomizeEmptyClusters;
+      public string videoName;
+      public int numIterations;
+      public int workingTextureSize;
+      public int numClusters;
+      public int jitterSize;
+      public bool staggeredJitter;
+      public bool doDownscale;
+      public string algorithm;
+      public bool doRandomizeEmptyClusters;
 
       public string GetJson() {
         return JsonUtility.ToJson(this);
