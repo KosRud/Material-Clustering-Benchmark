@@ -36,7 +36,7 @@ using UnityEngine;
 */
 
 [Serializable]
-public abstract class ABenchmarkMeasurement : ScriptableObject {}
+public abstract class ABenchmarkMeasurement {}
 
 [Serializable]
 public class BenchmarkMeasurementVariance : ABenchmarkMeasurement {
@@ -71,6 +71,7 @@ public class BenchmarkMeasurementFrameTime : ABenchmarkMeasurement {
 
 [Serializable]
 public class BenchmarkReport {
+  [SerializeReference]
   public ABenchmarkMeasurement measurement;
   public LaunchParameters launchParameters;
   public ClusteringTest.LogType logType;
