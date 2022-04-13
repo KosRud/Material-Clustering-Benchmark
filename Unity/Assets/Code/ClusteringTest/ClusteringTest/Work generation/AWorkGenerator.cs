@@ -1,6 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
-using System;
 
 namespace WorkGeneration {
   public abstract class AWorkGenerator {
@@ -19,8 +17,6 @@ namespace WorkGeneration {
       this.csHighlightRemoval = csHighlightRemoval;
     }
 
-    public abstract void GenerateWork(
-      Stack<LaunchParameters> workStack
-    );
+    public abstract WorkList GenerateWork( );
   }
 }

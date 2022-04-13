@@ -16,16 +16,16 @@ namespace WorkGeneration {
         csHighlightRemoval: csHighlightRemoval
       ) { }
 
-    public override void GenerateWork(
-      Stack<LaunchParameters> workStack
-    ) {
+    public override WorkList GenerateWork() {
+      var workList = new WorkList(ClusteringTest.LogType.Variance);
+
       foreach (UnityEngine.Video.VideoClip video in this.videos) {
         /*
           ! lowest textureSize must be no less, than kernel size
         */
         for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
           foreach (int numClusters in new int[] { 4, 6, 8, 12, 16 }) {
-            workStack.Push(
+            workList.runs.Push(
               new LaunchParameters(
                 staggeredJitter: false,
                 video: video,
@@ -46,7 +46,8 @@ namespace WorkGeneration {
           }
         }
       }
-    }
 
+      return workList;
+    }
   }
 }

@@ -14,14 +14,14 @@ namespace WorkGeneration {
         videos: videos,
         csHighlightRemoval: csHighlightRemoval) { }
 
-    public override void GenerateWork(
-      Stack<LaunchParameters> workStack
-    ) {
+    public override WorkList GenerateWork() {
+      var workList = new WorkList(ClusteringTest.LogType.Variance);
+
       for (int i = 0; i < 5; i++) {
         foreach (UnityEngine.Video.VideoClip video in this.videos) {
           foreach (int textureSize in new int[] { 512, 64 }) {
             // RS stop condition
-            workStack.Push(
+            workList.runs.Push(
               new LaunchParameters(
                 staggeredJitter: false,
                 video: video,
@@ -42,8 +42,8 @@ namespace WorkGeneration {
           }
         }
       }
+
+      return workList;
     }
-
-
   }
 }

@@ -14,9 +14,9 @@ namespace WorkGeneration {
         videos: videos,
         csHighlightRemoval: csHighlightRemoval) { }
 
-    public override void GenerateWork(
-      Stack<LaunchParameters> workStack
-    ) {
+    public override WorkList GenerateWork() {
+      var workList = new WorkList(ClusteringTest.LogType.Variance);
+
       foreach (UnityEngine.Video.VideoClip video in this.videos) {
         for (
           int numIterations = 1;
@@ -27,7 +27,7 @@ namespace WorkGeneration {
             int numIterationsKM in new int[1, 2]
           ) {
             this.AddRs(
-              workStack: workStack,
+              workList: workList,
               video: video,
               numIterations: numIterations,
               csHighlightRemoval: this.csHighlightRemoval,
@@ -36,10 +36,12 @@ namespace WorkGeneration {
           }
         }
       }
+
+      return workList;
     }
 
     private void AddRs(
-      Stack<LaunchParameters> workStack,
+      WorkList workList,
       UnityEngine.Video.VideoClip video,
       int numIterations,
       ComputeShader csHighlightRemoval,
@@ -51,7 +53,7 @@ namespace WorkGeneration {
           iterationsKM: numIterationsKM
         )
       ) {
-        workStack.Push(
+        workList.runs.Push(
           new LaunchParameters(
             staggeredJitter: false,
             video: video,

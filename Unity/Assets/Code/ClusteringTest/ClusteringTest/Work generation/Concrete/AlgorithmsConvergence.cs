@@ -14,9 +14,9 @@ namespace WorkGeneration {
         videos: videos,
         csHighlightRemoval: csHighlightRemoval) { }
 
-    public override void GenerateWork(
-      Stack<LaunchParameters> workStack
-    ) {
+    public override WorkList GenerateWork() {
+      var workList = new WorkList(ClusteringTest.LogType.Variance);
+
       foreach (UnityEngine.Video.VideoClip video in this.videos) {
         for (
           int numIterations = 1;
@@ -24,7 +24,7 @@ namespace WorkGeneration {
           numIterations++
         ) {
           this.AddFixedIterations(
-            workStack,
+            workList,
             video,
             numIterations,
             this.csHighlightRemoval
@@ -32,21 +32,23 @@ namespace WorkGeneration {
 
         }
         this.AddStopCondtion(
-          workStack,
+          workList,
           video,
           this.csHighlightRemoval
         );
       }
+
+      return workList;
     }
 
     private void AddFixedIterations(
-      Stack<LaunchParameters> workStack,
+      WorkList workList,
       UnityEngine.Video.VideoClip video,
       int numIterations,
       ComputeShader csHighlightRemoval
     ) {
       // KM
-      workStack.Push(
+      workList.runs.Push(
         new LaunchParameters(
           staggeredJitter: false,
           video: video,
@@ -66,7 +68,7 @@ namespace WorkGeneration {
       );
 
       // KHM
-      workStack.Push(
+      workList.runs.Push(
         new LaunchParameters(
           staggeredJitter: false,
           video: video,
@@ -91,7 +93,7 @@ namespace WorkGeneration {
           iterationsKM: 2
         )
       ) {
-        workStack.Push(
+        workList.runs.Push(
           new LaunchParameters(
             staggeredJitter: false,
             video: video,
@@ -115,12 +117,12 @@ namespace WorkGeneration {
     }
 
     private void AddStopCondtion(
-      Stack<LaunchParameters> workStack,
+      WorkList workList,
       UnityEngine.Video.VideoClip video,
       ComputeShader csHighlightRemoval
     ) {
       // Knecht
-      workStack.Push(
+      workList.runs.Push(
         new LaunchParameters(
           staggeredJitter: false,
           video: video,
@@ -139,7 +141,7 @@ namespace WorkGeneration {
       );
 
       // RS stop condition
-      workStack.Push(
+      workList.runs.Push(
         new LaunchParameters(
           staggeredJitter: false,
           video: video,

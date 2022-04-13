@@ -19,9 +19,6 @@ public class ClusteringTest : MonoBehaviour {
 
   public bool skip = false;
 
-  // ToDo put it inside "work" instance
-  private const LogType logType = LogType.Variance;
-
   private readonly long? overrideStartFrame = null;
   private readonly long? overrideEndFrame = null;
 
@@ -54,8 +51,7 @@ public class ClusteringTest : MonoBehaviour {
     OneKM
   }
 
-  private readonly Stack<LaunchParameters> work =
-    new Stack<LaunchParameters>();
+  private WorkList workList;
 
   private bool awaitingRestart = false;
   private readonly List<float> frameLogVariance = new List<float>();
@@ -133,13 +129,11 @@ public class ClusteringTest : MonoBehaviour {
   private void Awake() {
     Debug.Assert(this.videos.Length != 0);
 
-    new WorkGeneration.EmptyClusterRandomization(
+    this.workList = new WorkGeneration.EmptyClusterRandomization(
       kernelSize: kernelSize,
       videos: this.videos,
       csHighlightRemoval: this.csHighlightRemoval
-    ).GenerateWork(
-      this.work
-    );
+    ).GenerateWork();
 
     // check timer precision
     if (System.Diagnostics.Stopwatch.IsHighResolution == false) {
@@ -165,9 +159,9 @@ public class ClusteringTest : MonoBehaviour {
       return;
     }
 
-    this.currentWorkParameters = this.work.Pop();
+    this.currentWorkParameters = this.workList.runs.Pop();
 
-    Debug.Log($"work left: {this.work.Count}");
+    Debug.Log($"work left: {this.workList.runs.Count}");
     Debug.Log($"processing: {this.currentWorkParameters.GetFileName()}");
 
     this.frameLogVariance.Clear();
@@ -189,13 +183,6 @@ public class ClusteringTest : MonoBehaviour {
   // Update is called once per frame
   private void Update() {
 
-  }
-
-  private bool ValidateRandomSwapParams(int iterationsKM, int iterations) {
-    if (iterations <= 1) {
-      return false;
-    }
-    return iterationsKM == 1 || iterations % iterationsKM == 1;
   }
 
   private void WriteVarianceLog() {
@@ -266,16 +253,19 @@ public class ClusteringTest : MonoBehaviour {
       this.awaitingRestart = true;
       Graphics.Blit(src, dest);
 
-      switch (logType) {
+      switch (this.workList.logType) {
         case LogType.Variance:
           this.WriteVarianceLog();
           break;
         case LogType.FrameTime:
+          this.WriteFrameTimeLog(this.totalTime / this.framesMeasured,
+            this.peakFrameTime);
+          break;
         default:
           throw new System.NotImplementedException();
       }
 
-      if (this.work.Count == 0) {
+      if (this.workList.runs.Count == 0) {
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
@@ -298,10 +288,13 @@ public class ClusteringTest : MonoBehaviour {
       doDownscale: this.currentWorkParameters.doDownscale
     );
 
-    if (logType == LogType.Variance || this.firstFrameProcessed == false) {
+    if (
+      this.workList.logType == LogType.Variance ||
+      this.firstFrameProcessed == false
+    ) {
       this.RunDispatcher();
 
-      if (logType == LogType.Variance) {
+      if (this.workList.logType == LogType.Variance) {
         this.MakeVarianceLogEntry();
       }
 
