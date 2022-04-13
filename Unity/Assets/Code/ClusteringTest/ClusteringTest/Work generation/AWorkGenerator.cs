@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace WorkGeneration {
   public abstract class AWorkGenerator {
