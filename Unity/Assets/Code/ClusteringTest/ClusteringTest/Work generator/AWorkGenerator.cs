@@ -1,8 +1,7 @@
 using UnityEngine;
-using ClusteringAlgorithms;
 using System.Collections.Generic;
 
-namespace WorkGenerator {
+namespace WorkGeneration {
   public abstract class AWorkGenerator {
 
     protected readonly int kernelSize;
@@ -20,7 +19,7 @@ namespace WorkGenerator {
     }
 
     public abstract void GenerateWork(
-      Stack<ClusteringTest.LaunchParameters> workStack
+      Stack<LaunchParameters> workStack
     );
   }
 }

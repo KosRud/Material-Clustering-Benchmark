@@ -1,38 +1,41 @@
 using UnityEngine;
+using System.Collections.Generic;
 using ClusteringAlgorithms;
 
-namespace WorkGenerator {
+namespace WorkGeneration {
 
-  public class EmptyClusterRandomization : AWorkGenerator {
+  public class Subsampling : AWorkGenerator {
 
-    public EmptyClusterRandomization(
+    public Subsampling(
       int kernelSize,
       UnityEngine.Video.VideoClip[] videos,
       ComputeShader csHighlightRemoval
     ) : base(
         kernelSize: kernelSize,
         videos: videos,
-        csHighlightRemoval: csHighlightRemoval) { }
+        csHighlightRemoval: csHighlightRemoval
+      ) { }
 
     public override void GenerateWork(
-      System.Collections.Generic.Stack<ClusteringTest.LaunchParameters> workStack
+      Stack<LaunchParameters> workStack
     ) {
       foreach (UnityEngine.Video.VideoClip video in this.videos) {
+        /*
+          ! lowest textureSize must be no less, than kernel size
+        */
         for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
-          foreach (
-            bool doRandomizeEmptyClusters in new bool[] { true, false }
-          ) {
+          foreach (int numClusters in new int[] { 4, 6, 8, 12, 16 }) {
             workStack.Push(
-              new ClusteringTest.LaunchParameters(
+              new LaunchParameters(
                 staggeredJitter: false,
                 video: video,
                 doDownscale: false,
                 dispatcher: new DispatcherKM(
                   computeShader: this.csHighlightRemoval,
                   numIterations: 3,
-                  doRandomizeEmptyClusters: doRandomizeEmptyClusters,
+                  doRandomizeEmptyClusters: false,
                   clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
-                    numClusters: 6,
+                    numClusters: numClusters,
                     workingSize: textureSize,
                     fullSize: ClusteringTest.fullTextureSize,
                     jitterSize: 1
@@ -44,5 +47,6 @@ namespace WorkGenerator {
         }
       }
     }
+
   }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using ClusteringAlgorithms;
 
-namespace WorkGenerator {
+namespace WorkGeneration {
   public class ScalingVsSubsampling : AWorkGenerator {
 
     public ScalingVsSubsampling(
@@ -15,13 +15,13 @@ namespace WorkGenerator {
         csHighlightRemoval: csHighlightRemoval) { }
 
     public override void GenerateWork(
-      Stack<ClusteringTest.LaunchParameters> workStack
+      Stack<LaunchParameters> workStack
     ) {
       foreach (UnityEngine.Video.VideoClip video in this.videos) {
         for (int textureSize = 256; textureSize >= 8; textureSize /= 2) {
           foreach (bool doDownscale in new bool[] { true, false }) {
             workStack.Push(
-              new ClusteringTest.LaunchParameters(
+              new LaunchParameters(
                 staggeredJitter: false,
                 video: video,
                 doDownscale: doDownscale,

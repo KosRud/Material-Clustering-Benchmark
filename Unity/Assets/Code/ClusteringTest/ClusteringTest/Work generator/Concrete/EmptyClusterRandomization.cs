@@ -1,11 +1,11 @@
 using UnityEngine;
-using System.Collections.Generic;
 using ClusteringAlgorithms;
 
-namespace WorkGenerator {
-  public class RsStopCondition : AWorkGenerator {
+namespace WorkGeneration {
 
-    public RsStopCondition(
+  public class EmptyClusterRandomization : AWorkGenerator {
+
+    public EmptyClusterRandomization(
       int kernelSize,
       UnityEngine.Video.VideoClip[] videos,
       ComputeShader csHighlightRemoval
@@ -15,21 +15,22 @@ namespace WorkGenerator {
         csHighlightRemoval: csHighlightRemoval) { }
 
     public override void GenerateWork(
-      Stack<ClusteringTest.LaunchParameters> workStack
+      System.Collections.Generic.Stack<LaunchParameters> workStack
     ) {
-      for (int i = 0; i < 5; i++) {
-        foreach (UnityEngine.Video.VideoClip video in this.videos) {
-          foreach (int textureSize in new int[] { 512, 64 }) {
-            // RS stop condition
+      foreach (UnityEngine.Video.VideoClip video in this.videos) {
+        for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
+          foreach (
+            bool doRandomizeEmptyClusters in new bool[] { true, false }
+          ) {
             workStack.Push(
-              new ClusteringTest.LaunchParameters(
+              new LaunchParameters(
                 staggeredJitter: false,
                 video: video,
                 doDownscale: false,
-                dispatcher: new DispatcherRSstopCondition(
+                dispatcher: new DispatcherKM(
                   computeShader: this.csHighlightRemoval,
-                  doRandomizeEmptyClusters: false,
-                  numIterationsKM: 2,
+                  numIterations: 3,
+                  doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                   clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                     numClusters: 6,
                     workingSize: textureSize,
@@ -43,7 +44,5 @@ namespace WorkGenerator {
         }
       }
     }
-
-
   }
 }

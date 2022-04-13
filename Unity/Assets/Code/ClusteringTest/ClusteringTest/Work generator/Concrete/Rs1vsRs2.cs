@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using ClusteringAlgorithms;
 
-namespace WorkGenerator {
+namespace WorkGeneration {
   public class Rs1VsRs2 : AWorkGenerator {
 
     public Rs1VsRs2(
@@ -15,7 +15,7 @@ namespace WorkGenerator {
         csHighlightRemoval: csHighlightRemoval) { }
 
     public override void GenerateWork(
-      Stack<ClusteringTest.LaunchParameters> workStack
+      Stack<LaunchParameters> workStack
     ) {
       foreach (UnityEngine.Video.VideoClip video in this.videos) {
         for (
@@ -39,7 +39,7 @@ namespace WorkGenerator {
     }
 
     private void AddRs(
-      Stack<ClusteringTest.LaunchParameters> workStack,
+      Stack<LaunchParameters> workStack,
       UnityEngine.Video.VideoClip video,
       int numIterations,
       ComputeShader csHighlightRemoval,
@@ -52,7 +52,7 @@ namespace WorkGenerator {
         )
       ) {
         workStack.Push(
-          new ClusteringTest.LaunchParameters(
+          new LaunchParameters(
             staggeredJitter: false,
             video: video,
             doDownscale: false,

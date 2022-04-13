@@ -2,7 +2,7 @@ using UnityEngine;
 using ClusteringAlgorithms;
 using System.Collections.Generic;
 
-namespace WorkGenerator {
+namespace WorkGeneration {
   public class FrameTime : AWorkGenerator {
 
     public FrameTime(
@@ -16,7 +16,7 @@ namespace WorkGenerator {
 
 
     public override void GenerateWork(
-      Stack<ClusteringTest.LaunchParameters> workStack
+      Stack<LaunchParameters> workStack
     ) {
       for (int i = 0; i < 5; i++) {
         foreach (UnityEngine.Video.VideoClip video in this.videos) {
@@ -27,7 +27,7 @@ namespace WorkGenerator {
 
               // KM
               workStack.Push(
-                new ClusteringTest.LaunchParameters(
+                new LaunchParameters(
                   staggeredJitter: false,
                   video: video,
                   doDownscale: false,
@@ -47,7 +47,7 @@ namespace WorkGenerator {
 
               // KHM
               workStack.Push(
-                new ClusteringTest.LaunchParameters(
+                new LaunchParameters(
                   staggeredJitter: false,
                   video: video,
                   doDownscale: false,
@@ -68,7 +68,7 @@ namespace WorkGenerator {
               foreach (bool doReadback in new bool[] { true, false }) {
                 // RS(2KM)
                 workStack.Push(
-                  new ClusteringTest.LaunchParameters(
+                  new LaunchParameters(
                     staggeredJitter: false,
                     video: video,
                     doDownscale: false,
@@ -96,7 +96,7 @@ namespace WorkGenerator {
 
               // KM
               workStack.Push(
-                new ClusteringTest.LaunchParameters(
+                new LaunchParameters(
                   staggeredJitter: false,
                   video: video,
                   doDownscale: false,
@@ -116,7 +116,7 @@ namespace WorkGenerator {
 
               // KHM
               workStack.Push(
-                new ClusteringTest.LaunchParameters(
+                new LaunchParameters(
                   staggeredJitter: false,
                   video: video,
                   doDownscale: false,
@@ -136,7 +136,7 @@ namespace WorkGenerator {
             }
             // Knecht
             workStack.Push(
-              new ClusteringTest.LaunchParameters(
+              new LaunchParameters(
                 staggeredJitter: false,
                 video: video,
                 doDownscale: false,
@@ -155,7 +155,7 @@ namespace WorkGenerator {
 
             // RS stop condition
             workStack.Push(
-              new ClusteringTest.LaunchParameters(
+              new LaunchParameters(
                 staggeredJitter: false,
                 video: video,
                 doDownscale: false,

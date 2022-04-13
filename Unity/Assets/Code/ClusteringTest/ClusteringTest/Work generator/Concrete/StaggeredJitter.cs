@@ -1,11 +1,11 @@
 using UnityEngine;
-using System.Collections.Generic;
 using ClusteringAlgorithms;
+using System.Collections.Generic;
 
-namespace WorkGenerator {
-  public class ScanlineJitter : AWorkGenerator {
+namespace WorkGeneration {
+  public class StaggeredJitter : AWorkGenerator {
 
-    public ScanlineJitter(
+    public StaggeredJitter(
       int kernelSize,
       UnityEngine.Video.VideoClip[] videos,
       ComputeShader csHighlightRemoval
@@ -15,7 +15,7 @@ namespace WorkGenerator {
         csHighlightRemoval: csHighlightRemoval) { }
 
     public override void GenerateWork(
-      Stack<ClusteringTest.LaunchParameters> workStack
+      Stack<LaunchParameters> workStack
     ) {
       foreach (UnityEngine.Video.VideoClip video in this.videos) {
         for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
@@ -25,7 +25,7 @@ namespace WorkGenerator {
             jitterSize *= 2
           ) {
             workStack.Push(
-              new ClusteringTest.LaunchParameters(
+              new LaunchParameters(
                 staggeredJitter: false,
                 video: video,
                 doDownscale: false,
@@ -46,5 +46,7 @@ namespace WorkGenerator {
         }
       }
     }
+
+
   }
 }

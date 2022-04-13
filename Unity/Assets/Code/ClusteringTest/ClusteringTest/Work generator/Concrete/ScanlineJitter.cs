@@ -2,31 +2,30 @@ using UnityEngine;
 using System.Collections.Generic;
 using ClusteringAlgorithms;
 
-namespace WorkGenerator {
+namespace WorkGeneration {
+  public class ScanlineJitter : AWorkGenerator {
 
-  public class Subsampling : AWorkGenerator {
-
-    public Subsampling(
+    public ScanlineJitter(
       int kernelSize,
       UnityEngine.Video.VideoClip[] videos,
       ComputeShader csHighlightRemoval
     ) : base(
         kernelSize: kernelSize,
         videos: videos,
-        csHighlightRemoval: csHighlightRemoval
-      ) { }
+        csHighlightRemoval: csHighlightRemoval) { }
 
     public override void GenerateWork(
-      Stack<ClusteringTest.LaunchParameters> workStack
+      Stack<LaunchParameters> workStack
     ) {
       foreach (UnityEngine.Video.VideoClip video in this.videos) {
-        /*
-          ! lowest textureSize must be no less, than kernel size
-        */
         for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
-          foreach (int numClusters in new int[] { 4, 6, 8, 12, 16 }) {
+          for (
+            int jitterSize = 1;
+            jitterSize * textureSize <= 512 && jitterSize <= 16;
+            jitterSize *= 2
+          ) {
             workStack.Push(
-              new ClusteringTest.LaunchParameters(
+              new LaunchParameters(
                 staggeredJitter: false,
                 video: video,
                 doDownscale: false,
@@ -35,10 +34,10 @@ namespace WorkGenerator {
                   numIterations: 3,
                   doRandomizeEmptyClusters: false,
                   clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
-                    numClusters: numClusters,
+                    numClusters: 6,
                     workingSize: textureSize,
                     fullSize: ClusteringTest.fullTextureSize,
-                    jitterSize: 1
+                    jitterSize: jitterSize
                   )
                 )
               ).ThrowIfExists()
@@ -47,6 +46,5 @@ namespace WorkGenerator {
         }
       }
     }
-
   }
 }

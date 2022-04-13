@@ -2,7 +2,7 @@ using UnityEngine;
 using ClusteringAlgorithms;
 using System.Collections.Generic;
 
-namespace WorkGenerator {
+namespace WorkGeneration {
   public class AlgorithmsConvergence : AWorkGenerator {
 
     public AlgorithmsConvergence(
@@ -15,7 +15,7 @@ namespace WorkGenerator {
         csHighlightRemoval: csHighlightRemoval) { }
 
     public override void GenerateWork(
-      Stack<ClusteringTest.LaunchParameters> workStack
+      Stack<LaunchParameters> workStack
     ) {
       foreach (UnityEngine.Video.VideoClip video in this.videos) {
         for (
@@ -40,14 +40,14 @@ namespace WorkGenerator {
     }
 
     private void AddFixedIterations(
-      Stack<ClusteringTest.LaunchParameters> workStack,
+      Stack<LaunchParameters> workStack,
       UnityEngine.Video.VideoClip video,
       int numIterations,
       ComputeShader csHighlightRemoval
     ) {
       // KM
       workStack.Push(
-        new ClusteringTest.LaunchParameters(
+        new LaunchParameters(
           staggeredJitter: false,
           video: video,
           doDownscale: false,
@@ -67,7 +67,7 @@ namespace WorkGenerator {
 
       // KHM
       workStack.Push(
-        new ClusteringTest.LaunchParameters(
+        new LaunchParameters(
           staggeredJitter: false,
           video: video,
           doDownscale: false,
@@ -92,7 +92,7 @@ namespace WorkGenerator {
         )
       ) {
         workStack.Push(
-          new ClusteringTest.LaunchParameters(
+          new LaunchParameters(
             staggeredJitter: false,
             video: video,
             doDownscale: false,
@@ -115,13 +115,13 @@ namespace WorkGenerator {
     }
 
     private void AddStopCondtion(
-      Stack<ClusteringTest.LaunchParameters> workStack,
+      Stack<LaunchParameters> workStack,
       UnityEngine.Video.VideoClip video,
       ComputeShader csHighlightRemoval
     ) {
       // Knecht
       workStack.Push(
-        new ClusteringTest.LaunchParameters(
+        new LaunchParameters(
           staggeredJitter: false,
           video: video,
           doDownscale: false,
@@ -140,7 +140,7 @@ namespace WorkGenerator {
 
       // RS stop condition
       workStack.Push(
-        new ClusteringTest.LaunchParameters(
+        new LaunchParameters(
           staggeredJitter: false,
           video: video,
           doDownscale: false,

@@ -1,11 +1,11 @@
 using UnityEngine;
-using ClusteringAlgorithms;
 using System.Collections.Generic;
+using ClusteringAlgorithms;
 
-namespace WorkGenerator {
-  public class StaggeredJitter : AWorkGenerator {
+namespace WorkGeneration {
+  public class RsStopCondition : AWorkGenerator {
 
-    public StaggeredJitter(
+    public RsStopCondition(
       int kernelSize,
       UnityEngine.Video.VideoClip[] videos,
       ComputeShader csHighlightRemoval
@@ -15,29 +15,26 @@ namespace WorkGenerator {
         csHighlightRemoval: csHighlightRemoval) { }
 
     public override void GenerateWork(
-      Stack<ClusteringTest.LaunchParameters> workStack
+      Stack<LaunchParameters> workStack
     ) {
-      foreach (UnityEngine.Video.VideoClip video in this.videos) {
-        for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
-          for (
-            int jitterSize = 1;
-            jitterSize * textureSize <= 512 && jitterSize <= 16;
-            jitterSize *= 2
-          ) {
+      for (int i = 0; i < 5; i++) {
+        foreach (UnityEngine.Video.VideoClip video in this.videos) {
+          foreach (int textureSize in new int[] { 512, 64 }) {
+            // RS stop condition
             workStack.Push(
-              new ClusteringTest.LaunchParameters(
+              new LaunchParameters(
                 staggeredJitter: false,
                 video: video,
                 doDownscale: false,
-                dispatcher: new DispatcherKM(
+                dispatcher: new DispatcherRSstopCondition(
                   computeShader: this.csHighlightRemoval,
-                  numIterations: 3,
                   doRandomizeEmptyClusters: false,
+                  numIterationsKM: 2,
                   clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                     numClusters: 6,
                     workingSize: textureSize,
                     fullSize: ClusteringTest.fullTextureSize,
-                    jitterSize: jitterSize
+                    jitterSize: 1
                   )
                 )
               ).ThrowIfExists()

@@ -1,24 +1,26 @@
 using UnityEngine;
 using ClusteringAlgorithms;
 using System.Collections.Generic;
+using WorkGeneration;
 
 public class ClusteringTest : MonoBehaviour {
   public const int maxNumClusters = 16; // ! do not change
   public const int kernelSize = 8; // ! must match shader
   public const int fullTextureSize = 512;
 
-  // configuration
-  private enum LogType {
+  public const string varianceLogPath = "Variance logs";
+
+  public enum LogType {
     FrameTime,
     Variance
   }
+
+  // configuration
 
   public bool skip = false;
 
   // ToDo put it inside "work" instance
   private const LogType logType = LogType.Variance;
-
-  private const string varianceLogPath = "Variance logs";
 
   private readonly long? overrideStartFrame = null;
   private readonly long? overrideEndFrame = null;
@@ -64,54 +66,6 @@ public class ClusteringTest : MonoBehaviour {
   // public
   public ComputeShader csHighlightRemoval;
   public UnityEngine.Video.VideoClip[] videos;
-
-  public class LaunchParameters {
-    public string GetFileName() {
-      string videoName = this.video.name;
-      int numIterations = this.dispatcher.numIterations;
-      int workingTextureSize =
-        this.dispatcher.clusteringRTsAndBuffers.texturesWorkRes.size;
-      int numClusters = this.dispatcher.clusteringRTsAndBuffers.numClusters;
-      int jitterSize =
-        this.dispatcher.clusteringRTsAndBuffers.jitterSize;
-      bool staggeredJitter = this.staggeredJitter;
-      bool doDownscale = this.doDownscale;
-      string algorithm = this.dispatcher.descriptionString;
-      bool doRandomizeEmptyClusters = this.dispatcher.doRandomizeEmptyClusters;
-
-      return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{workingTextureSize}|number of clusters:{numClusters}|randomize empty clusters:{doRandomizeEmptyClusters}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}|algorithm:{algorithm}.csv";
-    }
-
-    public LaunchParameters ThrowIfExists() {
-      string fileName = $"{varianceLogPath}/{this.GetFileName()}";
-
-      if (System.IO.File.Exists(fileName)) {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#endif
-        throw new System.Exception($"File exists: {fileName}");
-      }
-
-      return this;
-    }
-
-    public readonly bool staggeredJitter;
-    public readonly UnityEngine.Video.VideoClip video;
-    public readonly bool doDownscale;
-    public readonly ADispatcher dispatcher;
-
-    public LaunchParameters(
-      bool staggeredJitter,
-      UnityEngine.Video.VideoClip video,
-      bool doDownscale,
-      ADispatcher dispatcher
-    ) {
-      this.staggeredJitter = staggeredJitter;
-      this.video = video;
-      this.doDownscale = doDownscale;
-      this.dispatcher = dispatcher;
-    }
-  }
 
   private int MipLevel(int textureSize) {
     int mipLevel = 0;
@@ -179,7 +133,7 @@ public class ClusteringTest : MonoBehaviour {
   private void Awake() {
     Debug.Assert(this.videos.Length != 0);
 
-    new WorkGenerator.EmptyClusterRandomization(
+    new WorkGeneration.EmptyClusterRandomization(
       kernelSize: kernelSize,
       videos: this.videos,
       csHighlightRemoval: this.csHighlightRemoval
