@@ -258,8 +258,10 @@ public class ClusteringTest : MonoBehaviour {
           this.WriteVarianceLog();
           break;
         case LogType.FrameTime:
-          this.WriteFrameTimeLog(this.totalTime / this.framesMeasured,
-            this.peakFrameTime);
+          this.WriteFrameTimeLog(
+            avgFrameTime: this.totalTime / this.framesMeasured,
+            peakFrameTime: this.peakFrameTime
+          );
           break;
         default:
           throw new System.NotImplementedException();
