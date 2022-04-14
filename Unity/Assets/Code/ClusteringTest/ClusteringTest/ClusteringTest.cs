@@ -258,7 +258,7 @@ public class ClusteringTest : MonoBehaviour {
         Destroy(this);
 
         System.IO.File.WriteAllText(
-          "report.txt",
+          "report.json",
           JsonUtility.ToJson(this.reportCollection)
         );
       }

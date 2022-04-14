@@ -18,9 +18,9 @@ namespace WorkGeneration {
       var workList = new WorkList(ClusteringTest.LogType.Variance);
 
       foreach (UnityEngine.Video.VideoClip video in this.videos) {
-        for (int textureSize = 8; textureSize >= 8; textureSize /= 2) {
+        for (int textureSize = 512; textureSize >= 8; textureSize /= 2) {
           foreach (
-            bool doRandomizeEmptyClusters in new bool[] { true }
+            bool doRandomizeEmptyClusters in new bool[] { true, false }
           ) {
             workList.runs.Push(
               new LaunchParameters(
