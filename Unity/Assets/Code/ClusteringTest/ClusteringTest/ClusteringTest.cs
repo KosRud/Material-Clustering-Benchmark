@@ -1,7 +1,6 @@
 using UnityEngine;
 using ClusteringAlgorithms;
 using System.Collections.Generic;
-using WorkGeneration;
 
 /*
   TODO
@@ -57,13 +56,13 @@ public class ClusteringTest : MonoBehaviour {
     OneKM
   }
 
-  private WorkList workList;
+  private WorkGeneration.WorkList workList;
   private BenchmarkReportCollection reportCollection;
   private BenchmarkMeasurementVariance benchmarkMeasurementVariance;
 
   private bool awaitingRestart = false;
   private readonly List<float> frameLogVariance = new List<float>();
-  private LaunchParameters currentWorkParameters;
+  private WorkGeneration.LaunchParameters currentWorkParameters;
 
   private UnityEngine.Video.VideoPlayer videoPlayer;
 
@@ -137,7 +136,7 @@ public class ClusteringTest : MonoBehaviour {
   private void Awake() {
     Debug.Assert(this.videos.Length != 0);
 
-    this.workList = new WorkGeneration.EmptyClusterRandomization(
+    this.workList = new WorkGeneration.FrameTime(
       kernelSize: kernelSize,
       videos: this.videos,
       csHighlightRemoval: this.csHighlightRemoval
