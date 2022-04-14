@@ -3,14 +3,28 @@
         {
             "language": "markdown",
             "source": [
-                "The extension ships with the latest version of Plotly, making it unnecessary to install plotly.js."
+                "# Plotly reference\n\n* https://plotly.com/javascript/setting-graph-size/\n* https://plotly.com/javascript/reference/layout/\n* https://plotly.com/javascript/group-by/"
             ],
             "outputs": []
         },
         {
             "language": "javascript",
             "source": [
-                "const { Plotly } = require('node-kernel');\nvar trace1 = {\n    x: ['giraffes', 'orangutans', 'monkeys'],\n    y: [20, 14, 23],\n    name: 'SF Zoo',\n    type: 'bar',\n};\n\nvar trace2 = {\n    x: ['giraffes', 'orangutans', 'monkeys'],\n    y: [12, 18, 29],\n    name: 'LA Zoo',\n    type: 'bar',\n};\n\nvar data = [trace1, trace2];\nvar layout = { barmode: 'group' };\nPlotly.newPlot('myDiv', data, layout);\n"
+                "import {Plotly} from 'node-kernel';\n\nconst sharedLayout = {\n    width: 600,\n    height: 300,\n    font: {\n        size: 16\n    },\n    yaxis: {\n        automargin: true\n    },\n    xaxis: {\n        automargin: true\n    },\n    margin: {\n        l: 4,\n        r: 4,\n        b: 4,\n        t: 50,  // for title\n        pad: 0  // between axis and plot\n    }\n}"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## Examples"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "var trace1 = {\n    x: ['giraffes', 'orangutans', 'monkeys'],\n    y: [20, 14, 23],\n    name: 'Zoo 1',\n    type: 'bar',\n};\n\nvar trace2 = {\n    x: ['giraffes', 'orangutans', 'monkeys'],\n    y: [12, 18, 29],\n    name: 'Zoo 2',\n    type: 'bar',\n};\n\nvar trace3 = {\n    x: ['penguins', 'crocodiles', 'swans'],\n    y: [16, 10, 28],\n    name: 'Zoo 3',\n    type: 'bar',\n\n    xaxis: 'x2',\n    yaxis: 'y2',\n};\n\nvar trace4 = {\n    x: ['penguins', 'crocodiles', 'swans'],\n    y: [24, 12, 16],\n    name: 'Zoo 4',\n    type: 'bar',\n\n    xaxis: 'x2',\n    yaxis: 'y2',\n};\n\nvar data = [trace1, trace2, trace3, trace4];\nvar layout = {\n    grid: { rows: 1, columns: 2, pattern: 'independent' },\n    title: 'Animals in different zoos',\n    barmode: 'group',\n    annotations: [  // subplot titles (hack)\n        {\n            text: 'First subplot',\n            font: {\n                size: 16,\n            },\n            align: 'center',\n            x: 0.13, //position in x domain\n            y: 1.1, //position in y domain\n            xref: 'paper',\n            yref: 'paper',\n            showarrow: false,\n        },\n        {\n            text: 'Second subplot',\n            font: {\n                size: 16,\n            },\n            align: 'center',\n            x: 0.9, //position in x domain\n            y: 1.1, // position in y domain\n            xref: 'paper',\n            yref: 'paper',\n            showarrow: false,\n        },\n    ],\n    ...sharedLayout,\n};\nPlotly.newPlot('myDiv', data, layout);\n"
             ],
             "outputs": [
                 {
@@ -18,7 +32,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xf006297504b94d6482636ff14647ac90",
+                                "requestId": "xaf9391e19f1541fcadaa66a321e4e8bc",
                                 "type": "generatePlot",
                                 "ele": "myDiv",
                                 "data": [
@@ -33,7 +47,7 @@
                                             14,
                                             23
                                         ],
-                                        "name": "SF Zoo",
+                                        "name": "Zoo 1",
                                         "type": "bar"
                                     },
                                     {
@@ -47,61 +61,40 @@
                                             18,
                                             29
                                         ],
-                                        "name": "LA Zoo",
+                                        "name": "Zoo 2",
                                         "type": "bar"
-                                    }
-                                ],
-                                "layout": {
-                                    "barmode": "group"
-                                }
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "language": "javascript",
-            "source": [
-                "var trace1 = {\n    x: [1, 2, 3],\n    y: [4, 5, 6],\n    type: 'scatter',\n};\n\nvar trace2 = {\n    x: [20, 30, 40],\n    y: [50, 60, 70],\n    xaxis: 'x2',\n    yaxis: 'y2',\n    type: 'scatter',\n};\n\nvar data = [trace1, trace2];\n\nvar layout = {\n    grid: { rows: 1, columns: 2, pattern: 'independent'},\n    title: \"title of the plot\" \n};\n\nPlotly.newPlot('myDiv', data, layout);\n"
-            ],
-            "outputs": [
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.ts.notebook.plotly+json",
-                            "value": {
-                                "requestId": "x1a0fdef33ce7484f9212616a9ca6f0cc",
-                                "type": "generatePlot",
-                                "ele": "myDiv",
-                                "data": [
-                                    {
-                                        "x": [
-                                            1,
-                                            2,
-                                            3
-                                        ],
-                                        "y": [
-                                            4,
-                                            5,
-                                            6
-                                        ],
-                                        "type": "scatter"
                                     },
                                     {
                                         "x": [
-                                            20,
-                                            30,
-                                            40
+                                            "penguins",
+                                            "crocodiles",
+                                            "swans"
                                         ],
                                         "y": [
-                                            50,
-                                            60,
-                                            70
+                                            16,
+                                            10,
+                                            28
                                         ],
+                                        "name": "Zoo 3",
+                                        "type": "bar",
                                         "xaxis": "x2",
-                                        "yaxis": "y2",
-                                        "type": "scatter"
+                                        "yaxis": "y2"
+                                    },
+                                    {
+                                        "x": [
+                                            "penguins",
+                                            "crocodiles",
+                                            "swans"
+                                        ],
+                                        "y": [
+                                            24,
+                                            12,
+                                            16
+                                        ],
+                                        "name": "Zoo 4",
+                                        "type": "bar",
+                                        "xaxis": "x2",
+                                        "yaxis": "y2"
                                     }
                                 ],
                                 "layout": {
@@ -110,7 +103,52 @@
                                         "columns": 2,
                                         "pattern": "independent"
                                     },
-                                    "title": "title of the plot"
+                                    "title": "Animals in different zoos",
+                                    "barmode": "group",
+                                    "annotations": [
+                                        {
+                                            "text": "First subplot",
+                                            "font": {
+                                                "size": 16
+                                            },
+                                            "align": "center",
+                                            "x": 0.13,
+                                            "y": 1.1,
+                                            "xref": "paper",
+                                            "yref": "paper",
+                                            "showarrow": false
+                                        },
+                                        {
+                                            "text": "Second subplot",
+                                            "font": {
+                                                "size": 16
+                                            },
+                                            "align": "center",
+                                            "x": 0.9,
+                                            "y": 1.1,
+                                            "xref": "paper",
+                                            "yref": "paper",
+                                            "showarrow": false
+                                        }
+                                    ],
+                                    "width": 600,
+                                    "height": 300,
+                                    "font": {
+                                        "size": 16
+                                    },
+                                    "yaxis": {
+                                        "automargin": true
+                                    },
+                                    "xaxis": {
+                                        "automargin": true
+                                    },
+                                    "margin": {
+                                        "l": 4,
+                                        "r": 4,
+                                        "b": 4,
+                                        "t": 50,
+                                        "pad": 0
+                                    }
                                 }
                             }
                         }
