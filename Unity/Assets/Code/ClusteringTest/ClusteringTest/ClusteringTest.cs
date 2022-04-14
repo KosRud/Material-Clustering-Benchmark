@@ -3,6 +3,12 @@ using ClusteringAlgorithms;
 using System.Collections.Generic;
 using WorkGeneration;
 
+/*
+  TODO
+
+  separate classes for handling different log types
+*/
+
 public class ClusteringTest : MonoBehaviour {
   public const int maxNumClusters = 16; // ! do not change
   public const int kernelSize = 8; // ! must match shader
@@ -52,6 +58,8 @@ public class ClusteringTest : MonoBehaviour {
   }
 
   private WorkList workList;
+  private BenchmarkReportCollection reportCollection;
+  private BenchmarkMeasurementVariance benchmarkMeasurementVariance;
 
   private bool awaitingRestart = false;
   private readonly List<float> frameLogVariance = new List<float>();
@@ -178,58 +186,25 @@ public class ClusteringTest : MonoBehaviour {
     this.videoPlayer.clip = this.currentWorkParameters.video;
     this.videoPlayer.Play();
     this.videoPlayer.frame = this.GetStartFrame();
+
+    if (this.reportCollection == null) {
+      this.reportCollection = new BenchmarkReportCollection();
+    }
+
+    this.reportCollection.reports.Add(
+      new BenchmarkReport(
+        measurement: null,
+        serializableLaunchParameters:  this.currentWorkParameters.GetSerializable(),
+        logType: this.workList.logType
+      )
+    );
+
+    this.benchmarkMeasurementVariance = new BenchmarkMeasurementVariance();
   }
 
   // Update is called once per frame
   private void Update() {
 
-  }
-
-  private void WriteVarianceLog() {
-    string fileName =
-      $"{varianceLogPath}/{this.currentWorkParameters.GetFileName()}";
-
-    if (System.IO.File.Exists(fileName)) {
-#if UNITY_EDITOR
-      UnityEditor.EditorApplication.isPlaying = false;
-#endif
-      throw new System.Exception($"File exists: {fileName}");
-    }
-
-    using (
-      System.IO.FileStream fs = System.IO.File.Open(
-          fileName, System.IO.FileMode.OpenOrCreate
-        )
-    ) {
-      using var sw = new System.IO.StreamWriter(fs);
-      sw.WriteLine("Frame,Variance");
-      for (int i = 0; i < this.frameLogVariance.Count; i++) {
-        float Variance = this.frameLogVariance[i];
-        if (Variance == -1) {
-          sw.WriteLine(
-            $"{i}"
-          );
-        } else {
-          sw.WriteLine(
-            $"{i},{Variance}"
-          );
-        }
-      }
-    }
-    Debug.Log($"file written: {fileName}");
-  }
-
-  private void WriteFrameTimeLog(float avgFrameTime, float peakFrameTime) {
-    string fileName = "Frame time log.txt";
-
-    using System.IO.FileStream fs = System.IO.File.Open(
-        fileName, System.IO.FileMode.Append
-      );
-    using var sw = new System.IO.StreamWriter(fs);
-    sw.WriteLine(this.currentWorkParameters.GetFileName());
-    sw.WriteLine($"Average frame time: {avgFrameTime:0.000} ms");
-    sw.WriteLine($"   Peak frame time: {peakFrameTime:0.000} ms");
-    sw.WriteLine();
   }
 
   private void OnRenderImage(RenderTexture src, RenderTexture dest) {
@@ -255,15 +230,24 @@ public class ClusteringTest : MonoBehaviour {
 
       switch (this.workList.logType) {
         case LogType.Variance:
-          this.WriteVarianceLog();
+
+          this.reportCollection.reports.FindLast(x => true).measurement =
+            this.benchmarkMeasurementVariance;
+
           break;
+
         case LogType.FrameTime:
-          this.WriteFrameTimeLog(
-            avgFrameTime: this.totalTime / this.framesMeasured,
-            peakFrameTime: this.peakFrameTime
+
+          var measurement = new BenchmarkMeasurementFrameTime(
+            peakFrameTime: this.peakFrameTime,
+            avgFrameTime: this.totalTime / this.framesMeasured
           );
+          this.reportCollection.reports.FindLast(x => true).measurement = measurement;
+
           break;
+
         default:
+
           throw new System.NotImplementedException();
       }
 
@@ -272,6 +256,11 @@ public class ClusteringTest : MonoBehaviour {
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
         Destroy(this);
+
+        System.IO.File.WriteAllText(
+          "report.txt",
+          JsonUtility.ToJson(this.reportCollection)
+        );
       }
 
       this.OnDisable();
@@ -361,8 +350,11 @@ public class ClusteringTest : MonoBehaviour {
   }
 
   private void MakeVarianceLogEntry() {
-    this.frameLogVariance.Add(
-      this.currentWorkParameters.dispatcher.GetVariance()
+    this.benchmarkMeasurementVariance.varianceByFrame.Add(
+      new BenchmarkMeasurementVariance.FrametVariance(
+        frameIndex: this.videoPlayer.frame,
+        variance: this.currentWorkParameters.dispatcher.GetVariance()
+      )
     );
   }
 

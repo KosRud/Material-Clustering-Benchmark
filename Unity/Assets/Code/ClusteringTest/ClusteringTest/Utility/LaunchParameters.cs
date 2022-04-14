@@ -7,7 +7,7 @@ namespace WorkGeneration {
 
   public class LaunchParameters {
     [Serializable]
-    private class SerializableLaunchParameters {
+    public class SerializableLaunchParameters {
       public string videoName;
       public int numIterations;
       public int workingTextureSize;
@@ -17,10 +17,6 @@ namespace WorkGeneration {
       public bool doDownscale;
       public string algorithm;
       public bool doRandomizeEmptyClusters;
-
-      public string GetJson() {
-        return JsonUtility.ToJson(this);
-      }
 
       public SerializableLaunchParameters(
         string videoName,
@@ -45,22 +41,22 @@ namespace WorkGeneration {
       }
     }
 
+    public SerializableLaunchParameters GetSerializable() {
+      return new SerializableLaunchParameters(
+          videoName: this.video.name,
+          numIterations: this.dispatcher.numIterations,
+          workingTextureSize:
+          this.dispatcher.clusteringRTsAndBuffers.texturesWorkRes.size,
+          numClusters: this.dispatcher.clusteringRTsAndBuffers.numClusters,
+          jitterSize: this.dispatcher.clusteringRTsAndBuffers.jitterSize,
+          staggeredJitter: this.staggeredJitter,
+          doDownscale: this.doDownscale,
+          algorithm: this.dispatcher.descriptionString,
+          doRandomizeEmptyClusters: this.dispatcher.doRandomizeEmptyClusters
+        );
+    }
+
     public string GetFileName() {
-      string json = new SerializableLaunchParameters(
-        videoName: this.video.name,
-        numIterations: this.dispatcher.numIterations,
-        workingTextureSize:
-        this.dispatcher.clusteringRTsAndBuffers.texturesWorkRes.size,
-        numClusters: this.dispatcher.clusteringRTsAndBuffers.numClusters,
-        jitterSize: this.dispatcher.clusteringRTsAndBuffers.jitterSize,
-        staggeredJitter: this.staggeredJitter,
-        doDownscale: this.doDownscale,
-        algorithm: this.dispatcher.descriptionString,
-        doRandomizeEmptyClusters: this.dispatcher.doRandomizeEmptyClusters
-      ).GetJson();
-
-      Debug.Log(json);
-
       string videoName = this.video.name;
       int numIterations = this.dispatcher.numIterations;
       int workingTextureSize =

@@ -36,16 +36,16 @@ using UnityEngine;
 */
 
 [Serializable]
-public abstract class ABenchmarkMeasurement {}
+public abstract class ABenchmarkMeasurement { }
 
 [Serializable]
 public class BenchmarkMeasurementVariance : ABenchmarkMeasurement {
   [Serializable]
   public class FrametVariance {
-    public int frameIdex;
+    public long frameIdex;
     public float variance;
 
-    public FrametVariance (int frameIndex, float variance) {
+    public FrametVariance(long frameIndex, float variance) {
       this.frameIdex = frameIndex;
       this.variance = variance;
     }
@@ -73,16 +73,18 @@ public class BenchmarkMeasurementFrameTime : ABenchmarkMeasurement {
 public class BenchmarkReport {
   [SerializeReference]
   public ABenchmarkMeasurement measurement;
-  public LaunchParameters launchParameters;
   public ClusteringTest.LogType logType;
+
+  public LaunchParameters.SerializableLaunchParameters
+  serializableLaunchParameters;
 
   public BenchmarkReport(
     ABenchmarkMeasurement measurement,
-    LaunchParameters launchParameters,
+    LaunchParameters.SerializableLaunchParameters serializableLaunchParameters,
     ClusteringTest.LogType logType
   ) {
     this.measurement = measurement;
-    this.launchParameters = launchParameters;
+    this.serializableLaunchParameters = serializableLaunchParameters;
     this.logType = logType;
   }
 }
@@ -91,7 +93,7 @@ public class BenchmarkReport {
 public class BenchmarkReportCollection {
   public List<BenchmarkReport> reports;
 
-  public BenchmarkReportCollection(List<BenchmarkReport> reports) {
-    this.reports = reports;
+  public BenchmarkReportCollection() {
+    this.reports = new List<BenchmarkReport>();
   }
 }
