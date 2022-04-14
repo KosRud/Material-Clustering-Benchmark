@@ -1,0 +1,129 @@
+{
+    "cells": [
+        {
+            "language": "markdown",
+            "source": [
+                "The extension ships with the latest version of Plotly, making it unnecessary to install plotly.js."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "const { Plotly } = require('node-kernel');\nvar trace1 = {\n    x: ['giraffes', 'orangutans', 'monkeys'],\n    y: [20, 14, 23],\n    name: 'SF Zoo',\n    type: 'bar',\n};\n\nvar trace2 = {\n    x: ['giraffes', 'orangutans', 'monkeys'],\n    y: [12, 18, 29],\n    name: 'LA Zoo',\n    type: 'bar',\n};\n\nvar data = [trace1, trace2];\nvar layout = { barmode: 'group' };\nPlotly.newPlot('myDiv', data, layout);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.ts.notebook.plotly+json",
+                            "value": {
+                                "requestId": "xf006297504b94d6482636ff14647ac90",
+                                "type": "generatePlot",
+                                "ele": "myDiv",
+                                "data": [
+                                    {
+                                        "x": [
+                                            "giraffes",
+                                            "orangutans",
+                                            "monkeys"
+                                        ],
+                                        "y": [
+                                            20,
+                                            14,
+                                            23
+                                        ],
+                                        "name": "SF Zoo",
+                                        "type": "bar"
+                                    },
+                                    {
+                                        "x": [
+                                            "giraffes",
+                                            "orangutans",
+                                            "monkeys"
+                                        ],
+                                        "y": [
+                                            12,
+                                            18,
+                                            29
+                                        ],
+                                        "name": "LA Zoo",
+                                        "type": "bar"
+                                    }
+                                ],
+                                "layout": {
+                                    "barmode": "group"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "var trace1 = {\n    x: [1, 2, 3],\n    y: [4, 5, 6],\n    type: 'scatter',\n};\n\nvar trace2 = {\n    x: [20, 30, 40],\n    y: [50, 60, 70],\n    xaxis: 'x2',\n    yaxis: 'y2',\n    type: 'scatter',\n};\n\nvar data = [trace1, trace2];\n\nvar layout = {\n    grid: { rows: 1, columns: 2, pattern: 'independent'},\n    title: \"title of the plot\" \n};\n\nPlotly.newPlot('myDiv', data, layout);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.ts.notebook.plotly+json",
+                            "value": {
+                                "requestId": "x1a0fdef33ce7484f9212616a9ca6f0cc",
+                                "type": "generatePlot",
+                                "ele": "myDiv",
+                                "data": [
+                                    {
+                                        "x": [
+                                            1,
+                                            2,
+                                            3
+                                        ],
+                                        "y": [
+                                            4,
+                                            5,
+                                            6
+                                        ],
+                                        "type": "scatter"
+                                    },
+                                    {
+                                        "x": [
+                                            20,
+                                            30,
+                                            40
+                                        ],
+                                        "y": [
+                                            50,
+                                            60,
+                                            70
+                                        ],
+                                        "xaxis": "x2",
+                                        "yaxis": "y2",
+                                        "type": "scatter"
+                                    }
+                                ],
+                                "layout": {
+                                    "grid": {
+                                        "rows": 1,
+                                        "columns": 2,
+                                        "pattern": "independent"
+                                    },
+                                    "title": "title of the plot"
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                ""
+            ],
+            "outputs": []
+        }
+    ]
+}
