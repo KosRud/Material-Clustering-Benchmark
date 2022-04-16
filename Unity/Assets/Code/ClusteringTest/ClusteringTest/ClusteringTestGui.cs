@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class ClusteringTestGui : MonoBehaviour
 {
     private List<WorkOption> workOptions;
+    private WorkOption frameTimeWorkOption;
+
     public UnityEngine.Video.VideoClip[] videos;
     public ComputeShader csHighlightRemoval;
 
@@ -42,15 +44,15 @@ public class ClusteringTestGui : MonoBehaviour
 
         this.workOptions = new List<WorkOption>();
 
-        this.workOptions.Add(
-            new WorkOption(
-                new WorkGeneration.FrameTime(
-                    kernelSize: ClusteringTest.kernelSize,
-                    videos: this.videos,
-                    csHighlightRemoval: this.csHighlightRemoval
-                ).GenerateWork()
-            )
+        this.frameTimeWorkOption = new WorkOption(
+            new WorkGeneration.FrameTime(
+                kernelSize: ClusteringTest.kernelSize,
+                videos: this.videos,
+                csHighlightRemoval: this.csHighlightRemoval
+            ).GenerateWork()
         );
+
+        this.workOptions.Add(this.frameTimeWorkOption);
 
         this.workOptions.Add(
             new WorkOption(
@@ -125,20 +127,6 @@ public class ClusteringTestGui : MonoBehaviour
 
     private void OnGUI()
     {
-        if (
-            this.clusteringTest.enabled == true
-            && this.clusteringTest.currentWorkList.logType == ClusteringTest.LogType.FrameTime
-        )
-        {
-            /*
-                OnGUI function GC allocates, even when empty
-                by the sheer virtue of its existence
-
-                for frame time measurement zero GC is
-                critically important
-            */
-            this.enabled = false;
-        }
         GUILayout.BeginVertical();
         {
             foreach (WorkOption option in this.workOptions)
@@ -178,5 +166,16 @@ public class ClusteringTestGui : MonoBehaviour
             );
         }
         GUILayout.EndVertical();
+
+        if (this.frameTimeWorkOption.enabled)
+        {
+            /*
+                make sure no GC allocations happen,
+                when measuring frame times
+
+                ! even an empty OnGUI function GC allocated
+            */
+            this.enabled = false;
+        }
     }
 }
