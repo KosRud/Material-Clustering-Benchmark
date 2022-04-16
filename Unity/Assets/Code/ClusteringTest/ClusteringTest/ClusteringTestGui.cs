@@ -148,6 +148,17 @@ public class ClusteringTestGui : MonoBehaviour
                     }
                 }
                 this.clusteringTest.enabled = true;
+
+                if (this.frameTimeWorkOption.enabled)
+                {
+                    /*
+                        make sure no GC allocations happen,
+                        when measuring frame times
+        
+                        ! even an empty OnGUI function GC allocated
+                    */
+                    this.enabled = false;
+                }
             }
             if (this.clusteringTest.enabled)
             {
@@ -166,16 +177,5 @@ public class ClusteringTestGui : MonoBehaviour
             );
         }
         GUILayout.EndVertical();
-
-        if (this.frameTimeWorkOption.enabled)
-        {
-            /*
-                make sure no GC allocations happen,
-                when measuring frame times
-
-                ! even an empty OnGUI function GC allocated
-            */
-            this.enabled = false;
-        }
     }
 }
