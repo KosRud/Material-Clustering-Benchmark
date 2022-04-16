@@ -204,7 +204,7 @@ public class MeasurementRunner : IDisposable
 
                 if (this.noGcAvailable)
                 {
-                    Debug.Assert(System.GC.TryStartNoGCRegion(128));
+                    Debug.Assert(System.GC.TryStartNoGCRegion(0));
                 }
                 // no GC section
                 {

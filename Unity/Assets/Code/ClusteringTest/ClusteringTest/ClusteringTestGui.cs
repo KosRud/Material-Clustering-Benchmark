@@ -22,11 +22,35 @@ public class ClusteringTestGui : MonoBehaviour
         }
     }
 
+    private bool noGcAvailable;
+
     private void Awake()
     {
         Debug.Assert(this.videos.Length != 0);
 
+        this.noGcAvailable = false;
+        try
+        {
+            System.GC.TryStartNoGCRegion(0);
+            this.noGcAvailable = true;
+            System.GC.EndNoGCRegion();
+        }
+        catch (System.NotImplementedException)
+        {
+            Debug.Log("No GC region not implemented!");
+        }
+
         this.workOptions = new List<WorkOption>();
+
+        this.workOptions.Add(
+            new WorkOption(
+                new WorkGeneration.FrameTime(
+                    kernelSize: ClusteringTest.kernelSize,
+                    videos: this.videos,
+                    csHighlightRemoval: this.csHighlightRemoval
+                ).GenerateWork()
+            )
+        );
 
         this.workOptions.Add(
             new WorkOption(
@@ -41,16 +65,6 @@ public class ClusteringTestGui : MonoBehaviour
         this.workOptions.Add(
             new WorkOption(
                 new WorkGeneration.EmptyClusterRandomization(
-                    kernelSize: ClusteringTest.kernelSize,
-                    videos: this.videos,
-                    csHighlightRemoval: this.csHighlightRemoval
-                ).GenerateWork()
-            )
-        );
-
-        this.workOptions.Add(
-            new WorkOption(
-                new WorkGeneration.FrameTime(
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
@@ -111,6 +125,20 @@ public class ClusteringTestGui : MonoBehaviour
 
     private void OnGUI()
     {
+        if (
+            this.clusteringTest.enabled == true
+            && this.clusteringTest.currentWorkList.logType == ClusteringTest.LogType.FrameTime
+        )
+        {
+            /*
+                OnGUI function GC allocates, even when empty
+                by the sheer virtue of its existence
+
+                for frame time measurement zero GC is
+                critically important
+            */
+            this.enabled = false;
+        }
         GUILayout.BeginVertical();
         {
             foreach (WorkOption option in this.workOptions)
@@ -137,6 +165,12 @@ public class ClusteringTestGui : MonoBehaviour
                     $"{this.clusteringTest.currentWorkList.name}: {this.clusteringTest.numCurWorkListFinishedRuns} / {this.clusteringTest.numCurWorkListRuns}"
                 );
             }
+        }
+        if (this.noGcAvailable == false)
+        {
+            GUILayout.Label(
+                "No-GC region functionality not available - frame time measurements will be inaccurate!"
+            );
         }
         GUILayout.EndVertical();
     }
