@@ -130,7 +130,6 @@ public class ClusteringTest : MonoBehaviour
 
         if (this.measurementRunner.finished == true)
         {
-            WorkList workList = this.workLists.Peek();
             this.reportCollection.reports.Add(this.measurementRunner.GetReport());
             this.OnFinishedRunner();
             this.numCurWorkListFinishedRuns++;
