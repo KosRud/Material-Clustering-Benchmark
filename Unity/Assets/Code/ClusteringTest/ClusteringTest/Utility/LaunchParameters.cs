@@ -1,105 +1,117 @@
-
 using ClusteringAlgorithms;
 using System;
 using UnityEngine;
 
-namespace WorkGeneration {
+namespace WorkGeneration
+{
+    public class LaunchParameters : IDisposable
+    {
+        [Serializable]
+        public class SerializableLaunchParameters
+        {
+            public string videoName;
+            public int numIterations;
+            public int workingTextureSize;
+            public int numClusters;
+            public int jitterSize;
+            public bool staggeredJitter;
+            public bool doDownscale;
+            public string algorithm;
+            public bool doRandomizeEmptyClusters;
 
-  public class LaunchParameters {
-    [Serializable]
-    public class SerializableLaunchParameters {
-      public string videoName;
-      public int numIterations;
-      public int workingTextureSize;
-      public int numClusters;
-      public int jitterSize;
-      public bool staggeredJitter;
-      public bool doDownscale;
-      public string algorithm;
-      public bool doRandomizeEmptyClusters;
+            public SerializableLaunchParameters(
+                string videoName,
+                int numIterations,
+                int workingTextureSize,
+                int numClusters,
+                int jitterSize,
+                bool staggeredJitter,
+                bool doDownscale,
+                string algorithm,
+                bool doRandomizeEmptyClusters
+            )
+            {
+                this.videoName = videoName;
+                this.numIterations = numIterations;
+                this.workingTextureSize = workingTextureSize;
+                this.numClusters = numClusters;
+                this.jitterSize = jitterSize;
+                this.staggeredJitter = staggeredJitter;
+                this.doDownscale = doDownscale;
+                this.algorithm = algorithm;
+                this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
+            }
+        }
 
-      public SerializableLaunchParameters(
-        string videoName,
-        int numIterations,
-        int workingTextureSize,
-        int numClusters,
-        int jitterSize,
-        bool staggeredJitter,
-        bool doDownscale,
-        string algorithm,
-        bool doRandomizeEmptyClusters
-      ) {
-        this.videoName = videoName;
-        this.numIterations = numIterations;
-        this.workingTextureSize = workingTextureSize;
-        this.numClusters = numClusters;
-        this.jitterSize = jitterSize;
-        this.staggeredJitter = staggeredJitter;
-        this.doDownscale = doDownscale;
-        this.algorithm = algorithm;
-        this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
-      }
-    }
+        public SerializableLaunchParameters GetSerializable()
+        {
+            return new SerializableLaunchParameters(
+                videoName: this.video.name,
+                numIterations: this.dispatcher.numIterations,
+                workingTextureSize: this.dispatcher.clusteringRTsAndBuffers.texturesWorkRes.size,
+                numClusters: this.dispatcher.clusteringRTsAndBuffers.numClusters,
+                jitterSize: this.dispatcher.clusteringRTsAndBuffers.jitterSize,
+                staggeredJitter: this.staggeredJitter,
+                doDownscale: this.doDownscale,
+                algorithm: this.dispatcher.descriptionString,
+                doRandomizeEmptyClusters: this.dispatcher.doRandomizeEmptyClusters
+            );
+        }
 
-    public SerializableLaunchParameters GetSerializable() {
-      return new SerializableLaunchParameters(
-          videoName: this.video.name,
-          numIterations: this.dispatcher.numIterations,
-          workingTextureSize:
-          this.dispatcher.clusteringRTsAndBuffers.texturesWorkRes.size,
-          numClusters: this.dispatcher.clusteringRTsAndBuffers.numClusters,
-          jitterSize: this.dispatcher.clusteringRTsAndBuffers.jitterSize,
-          staggeredJitter: this.staggeredJitter,
-          doDownscale: this.doDownscale,
-          algorithm: this.dispatcher.descriptionString,
-          doRandomizeEmptyClusters: this.dispatcher.doRandomizeEmptyClusters
-        );
-    }
+        public string GetFileName()
+        {
+            string videoName = this.video.name;
+            int numIterations = this.dispatcher.numIterations;
+            int workingTextureSize = this.dispatcher.clusteringRTsAndBuffers.texturesWorkRes.size;
+            int numClusters = this.dispatcher.clusteringRTsAndBuffers.numClusters;
+            int jitterSize = this.dispatcher.clusteringRTsAndBuffers.jitterSize;
+            bool staggeredJitter = this.staggeredJitter;
+            bool doDownscale = this.doDownscale;
+            string algorithm = this.dispatcher.descriptionString;
+            bool doRandomizeEmptyClusters = this.dispatcher.doRandomizeEmptyClusters;
 
-    public string GetFileName() {
-      string videoName = this.video.name;
-      int numIterations = this.dispatcher.numIterations;
-      int workingTextureSize =
-        this.dispatcher.clusteringRTsAndBuffers.texturesWorkRes.size;
-      int numClusters = this.dispatcher.clusteringRTsAndBuffers.numClusters;
-      int jitterSize =
-        this.dispatcher.clusteringRTsAndBuffers.jitterSize;
-      bool staggeredJitter = this.staggeredJitter;
-      bool doDownscale = this.doDownscale;
-      string algorithm = this.dispatcher.descriptionString;
-      bool doRandomizeEmptyClusters = this.dispatcher.doRandomizeEmptyClusters;
+            return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{workingTextureSize}|number of clusters:{numClusters}|randomize empty clusters:{doRandomizeEmptyClusters}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}|algorithm:{algorithm}.csv";
+        }
 
-      return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{workingTextureSize}|number of clusters:{numClusters}|randomize empty clusters:{doRandomizeEmptyClusters}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}|algorithm:{algorithm}.csv";
-    }
+        public LaunchParameters ThrowIfExists()
+        {
+            string fileName = $"{ClusteringTest.varianceLogPath}/{this.GetFileName()}";
 
-    public LaunchParameters ThrowIfExists() {
-      string fileName = $"{ClusteringTest.varianceLogPath}/{this.GetFileName()}";
-
-      if (System.IO.File.Exists(fileName)) {
+            if (System.IO.File.Exists(fileName))
+            {
 #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
+                UnityEditor.EditorApplication.isPlaying = false;
 #endif
-        throw new System.Exception($"File exists: {fileName}");
-      }
+                throw new System.Exception($"File exists: {fileName}");
+            }
 
-      return this;
+            return this;
+        }
+
+        public readonly bool staggeredJitter;
+        public readonly UnityEngine.Video.VideoClip video;
+        public readonly bool doDownscale;
+        public readonly ADispatcher dispatcher;
+
+        /// <summary>
+        /// Takes ownership of the dispatcher
+        /// </summary>
+        public LaunchParameters(
+            bool staggeredJitter,
+            UnityEngine.Video.VideoClip video,
+            bool doDownscale,
+            ADispatcher dispatcher
+        )
+        {
+            this.staggeredJitter = staggeredJitter;
+            this.video = video;
+            this.doDownscale = doDownscale;
+            this.dispatcher = dispatcher;
+        }
+
+        public void Dispose()
+        {
+            this.dispatcher.Dispose();
+        }
     }
-
-    public readonly bool staggeredJitter;
-    public readonly UnityEngine.Video.VideoClip video;
-    public readonly bool doDownscale;
-    public readonly ADispatcher dispatcher;
-
-    public LaunchParameters(
-      bool staggeredJitter,
-      UnityEngine.Video.VideoClip video,
-      bool doDownscale,
-      ADispatcher dispatcher
-    ) {
-      this.staggeredJitter = staggeredJitter;
-      this.video = video;
-      this.doDownscale = doDownscale;
-      this.dispatcher = dispatcher;
-    }
-  }
 }

@@ -1,11 +1,12 @@
 {
     "[csharp]": {
         "editor.defaultFormatter": "jkillian.custom-local-formatters",
-        "editor.tabSize": 2
+        "editor.tabSize": 4
     },
     "customLocalFormatters.formatters": [
         {
-            "command": "astyle --options=.astylerc",
+            //"command": "astyle --options=.astylerc",
+            "command": "dotnet dotnet-csharpier",
             "languages": ["csharp"]
         }
     ]
