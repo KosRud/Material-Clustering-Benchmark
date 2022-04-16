@@ -13,7 +13,10 @@ namespace WorkGeneration
 
         public override WorkList GenerateWork()
         {
-            var workList = new WorkList(ClusteringTest.LogType.Variance);
+            var workList = new WorkList(
+                ClusteringTest.LogType.Variance,
+                "Random swap (1KM) vs Random swap (2KM)"
+            );
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {

@@ -14,7 +14,7 @@ namespace WorkGeneration
 
         public override WorkList GenerateWork()
         {
-            var workList = new WorkList(ClusteringTest.LogType.Variance);
+            var workList = new WorkList(ClusteringTest.LogType.Variance, "Subsampling");
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {

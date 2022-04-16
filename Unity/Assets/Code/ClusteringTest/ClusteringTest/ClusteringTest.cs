@@ -45,7 +45,7 @@ public class ClusteringTest : MonoBehaviour
         }
 
         // must be called after checking noGcAvailable
-        this.LoadNextRunnerOrDisableSelf();
+        this.OnFinishedRunner();
     }
 
     private void CheckTimerPrecision()
@@ -60,13 +60,18 @@ public class ClusteringTest : MonoBehaviour
         }
     }
 
-    private void LoadNextRunnerOrDisableSelf()
+    private void OnFinishedRunner()
     {
         this.measurementRunner?.Dispose();
 
         WorkList workList = this.workLists.Peek();
         if (workList.runs.Count == 0)
         {
+            System.IO.File.WriteAllText(
+                $"Reports/{workList.name}.json",
+                JsonUtility.ToJson(this.reportCollection)
+            );
+
             this.workLists.Pop();
             if (this.workLists.Count == 0)
             {
@@ -96,20 +101,11 @@ public class ClusteringTest : MonoBehaviour
 
         if (this.measurementRunner.finished == true)
         {
+            WorkList workList = this.workLists.Peek();
+
             this.reportCollection.reports.Add(this.measurementRunner.GetReport());
 
-            if (this.workLists.Peek().runs.Count == 0)
-            {
-                System.IO.File.WriteAllText(
-                    "report.json",
-                    JsonUtility.ToJson(this.reportCollection)
-                );
-                this.enabled = false;
-            }
-            else
-            {
-                this.LoadNextRunnerOrDisableSelf();
-            }
+            this.OnFinishedRunner();
         }
     }
 }
