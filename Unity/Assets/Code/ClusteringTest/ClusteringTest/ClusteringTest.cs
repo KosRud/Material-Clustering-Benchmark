@@ -108,6 +108,7 @@ public class ClusteringTest : MonoBehaviour
             }
 
             this.currentWorkList = this.workLists.Pop();
+            this.numCurWorkListFinishedRuns = 0;
         }
 
         this.measurementRunner = new MeasurementRunner(
