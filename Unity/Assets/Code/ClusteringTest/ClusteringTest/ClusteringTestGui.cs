@@ -155,7 +155,7 @@ public class ClusteringTestGui : MonoBehaviour
                         make sure no GC allocations happen,
                         when measuring frame times
         
-                        ! even an empty OnGUI function GC allocated
+                        ! even an empty OnGUI function GC allocates
                     */
                     this.enabled = false;
                 }
