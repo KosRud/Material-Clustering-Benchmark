@@ -9,10 +9,16 @@ public class ClusteringTest : MonoBehaviour
     public const int fullTextureSize = 512;
 
     public Stack<WorkList> workLists;
+    public WorkList currentWorkList;
     public ComputeShader csHighlightRemoval;
     public const string varianceLogPath = "Variance logs";
 
     private bool noGcAvailable;
+
+    public int numTotalRuns;
+    public int numTotalFinishedRuns;
+    public int numCurWorkListFinishedRuns;
+    public int numCurWorkListRuns;
 
     public enum LogType
     {
@@ -30,7 +36,19 @@ public class ClusteringTest : MonoBehaviour
 
     private void Awake()
     {
+        this.workLists = new Stack<WorkList>();
+    }
+
+    private void OnEnable()
+    {
         this.reportCollection = new BenchmarkReportCollection();
+
+        this.numTotalRuns = 0;
+        foreach (WorkList workList in this.workLists)
+        {
+            this.numTotalRuns += workList.runs.Count;
+        }
+        this.numTotalFinishedRuns = 0;
 
         this.noGcAvailable = false;
         try
@@ -44,8 +62,20 @@ public class ClusteringTest : MonoBehaviour
             Debug.Log("No GC region not implemented!");
         }
 
-        // must be called after checking noGcAvailable
-        this.OnFinishedRunner();
+        this.currentWorkList = this.workLists.Pop();
+
+        this.numCurWorkListFinishedRuns = 0;
+        this.numCurWorkListRuns = this.currentWorkList.runs.Count;
+
+        this.measurementRunner = new MeasurementRunner(
+            launchParameters: this.currentWorkList.runs.Pop(),
+            videoPlayer: this.GetComponent<UnityEngine.Video.VideoPlayer>(),
+            frameStart: this.frameStart,
+            frameEnd: this.frameEnd,
+            logType: this.currentWorkList.logType,
+            csHighlightRemoval: this.csHighlightRemoval,
+            noGcAvailable: this.noGcAvailable
+        );
     }
 
     private void CheckTimerPrecision()
@@ -64,29 +94,28 @@ public class ClusteringTest : MonoBehaviour
     {
         this.measurementRunner?.Dispose();
 
-        WorkList workList = this.workLists.Peek();
-        if (workList.runs.Count == 0)
+        if (this.currentWorkList.runs.Count == 0)
         {
             System.IO.File.WriteAllText(
-                $"Reports/{workList.name}.json",
+                $"Reports/{this.currentWorkList.name}.json",
                 JsonUtility.ToJson(this.reportCollection)
             );
 
-            this.workLists.Pop();
             if (this.workLists.Count == 0)
             {
                 this.enabled = false;
                 return;
             }
-            workList = this.workLists.Peek();
-            Debug.Assert(workList.runs.Count != 0);
+
+            this.currentWorkList = this.workLists.Pop();
         }
+
         this.measurementRunner = new MeasurementRunner(
-            launchParameters: workList.runs.Pop(),
+            launchParameters: this.currentWorkList.runs.Pop(),
             videoPlayer: this.GetComponent<UnityEngine.Video.VideoPlayer>(),
             frameStart: this.frameStart,
             frameEnd: this.frameEnd,
-            logType: workList.logType,
+            logType: this.currentWorkList.logType,
             csHighlightRemoval: this.csHighlightRemoval,
             noGcAvailable: this.noGcAvailable
         );
@@ -102,10 +131,10 @@ public class ClusteringTest : MonoBehaviour
         if (this.measurementRunner.finished == true)
         {
             WorkList workList = this.workLists.Peek();
-
             this.reportCollection.reports.Add(this.measurementRunner.GetReport());
-
             this.OnFinishedRunner();
+            this.numCurWorkListFinishedRuns++;
+            this.numTotalFinishedRuns++;
         }
     }
 }

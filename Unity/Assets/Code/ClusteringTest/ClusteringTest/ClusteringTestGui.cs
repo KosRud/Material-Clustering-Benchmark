@@ -117,6 +117,26 @@ public class ClusteringTestGui : MonoBehaviour
             {
                 option.enabled = GUILayout.Toggle(option.enabled, option.workList.name);
             }
+            if (GUILayout.Button("Start"))
+            {
+                foreach (WorkOption option in this.workOptions)
+                {
+                    if (option.enabled)
+                    {
+                        this.clusteringTest.workLists.Push(option.workList);
+                    }
+                }
+                this.clusteringTest.enabled = true;
+            }
+            if (this.clusteringTest.enabled)
+            {
+                GUILayout.Label(
+                    $"Total: {this.clusteringTest.numTotalFinishedRuns} / {this.clusteringTest.numTotalRuns}"
+                );
+                GUILayout.Label(
+                    $"{this.clusteringTest.currentWorkList.name}: {this.clusteringTest.numCurWorkListFinishedRuns} / {this.clusteringTest.numCurWorkListRuns}"
+                );
+            }
         }
         GUILayout.EndVertical();
     }
