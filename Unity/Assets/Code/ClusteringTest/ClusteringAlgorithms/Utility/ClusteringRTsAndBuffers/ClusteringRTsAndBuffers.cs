@@ -89,7 +89,8 @@ namespace ClusteringAlgorithms
                 RenderTextureFormat.ARGBFloat
             )
             {
-                enableRandomWrite = true
+                enableRandomWrite = true,
+                filterMode = FilterMode.Point
             };
 
             this.jitterSize = jitterSize;
