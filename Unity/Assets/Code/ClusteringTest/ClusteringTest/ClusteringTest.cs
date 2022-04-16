@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections.Generic;
+using WorkGeneration;
 
 public class ClusteringTest : MonoBehaviour
 {
@@ -6,9 +8,11 @@ public class ClusteringTest : MonoBehaviour
     public const int kernelSize = 8; // ! must match shader
     public const int fullTextureSize = 512;
 
-    private bool noGcAvailable;
-
+    public Stack<WorkList> workLists;
+    public ComputeShader csHighlightRemoval;
     public const string varianceLogPath = "Variance logs";
+
+    private bool noGcAvailable;
 
     public enum LogType
     {
@@ -22,35 +26,10 @@ public class ClusteringTest : MonoBehaviour
     public long? frameStart = null;
     public long? frameEnd = null;
 
-    // ToDo: is it needed?
-    private enum Algorithm
-    {
-        KM,
-        KHM,
-        RS_1KM,
-        RS_2KM,
-        RS_2KM_readback,
-        Alternating,
-        OneKM
-    }
-
-    private WorkGeneration.WorkList workList;
     private BenchmarkReportCollection reportCollection;
-
-    // public
-    public ComputeShader csHighlightRemoval;
-    public UnityEngine.Video.VideoClip[] videos;
 
     private void Awake()
     {
-        Debug.Assert(this.videos.Length != 0);
-
-        this.workList = new WorkGeneration.Subsampling(
-            kernelSize: kernelSize,
-            videos: this.videos,
-            csHighlightRemoval: this.csHighlightRemoval
-        ).GenerateWork();
-
         this.reportCollection = new BenchmarkReportCollection();
 
         this.noGcAvailable = false;
@@ -66,7 +45,7 @@ public class ClusteringTest : MonoBehaviour
         }
 
         // must be called after checking noGcAvailable
-        this.LoadNextMeasurementRunner();
+        this.LoadNextRunnerOrDisableSelf();
     }
 
     private void CheckTimerPrecision()
@@ -81,16 +60,28 @@ public class ClusteringTest : MonoBehaviour
         }
     }
 
-    private void LoadNextMeasurementRunner()
+    private void LoadNextRunnerOrDisableSelf()
     {
         this.measurementRunner?.Dispose();
 
+        WorkList workList = this.workLists.Peek();
+        if (workList.runs.Count == 0)
+        {
+            this.workLists.Pop();
+            if (this.workLists.Count == 0)
+            {
+                this.enabled = false;
+                return;
+            }
+            workList = this.workLists.Peek();
+            Debug.Assert(workList.runs.Count != 0);
+        }
         this.measurementRunner = new MeasurementRunner(
-            launchParameters: this.workList.runs.Pop(),
+            launchParameters: workList.runs.Pop(),
             videoPlayer: this.GetComponent<UnityEngine.Video.VideoPlayer>(),
             frameStart: this.frameStart,
             frameEnd: this.frameEnd,
-            logType: this.workList.logType,
+            logType: workList.logType,
             csHighlightRemoval: this.csHighlightRemoval,
             noGcAvailable: this.noGcAvailable
         );
@@ -107,7 +98,7 @@ public class ClusteringTest : MonoBehaviour
         {
             this.reportCollection.reports.Add(this.measurementRunner.GetReport());
 
-            if (this.workList.runs.Count == 0)
+            if (this.workLists.Peek().runs.Count == 0)
             {
                 System.IO.File.WriteAllText(
                     "report.json",
@@ -117,7 +108,7 @@ public class ClusteringTest : MonoBehaviour
             }
             else
             {
-                this.LoadNextMeasurementRunner();
+                this.LoadNextRunnerOrDisableSelf();
             }
         }
     }

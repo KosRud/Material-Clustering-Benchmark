@@ -56,8 +56,6 @@ public class MeasurementRunner : IDisposable
 
         this.SetTextureSize();
         this.InitVideoPlayer(videoPlayer, frameStart);
-
-        Debug.Log(this.launchParameters.dispatcher.clusteringRTsAndBuffers.texturesWorkRes.size);
     }
 
     private void InitVideoPlayer(UnityEngine.Video.VideoPlayer videoPlayer, long? frameStart)
