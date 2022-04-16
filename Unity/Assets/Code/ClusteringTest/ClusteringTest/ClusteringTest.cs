@@ -127,7 +127,19 @@ public class ClusteringTest : MonoBehaviour
 
     private void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
-        this.measurementRunner.ProcessNextFrame(src, dest);
+        try
+        {
+            this.measurementRunner.ProcessNextFrame(src, dest);
+        }
+        catch (System.Exception e)
+        {
+            System.IO.File.WriteAllText(
+                $"Reports/Error.txt",
+                $"Exception during processing a frame ({e.GetType().Name}): {e.Message}"
+            );
+            this.enabled = false;
+            Application.Quit();
+        }
 
         if (this.measurementRunner.finished == true)
         {

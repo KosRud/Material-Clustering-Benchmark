@@ -147,6 +147,11 @@ public class ClusteringTestGui : MonoBehaviour
             }
             if (GUILayout.Button("Start"))
             {
+                if (System.IO.Directory.Exists("Reports") == false)
+                {
+                    System.IO.Directory.CreateDirectory("Reports");
+                }
+
                 foreach (WorkOption option in this.workOptions)
                 {
                     if (option.enabled)
