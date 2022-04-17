@@ -8,9 +8,9 @@
             "outputs": []
         },
         {
-            "language": "javascript",
+            "language": "typescript",
             "source": [
-                "import {Plotly} from 'node-kernel';\n\nconst sharedLayout = {\n    width: 600,\n    height: 300,\n    font: {\n        size: 16\n    },\n    yaxis: {\n        automargin: true\n    },\n    xaxis: {\n        automargin: true\n    },\n    margin: {\n        l: 4,\n        r: 4,\n        b: 4,\n        t: 50,  // for title\n        pad: 0  // between axis and plot\n    }\n}"
+                "const sharedLayout = {\n    width: 600,\n    height: 300,\n    font: {\n        size: 16\n    },\n    yaxis: {\n        automargin: true\n    },\n    xaxis: {\n        automargin: true\n    },\n    margin: {\n        l: 4,\n        r: 4,\n        b: 4,\n        t: 50,  // for title\n        pad: 0  // between axis and plot\n    }\n}"
             ],
             "outputs": []
         },
@@ -24,7 +24,7 @@
         {
             "language": "javascript",
             "source": [
-                "var trace1 = {\n    x: ['giraffes', 'orangutans', 'monkeys'],\n    y: [20, 14, 23],\n    name: 'Zoo 1',\n    type: 'bar',\n};\n\nvar trace2 = {\n    x: ['giraffes', 'orangutans', 'monkeys'],\n    y: [12, 18, 29],\n    name: 'Zoo 2',\n    type: 'bar',\n};\n\nvar trace3 = {\n    x: ['penguins', 'crocodiles', 'swans'],\n    y: [16, 10, 28],\n    name: 'Zoo 3',\n    type: 'bar',\n\n    xaxis: 'x2',\n    yaxis: 'y2',\n};\n\nvar trace4 = {\n    x: ['penguins', 'crocodiles', 'swans'],\n    y: [24, 12, 16],\n    name: 'Zoo 4',\n    type: 'bar',\n\n    xaxis: 'x2',\n    yaxis: 'y2',\n};\n\nvar data = [trace1, trace2, trace3, trace4];\nvar layout = {\n    grid: { rows: 1, columns: 2, pattern: 'independent' },\n    title: 'Animals in different zoos',\n    barmode: 'group',\n    annotations: [  // subplot titles (hack)\n        {\n            text: 'First subplot',\n            font: {\n                size: 16,\n            },\n            align: 'center',\n            x: 0.13, //position in x domain\n            y: 1.1, //position in y domain\n            xref: 'paper',\n            yref: 'paper',\n            showarrow: false,\n        },\n        {\n            text: 'Second subplot',\n            font: {\n                size: 16,\n            },\n            align: 'center',\n            x: 0.9, //position in x domain\n            y: 1.1, // position in y domain\n            xref: 'paper',\n            yref: 'paper',\n            showarrow: false,\n        },\n    ],\n    ...sharedLayout,\n};\nPlotly.newPlot('myDiv', data, layout);\n"
+                "var trace1 = {\n    x: ['giraffes', 'orangutans', 'monkeys'],\n    y: [20, 14, 23],\n    name: 'Zoo 1',\n    type: 'bar',\n};\n\nvar trace2 = {\n    x: ['giraffes', 'orangutans', 'monkeys'],\n    y: [12, 18, 29],\n    name: 'Zoo 2',\n    type: 'bar',\n};\n\nvar trace3 = {\n    x: ['penguins', 'crocodiles', 'swans'],\n    y: [16, 10, 28],\n    name: 'Zoo 3',\n    type: 'bar',\n\n    xaxis: 'x2',\n    yaxis: 'y2',\n};\n\nvar trace4 = {\n    x: ['penguins', 'crocodiles', 'swans'],\n    y: [24, 12, 16],\n    name: 'Zoo 4',\n    type: 'bar',\n\n    xaxis: 'x2',\n    yaxis: 'y2',\n};\n\nvar data = [trace1, trace2, trace3, trace4];\nvar layout = {\n    grid: { rows: 1, columns: 2, pattern: 'independent' },\n    title: 'Animals in different zoos',\n    barmode: 'group',\n    annotations: [\n        // subplot titles (hack)\n        {\n            text: 'First subplot',\n            font: {\n                size: 16,\n            },\n            align: 'center',\n            x: 0.13, //position in x domain\n            y: 1.1, //position in y domain\n            xref: 'paper',\n            yref: 'paper',\n            showarrow: false,\n        },\n        {\n            text: 'Second subplot',\n            font: {\n                size: 16,\n            },\n            align: 'center',\n            x: 0.9, //position in x domain\n            y: 1.1, // position in y domain\n            xref: 'paper',\n            yref: 'paper',\n            showarrow: false,\n        },\n    ],\n    ...sharedLayout,\n};\nPlotly.newPlot('myDiv', data, layout);\n"
             ],
             "outputs": [
                 {
@@ -32,7 +32,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xaf919b641ffa4170b66e488f7f6f4bc6",
+                                "requestId": "x434bbcce46b040ee97c61a8f2be28057",
                                 "type": "generatePlot",
                                 "ele": "myDiv",
                                 "data": [
@@ -159,186 +159,14 @@
         {
             "language": "markdown",
             "source": [
-                "# Loading"
+                "# Loading reports"
             ],
             "outputs": []
         },
         {
-            "language": "typescript",
+            "language": "javascript",
             "source": [
-                "import fs from 'fs';\n\nconst content = fs.readFileSync('./Reports/Subsampling.json');\nconsole.dir(content);"
-            ],
-            "outputs": [
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.code.notebook.stdout",
-                            "value": [
-                                "Buffer(441205) [Uint8Array] [",
-                                "  123,  34, 114, 101, 112, 111, 114, 116, 115,  34,  58,  91,",
-                                "  123,  34, 109, 101,  97, 115, 117, 114, 101, 109, 101, 110,",
-                                "  116,  34,  58, 123,  34, 114, 105, 100,  34,  58,  49,  48,",
-                                "   48,  48, 125,  44,  34, 108, 111, 103,  84, 121, 112, 101,",
-                                "   34,  58,  49,  44,  34, 115, 101, 114, 105,  97, 108, 105,",
-                                "  122,  97,  98, 108, 101,  76,  97, 117, 110,  99, 104,  80,",
-                                "   97, 114,  97, 109, 101, 116, 101, 114, 115,  34,  58, 123,",
-                                "   34, 118, 105, 100, 101, 111,  78,  97, 109, 101,  34,  58,",
-                                "   34,  50,  34,  44,",
-                                "  ... 441105 more items",
-                                "]",
-                                ""
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "language": "markdown",
-            "source": [
-                ""
-            ],
-            "outputs": []
-        },
-        {
-            "language": "typescript",
-            "source": [
-                "import report from './validators/generated/Report-ti';\nimport {createCheckers} from \"ts-interface-checker\";\n\nconst reportChecker = createCheckers(report).Report;\nreportChecker.check({\n    a: \"s\",\n    b: 1,\n    c: 2\n});"
-            ],
-            "outputs": [
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.code.notebook.error",
-                            "value": {
-                                "name": "Error",
-                                "message": "Cannot find module './validators/generated/Report-ti'\nRequire stack:\n- <repl>",
-                                "stack": "node:internal/modules/cjs/loader:936\n  throw err;\n  ^\n\n    at Function.Module._resolveFilename (node:internal/modules/cjs/loader:933:15)\n    at Function.Module._resolveFilename.sharedData.moduleResolveFilenameHook.installedValue [as _resolveFilename] (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/resources/scripts/node_modules/@cspotcode/source-map-support/source-map-support.js:679:30)\n    at Function.Module._load (node:internal/modules/cjs/loader:778:27)\n    at Function._._load (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:115372)\n    at Module.require (node:internal/modules/cjs/loader:999:19)\n    at require (node:internal/modules/cjs/helpers:102:18)\n    at <Cell 8> [1, 62]\n    at Script.runInContext (node:vm:139:12)\n    at Script.runInNewContext (node:vm:144:17)\n    at Object.runInNewContext (node:vm:298:38)"
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "language": "typescript",
-            "source": [
-                "import fs from 'fs/promises';\n\nfunction unpackUnityJson(obj) {\n    const refs = Object.fromEntries(\n        obj.references.RefIds.map((reference) => [\n            reference.rid,\n            reference.data,\n        ])\n    );\n\n    return refs;\n}\n\n(async () => {\n    const report = JSON.parse(\n        await fs.readFile('./Reports/Subsampling.json', 'utf-8')\n    );\n\n    console.dir(unpackUnityJson(report));\n})();\n"
-            ],
-            "outputs": [
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.code.notebook.stdout",
-                            "value": [
-                                "{",
-                                "  '1000': {",
-                                "    varianceByFrame: [",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object],",
-                                "      ... 3900 more items",
-                                "    ]",
-                                "  },",
-                                "  '1001': {",
-                                "    varianceByFrame: [",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object],",
-                                "      ... 3900 more items",
-                                "    ]",
-                                "  },",
-                                "  '1002': {",
-                                "    varianceByFrame: [",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object],",
-                                "      ... 4550 more items",
-                                "    ]",
-                                "  },",
-                                "  '1003': {",
-                                "    varianceByFrame: [",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object],",
-                                "      ... 4550 more items",
-                                "    ]",
-                                "  }",
-                                "}",
-                                ""
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "language": "typescript",
-            "source": [
-                ""
-            ],
-            "outputs": []
-        },
-        {
-            "language": "typescript",
-            "source": [
-                ""
+                "import fs from 'fs';\nimport unpackUnityJson from './util/unpackUnityJson'\nimport report from './util/validators/generated/Report-ti';\nimport {createCheckers} from \"ts-interface-checker\";\n\nconst reportCollection = JSON.parse(\n    fs.readFileSync('./Reports/Subsampling.json', 'utf-8')\n);\n\nunpackUnityJson(reportCollection);\n\nconst reportChecker = createCheckers(report).Report;\nreportChecker.check({\n    a: \"s\",\n    b: 1,\n    c: 2\n});\n"
             ],
             "outputs": []
         }
