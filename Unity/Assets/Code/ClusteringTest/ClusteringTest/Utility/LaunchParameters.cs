@@ -10,7 +10,7 @@ namespace WorkGeneration
         public class SerializableLaunchParameters
         {
             [SerializeReference]
-            public readonly DispatcherParameters dispatchrParameters;
+            public readonly DispatcherParameters dispatcherParameters;
 
             public readonly string videoName;
             public readonly int numIterations;
@@ -44,7 +44,7 @@ namespace WorkGeneration
                 this.doDownscale = doDownscale;
                 this.algorithm = algorithm;
                 this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
-                this.dispatchrParameters = dispatcherParameters;
+                this.dispatcherParameters = dispatcherParameters;
             }
         }
 
