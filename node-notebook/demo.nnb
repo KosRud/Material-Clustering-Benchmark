@@ -210,7 +210,7 @@
         {
             "language": "typescript",
             "source": [
-                "import {report} from './validators/generated/Report-ti.ts';\nimport {createCheckers} from \"ts-interface-checker\";\n\nconst checker = createCheckers(report);"
+                "import report from './validators/generated/Report-ti';\nimport {createCheckers} from \"ts-interface-checker\";\n\nconst reportChecker = createCheckers(report).Report;\nreportChecker.check({\n    a: \"s\",\n    b: 1,\n    c: 2\n});"
             ],
             "outputs": []
         },
