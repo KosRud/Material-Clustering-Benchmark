@@ -52,7 +52,16 @@ namespace ClusteringAlgorithms
             this.defaultParameters = new DispatcherParameters();
         }
 
-        public abstract void RunClustering(ClusteringTextures clusteringTextures);
+        public void RunClustering(ClusteringTextures clusteringTextures)
+        {
+            if (this.clusteringRTsAndBuffers.isAllocated == false)
+            {
+                this.clusteringRTsAndBuffers.Allocate();
+            }
+            this.RunClustering(clusteringTextures);
+        }
+
+        protected abstract void _RunClustering(ClusteringTextures clusteringTextures);
 
         public void UpdateClusterCenters(ClusteringTextures textures, bool rejectOld)
         {

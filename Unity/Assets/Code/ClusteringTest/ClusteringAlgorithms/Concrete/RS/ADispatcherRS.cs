@@ -41,7 +41,7 @@ namespace ClusteringAlgorithms
             );
         }
 
-        public abstract override void RunClustering(ClusteringTextures clusteringTextures);
+        protected abstract override void _RunClustering(ClusteringTextures clusteringTextures);
 
         protected float ValidateCandidatesReadback()
         {

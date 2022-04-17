@@ -8,15 +8,15 @@ namespace ClusteringAlgorithms
         public const bool randomInit = false;
 
         public RenderTexture rtResult;
-        public readonly ClusteringTextures texturesWorkRes;
-        public readonly ClusteringTextures texturesFullRes;
-        public readonly ComputeBuffer cbufClusterCenters;
-        public readonly ComputeBuffer cbufRandomPositions;
+        public ClusteringTextures texturesWorkRes { get; private set; }
+        public ClusteringTextures texturesFullRes { get; private set; }
+        public ComputeBuffer cbufClusterCenters { get; private set; }
+        public ComputeBuffer cbufRandomPositions { get; private set; }
         public readonly int numClusters;
         public readonly int jitterSize;
 
         private readonly int[] scanlinePixelOffset = new int[2];
-        private readonly int[][] jitterOffsets;
+        private int[][] jitterOffsets;
 
         /// <summary>
         /// Get a pooled instance of ClusterCenters with a copy of the data from ComputeBuffer. Safe to modify. Don't forget to dispose!
@@ -37,13 +37,13 @@ namespace ClusteringAlgorithms
             this.cbufClusterCenters.SetData(clusterCentersBufferData);
         }
 
-        private readonly Vector4[] clusterCentersTempData;
+        private Vector4[] clusterCentersTempData;
 
         /// <summary>
         /// For working resolution
         /// </summary>
-        private readonly Position[] randomPositions;
-        private readonly System.Random random;
+        private Position[] randomPositions;
+        private System.Random random;
 
         private struct Position
         {
@@ -75,6 +75,9 @@ namespace ClusteringAlgorithms
             this.cbufRandomPositions.SetData(this.randomPositions);
         }
 
+        private readonly int workingSize;
+        private readonly int fullSize;
+
         public ClusteringRTsAndBuffers(
             int numClusters,
             int workingSize,
@@ -82,9 +85,19 @@ namespace ClusteringAlgorithms
             int jitterSize
         )
         {
+            this.numClusters = numClusters;
+            this.workingSize = workingSize;
+            this.fullSize = fullSize;
+            this.jitterSize = jitterSize;
+        }
+
+        public void Allocate()
+        {
+            Debug.Assert(this.isAllocated == false);
+
             this.rtResult = new RenderTexture(
-                workingSize,
-                workingSize,
+                this.workingSize,
+                this.workingSize,
                 0,
                 RenderTextureFormat.ARGBFloat
             )
@@ -93,13 +106,10 @@ namespace ClusteringAlgorithms
                 filterMode = FilterMode.Point
             };
 
-            this.jitterSize = jitterSize;
-            this.jitterOffsets = JitterPattern.Get(jitterSize);
+            this.jitterOffsets = JitterPattern.Get(this.jitterSize);
 
-            this.texturesWorkRes = new ClusteringTextures(workingSize);
-            this.texturesFullRes = new ClusteringTextures(fullSize);
-
-            this.numClusters = numClusters;
+            this.texturesWorkRes = new ClusteringTextures(this.workingSize);
+            this.texturesFullRes = new ClusteringTextures(this.fullSize);
 
             this.random = new System.Random();
 
@@ -125,6 +135,8 @@ namespace ClusteringAlgorithms
                 this.SetDeterministicClusterCenters();
             }
         }
+
+        public bool isAllocated => this.cbufClusterCenters != null;
 
         public void SetDeterministicClusterCenters()
         {
