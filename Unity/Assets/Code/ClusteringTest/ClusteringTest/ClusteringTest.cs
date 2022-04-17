@@ -75,6 +75,9 @@ public class ClusteringTest : MonoBehaviour
             csHighlightRemoval: this.csHighlightRemoval,
             noGcAvailable: this.noGcAvailable
         );
+
+        Debug.Log(this.reportCollection.ToString());
+        Debug.Log(JsonUtility.ToJson(this.reportCollection));
     }
 
     private void CheckTimerPrecision()

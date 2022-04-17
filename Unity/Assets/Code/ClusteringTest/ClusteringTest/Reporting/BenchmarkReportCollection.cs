@@ -44,8 +44,8 @@ public class BenchmarkMeasurementVariance : ABenchmarkMeasurement
     [Serializable]
     public class FrametVariance
     {
-        public readonly long frameIdex;
-        public readonly float variance;
+        public long frameIdex;
+        public float variance;
 
         public FrametVariance(long frameIndex, float variance)
         {
@@ -65,8 +65,8 @@ public class BenchmarkMeasurementVariance : ABenchmarkMeasurement
 [Serializable]
 public class BenchmarkMeasurementFrameTime : ABenchmarkMeasurement
 {
-    public readonly float peakFrameTime;
-    public readonly float avgFrameTime;
+    public float peakFrameTime;
+    public float avgFrameTime;
 
     public BenchmarkMeasurementFrameTime(float peakFrameTime, float avgFrameTime)
     {
@@ -79,10 +79,12 @@ public class BenchmarkMeasurementFrameTime : ABenchmarkMeasurement
 public class BenchmarkReport
 {
     [SerializeReference]
-    public readonly ABenchmarkMeasurement measurement;
-    public readonly ClusteringTest.LogType logType;
+    public ABenchmarkMeasurement measurement;
 
-    public readonly LaunchParameters.SerializableLaunchParameters serializableLaunchParameters;
+    [SerializeReference]
+    public LaunchParameters.SerializableLaunchParameters serializableLaunchParameters;
+
+    public ClusteringTest.LogType logType;
 
     public BenchmarkReport(
         ABenchmarkMeasurement measurement,
@@ -99,7 +101,7 @@ public class BenchmarkReport
 [Serializable]
 public class BenchmarkReportCollection
 {
-    public readonly List<BenchmarkReport> reports;
+    public List<BenchmarkReport> reports;
 
     public BenchmarkReportCollection()
     {
