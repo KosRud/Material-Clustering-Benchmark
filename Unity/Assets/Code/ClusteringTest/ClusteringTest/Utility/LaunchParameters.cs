@@ -9,8 +9,10 @@ namespace WorkGeneration
         [Serializable]
         public class SerializableLaunchParameters
         {
-            public readonly string videoName;
+            [SerializeReference]
             public readonly DispatcherParameters dispatchrParameters;
+
+            public readonly string videoName;
             public readonly int numIterations;
             public readonly int workingTextureSize;
             public readonly int numClusters;
