@@ -54,6 +54,11 @@ public class MeasurementRunner : IDisposable
         this.frameStart = frameStart ?? 0;
         this.noGcAvailable = noGcAvailable;
 
+        if (this.launchParameters.dispatcher.clusteringRTsAndBuffers.isAllocated == false)
+        {
+            this.launchParameters.dispatcher.clusteringRTsAndBuffers.Allocate();
+        }
+
         this.SetTextureSize();
         this.InitVideoPlayer(videoPlayer, frameStart);
     }
@@ -72,14 +77,9 @@ public class MeasurementRunner : IDisposable
         int workingTextureSize = this.launchParameters
             .dispatcher
             .clusteringRTsAndBuffers
-            .texturesWorkRes
-            .size;
+            .workingSize;
 
-        int fullTextureSize = this.launchParameters
-            .dispatcher
-            .clusteringRTsAndBuffers
-            .texturesFullRes
-            .size;
+        int fullTextureSize = this.launchParameters.dispatcher.clusteringRTsAndBuffers.fullSize;
 
         Debug.Assert(
             // positive power of 2

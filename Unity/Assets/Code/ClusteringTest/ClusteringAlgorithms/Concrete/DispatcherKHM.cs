@@ -31,7 +31,7 @@ namespace ClusteringAlgorithms
 
         public override string name => "KHM";
 
-        protected override void _RunClustering(ClusteringTextures clusteringTextures)
+        public override void RunClustering(ClusteringTextures clusteringTextures)
         {
             this.computeShader.SetBool(
                 "do_random_sample_empty_clusters",

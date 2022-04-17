@@ -75,8 +75,8 @@ namespace ClusteringAlgorithms
             this.cbufRandomPositions.SetData(this.randomPositions);
         }
 
-        private readonly int workingSize;
-        private readonly int fullSize;
+        public readonly int workingSize;
+        public readonly int fullSize;
 
         public ClusteringRTsAndBuffers(
             int numClusters,

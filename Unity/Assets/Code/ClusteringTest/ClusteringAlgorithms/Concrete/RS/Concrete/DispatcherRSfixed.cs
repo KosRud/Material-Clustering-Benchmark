@@ -48,7 +48,7 @@ namespace ClusteringAlgorithms
             }
         }
 
-        protected override void _RunClustering(ClusteringTextures clusteringTextures)
+        public override void RunClustering(ClusteringTextures clusteringTextures)
         {
             this.KMiteration(clusteringTextures, rejectOld: true);
 

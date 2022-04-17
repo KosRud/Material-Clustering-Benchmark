@@ -66,7 +66,7 @@ namespace WorkGeneration
         {
             string videoName = this.video.name;
             int numIterations = this.dispatcher.numIterations;
-            int workingTextureSize = this.dispatcher.clusteringRTsAndBuffers.texturesWorkRes.size;
+            int workingTextureSize = this.dispatcher.clusteringRTsAndBuffers.workingSize;
             int numClusters = this.dispatcher.clusteringRTsAndBuffers.numClusters;
             int jitterSize = this.dispatcher.clusteringRTsAndBuffers.jitterSize;
             bool staggeredJitter = this.staggeredJitter;

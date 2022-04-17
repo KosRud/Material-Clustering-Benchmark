@@ -20,7 +20,7 @@ namespace ClusteringAlgorithms
 
         public override string name => "Knecht";
 
-        protected override void _RunClustering(ClusteringTextures clusteringTextures)
+        public override void RunClustering(ClusteringTextures clusteringTextures)
         {
             this.frameCounter++;
 

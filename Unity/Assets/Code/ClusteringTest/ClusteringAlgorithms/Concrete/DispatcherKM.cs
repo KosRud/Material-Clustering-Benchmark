@@ -14,7 +14,7 @@ namespace ClusteringAlgorithms
 
         public override string name => "KM";
 
-        protected override void _RunClustering(ClusteringTextures clusteringTextures)
+        public override void RunClustering(ClusteringTextures clusteringTextures)
         {
             for (int i = 0; i < this.numIterations; i++)
             {

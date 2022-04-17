@@ -17,7 +17,7 @@ namespace ClusteringAlgorithms
 
         public override string name => "Null";
 
-        protected override void _RunClustering(ClusteringTextures clusteringTextures)
+        public override void RunClustering(ClusteringTextures clusteringTextures)
         {
             // do nothing
         }
