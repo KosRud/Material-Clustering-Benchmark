@@ -196,13 +196,6 @@
         {
             "language": "markdown",
             "source": [
-                "# Idea\n\n#### TS runtime compile\n\nhttps://medium.com/bytecodeagency/runtime-json-type-checks-with-typescript-interfaces-379e8ea81258\n\n* Load all type-definitions through the file system as strings\n* Use the Typescript compiler as production dependency and parse these strings\n* Compare the result of parsing against the JSON data to see if it matches the interfaces\n\n#### Aegis\n\nhttps://github.com/PicnicSupermarket/aegis\n\n#### TS interface builder and checker\n\nhttps://stackoverflow.com/questions/42758581/use-typescript-interface-for-runtime-validation-in-of-js-code"
-            ],
-            "outputs": []
-        },
-        {
-            "language": "markdown",
-            "source": [
                 ""
             ],
             "outputs": []
