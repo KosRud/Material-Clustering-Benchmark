@@ -1,9 +1,16 @@
 using UnityEngine;
+using System;
 
 namespace ClusteringAlgorithms
 {
     public class DispatcherRSfixed : ADispatcherRS
     {
+        [Serializable]
+        public new class Parameters : DispatcherParameters
+        {
+            public readonly bool doReadback;
+        }
+
         public readonly bool doReadback;
 
         public DispatcherRSfixed(
@@ -28,11 +35,11 @@ namespace ClusteringAlgorithms
             this.doReadback = doReadback;
         }
 
-        public override string descriptionString
+        public override string name
         {
             get
             {
-                string result = $"RS({this.iterationsKM}KM)";
+                string result = $"RS({this._parameters.numIterationsKM}KM)";
                 if (this.doReadback)
                 {
                     result += "_readback";
@@ -45,11 +52,11 @@ namespace ClusteringAlgorithms
         {
             this.KMiteration(clusteringTextures, rejectOld: true);
 
-            for (int i = 1; i < this.numIterations; i += this.iterationsKM)
+            for (int i = 1; i < this.numIterations; i += this._parameters.numIterationsKM)
             {
                 this.RandomSwap(clusteringTextures);
 
-                for (int k = 0; k < this.iterationsKM; k++)
+                for (int k = 0; k < this._parameters.numIterationsKM; k++)
                 {
                     this.KMiteration(clusteringTextures, rejectOld: false);
                 }

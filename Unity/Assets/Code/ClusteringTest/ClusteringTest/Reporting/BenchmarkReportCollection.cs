@@ -39,61 +39,70 @@ using UnityEngine;
 public abstract class ABenchmarkMeasurement { }
 
 [Serializable]
-public class BenchmarkMeasurementVariance : ABenchmarkMeasurement {
-  [Serializable]
-  public class FrametVariance {
-    public long frameIdex;
-    public float variance;
+public class BenchmarkMeasurementVariance : ABenchmarkMeasurement
+{
+    [Serializable]
+    public class FrametVariance
+    {
+        public readonly long frameIdex;
+        public readonly float variance;
 
-    public FrametVariance(long frameIndex, float variance) {
-      this.frameIdex = frameIndex;
-      this.variance = variance;
+        public FrametVariance(long frameIndex, float variance)
+        {
+            this.frameIdex = frameIndex;
+            this.variance = variance;
+        }
     }
-  }
 
-  public List<FrametVariance> varianceByFrame;
+    public List<FrametVariance> varianceByFrame;
 
-  public BenchmarkMeasurementVariance() {
-    this.varianceByFrame = new List<FrametVariance>();
-  }
+    public BenchmarkMeasurementVariance()
+    {
+        this.varianceByFrame = new List<FrametVariance>();
+    }
 }
 
 [Serializable]
-public class BenchmarkMeasurementFrameTime : ABenchmarkMeasurement {
-  public float peakFrameTime;
-  public float avgFrameTime;
+public class BenchmarkMeasurementFrameTime : ABenchmarkMeasurement
+{
+    public readonly float peakFrameTime;
+    public readonly float avgFrameTime;
 
-  public BenchmarkMeasurementFrameTime(float peakFrameTime, float avgFrameTime) {
-    this.peakFrameTime = peakFrameTime;
-    this.avgFrameTime = avgFrameTime;
-  }
+    public BenchmarkMeasurementFrameTime(float peakFrameTime, float avgFrameTime)
+    {
+        this.peakFrameTime = peakFrameTime;
+        this.avgFrameTime = avgFrameTime;
+    }
 }
 
 [Serializable]
-public class BenchmarkReport {
-  [SerializeReference]
-  public ABenchmarkMeasurement measurement;
-  public ClusteringTest.LogType logType;
+public class BenchmarkReport
+{
+    [SerializeReference]
+    public readonly ABenchmarkMeasurement measurement;
+    public readonly ClusteringTest.LogType logType;
 
-  public LaunchParameters.SerializableLaunchParameters
-  serializableLaunchParameters;
+    public readonly LaunchParameters.SerializableLaunchParameters serializableLaunchParameters;
 
-  public BenchmarkReport(
-    ABenchmarkMeasurement measurement,
-    LaunchParameters.SerializableLaunchParameters serializableLaunchParameters,
-    ClusteringTest.LogType logType
-  ) {
-    this.measurement = measurement;
-    this.serializableLaunchParameters = serializableLaunchParameters;
-    this.logType = logType;
-  }
+    public BenchmarkReport(
+        ABenchmarkMeasurement measurement,
+        LaunchParameters.SerializableLaunchParameters serializableLaunchParameters,
+        ClusteringTest.LogType logType
+    )
+    {
+        this.measurement = measurement;
+        this.serializableLaunchParameters = serializableLaunchParameters;
+        this.logType = logType;
+    }
 }
 
 [Serializable]
-public class BenchmarkReportCollection {
-  public List<BenchmarkReport> reports;
+public class BenchmarkReportCollection
+{
+    public readonly List<BenchmarkReport> reports;
 
-  public BenchmarkReportCollection() {
-    this.reports = new List<BenchmarkReport>();
-  }
+    public BenchmarkReportCollection()
+    {
+        this.reports = new List<BenchmarkReport>();
+    }
 }

@@ -10,7 +10,10 @@ namespace ClusteringAlgorithms
         public readonly int numIterations;
         public readonly ClusteringRTsAndBuffers clusteringRTsAndBuffers;
 
-        public abstract string descriptionString { get; }
+        public abstract string name { get; }
+        public virtual DispatcherParameters parameters => this.defaultParameters;
+
+        private readonly DispatcherParameters defaultParameters;
 
         // internal
         protected readonly ComputeShader computeShader;
@@ -46,6 +49,7 @@ namespace ClusteringAlgorithms
             this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
             this.numIterations = numIterations;
             this.clusteringRTsAndBuffers = clusteringRTsAndBuffers;
+            this.defaultParameters = new DispatcherParameters();
         }
 
         public abstract void RunClustering(ClusteringTextures clusteringTextures);

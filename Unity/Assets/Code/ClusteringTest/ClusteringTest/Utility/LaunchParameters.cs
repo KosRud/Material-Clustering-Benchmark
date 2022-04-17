@@ -9,15 +9,16 @@ namespace WorkGeneration
         [Serializable]
         public class SerializableLaunchParameters
         {
-            public string videoName;
-            public int numIterations;
-            public int workingTextureSize;
-            public int numClusters;
-            public int jitterSize;
-            public bool staggeredJitter;
-            public bool doDownscale;
-            public string algorithm;
-            public bool doRandomizeEmptyClusters;
+            public readonly string videoName;
+            public readonly DispatcherParameters dispatchrParameters;
+            public readonly int numIterations;
+            public readonly int workingTextureSize;
+            public readonly int numClusters;
+            public readonly int jitterSize;
+            public readonly bool staggeredJitter;
+            public readonly bool doDownscale;
+            public readonly string algorithm;
+            public readonly bool doRandomizeEmptyClusters;
 
             public SerializableLaunchParameters(
                 string videoName,
@@ -28,7 +29,8 @@ namespace WorkGeneration
                 bool staggeredJitter,
                 bool doDownscale,
                 string algorithm,
-                bool doRandomizeEmptyClusters
+                bool doRandomizeEmptyClusters,
+                DispatcherParameters dispatcherParameters
             )
             {
                 this.videoName = videoName;
@@ -40,6 +42,7 @@ namespace WorkGeneration
                 this.doDownscale = doDownscale;
                 this.algorithm = algorithm;
                 this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
+                this.dispatchrParameters = dispatcherParameters;
             }
         }
 
@@ -53,8 +56,9 @@ namespace WorkGeneration
                 jitterSize: this.dispatcher.clusteringRTsAndBuffers.jitterSize,
                 staggeredJitter: this.staggeredJitter,
                 doDownscale: this.doDownscale,
-                algorithm: this.dispatcher.descriptionString,
-                doRandomizeEmptyClusters: this.dispatcher.doRandomizeEmptyClusters
+                algorithm: this.dispatcher.name,
+                doRandomizeEmptyClusters: this.dispatcher.doRandomizeEmptyClusters,
+                dispatcherParameters: this.dispatcher.parameters
             );
         }
 
@@ -67,7 +71,7 @@ namespace WorkGeneration
             int jitterSize = this.dispatcher.clusteringRTsAndBuffers.jitterSize;
             bool staggeredJitter = this.staggeredJitter;
             bool doDownscale = this.doDownscale;
-            string algorithm = this.dispatcher.descriptionString;
+            string algorithm = this.dispatcher.name;
             bool doRandomizeEmptyClusters = this.dispatcher.doRandomizeEmptyClusters;
 
             return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{workingTextureSize}|number of clusters:{numClusters}|randomize empty clusters:{doRandomizeEmptyClusters}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}|algorithm:{algorithm}.csv";
