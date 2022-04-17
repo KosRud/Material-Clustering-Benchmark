@@ -91,7 +91,7 @@ public class ClusteringTest : MonoBehaviour
 
     private void OnFinishedRunner()
     {
-        this.measurementRunner?.Dispose();
+        this.measurementRunner.Dispose();
 
         if (this.currentWorkList.runs.Count == 0)
         {
