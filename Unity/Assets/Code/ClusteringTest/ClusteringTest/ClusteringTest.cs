@@ -127,11 +127,11 @@ public class ClusteringTest : MonoBehaviour
 
     private void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
-        //try
+        try
         {
             this.measurementRunner.ProcessNextFrame(src, dest);
         }
-        /*catch (System.Exception e)
+        catch (System.Exception e)
         {
             string msg = $"Exception during processing a frame ({e.GetType().Name}): {e.Message}";
 
@@ -140,7 +140,7 @@ public class ClusteringTest : MonoBehaviour
 
             this.enabled = false;
             Application.Quit();
-        }*/
+        }
 
         if (this.measurementRunner.finished == true)
         {
