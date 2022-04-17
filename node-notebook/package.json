@@ -11,6 +11,6 @@
         "gpu.js": "^2.15.2"
     },
     "scripts": {
-        "build-validators": "ts-node ./scripts/clearValidators.ts && ts-interface-builder ./validators/Report.ts -o ./validators/generated && tsc ./validators/generated/*"
+        "build-validators": "ts-node ./scripts/clearValidators.ts && ts-interface-builder ./util/validators/Report.ts -o ./util/validators/generated && tsc ./util/validators/generated/*"
     }
 }

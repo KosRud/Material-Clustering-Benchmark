@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-const dirPath = './validators/generated';
+const dirPath = './util/validators/generated';
 
 (async () => {
     for (const file of await fs.readdir(dirPath)) {
