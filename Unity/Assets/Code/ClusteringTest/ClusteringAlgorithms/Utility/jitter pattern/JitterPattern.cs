@@ -365,7 +365,7 @@ public static class JitterPattern
               },
 
             1 => new int[][] { new int[] { 0, 0 }, },
-            _ => throw new System.Exception($"invalid jitter Size: size"),
+            _ => throw new System.NotImplementedException()
         };
     }
 }
