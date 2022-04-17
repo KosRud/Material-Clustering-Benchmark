@@ -32,7 +32,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xaf9391e19f1541fcadaa66a321e4e8bc",
+                                "requestId": "xaf919b641ffa4170b66e488f7f6f4bc6",
                                 "type": "generatePlot",
                                 "ele": "myDiv",
                                 "data": [
@@ -174,7 +174,7 @@
                         {
                             "mime": "application/vnd.code.notebook.stdout",
                             "value": [
-                                "Buffer(73989) [Uint8Array] [",
+                                "Buffer(441205) [Uint8Array] [",
                                 "  123,  34, 114, 101, 112, 111, 114, 116, 115,  34,  58,  91,",
                                 "  123,  34, 109, 101,  97, 115, 117, 114, 101, 109, 101, 110,",
                                 "  116,  34,  58, 123,  34, 114, 105, 100,  34,  58,  49,  48,",
@@ -184,7 +184,7 @@
                                 "   97, 114,  97, 109, 101, 116, 101, 114, 115,  34,  58, 123,",
                                 "   34, 118, 105, 100, 101, 111,  78,  97, 109, 101,  34,  58,",
                                 "   34,  50,  34,  44,",
-                                "  ... 73889 more items",
+                                "  ... 441105 more items",
                                 "]",
                                 ""
                             ]
@@ -205,12 +205,25 @@
             "source": [
                 "import report from './validators/generated/Report-ti';\nimport {createCheckers} from \"ts-interface-checker\";\n\nconst reportChecker = createCheckers(report).Report;\nreportChecker.check({\n    a: \"s\",\n    b: 1,\n    c: 2\n});"
             ],
-            "outputs": []
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.error",
+                            "value": {
+                                "name": "Error",
+                                "message": "Cannot find module './validators/generated/Report-ti'\nRequire stack:\n- <repl>",
+                                "stack": "node:internal/modules/cjs/loader:936\n  throw err;\n  ^\n\n    at Function.Module._resolveFilename (node:internal/modules/cjs/loader:933:15)\n    at Function.Module._resolveFilename.sharedData.moduleResolveFilenameHook.installedValue [as _resolveFilename] (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/resources/scripts/node_modules/@cspotcode/source-map-support/source-map-support.js:679:30)\n    at Function.Module._load (node:internal/modules/cjs/loader:778:27)\n    at Function._._load (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:115372)\n    at Module.require (node:internal/modules/cjs/loader:999:19)\n    at require (node:internal/modules/cjs/helpers:102:18)\n    at <Cell 8> [1, 62]\n    at Script.runInContext (node:vm:139:12)\n    at Script.runInNewContext (node:vm:144:17)\n    at Object.runInNewContext (node:vm:298:38)"
+                            }
+                        }
+                    ]
+                }
+            ]
         },
         {
             "language": "typescript",
             "source": [
-                "import fs from 'fs/promises';\nimport unpackUnityJson from './util/unpackUnityJson';\n\n(async () => {\n    const report = JSON.parse(\n        await fs.readFile('./Reports/Subsampling.json', 'utf-8')\n    );\n\n    unpackUnityJson(report);\n})();\n"
+                "import fs from 'fs/promises';\n\nfunction unpackUnityJson(obj) {\n    const refs = Object.fromEntries(\n        obj.references.RefIds.map((reference) => [\n            reference.rid,\n            reference.data,\n        ])\n    );\n\n    return refs;\n}\n\n(async () => {\n    const report = JSON.parse(\n        await fs.readFile('./Reports/Subsampling.json', 'utf-8')\n    );\n\n    console.dir(unpackUnityJson(report));\n})();\n"
             ],
             "outputs": [
                 {
@@ -237,44 +250,11 @@
                                 "      [Object], [Object], [Object], [Object], [Object], [Object],",
                                 "      [Object], [Object], [Object], [Object], [Object], [Object],",
                                 "      [Object], [Object], [Object], [Object], [Object], [Object],",
-                                "      [Object], [Object], [Object], [Object]",
+                                "      [Object], [Object], [Object], [Object],",
+                                "      ... 3900 more items",
                                 "    ]",
                                 "  },",
-                                "  '1001': { varianceByFrame: [ [Object] ] },",
-                                "  '1002': { varianceByFrame: [ [Object] ] },",
-                                "  '1003': { varianceByFrame: [ [Object] ] },",
-                                "  '1004': { varianceByFrame: [ [Object] ] },",
-                                "  '1005': { varianceByFrame: [ [Object] ] },",
-                                "  '1006': { varianceByFrame: [ [Object] ] },",
-                                "  '1007': { varianceByFrame: [ [Object] ] },",
-                                "  '1008': { varianceByFrame: [ [Object] ] },",
-                                "  '1009': { varianceByFrame: [ [Object] ] },",
-                                "  '1010': { varianceByFrame: [ [Object] ] },",
-                                "  '1011': { varianceByFrame: [ [Object] ] },",
-                                "  '1012': { varianceByFrame: [ [Object] ] },",
-                                "  '1013': { varianceByFrame: [ [Object] ] },",
-                                "  '1014': { varianceByFrame: [ [Object] ] },",
-                                "  '1015': { varianceByFrame: [ [Object] ] },",
-                                "  '1016': { varianceByFrame: [ [Object] ] },",
-                                "  '1017': { varianceByFrame: [ [Object] ] },",
-                                "  '1018': { varianceByFrame: [ [Object] ] },",
-                                "  '1019': { varianceByFrame: [ [Object] ] },",
-                                "  '1020': { varianceByFrame: [ [Object] ] },",
-                                "  '1021': { varianceByFrame: [ [Object] ] },",
-                                "  '1022': { varianceByFrame: [ [Object] ] },",
-                                "  '1023': { varianceByFrame: [ [Object] ] },",
-                                "  '1024': { varianceByFrame: [ [Object] ] },",
-                                "  '1025': { varianceByFrame: [ [Object] ] },",
-                                "  '1026': { varianceByFrame: [ [Object] ] },",
-                                "  '1027': { varianceByFrame: [ [Object] ] },",
-                                "  '1028': { varianceByFrame: [ [Object] ] },",
-                                "  '1029': { varianceByFrame: [ [Object] ] },",
-                                "  '1030': { varianceByFrame: [ [Object] ] },",
-                                "  '1031': { varianceByFrame: [ [Object] ] },",
-                                "  '1032': { varianceByFrame: [ [Object] ] },",
-                                "  '1033': { varianceByFrame: [ [Object] ] },",
-                                "  '1034': { varianceByFrame: [ [Object] ] },",
-                                "  '1035': {",
+                                "  '1001': {",
                                 "    varianceByFrame: [",
                                 "      [Object], [Object], [Object], [Object], [Object], [Object],",
                                 "      [Object], [Object], [Object], [Object], [Object], [Object],",
@@ -293,43 +273,53 @@
                                 "      [Object], [Object], [Object], [Object], [Object], [Object],",
                                 "      [Object], [Object], [Object], [Object], [Object], [Object],",
                                 "      [Object], [Object], [Object], [Object],",
-                                "      ... 650 more items",
+                                "      ... 3900 more items",
                                 "    ]",
                                 "  },",
-                                "  '1036': { varianceByFrame: [ [Object] ] },",
-                                "  '1037': { varianceByFrame: [ [Object] ] },",
-                                "  '1038': { varianceByFrame: [ [Object] ] },",
-                                "  '1039': { varianceByFrame: [ [Object] ] },",
-                                "  '1040': { varianceByFrame: [ [Object] ] },",
-                                "  '1041': { varianceByFrame: [ [Object] ] },",
-                                "  '1042': { varianceByFrame: [ [Object] ] },",
-                                "  '1043': { varianceByFrame: [ [Object] ] },",
-                                "  '1044': { varianceByFrame: [ [Object] ] },",
-                                "  '1045': { varianceByFrame: [ [Object] ] },",
-                                "  '1046': { varianceByFrame: [ [Object] ] },",
-                                "  '1047': { varianceByFrame: [ [Object] ] },",
-                                "  '1048': { varianceByFrame: [ [Object] ] },",
-                                "  '1049': { varianceByFrame: [ [Object] ] },",
-                                "  '1050': { varianceByFrame: [ [Object] ] },",
-                                "  '1051': { varianceByFrame: [ [Object] ] },",
-                                "  '1052': { varianceByFrame: [ [Object] ] },",
-                                "  '1053': { varianceByFrame: [ [Object] ] },",
-                                "  '1054': { varianceByFrame: [ [Object] ] },",
-                                "  '1055': { varianceByFrame: [ [Object] ] },",
-                                "  '1056': { varianceByFrame: [ [Object] ] },",
-                                "  '1057': { varianceByFrame: [ [Object] ] },",
-                                "  '1058': { varianceByFrame: [ [Object] ] },",
-                                "  '1059': { varianceByFrame: [ [Object] ] },",
-                                "  '1060': { varianceByFrame: [ [Object] ] },",
-                                "  '1061': { varianceByFrame: [ [Object] ] },",
-                                "  '1062': { varianceByFrame: [ [Object] ] },",
-                                "  '1063': { varianceByFrame: [ [Object] ] },",
-                                "  '1064': { varianceByFrame: [ [Object] ] },",
-                                "  '1065': { varianceByFrame: [ [Object] ] },",
-                                "  '1066': { varianceByFrame: [ [Object] ] },",
-                                "  '1067': { varianceByFrame: [ [Object] ] },",
-                                "  '1068': { varianceByFrame: [ [Object] ] },",
-                                "  '1069': { varianceByFrame: [ [Object] ] }",
+                                "  '1002': {",
+                                "    varianceByFrame: [",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object],",
+                                "      ... 4550 more items",
+                                "    ]",
+                                "  },",
+                                "  '1003': {",
+                                "    varianceByFrame: [",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object], [Object], [Object],",
+                                "      [Object], [Object], [Object], [Object],",
+                                "      ... 4550 more items",
+                                "    ]",
+                                "  }",
                                 "}",
                                 ""
                             ]
@@ -337,6 +327,13 @@
                     ]
                 }
             ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                ""
+            ],
+            "outputs": []
         },
         {
             "language": "typescript",

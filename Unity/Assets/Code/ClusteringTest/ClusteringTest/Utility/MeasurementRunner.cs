@@ -120,7 +120,14 @@ public class MeasurementRunner : IDisposable
 
     public void ProcessNextFrame(RenderTexture src, RenderTexture dst)
     {
-        if (this.videoPlayer.frame == -1)
+        if (
+            // not yet loaded video file
+            this.videoPlayer.frame == -1
+            // not yet loaded first frame
+            || this.lastProcessedFrame == null && this.videoPlayer.frame != this.frameStart
+            // not yet loaded next frame
+            || this.lastProcessedFrame == this.videoPlayer.frame
+        )
         {
             Graphics.Blit(src, dst);
             return;
@@ -150,6 +157,10 @@ public class MeasurementRunner : IDisposable
         if (this.lastProcessedFrame != null)
         {
             Debug.Assert(this.lastProcessedFrame + 1 == this.videoPlayer.frame);
+        }
+        else
+        {
+            Debug.Assert(this.videoPlayer.frame == this.frameStart);
         }
         this.lastProcessedFrame = this.videoPlayer.frame;
 

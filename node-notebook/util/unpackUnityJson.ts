@@ -6,7 +6,7 @@ export default (obj) => {
         ])
     );
 
-    console.dir(refs);
+    return 1;
 
-    return obj;
+    return obj.references;
 };
