@@ -180,7 +180,7 @@
         {
             "language": "javascript",
             "source": [
-                "import fs from 'fs';\nimport unpackUnityJson from './util/unpackUnityJson';\nimport loadReportCollection from './util/loadReportCollection';\n\nimport fs from 'fs';\nimport path from 'path';\n\nfunction loadReports() {\n    const reportDir = './Reports/';\n    const reportCollections = {};\n    for (const reportFileName of fs.readdirSync(reportDir)) {\n        const reportPath = path.join(reportDir, reportFileName);\n\n        let reportName = reportFileName;\n        const reportNameParts = reportFileName.split('.')\n        reportNameParts.splice(-1,1);\n        reportName = reportNameParts.join(\"\");\n\n        reportCollections[reportName] = loadReportCollection(\n            unpackUnityJson(JSON.parse(fs.readFileSync(reportPath, 'utf-8')))\n        ).reports;\n    }\n\n    return reportCollections;\n}\n\nconst reportCollections = loadReports();\n\nconsole.dir(Object.keys(reportCollections));\n"
+                "import fs from 'fs';\nimport unpackUnityJson from './util/unpackUnityJson';\nimport loadReportCollection from './util/loadReportCollection';\n\nimport fs from 'fs';\nimport path from 'path';\n\nconst reportCollections = (() => {\n    const reportDir = './Reports/';\n    const reportCollections = {};\n    for (const reportFileName of fs.readdirSync(reportDir)) {\n        const reportPath = path.join(reportDir, reportFileName);\n\n        let reportName = reportFileName;\n        const reportNameParts = reportFileName.split('.')\n        reportNameParts.splice(-1,1);\n        reportName = reportNameParts.join(\"\");\n\n        reportCollections[reportName] = loadReportCollection(\n            unpackUnityJson(JSON.parse(fs.readFileSync(reportPath, 'utf-8')))\n        ).reports;\n    }\n\n    return reportCollections;\n})();\n\nconsole.dir(Object.keys(reportCollections));\n"
             ],
             "outputs": [
                 {
@@ -221,7 +221,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x505d0a66e3344f0485181675cad2bc44",
+                                "requestId": "x21c0a4e5285744b784778bafa1265265",
                                 "type": "generatePlot",
                                 "ele": "plot",
                                 "data": [
@@ -396,7 +396,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x505d0a66e3344f0485181675cad2bc44",
+                                "requestId": "x21c0a4e5285744b784778bafa1265265",
                                 "type": "generatePlot",
                                 "ele": "plot",
                                 "data": [
@@ -571,7 +571,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x505d0a66e3344f0485181675cad2bc44",
+                                "requestId": "x21c0a4e5285744b784778bafa1265265",
                                 "type": "generatePlot",
                                 "ele": "plot",
                                 "data": [
@@ -746,7 +746,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x505d0a66e3344f0485181675cad2bc44",
+                                "requestId": "x21c0a4e5285744b784778bafa1265265",
                                 "type": "generatePlot",
                                 "ele": "plot",
                                 "data": [
