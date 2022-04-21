@@ -24,7 +24,7 @@
         {
             "language": "typescript",
             "source": [
-                "const sharedLayout = {\n    width: 600,\n    height: 300,\n    font: {\n        size: 16\n    },\n    yaxis: {\n        automargin: true\n    },\n    xaxis: {\n        automargin: true\n    },\n    margin: {\n        l: 4,\n        r: 4,\n        b: 4,\n        t: 50,  // for title\n        pad: 0  // between axis and plot\n    }\n}"
+                "const sharedLayout = {\n    width: 600,\n    height: 300,\n    font: {\n        size: 16,\n    },\n    yaxis: {\n        automargin: true,\n    },\n    xaxis: {\n        automargin: true,\n    },\n    margin: {\n        l: 4,\n        r: 4,\n        b: 4,\n        t: 50, // for title\n        pad: 0, // between axis and plot\n    },\n};\n"
             ],
             "outputs": []
         },
@@ -180,25 +180,42 @@
         {
             "language": "javascript",
             "source": [
-                "import fs from 'fs';\nimport unpackUnityJson from './util/unpackUnityJson'\nimport ReportCollection from './util/validators/generated/Validators-ti';\nimport {createCheckers} from \"ts-interface-checker\";\n\nconst reportCollection = JSON.parse(\n    fs.readFileSync('./Reports/Subsampling.json', 'utf-8')\n);\n\nunpackUnityJson(reportCollection);\n\nconst validator = createCheckers(ReportCollection).ReportCollection;\nvalidator.check(reportCollection);\n"
+                "import fs from 'fs';\nimport unpackUnityJson from './util/unpackUnityJson';\nimport * as validatorTemplates from './util/validators/generated/Validators-ti';\nimport { createCheckers } from 'ts-interface-checker';\n\nconst validators = createCheckers(validatorTemplates.default);\n\nconst reportCollection = JSON.parse(\n    fs.readFileSync('./Reports/Subsampling.json', 'utf-8')\n);\n\nunpackUnityJson(reportCollection);\nvalidators.ReportCollection.check(reportCollection);"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "# Plots\n\n## Subsampling"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "let data = reportCollection.reports;\ndata = data.map((report) => {\n    const varianceByFrame = report.measurement.varianceByFrame;\n    const arrVariance = varianceByFrame.map(\n        (frameRecord) => frameRecord.variance\n    );\n    const aggregated = {};\n    aggregated.avg = arrVariance.reduce((a,b) => a+b) / varianceByFrame.length;\n    aggregated.max = arrVariance.reduce((a,b) => Math.max(a,b));\n    aggregated.min = arrVariance.reduce((a,b) => Math.min(a,b));\n    report.measurement.aggregated = aggregated;\n    return report;\n});\n\nconsole.dir(data[0].measurement.aggregated);\n"
             ],
             "outputs": [
                 {
                     "items": [
                         {
-                            "mime": "application/vnd.code.notebook.error",
-                            "value": {
-                                "name": "Error",
-                                "message": "value.a is missing\nvalue.b is missing",
-                                "stack": "    at new VError (/home/madcake/Projects/Thesis/Implementation/Highlight-Removal-for-MR/node-notebook/node_modules/.pnpm/ts-interface-checker@1.0.2/node_modules/ts-interface-checker/dist/util.js:31:28)\n    at DetailContext.getError (/home/madcake/Projects/Thesis/Implementation/Highlight-Removal-for-MR/node-notebook/node_modules/.pnpm/ts-interface-checker@1.0.2/node_modules/ts-interface-checker/dist/util.js:119:16)\n    at Checker._doCheck (/home/madcake/Projects/Thesis/Implementation/Highlight-Removal-for-MR/node-notebook/node_modules/.pnpm/ts-interface-checker@1.0.2/node_modules/ts-interface-checker/dist/index.js:202:29)\n    at Checker.check (/home/madcake/Projects/Thesis/Implementation/Highlight-Removal-for-MR/node-notebook/node_modules/.pnpm/ts-interface-checker@1.0.2/node_modules/ts-interface-checker/dist/index.js:104:62)\n    at <Cell 8> [13, 9]\n    at <Cell 8> [12, 46]\n    at Script.runInContext (node:vm:139:12)\n    at Script.runInNewContext (node:vm:144:17)\n    at Object.runInNewContext (node:vm:298:38)\n    at C (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:113345)"
-                            }
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "{",
+                                "  avg: 0.006283783689084885,",
+                                "  max: 0.10790553689002991,",
+                                "  min: 0.000004244507181283552",
+                                "}",
+                                ""
+                            ]
                         }
                     ]
                 }
             ]
         },
         {
-            "language": "typescript",
+            "language": "javascript",
             "source": [
                 ""
             ],
