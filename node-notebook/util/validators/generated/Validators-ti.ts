@@ -4,12 +4,11 @@
 import * as t from "ts-interface-checker";
 // tslint:disable:object-literal-key-quotes
 
-export const Report = t.iface([], {
-  "a": "string",
-  "b": "number",
+export const ReportCollection = t.iface([], {
+  "reports": t.tuple("any"),
 });
 
 const exportedTypeSuite: t.ITypeSuite = {
-  Report,
+  ReportCollection,
 };
 export default exportedTypeSuite;

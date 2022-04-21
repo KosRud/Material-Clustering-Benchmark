@@ -8,6 +8,6 @@
         "typescript": "^4.6.3"
     },
     "scripts": {
-        "build-validators": "ts-node ./scripts/clearValidators.ts && ts-interface-builder ./util/validators/Report.ts -o ./util/validators/generated && tsc ./util/validators/generated/*"
+        "generate-validators": "ts-node ./scripts/clearValidators.ts && ts-interface-builder ./util/validators/Validators.ts -o ./util/validators/generated && tsc ./util/validators/generated/*"
     }
 }

@@ -3,6 +3,20 @@
         {
             "language": "markdown",
             "source": [
+                "# Import node-kernel"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "import {Plotly, display} from 'node-kernel';"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
                 "# Plotly reference\n\n* https://plotly.com/javascript/setting-graph-size/\n* https://plotly.com/javascript/reference/layout/\n* https://plotly.com/javascript/group-by/"
             ],
             "outputs": []
@@ -32,7 +46,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x434bbcce46b040ee97c61a8f2be28057",
+                                "requestId": "x09e85b3987074e408e65125ed69dd689",
                                 "type": "generatePlot",
                                 "ele": "myDiv",
                                 "data": [
@@ -166,7 +180,27 @@
         {
             "language": "javascript",
             "source": [
-                "import fs from 'fs';\nimport unpackUnityJson from './util/unpackUnityJson'\nimport report from './util/validators/generated/Report-ti';\nimport {createCheckers} from \"ts-interface-checker\";\n\nconst reportCollection = JSON.parse(\n    fs.readFileSync('./Reports/Subsampling.json', 'utf-8')\n);\n\nunpackUnityJson(reportCollection);\n\nconst reportChecker = createCheckers(report).Report;\nreportChecker.check({\n    a: \"s\",\n    b: 1,\n    c: 2\n});\n"
+                "import fs from 'fs';\nimport unpackUnityJson from './util/unpackUnityJson'\nimport ReportCollection from './util/validators/generated/Validators-ti';\nimport {createCheckers} from \"ts-interface-checker\";\n\nconst reportCollection = JSON.parse(\n    fs.readFileSync('./Reports/Subsampling.json', 'utf-8')\n);\n\nunpackUnityJson(reportCollection);\n\nconst validator = createCheckers(ReportCollection).ReportCollection;\nvalidator.check(reportCollection);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.error",
+                            "value": {
+                                "name": "Error",
+                                "message": "value.a is missing\nvalue.b is missing",
+                                "stack": "    at new VError (/home/madcake/Projects/Thesis/Implementation/Highlight-Removal-for-MR/node-notebook/node_modules/.pnpm/ts-interface-checker@1.0.2/node_modules/ts-interface-checker/dist/util.js:31:28)\n    at DetailContext.getError (/home/madcake/Projects/Thesis/Implementation/Highlight-Removal-for-MR/node-notebook/node_modules/.pnpm/ts-interface-checker@1.0.2/node_modules/ts-interface-checker/dist/util.js:119:16)\n    at Checker._doCheck (/home/madcake/Projects/Thesis/Implementation/Highlight-Removal-for-MR/node-notebook/node_modules/.pnpm/ts-interface-checker@1.0.2/node_modules/ts-interface-checker/dist/index.js:202:29)\n    at Checker.check (/home/madcake/Projects/Thesis/Implementation/Highlight-Removal-for-MR/node-notebook/node_modules/.pnpm/ts-interface-checker@1.0.2/node_modules/ts-interface-checker/dist/index.js:104:62)\n    at <Cell 8> [13, 9]\n    at <Cell 8> [12, 46]\n    at Script.runInContext (node:vm:139:12)\n    at Script.runInNewContext (node:vm:144:17)\n    at Object.runInNewContext (node:vm:298:38)\n    at C (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:113345)"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                ""
             ],
             "outputs": []
         }
