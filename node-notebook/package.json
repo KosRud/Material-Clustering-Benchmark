@@ -9,5 +9,9 @@
     },
     "scripts": {
         "generate-validators": "ts-node ./scripts/clearValidators.ts && ts-interface-builder ./util/validators/Validators.ts -o ./util/validators/generated && tsc ./util/validators/generated/*"
+    },
+    "dependencies": {
+        "plotly": "^1.0.6",
+        "tslab-plotly": "^2.0.4"
     }
 }
