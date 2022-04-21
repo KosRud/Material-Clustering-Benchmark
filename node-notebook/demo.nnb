@@ -24,7 +24,7 @@
         {
             "language": "typescript",
             "source": [
-                "const sharedLayout = {\n    width: 500,\n    height: 333,\n    font: {\n        size: 13,\n    },\n    yaxis: {\n        automargin: true,\n    },\n    xaxis: {\n        automargin: true,\n    },\n    margin: {\n        l: 4,\n        r: 4,\n        b: 4,\n        t: 50, // for title\n        pad: 0, // between axis and plot\n    },\n};\n"
+                "const sharedLayout = {\n    width: 600,\n    height: 400,\n    font: {\n        size: 15,\n    },\n    yaxis: {\n        automargin: true,\n    },\n    xaxis: {\n        automargin: true,\n    },\n    margin: {\n        l: 4,\n        r: 4,\n        b: 4,\n        t: 50, // for title\n        pad: 0, // between axis and plot\n    },\n};\n"
             ],
             "outputs": []
         },
@@ -213,7 +213,7 @@
         {
             "language": "javascript",
             "source": [
-                "(() => {\n    const subsamplingReports = reportCollections['Subsampling'];\n\n    const textureSizeOptions = Array.from(\n        new Set(\n            subsamplingReports.map(\n                (report) => report.launchParameters.workingTextureSize\n            )\n        )\n    );\n\n    const videoNameOptions = Array.from(\n        new Set(\n            subsamplingReports.map(\n                (report) => report.launchParameters.videoName\n            )\n        )\n    );\n\n    for (const aggregatedStatName of ['mean', 'peak']) {\n\n        for ([plotIndex, videoName] of Object.entries(\n            videoNameOptions\n        ).reverse()) {\n\n            const subsetVideo = subsamplingReports.filter(\n                (report) => report.launchParameters.videoName == videoName\n            );\n\n            const data = textureSizeOptions.map((textureSize) => {\n                const subsetTextureSize = subsetVideo\n                    .filter(\n                        (report) =>\n                            report.launchParameters.workingTextureSize ==\n                            textureSize\n                    )\n                    .reverse();\n\n                return {\n                    y: subsetTextureSize.map(\n                        (report) => report.measurement.aggregated[aggregatedStatName]\n                    ),\n\n                    x: subsetTextureSize.map(\n                        (report) => `${report.launchParameters.numClusters}`\n                    ),\n\n                    name: `${textureSize}`,\n                    type: 'bar',\n                };\n            });\n\n            const layout = {\n                ...sharedLayout,\n\n                xaxis: {\n                    title: 'number of clusters',\n                    type: 'category',\n                },\n\n                yaxis: {\n                    title: {\n                        text: `${aggregatedStatName} variance`,\n                        standoff: 4,\n                    },\n                    automargin: true,\n                },\n\n                legend: {\n                    title: {\n                        text: 'texture size',\n                        font: {\n                            family: \"Sans-serif\",\n                            size: 16\n                        }\n                    },\n                },\n\n                margin: {\n                    l: 60,\n                    r: 4,\n                    b: 50,\n                    t: 50, // for title\n                    pad: 0, // between axis and plot\n                },\n\n                title: `Subsampling (video ${videoName})`,\n            };\n\n            Plotly.newPlot('plot', data, layout);\n        }\n    }\n})();\n"
+                "(() => {\n    const subsamplingReports = reportCollections['Subsampling'];\n\n    const textureSizeOptions = Array.from(\n        new Set(\n            subsamplingReports.map(\n                (report) => report.launchParameters.workingTextureSize\n            )\n        )\n    );\n\n    const videoNameOptions = Array.from(\n        new Set(\n            subsamplingReports.map(\n                (report) => report.launchParameters.videoName\n            )\n        )\n    );\n\n    for (const aggregatedStatName of ['mean', 'peak']) {\n\n        for ([plotIndex, videoName] of Object.entries(\n            videoNameOptions\n        ).reverse()) {\n\n            const subsetVideo = subsamplingReports.filter(\n                (report) => report.launchParameters.videoName == videoName\n            );\n\n            const data = textureSizeOptions.map((textureSize) => {\n                const subsetTextureSize = subsetVideo\n                    .filter(\n                        (report) =>\n                            report.launchParameters.workingTextureSize ==\n                            textureSize\n                    )\n                    .reverse();\n\n                return {\n                    y: subsetTextureSize.map(\n                        (report) => report.measurement.aggregated[aggregatedStatName]\n                    ),\n\n                    x: subsetTextureSize.map(\n                        (report) => `${report.launchParameters.numClusters}`\n                    ),\n\n                    name: `${textureSize}`,\n                    type: 'bar',\n                };\n            });\n\n            const layout = {\n                ...sharedLayout,\n\n                xaxis: {\n                    title: 'number of clusters',\n                    type: 'category',\n                },\n\n                yaxis: {\n                    title: {\n                        text: `${aggregatedStatName} variance`,\n                        standoff: 4,\n                    },\n                    automargin: true,\n                },\n\n                legend: {\n                    title: {\n                        text: 'texture size',\n                        font: {\n                            family: \"Sans-serif\",\n                            size: 16\n                        }\n                    },\n                },\n\n                margin: {\n                    l: 80,\n                    r: 4,\n                    b: 40,\n                    t: 50, // for title\n                    pad: 0, // between axis and plot\n                },\n\n                title: `Subsampling (video ${videoName})`,\n            };\n\n            Plotly.newPlot('plot', data, layout);\n        }\n    }\n})();\n"
             ],
             "outputs": [
                 {
@@ -221,7 +221,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x6af58916303f4ed984745fd6c14acb3d",
+                                "requestId": "x505d0a66e3344f0485181675cad2bc44",
                                 "type": "generatePlot",
                                 "ele": "plot",
                                 "data": [
@@ -353,10 +353,10 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 500,
-                                    "height": 333,
+                                    "width": 600,
+                                    "height": 400,
                                     "font": {
-                                        "size": 13
+                                        "size": 15
                                     },
                                     "yaxis": {
                                         "title": {
@@ -370,9 +370,9 @@
                                         "type": "category"
                                     },
                                     "margin": {
-                                        "l": 60,
+                                        "l": 80,
                                         "r": 4,
-                                        "b": 50,
+                                        "b": 40,
                                         "t": 50,
                                         "pad": 0
                                     },
@@ -396,7 +396,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x6af58916303f4ed984745fd6c14acb3d",
+                                "requestId": "x505d0a66e3344f0485181675cad2bc44",
                                 "type": "generatePlot",
                                 "ele": "plot",
                                 "data": [
@@ -528,10 +528,10 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 500,
-                                    "height": 333,
+                                    "width": 600,
+                                    "height": 400,
                                     "font": {
-                                        "size": 13
+                                        "size": 15
                                     },
                                     "yaxis": {
                                         "title": {
@@ -545,9 +545,9 @@
                                         "type": "category"
                                     },
                                     "margin": {
-                                        "l": 60,
+                                        "l": 80,
                                         "r": 4,
-                                        "b": 50,
+                                        "b": 40,
                                         "t": 50,
                                         "pad": 0
                                     },
@@ -571,7 +571,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x6af58916303f4ed984745fd6c14acb3d",
+                                "requestId": "x505d0a66e3344f0485181675cad2bc44",
                                 "type": "generatePlot",
                                 "ele": "plot",
                                 "data": [
@@ -703,10 +703,10 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 500,
-                                    "height": 333,
+                                    "width": 600,
+                                    "height": 400,
                                     "font": {
-                                        "size": 13
+                                        "size": 15
                                     },
                                     "yaxis": {
                                         "title": {
@@ -720,9 +720,9 @@
                                         "type": "category"
                                     },
                                     "margin": {
-                                        "l": 60,
+                                        "l": 80,
                                         "r": 4,
-                                        "b": 50,
+                                        "b": 40,
                                         "t": 50,
                                         "pad": 0
                                     },
@@ -746,7 +746,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x6af58916303f4ed984745fd6c14acb3d",
+                                "requestId": "x505d0a66e3344f0485181675cad2bc44",
                                 "type": "generatePlot",
                                 "ele": "plot",
                                 "data": [
@@ -878,10 +878,10 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 500,
-                                    "height": 333,
+                                    "width": 600,
+                                    "height": 400,
                                     "font": {
-                                        "size": 13
+                                        "size": 15
                                     },
                                     "yaxis": {
                                         "title": {
@@ -895,9 +895,9 @@
                                         "type": "category"
                                     },
                                     "margin": {
-                                        "l": 60,
+                                        "l": 80,
                                         "r": 4,
-                                        "b": 50,
+                                        "b": 40,
                                         "t": 50,
                                         "pad": 0
                                     },
