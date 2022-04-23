@@ -123,6 +123,8 @@ public class ClusteringTest : MonoBehaviour
             csHighlightRemoval: this.csHighlightRemoval,
             noGcAvailable: this.noGcAvailable
         );
+
+        this.reportCollection = new BenchmarkReportCollection();
     }
 
     // Update is called once per frame
