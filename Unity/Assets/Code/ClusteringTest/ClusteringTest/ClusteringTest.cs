@@ -112,6 +112,8 @@ public class ClusteringTest : MonoBehaviour
             this.currentWorkList = this.workLists.Pop();
             this.numCurWorkListFinishedRuns = 0;
             this.numCurWorkListRuns = this.currentWorkList.runs.Count;
+
+            this.reportCollection = new BenchmarkReportCollection();
         }
 
         this.measurementRunner = new MeasurementRunner(
@@ -123,8 +125,6 @@ public class ClusteringTest : MonoBehaviour
             csHighlightRemoval: this.csHighlightRemoval,
             noGcAvailable: this.noGcAvailable
         );
-
-        this.reportCollection = new BenchmarkReportCollection();
     }
 
     // Update is called once per frame
