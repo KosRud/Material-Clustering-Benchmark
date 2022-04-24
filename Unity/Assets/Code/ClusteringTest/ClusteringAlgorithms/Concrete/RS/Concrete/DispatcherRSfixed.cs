@@ -8,7 +8,7 @@ namespace ClusteringAlgorithms
         [Serializable]
         public new class Parameters : DispatcherParameters
         {
-            public readonly bool doReadback;
+            public bool doReadback;
         }
 
         public readonly bool doReadback;

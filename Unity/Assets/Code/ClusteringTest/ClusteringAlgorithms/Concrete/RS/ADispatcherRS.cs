@@ -7,7 +7,7 @@ namespace ClusteringAlgorithms
     {
         public class Parameters : DispatcherParameters
         {
-            public readonly int numIterationsKM;
+            public int numIterationsKM;
             public bool stopCondition;
 
             public Parameters(int numIterationsKM, bool stopCondition)
