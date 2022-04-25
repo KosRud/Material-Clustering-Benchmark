@@ -52,7 +52,7 @@ namespace WorkGeneration
                         doRandomizeEmptyClusters: false,
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
-                            workingSize: 64,
+                            workingSize: 256,
                             fullSize: ClusteringTest.fullTextureSize,
                             jitterSize: 1
                         )
@@ -72,7 +72,7 @@ namespace WorkGeneration
                         doRandomizeEmptyClusters: false,
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
-                            workingSize: 64,
+                            workingSize: 256,
                             fullSize: ClusteringTest.fullTextureSize,
                             jitterSize: 1
                         )
@@ -95,7 +95,7 @@ namespace WorkGeneration
                             doReadback: false,
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                 numClusters: 6,
-                                workingSize: 64,
+                                workingSize: 256,
                                 fullSize: ClusteringTest.fullTextureSize,
                                 jitterSize: 1
                             )
@@ -122,7 +122,7 @@ namespace WorkGeneration
                         doRandomizeEmptyClusters: false,
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
-                            workingSize: 64,
+                            workingSize: 256,
                             fullSize: ClusteringTest.fullTextureSize,
                             jitterSize: 1
                         )
@@ -142,7 +142,7 @@ namespace WorkGeneration
                         numIterationsKM: 2,
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
-                            workingSize: 64,
+                            workingSize: 256,
                             fullSize: ClusteringTest.fullTextureSize,
                             jitterSize: 1
                         )
