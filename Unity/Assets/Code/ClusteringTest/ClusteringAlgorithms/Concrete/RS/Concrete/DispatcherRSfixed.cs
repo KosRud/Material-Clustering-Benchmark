@@ -35,19 +35,6 @@ namespace ClusteringAlgorithms
             this.doReadback = doReadback;
         }
 
-        public override string name
-        {
-            get
-            {
-                string result = $"RS({this._parameters.numIterationsKm}KM)";
-                if (this.doReadback)
-                {
-                    result += "_readback";
-                }
-                return result;
-            }
-        }
-
         public override void RunClustering(ClusteringTextures clusteringTextures)
         {
             this.KMiteration(clusteringTextures, rejectOld: true);

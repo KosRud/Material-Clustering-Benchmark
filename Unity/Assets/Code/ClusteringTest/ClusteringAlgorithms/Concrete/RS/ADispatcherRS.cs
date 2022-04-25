@@ -41,6 +41,8 @@ namespace ClusteringAlgorithms
             );
         }
 
+        public sealed override string name => "RS";
+
         public abstract override void RunClustering(ClusteringTextures clusteringTextures);
 
         protected float ValidateCandidatesReadback()
