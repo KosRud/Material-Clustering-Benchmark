@@ -7,12 +7,12 @@ namespace ClusteringAlgorithms
     {
         public class Parameters : DispatcherParameters
         {
-            public int numIterationsKM;
+            public int numIterationsKm;
             public bool stopCondition;
 
-            public Parameters(int numIterationsKM, bool stopCondition)
+            public Parameters(int numIterationsKm, bool stopCondition)
             {
-                this.numIterationsKM = numIterationsKM;
+                this.numIterationsKm = numIterationsKm;
                 this.stopCondition = stopCondition;
             }
         }
@@ -27,12 +27,12 @@ namespace ClusteringAlgorithms
             ComputeShader computeShader,
             int numIterations,
             bool doRandomizeEmptyClusters,
-            int numIterationsKM,
+            int numIterationsKm,
             ClusteringRTsAndBuffers clusteringRTsAndBuffers
         ) : base(computeShader, numIterations, doRandomizeEmptyClusters, clusteringRTsAndBuffers)
         {
             this._parameters = new Parameters(
-                numIterationsKM: numIterationsKM,
+                numIterationsKm: numIterationsKm,
                 stopCondition: false
             );
             this.kernelHandleRandomSwap = this.computeShader.FindKernel("RandomSwap");

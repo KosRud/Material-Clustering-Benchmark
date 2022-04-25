@@ -25,7 +25,7 @@ namespace ClusteringAlgorithms
                 computeShader: computeShader,
                 numIterations: numIterations,
                 doRandomizeEmptyClusters: doRandomizeEmptyClusters,
-                numIterationsKM: numIterationsKM,
+                numIterationsKm: numIterationsKM,
                 clusteringRTsAndBuffers: clusteringRTsAndBuffers
             )
         {
@@ -39,7 +39,7 @@ namespace ClusteringAlgorithms
         {
             get
             {
-                string result = $"RS({this._parameters.numIterationsKM}KM)";
+                string result = $"RS({this._parameters.numIterationsKm}KM)";
                 if (this.doReadback)
                 {
                     result += "_readback";
@@ -52,11 +52,11 @@ namespace ClusteringAlgorithms
         {
             this.KMiteration(clusteringTextures, rejectOld: true);
 
-            for (int i = 1; i < this.numIterations; i += this._parameters.numIterationsKM)
+            for (int i = 1; i < this.numIterations; i += this._parameters.numIterationsKm)
             {
                 this.RandomSwap(clusteringTextures);
 
-                for (int k = 0; k < this._parameters.numIterationsKM; k++)
+                for (int k = 0; k < this._parameters.numIterationsKm; k++)
                 {
                     this.KMiteration(clusteringTextures, rejectOld: false);
                 }

@@ -15,12 +15,12 @@ namespace ClusteringAlgorithms
                 computeShader: computeShader,
                 numIterations: 1,
                 doRandomizeEmptyClusters: doRandomizeEmptyClusters,
-                numIterationsKM: numIterationsKM,
+                numIterationsKm: numIterationsKM,
                 clusteringRTsAndBuffers: clusteringRTsAndBuffers
             )
         {
             this._parameters = new ADispatcherRS.Parameters(
-                numIterationsKM: numIterationsKM,
+                numIterationsKm: numIterationsKM,
                 stopCondition: true
             );
         }
@@ -31,11 +31,11 @@ namespace ClusteringAlgorithms
 
             int failedSwaps = 0;
 
-            for (int i = 1; ; i += this._parameters.numIterationsKM)
+            for (int i = 1; ; i += this._parameters.numIterationsKm)
             {
                 this.RandomSwap(clusteringTextures);
 
-                for (int k = 0; k < this._parameters.numIterationsKM; k++)
+                for (int k = 0; k < this._parameters.numIterationsKm; k++)
                 {
                     this.KMiteration(clusteringTextures, rejectOld: false);
                 }
