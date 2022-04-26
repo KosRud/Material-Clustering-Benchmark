@@ -20,19 +20,6 @@ namespace ClusteringAlgorithms
         private readonly int kernelHandleAttributeClusters;
         private readonly int kernelUpdateClusterCenters;
 
-        /* ToDo
-          remove redundant arguments
-          move them into clusteringRTsAndBuffers
-    
-          clusteringRTsAndBuffers is re-created
-          for every new work item
-    
-          later reference work directly?
-    
-          move inputTex to clusteringRTsAndBuffers
-          or work
-        */
-
         /// <summary>
         /// Takes ownership of the clusteringRTsAndBuffers
         /// </summary>

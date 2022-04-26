@@ -145,6 +145,7 @@ public class ClusteringTest : MonoBehaviour
 
             this.enabled = false;
             Application.Quit();
+            throw e;
         }
 
         if (this.measurementRunner.finished == true)

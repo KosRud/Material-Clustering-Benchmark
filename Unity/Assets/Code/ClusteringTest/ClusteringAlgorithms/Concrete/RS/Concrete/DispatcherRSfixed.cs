@@ -6,12 +6,19 @@ namespace ClusteringAlgorithms
     public class DispatcherRSfixed : ADispatcherRS
     {
         [Serializable]
-        public new class Parameters : DispatcherParameters
+        public new class Parameters : ADispatcherRS.Parameters
         {
             public bool doReadback;
+
+            public Parameters(int numIterationsKm, bool stopCondition, bool doReadback)
+                : base(numIterationsKm: numIterationsKm, stopCondition: stopCondition)
+            {
+                this.doReadback = doReadback;
+            }
         }
 
-        public readonly bool doReadback;
+        protected new Parameters _parameters;
+        public override DispatcherParameters parameters => this._parameters;
 
         public DispatcherRSfixed(
             ComputeShader computeShader,
@@ -32,7 +39,12 @@ namespace ClusteringAlgorithms
             Debug.Assert(
                 IsNumIterationsValid(iterationsKM: numIterationsKM, iterations: numIterations)
             );
-            this.doReadback = doReadback;
+
+            this._parameters = new Parameters(
+                numIterationsKM,
+                stopCondition: true,
+                doReadback: doReadback
+            );
         }
 
         public override void RunClustering(ClusteringTextures clusteringTextures)
@@ -47,7 +59,7 @@ namespace ClusteringAlgorithms
                 {
                     this.KMiteration(clusteringTextures, rejectOld: false);
                 }
-                if (this.doReadback)
+                if (this._parameters.doReadback)
                 {
                     this.ValidateCandidatesReadback();
                 }

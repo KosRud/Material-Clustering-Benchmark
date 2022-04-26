@@ -145,7 +145,7 @@ void ShowResult (uint3 id : SV_DispatchThreadID)
 	}
 
 	if (test(tex_input[id.xy].rgb) <= threshold){
-		color.rgb /= 128.0;
+		color.rgb /= 32.0;
 	}
 
 	tex_output[id.xy] = color;

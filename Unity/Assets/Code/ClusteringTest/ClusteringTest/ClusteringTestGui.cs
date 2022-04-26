@@ -45,7 +45,7 @@ public class ClusteringTestGui : MonoBehaviour
         this.workOptions = new List<WorkOption>();
 
         this.frameTimeWorkOption = new WorkOption(
-            new WorkGeneration.FrameTime(
+            new FrameTime(
                 kernelSize: ClusteringTest.kernelSize,
                 videos: this.videos,
                 csHighlightRemoval: this.csHighlightRemoval
@@ -66,7 +66,7 @@ public class ClusteringTestGui : MonoBehaviour
 
         this.workOptions.Add(
             new WorkOption(
-                new WorkGeneration.EmptyClusterRandomization(
+                new EmptyClusterRandomization(
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
@@ -76,7 +76,7 @@ public class ClusteringTestGui : MonoBehaviour
 
         this.workOptions.Add(
             new WorkOption(
-                new WorkGeneration.Rs1VsRs2(
+                new Rs1VsRs2(
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
@@ -86,7 +86,7 @@ public class ClusteringTestGui : MonoBehaviour
 
         this.workOptions.Add(
             new WorkOption(
-                new WorkGeneration.ScalingVsSubsampling(
+                new ScalingVsSubsampling(
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
@@ -96,7 +96,7 @@ public class ClusteringTestGui : MonoBehaviour
 
         this.workOptions.Add(
             new WorkOption(
-                new WorkGeneration.ScanlineJitter(
+                new ScanlineJitter(
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
@@ -106,7 +106,7 @@ public class ClusteringTestGui : MonoBehaviour
 
         this.workOptions.Add(
             new WorkOption(
-                new WorkGeneration.StaggeredJitter(
+                new StaggeredJitter(
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
@@ -116,7 +116,7 @@ public class ClusteringTestGui : MonoBehaviour
 
         this.workOptions.Add(
             new WorkOption(
-                new WorkGeneration.Subsampling(
+                new Subsampling(
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
@@ -154,7 +154,7 @@ public class ClusteringTestGui : MonoBehaviour
                     /*
                         make sure no GC allocations happen,
                         when measuring frame times
-        
+                        
                         ! even an empty OnGUI function GC allocates
                     */
                     this.enabled = false;

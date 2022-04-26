@@ -93,8 +93,24 @@ namespace ClusteringAlgorithms
             ClusterCenters clusterCenters = null;
             ClusterCenters newClusterCenters = this.clusteringRTsAndBuffers.GetClusterCenters();
 
-            for (int i = 1; i < maxKMiterations; i++)
+            /*
+                start at 1
+                because 1 iteration was already performed
+
+                we need variance change between 2 iterations
+                thus we can't check stop condition after the first iteration
+
+                variance check between last iteration of the previous frame
+                and the first iteration of the current frame
+                makes no sense
+                because the input texture changed
+            */
+            for (int kmIteration = 1; kmIteration < maxKMiterations; kmIteration++)
             {
+                /*
+                    * dispose previous cluster centers
+                    * (only hold one instance at a time)
+                */
                 clusterCenters?.Dispose();
                 clusterCenters = newClusterCenters;
 
@@ -107,6 +123,7 @@ namespace ClusteringAlgorithms
                     < StopCondition.varianceChangeThreshold
                 )
                 {
+                    // * dispose latest cluster centers
                     clusterCenters.Dispose();
                     return KMuntilConvergesResult.Get(
                         converged: true,
@@ -115,6 +132,7 @@ namespace ClusteringAlgorithms
                 }
             }
 
+            // * dispose latest cluster centers
             clusterCenters.Dispose();
             return KMuntilConvergesResult.Get(converged: false, clusterCenters: newClusterCenters);
         }
