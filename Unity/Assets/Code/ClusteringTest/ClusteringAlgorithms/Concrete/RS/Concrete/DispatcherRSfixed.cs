@@ -10,14 +10,16 @@ namespace ClusteringAlgorithms
         {
             public bool doReadback;
 
-            public Parameters(int numIterationsKm, bool stopCondition, bool doReadback)
-                : base(numIterationsKm: numIterationsKm, stopCondition: stopCondition)
+            public Parameters(int numIterationsKm, bool doReadback)
+                : base(numIterationsKm: numIterationsKm)
             {
                 this.doReadback = doReadback;
             }
         }
 
-        protected new Parameters _parameters;
+        public override bool usesStopCondition => false;
+
+        protected new readonly Parameters _parameters;
         public override DispatcherParameters parameters => this._parameters;
 
         public DispatcherRSfixed(
@@ -40,11 +42,7 @@ namespace ClusteringAlgorithms
                 IsNumIterationsValid(iterationsKM: numIterationsKM, iterations: numIterations)
             );
 
-            this._parameters = new Parameters(
-                numIterationsKM,
-                stopCondition: true,
-                doReadback: doReadback
-            );
+            this._parameters = new Parameters(numIterationsKM, doReadback: doReadback);
         }
 
         public override void RunClustering(ClusteringTextures clusteringTextures)

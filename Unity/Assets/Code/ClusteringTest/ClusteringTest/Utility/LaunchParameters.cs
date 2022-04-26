@@ -21,6 +21,7 @@ namespace WorkGeneration
             public bool doDownscale;
             public string algorithm;
             public bool doRandomizeEmptyClusters;
+            public bool stopCondition;
 
             public SerializableLaunchParameters(
                 string videoName,
@@ -32,6 +33,7 @@ namespace WorkGeneration
                 bool doDownscale,
                 string algorithm,
                 bool doRandomizeEmptyClusters,
+                bool stopCondition,
                 DispatcherParameters dispatcherParameters
             )
             {
@@ -45,6 +47,7 @@ namespace WorkGeneration
                 this.algorithm = algorithm;
                 this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
                 this.dispatcherParameters = dispatcherParameters;
+                this.stopCondition = stopCondition;
             }
         }
 
@@ -60,44 +63,15 @@ namespace WorkGeneration
                 doDownscale: this.doDownscale,
                 algorithm: this.dispatcher.name,
                 doRandomizeEmptyClusters: this.dispatcher.doRandomizeEmptyClusters,
-                dispatcherParameters: this.dispatcher.parameters
+                dispatcherParameters: this.dispatcher.parameters,
+                stopCondition: this.dispatcher.usesStopCondition
             );
-        }
-
-        public string GetFileName()
-        {
-            string videoName = this.video.name;
-            int numIterations = this.dispatcher.numIterations;
-            int workingTextureSize = this.dispatcher.clusteringRTsAndBuffers.workingSize;
-            int numClusters = this.dispatcher.clusteringRTsAndBuffers.numClusters;
-            int jitterSize = this.dispatcher.clusteringRTsAndBuffers.jitterSize;
-            bool staggeredJitter = this.staggeredJitter;
-            bool doDownscale = this.doDownscale;
-            string algorithm = this.dispatcher.name;
-            bool doRandomizeEmptyClusters = this.dispatcher.doRandomizeEmptyClusters;
-
-            return $"video file:{videoName}|number of iterations:{numIterations}|texture size:{workingTextureSize}|number of clusters:{numClusters}|randomize empty clusters:{doRandomizeEmptyClusters}|jitter size:{jitterSize}|staggered jitter:{staggeredJitter}|downscale:{doDownscale}|algorithm:{algorithm}.csv";
-        }
-
-        public LaunchParameters ThrowIfExists()
-        {
-            string fileName = $"{ClusteringTest.varianceLogPath}/{this.GetFileName()}";
-
-            if (System.IO.File.Exists(fileName))
-            {
-#if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-#endif
-                throw new System.Exception($"File exists: {fileName}");
-            }
-
-            return this;
         }
 
         public readonly bool staggeredJitter;
         public readonly UnityEngine.Video.VideoClip video;
         public readonly bool doDownscale;
-        public readonly ADispatcher dispatcher;
+        public readonly IDispatcher dispatcher;
 
         /// <summary>
         /// Takes ownership of the dispatcher
@@ -106,7 +80,7 @@ namespace WorkGeneration
             bool staggeredJitter,
             UnityEngine.Video.VideoClip video,
             bool doDownscale,
-            ADispatcher dispatcher
+            IDispatcher dispatcher
         )
         {
             this.staggeredJitter = staggeredJitter;

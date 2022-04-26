@@ -13,5 +13,7 @@ namespace ClusteringAlgorithms
         { }
 
         public abstract void SingleIteration(ClusteringTextures textures);
+
+        public override bool usesStopCondition => false;
     }
 }

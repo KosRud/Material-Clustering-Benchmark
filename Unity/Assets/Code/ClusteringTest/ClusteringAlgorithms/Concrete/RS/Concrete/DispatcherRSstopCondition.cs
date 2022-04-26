@@ -19,11 +19,10 @@ namespace ClusteringAlgorithms
                 clusteringRTsAndBuffers: clusteringRTsAndBuffers
             )
         {
-            this._parameters = new ADispatcherRS.Parameters(
-                numIterationsKm: numIterationsKM,
-                stopCondition: true
-            );
+            this._parameters.numIterationsKm = numIterationsKM;
         }
+
+        public override bool usesStopCondition => true;
 
         public override void RunClustering(ClusteringTextures clusteringTextures)
         {

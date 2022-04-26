@@ -23,6 +23,7 @@ export const ReportCollection = t.iface([], {
       "doDownscale": "boolean",
       "algorithm": "string",
       "doRandomizeEmptyClusters": "boolean",
+      "stopCondition": t.opt("boolean"),
     }),
     "logType": "number",
   })),

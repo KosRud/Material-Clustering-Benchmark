@@ -8,7 +8,7 @@ namespace ClusteringAlgorithms
         [Serializable]
         public class Parameters : DispatcherParameters
         {
-            public readonly int p;
+            public int p;
 
             public Parameters(int p)
             {

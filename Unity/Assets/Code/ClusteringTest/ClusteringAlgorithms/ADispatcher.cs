@@ -1,9 +1,8 @@
 using UnityEngine;
-using System;
 
 namespace ClusteringAlgorithms
 {
-    public abstract class ADispatcher : IDisposable
+    public abstract class ADispatcher : IDispatcher
     {
         // reported in the file
         public bool doRandomizeEmptyClusters { get; private set; }
@@ -11,9 +10,11 @@ namespace ClusteringAlgorithms
         public ClusteringRTsAndBuffers clusteringRTsAndBuffers { get; private set; }
 
         public abstract string name { get; }
-        public virtual DispatcherParameters parameters => this.defaultParameters;
+        public virtual DispatcherParameters parameters => this._parameters;
 
-        private readonly DispatcherParameters defaultParameters;
+        private readonly DispatcherParameters _parameters;
+
+        public abstract bool usesStopCondition { get; }
 
         // internal
         public readonly ComputeShader computeShader;
@@ -36,12 +37,12 @@ namespace ClusteringAlgorithms
             this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
             this.numIterations = numIterations;
             this.clusteringRTsAndBuffers = clusteringRTsAndBuffers;
-            this.defaultParameters = new DispatcherParameters();
+            this._parameters = new DispatcherParameters();
         }
 
         public abstract void RunClustering(ClusteringTextures clusteringTextures);
 
-        public void UpdateClusterCenters(ClusteringTextures textures, bool rejectOld)
+        public void UpdateClusterCenters(ClusteringTextures clusteringTextures, bool rejectOld)
         {
             this.clusteringRTsAndBuffers.UpdateRandomPositions();
 
@@ -49,12 +50,12 @@ namespace ClusteringAlgorithms
             this.computeShader.SetTexture(
                 this.kernelUpdateClusterCenters,
                 "tex_arr_clusters_r",
-                textures.rtArr
+                clusteringTextures.rtArr
             );
             this.computeShader.SetTexture(
                 this.kernelUpdateClusterCenters,
                 "tex_input",
-                textures.rtInput
+                clusteringTextures.rtInput
             );
             this.computeShader.SetBuffer(
                 this.kernelUpdateClusterCenters,
@@ -69,7 +70,7 @@ namespace ClusteringAlgorithms
             this.computeShader.Dispatch(this.kernelUpdateClusterCenters, 1, 1, 1);
         }
 
-        public void AttributeClusters(ClusteringTextures textures, bool final, bool khm)
+        public void AttributeClusters(ClusteringTextures clusteringTextures, bool final, bool khm)
         {
             this.computeShader.SetBool("KHM", khm);
             this.computeShader.SetBool("final", final);
@@ -77,12 +78,12 @@ namespace ClusteringAlgorithms
             this.computeShader.SetTexture(
                 this.kernelHandleAttributeClusters,
                 "tex_input",
-                textures.rtInput
+                clusteringTextures.rtInput
             );
             this.computeShader.SetTexture(
                 this.kernelHandleAttributeClusters,
                 "tex_arr_clusters_rw",
-                textures.rtArr
+                clusteringTextures.rtArr
             );
             this.computeShader.SetBuffer(
                 this.kernelHandleAttributeClusters,
@@ -91,12 +92,12 @@ namespace ClusteringAlgorithms
             );
             this.computeShader.Dispatch(
                 this.kernelHandleAttributeClusters,
-                textures.size / ClusteringTest.kernelSize,
-                textures.size / ClusteringTest.kernelSize,
+                clusteringTextures.size / ClusteringTest.kernelSize,
+                clusteringTextures.size / ClusteringTest.kernelSize,
                 1
             );
 
-            textures.rtArr.GenerateMips();
+            clusteringTextures.rtArr.GenerateMips();
         }
 
         /// <summary>
@@ -113,7 +114,7 @@ namespace ClusteringAlgorithms
                   also ensure final=true (no threshold)
                 */
                 this.AttributeClusters(
-                    textures: this.clusteringRTsAndBuffers.texturesFullRes,
+                    clusteringTextures: this.clusteringRTsAndBuffers.texturesFullRes,
                     final: true,
                     khm: false
                 );
@@ -132,7 +133,7 @@ namespace ClusteringAlgorithms
                   which disables thresholding of dark pixels
                 */
                 this.UpdateClusterCenters(
-                    textures: this.clusteringRTsAndBuffers.texturesFullRes,
+                    clusteringTextures: this.clusteringRTsAndBuffers.texturesFullRes,
                     rejectOld: false
                 );
 
@@ -144,7 +145,7 @@ namespace ClusteringAlgorithms
             }
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             this.clusteringRTsAndBuffers.Dispose();
         }

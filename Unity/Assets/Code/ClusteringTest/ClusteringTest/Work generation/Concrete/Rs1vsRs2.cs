@@ -24,7 +24,7 @@ namespace WorkGeneration
                 {
                     foreach (int numIterationsKM in new int[] { 1, 2 })
                     {
-                        this.AddRs(
+                        AddRs(
                             workList: workList,
                             video: video,
                             numIterations: numIterations,
@@ -38,7 +38,7 @@ namespace WorkGeneration
             return workList;
         }
 
-        private void AddRs(
+        private static void AddRs(
             WorkList workList,
             UnityEngine.Video.VideoClip video,
             int numIterations,
@@ -71,7 +71,7 @@ namespace WorkGeneration
                                 jitterSize: 1
                             )
                         )
-                    ).ThrowIfExists()
+                    )
                 );
             }
         }

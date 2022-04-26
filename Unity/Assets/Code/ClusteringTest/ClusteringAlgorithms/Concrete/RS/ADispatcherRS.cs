@@ -8,17 +8,17 @@ namespace ClusteringAlgorithms
         public class Parameters : DispatcherParameters
         {
             public int numIterationsKm;
-            public bool stopCondition;
 
-            public Parameters(int numIterationsKm, bool stopCondition)
+            public Parameters(int numIterationsKm)
             {
                 this.numIterationsKm = numIterationsKm;
-                this.stopCondition = stopCondition;
             }
         }
 
-        protected Parameters _parameters;
+        protected readonly Parameters _parameters;
         public override DispatcherParameters parameters => this._parameters;
+
+        public override abstract bool usesStopCondition { get; }
 
         protected readonly int kernelHandleRandomSwap;
         protected readonly int kernelHandleValidateCandidates;
@@ -31,10 +31,7 @@ namespace ClusteringAlgorithms
             ClusteringRTsAndBuffers clusteringRTsAndBuffers
         ) : base(computeShader, numIterations, doRandomizeEmptyClusters, clusteringRTsAndBuffers)
         {
-            this._parameters = new Parameters(
-                numIterationsKm: numIterationsKm,
-                stopCondition: false
-            );
+            this._parameters = new Parameters(numIterationsKm: numIterationsKm);
             this.kernelHandleRandomSwap = this.computeShader.FindKernel("RandomSwap");
             this.kernelHandleValidateCandidates = this.computeShader.FindKernel(
                 "ValidateCandidates"

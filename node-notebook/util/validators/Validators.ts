@@ -25,6 +25,7 @@ export interface ReportCollection {
                 doDownscale: boolean;
                 algorithm: string;
                 doRandomizeEmptyClusters: boolean;
+                stopCondition?: boolean;
             };
             logType: number;
         }

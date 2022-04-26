@@ -1,6 +1,5 @@
 using UnityEngine;
 using ClusteringAlgorithms;
-using System.Collections.Generic;
 
 namespace WorkGeneration
 {
@@ -43,7 +42,7 @@ namespace WorkGeneration
                                             jitterSize: 1
                                         )
                                     )
-                                ).ThrowIfExists()
+                                )
                             );
 
                             // KHM
@@ -63,7 +62,7 @@ namespace WorkGeneration
                                             jitterSize: 1
                                         )
                                     )
-                                ).ThrowIfExists()
+                                )
                             );
 
                             foreach (bool doReadback in new bool[] { true, false })
@@ -87,7 +86,7 @@ namespace WorkGeneration
                                                 jitterSize: 1
                                             )
                                         )
-                                    ).ThrowIfExists()
+                                    )
                                 );
                             }
                         }
@@ -113,7 +112,7 @@ namespace WorkGeneration
                                             jitterSize: 1
                                         )
                                     )
-                                ).ThrowIfExists()
+                                )
                             );
 
                             // KHM
@@ -133,52 +132,112 @@ namespace WorkGeneration
                                             jitterSize: 1
                                         )
                                     )
-                                ).ThrowIfExists()
+                                )
                             );
                         }
-                        // Knecht
-                        workList.runs.Push(
-                            new LaunchParameters(
-                                staggeredJitter: false,
-                                video: video,
-                                doDownscale: false,
-                                dispatcher: new DispatcherKnecht(
-                                    computeShader: this.csHighlightRemoval,
-                                    doRandomizeEmptyClusters: false,
-                                    clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
-                                        numClusters: 6,
-                                        workingSize: textureSize,
-                                        fullSize: ClusteringTest.fullTextureSize,
-                                        jitterSize: 1
-                                    )
-                                )
-                            ).ThrowIfExists()
-                        );
 
-                        // RS stop condition
-                        workList.runs.Push(
-                            new LaunchParameters(
-                                staggeredJitter: false,
-                                video: video,
-                                doDownscale: false,
-                                dispatcher: new DispatcherRSstopCondition(
-                                    computeShader: this.csHighlightRemoval,
-                                    doRandomizeEmptyClusters: false,
-                                    numIterationsKM: 2,
-                                    clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
-                                        numClusters: 6,
-                                        workingSize: textureSize,
-                                        fullSize: ClusteringTest.fullTextureSize,
-                                        jitterSize: 1
-                                    )
-                                )
-                            ).ThrowIfExists()
+                        AddStopCondtion(
+                            workList: workList,
+                            video: video,
+                            textureSize: textureSize,
+                            this.csHighlightRemoval
                         );
                     }
                 }
             }
 
             return workList;
+        }
+
+        private static void AddStopCondtion(
+            WorkList workList,
+            UnityEngine.Video.VideoClip video,
+            int textureSize,
+            ComputeShader csHighlightRemoval
+        )
+        {
+            // Knecht
+            workList.runs.Push(
+                new LaunchParameters(
+                    staggeredJitter: false,
+                    video: video,
+                    doDownscale: false,
+                    dispatcher: new DispatcherKnecht(
+                        computeShader: csHighlightRemoval,
+                        doRandomizeEmptyClusters: false,
+                        clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                            numClusters: 6,
+                            workingSize: textureSize,
+                            fullSize: ClusteringTest.fullTextureSize,
+                            jitterSize: 1
+                        )
+                    )
+                )
+            );
+
+            // RS stop condition
+            workList.runs.Push(
+                new LaunchParameters(
+                    staggeredJitter: false,
+                    video: video,
+                    doDownscale: false,
+                    dispatcher: new DispatcherRSstopCondition(
+                        computeShader: csHighlightRemoval,
+                        doRandomizeEmptyClusters: false,
+                        numIterationsKM: 2,
+                        clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                            numClusters: 6,
+                            workingSize: textureSize,
+                            fullSize: ClusteringTest.fullTextureSize,
+                            jitterSize: 1
+                        )
+                    )
+                )
+            );
+
+            // KM stop condition
+            workList.runs.Push(
+                new LaunchParameters(
+                    staggeredJitter: false,
+                    video: video,
+                    doDownscale: false,
+                    dispatcher: new WrapperStopCondition(
+                        new DispatcherKM(
+                            computeShader: csHighlightRemoval,
+                            doRandomizeEmptyClusters: false,
+                            numIterations: 1,
+                            clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                                numClusters: 6,
+                                workingSize: textureSize,
+                                fullSize: ClusteringTest.fullTextureSize,
+                                jitterSize: 1
+                            )
+                        )
+                    )
+                )
+            );
+
+            // KHM stop condition
+            workList.runs.Push(
+                new LaunchParameters(
+                    staggeredJitter: false,
+                    video: video,
+                    doDownscale: false,
+                    dispatcher: new WrapperStopCondition(
+                        new DispatcherKHM(
+                            computeShader: csHighlightRemoval,
+                            doRandomizeEmptyClusters: false,
+                            numIterations: 1,
+                            clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                                numClusters: 6,
+                                workingSize: textureSize,
+                                fullSize: ClusteringTest.fullTextureSize,
+                                jitterSize: 1
+                            )
+                        )
+                    )
+                )
+            );
         }
     }
 }

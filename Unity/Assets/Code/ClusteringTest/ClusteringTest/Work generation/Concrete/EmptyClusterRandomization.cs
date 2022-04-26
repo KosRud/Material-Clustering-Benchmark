@@ -40,7 +40,7 @@ namespace WorkGeneration
                                         jitterSize: 1
                                     )
                                 )
-                            ).ThrowIfExists()
+                            )
                         );
                     }
                 }

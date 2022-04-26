@@ -1,6 +1,5 @@
 using UnityEngine;
 using ClusteringAlgorithms;
-using System.Collections.Generic;
 
 namespace WorkGeneration
 {
@@ -20,20 +19,15 @@ namespace WorkGeneration
             {
                 for (int numIterations = 1; numIterations < 31; numIterations++)
                 {
-                    this.AddFixedIterations(
-                        workList,
-                        video,
-                        numIterations,
-                        this.csHighlightRemoval
-                    );
+                    AddFixedIterations(workList, video, numIterations, this.csHighlightRemoval);
                 }
-                this.AddStopCondtion(workList, video, this.csHighlightRemoval);
+                AddStopCondtion(workList, video, this.csHighlightRemoval);
             }
 
             return workList;
         }
 
-        private void AddFixedIterations(
+        private static void AddFixedIterations(
             WorkList workList,
             UnityEngine.Video.VideoClip video,
             int numIterations,
@@ -57,7 +51,7 @@ namespace WorkGeneration
                             jitterSize: 1
                         )
                     )
-                ).ThrowIfExists()
+                )
             );
 
             // KHM
@@ -77,7 +71,7 @@ namespace WorkGeneration
                             jitterSize: 1
                         )
                     )
-                ).ThrowIfExists()
+                )
             );
 
             if (DispatcherRSfixed.IsNumIterationsValid(iterations: numIterations, iterationsKM: 2))
@@ -100,12 +94,12 @@ namespace WorkGeneration
                                 jitterSize: 1
                             )
                         )
-                    ).ThrowIfExists()
+                    )
                 );
             }
         }
 
-        private void AddStopCondtion(
+        private static void AddStopCondtion(
             WorkList workList,
             UnityEngine.Video.VideoClip video,
             ComputeShader csHighlightRemoval
@@ -127,7 +121,7 @@ namespace WorkGeneration
                             jitterSize: 1
                         )
                     )
-                ).ThrowIfExists()
+                )
             );
 
             // RS stop condition
@@ -147,7 +141,51 @@ namespace WorkGeneration
                             jitterSize: 1
                         )
                     )
-                ).ThrowIfExists()
+                )
+            );
+
+            // KM stop condition
+            workList.runs.Push(
+                new LaunchParameters(
+                    staggeredJitter: false,
+                    video: video,
+                    doDownscale: false,
+                    dispatcher: new WrapperStopCondition(
+                        new DispatcherKM(
+                            computeShader: csHighlightRemoval,
+                            doRandomizeEmptyClusters: false,
+                            numIterations: 1,
+                            clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                                numClusters: 6,
+                                workingSize: 256,
+                                fullSize: ClusteringTest.fullTextureSize,
+                                jitterSize: 1
+                            )
+                        )
+                    )
+                )
+            );
+
+            // KHM stop condition
+            workList.runs.Push(
+                new LaunchParameters(
+                    staggeredJitter: false,
+                    video: video,
+                    doDownscale: false,
+                    dispatcher: new WrapperStopCondition(
+                        new DispatcherKHM(
+                            computeShader: csHighlightRemoval,
+                            doRandomizeEmptyClusters: false,
+                            numIterations: 1,
+                            clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                                numClusters: 6,
+                                workingSize: 256,
+                                fullSize: ClusteringTest.fullTextureSize,
+                                jitterSize: 1
+                            )
+                        )
+                    )
+                )
             );
         }
     }

@@ -24,7 +24,8 @@ exports.ReportCollection = t.iface([], {
             "staggeredJitter": "boolean",
             "doDownscale": "boolean",
             "algorithm": "string",
-            "doRandomizeEmptyClusters": "boolean"
+            "doRandomizeEmptyClusters": "boolean",
+            "stopCondition": t.opt("boolean")
         }),
         "logType": "number"
     }))
