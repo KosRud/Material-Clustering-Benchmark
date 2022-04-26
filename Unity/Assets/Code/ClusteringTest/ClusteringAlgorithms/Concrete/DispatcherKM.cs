@@ -14,6 +14,12 @@ namespace ClusteringAlgorithms
 
         public override string name => "KM";
 
+        /// <summary>
+        /// Each iteration first attributes pixels to clusters,
+        /// then updates cluster centers.
+        /// In order to use the resulting cluster centers,
+        /// one final cluster attribution is required!
+        /// </summary>
         public override void RunClustering(ClusteringTextures clusteringTextures)
         {
             for (int i = 0; i < this.numIterations; i++)
@@ -23,10 +29,12 @@ namespace ClusteringAlgorithms
         }
 
         /// <summary>
-        /// First attributes clusters to
-        /// In order to use the result, one final cluster attribution is required!
+        /// First attributes pixels to clusters.
+        /// Then updates cluster centers.
+        /// In order to use the resulting cluster centers,
+        /// one final cluster attribution is required!
         /// </summary>
-        protected void KMiteration(ClusteringTextures textures, bool rejectOld)
+        public void KMiteration(ClusteringTextures textures, bool rejectOld)
         {
             this.computeShader.SetBool(
                 "do_random_sample_empty_clusters",

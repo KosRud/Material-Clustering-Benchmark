@@ -31,6 +31,12 @@ namespace ClusteringAlgorithms
 
         public override string name => "KHM";
 
+        /// <summary>
+        /// Each iteration first attributes pixels to clusters,
+        /// then updates cluster centers.
+        /// In order to use the resulting cluster centers,
+        /// one final cluster attribution is required!
+        /// </summary>
         public override void RunClustering(ClusteringTextures clusteringTextures)
         {
             this.computeShader.SetBool(
@@ -45,7 +51,13 @@ namespace ClusteringAlgorithms
             }
         }
 
-        protected void KHMiteration(ClusteringTextures textures)
+        /// <summary>
+        /// First attributes pixels to clusters.
+        /// Then updates cluster centers.
+        /// In order to use the resulting cluster centers,
+        /// one final cluster attribution is required!
+        /// </summary>
+        public void KHMiteration(ClusteringTextures textures)
         {
             this.AttributeClusters(textures, final: false, khm: true);
             this.UpdateClusterCenters(textures, rejectOld: false);
