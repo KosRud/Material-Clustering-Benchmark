@@ -6,9 +6,9 @@ namespace ClusteringAlgorithms
     public abstract class ADispatcher : IDisposable
     {
         // reported in the file
-        public readonly bool doRandomizeEmptyClusters;
-        public readonly int numIterations;
-        public readonly ClusteringRTsAndBuffers clusteringRTsAndBuffers;
+        public bool doRandomizeEmptyClusters { get; private set; }
+        public int numIterations { get; private set; }
+        public ClusteringRTsAndBuffers clusteringRTsAndBuffers { get; private set; }
 
         public abstract string name { get; }
         public virtual DispatcherParameters parameters => this.defaultParameters;
@@ -16,7 +16,7 @@ namespace ClusteringAlgorithms
         private readonly DispatcherParameters defaultParameters;
 
         // internal
-        protected readonly ComputeShader computeShader;
+        public readonly ComputeShader computeShader;
         private readonly int kernelHandleAttributeClusters;
         private readonly int kernelUpdateClusterCenters;
 
