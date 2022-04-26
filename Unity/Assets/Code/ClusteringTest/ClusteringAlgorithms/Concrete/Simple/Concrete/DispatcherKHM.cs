@@ -3,7 +3,7 @@ using System;
 
 namespace ClusteringAlgorithms
 {
-    public class DispatcherKHM : ADispatcher
+    public class DispatcherKHM : ASimpleDispatcer
     {
         [Serializable]
         public class Parameters : DispatcherParameters
@@ -57,10 +57,15 @@ namespace ClusteringAlgorithms
         /// In order to use the resulting cluster centers,
         /// one final cluster attribution is required!
         /// </summary>
-        public void KHMiteration(ClusteringTextures textures)
+        protected void KHMiteration(ClusteringTextures textures)
         {
             this.AttributeClusters(textures, final: false, khm: true);
             this.UpdateClusterCenters(textures, rejectOld: false);
+        }
+
+        public override void SingleIteration(ClusteringTextures textures)
+        {
+            this.KHMiteration(textures);
         }
     }
 }

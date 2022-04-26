@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ClusteringAlgorithms
 {
-    public class DispatcherKM : ADispatcher
+    public class DispatcherKM : ASimpleDispatcer
     {
         public DispatcherKM(
             ComputeShader computeShader,
@@ -34,7 +34,7 @@ namespace ClusteringAlgorithms
         /// In order to use the resulting cluster centers,
         /// one final cluster attribution is required!
         /// </summary>
-        public void KMiteration(ClusteringTextures textures, bool rejectOld)
+        protected void KMiteration(ClusteringTextures textures, bool rejectOld)
         {
             this.computeShader.SetBool(
                 "do_random_sample_empty_clusters",
@@ -44,6 +44,11 @@ namespace ClusteringAlgorithms
 
             this.AttributeClusters(textures, final: false, khm: false);
             this.UpdateClusterCenters(textures, rejectOld);
+        }
+
+        public override void SingleIteration(ClusteringTextures textures)
+        {
+            this.KMiteration(textures, rejectOld: false);
         }
     }
 }
