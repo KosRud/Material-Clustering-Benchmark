@@ -9,5 +9,8 @@
             "command": "dotnet dotnet-csharpier",
             "languages": ["csharp"]
         }
-    ]
+    ],
+    "files.exclude": {
+        "**/*.meta": true
+    }
 }
