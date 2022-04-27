@@ -39,12 +39,6 @@ namespace ClusteringAlgorithms
         /// </summary>
         public override void RunClustering(ClusteringTextures clusteringTextures)
         {
-            this.computeShader.SetBool(
-                "do_random_sample_empty_clusters",
-                this.doRandomizeEmptyClusters
-            );
-            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
-
             for (int i = 0; i < this.numIterations; i++)
             {
                 this.KHMiteration(clusteringTextures);
@@ -65,6 +59,13 @@ namespace ClusteringAlgorithms
 
         public override void SingleIteration(ClusteringTextures textures)
         {
+            this.computeShader.SetBool(
+                "do_random_sample_empty_clusters",
+                this.doRandomizeEmptyClusters
+            );
+
+            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
+
             this.KHMiteration(textures);
         }
     }

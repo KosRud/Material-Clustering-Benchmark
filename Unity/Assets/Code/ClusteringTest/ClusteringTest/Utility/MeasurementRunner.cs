@@ -25,6 +25,8 @@ public class MeasurementRunner : IDisposable
 
     private readonly ClusteringTest.LogType logType;
 
+    public string paramsJSON => JsonUtility.ToJson(this.launchParameters.GetSerializable());
+
     private long? lastProcessedFrame;
 
     public bool finished =>

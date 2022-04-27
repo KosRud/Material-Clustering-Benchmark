@@ -36,18 +36,18 @@ namespace ClusteringAlgorithms
         /// </summary>
         protected void KMiteration(ClusteringTextures textures, bool rejectOld)
         {
-            this.computeShader.SetBool(
-                "do_random_sample_empty_clusters",
-                this.doRandomizeEmptyClusters
-            );
-            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
-
             this.AttributeClusters(textures, final: false, khm: false);
             this.UpdateClusterCenters(textures, rejectOld);
         }
 
         public override void SingleIteration(ClusteringTextures textures)
         {
+            this.computeShader.SetBool(
+                "do_random_sample_empty_clusters",
+                this.doRandomizeEmptyClusters
+            );
+            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
+
             this.KMiteration(textures, rejectOld: false);
         }
     }

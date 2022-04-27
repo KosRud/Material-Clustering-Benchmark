@@ -75,6 +75,8 @@ public class ClusteringTest : MonoBehaviour
             csHighlightRemoval: this.csHighlightRemoval,
             noGcAvailable: this.noGcAvailable
         );
+
+        Debug.Log(this.measurementRunner.paramsJSON);
     }
 
     private void CheckTimerPrecision()
@@ -122,6 +124,8 @@ public class ClusteringTest : MonoBehaviour
             csHighlightRemoval: this.csHighlightRemoval,
             noGcAvailable: this.noGcAvailable
         );
+
+        Debug.Log(this.measurementRunner.paramsJSON);
     }
 
     // Update is called once per frame
