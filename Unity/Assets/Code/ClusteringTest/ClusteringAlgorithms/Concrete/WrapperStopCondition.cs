@@ -21,7 +21,7 @@ namespace ClusteringAlgorithms
 
         public bool usesStopCondition => true;
 
-        public string name => this.wrappedDispatcher.name;
+        public virtual string name => this.wrappedDispatcher.name;
         public bool doRandomizeEmptyClusters => this.wrappedDispatcher.doRandomizeEmptyClusters;
         public int numIterations => this.wrappedDispatcher.numIterations;
         public ClusteringRTsAndBuffers clusteringRTsAndBuffers =>

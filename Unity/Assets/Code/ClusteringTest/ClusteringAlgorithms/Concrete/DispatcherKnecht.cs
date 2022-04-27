@@ -24,6 +24,8 @@ namespace ClusteringAlgorithms
             this.frameCounter = 0;
         }
 
+        public override string name => "Knecht";
+
         public override void RunClustering(ClusteringTextures clusteringTextures)
         {
             this.frameCounter++;
