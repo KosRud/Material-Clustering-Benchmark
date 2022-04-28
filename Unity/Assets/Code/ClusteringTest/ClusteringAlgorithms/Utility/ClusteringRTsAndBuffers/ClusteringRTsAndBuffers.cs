@@ -78,6 +78,9 @@ namespace ClusteringAlgorithms
         public readonly int workingSize;
         public readonly int fullSize;
 
+        /// <summary>
+        /// Textures are not allocated in the constructor. Call Allocate() manually before using.
+        /// </summary>
         public ClusteringRTsAndBuffers(
             int numClusters,
             int workingSize,

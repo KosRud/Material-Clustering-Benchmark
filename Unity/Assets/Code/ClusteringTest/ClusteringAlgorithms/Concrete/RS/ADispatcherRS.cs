@@ -5,6 +5,7 @@ namespace ClusteringAlgorithms
 {
     public abstract class ADispatcherRS : DispatcherKM
     {
+        [Serializable]
         public class Parameters : DispatcherParameters
         {
             public int numIterationsKm;

@@ -10,8 +10,12 @@ namespace ClusteringAlgorithms
         public WrapperStopCondition(ASimpleDispatcer wrappedDispatcher)
         {
             this.wrappedDispatcher = wrappedDispatcher;
-            Debug.Assert(wrappedDispatcher.parameters.stopCondition == false);
-            this.wrappedDispatcher.parameters.stopCondition = true;
+            if (wrappedDispatcher.usesStopCondition)
+            {
+                throw new System.InvalidOperationException(
+                    "WrapperStopCondition must be given a dispatcher, which does not use stop condition."
+                );
+            }
         }
 
         public void Dispose()
