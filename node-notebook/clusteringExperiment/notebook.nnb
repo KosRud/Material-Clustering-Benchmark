@@ -10,7 +10,7 @@
         {
             "language": "javascript",
             "source": [
-                "import {Kmeans} from \"./clustering.ts\"\n\nconsole.dir(Kmeans)"
+                "import {Kmeans} from \"./clustering.ts\"\n\nconst data = "
             ],
             "outputs": [
                 {
