@@ -1,0 +1,40 @@
+{
+    "cells": [
+        {
+            "language": "javascript",
+            "source": [
+                "import { display } from 'node-kernel';\nimport { Plotly } from 'node-kernel';\nimport assert from 'assert/strict';"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "import {Kmeans} from \"./clustering.ts\"\n\nconsole.dir(Kmeans)"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "{",
+                                "  attributeClusters: [Function: attributeClusters],",
+                                "  updateCenters: [Function: updateCenters]",
+                                "}",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                ""
+            ],
+            "outputs": []
+        }
+    ]
+}
