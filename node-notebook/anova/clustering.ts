@@ -198,6 +198,8 @@ const RandomSwap: ClusteringAlgorithm = {
             centers,
         });
 
+        const swapLog = [];
+
         let oldVariance = getVariance({ samples, attribution, centers });
         let oldCenters = centers.map((center) => center.slice());
 
@@ -222,9 +224,11 @@ const RandomSwap: ClusteringAlgorithm = {
                 for (const centerIndex in centers) {
                     centers[centerIndex] = oldCenters[centerIndex];
                 }
+                swapLog.push(' ');
             } else {
                 oldVariance = newVariance;
                 oldCenters = centers.map((center) => center.slice());
+                swapLog.push('+');
             }
         }
 
@@ -233,6 +237,8 @@ const RandomSwap: ClusteringAlgorithm = {
             attribution,
             centers,
         });
+
+        return swapLog;
     },
 };
 
