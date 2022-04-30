@@ -2,8 +2,10 @@ lockfileVersion: 5.3
 
 specifiers:
   '@types/node': ^17.0.24
+  deepmerge: ^4.2.2
   eslint: ^8.13.0
   plotly: ^1.0.6
+  pythonic: ^2.0.3
   ts-interface-builder: ^0.3.3
   ts-interface-checker: ^1.0.2
   ts-node: ^10.7.0
@@ -11,7 +13,9 @@ specifiers:
   typescript: ^4.6.3
 
 dependencies:
+  deepmerge: 4.2.2
   plotly: 1.0.6
+  pythonic: 2.0.3
   tslab-plotly: 2.0.4
 
 devDependencies:
@@ -729,6 +733,11 @@ packages:
     resolution: {integrity: sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==}
     engines: {node: '>=6'}
     dev: true
+
+  /pythonic/2.0.3:
+    resolution: {integrity: sha512-ykX9CXwye1Zq9pey32wzYgl0DIriQ+US362W87PxZUiLN7NPEEQeT0LyMZGEZmWqlic0JQadpujTxEBY7d0Ncg==}
+    engines: {node: '>=10'}
+    dev: false
 
   /regexpp/3.2.0:
     resolution: {integrity: sha512-pq2bWo9mVD43nbts2wGv17XLiNLya+GklZ8kaDLV2Z08gDCsGpnKn9BFMepvWuHCbyVvY7J5o5+BVvoQbmlJLg==}
