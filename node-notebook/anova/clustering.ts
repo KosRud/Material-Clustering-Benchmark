@@ -1,27 +1,30 @@
 import cluster from 'cluster';
-
-type attributeSamples = (
-    samples: number[][],
-    attribution: number[],
-    centers: number[][]
-) => void;
-
-type updateCenters = (
-    samples: number[][],
-    attribution: number[],
-    centers: number[][]
-) => void;
+import assert from 'assert/strict';
 
 interface ClusteringAlgorithm {
-    attributeSamples: attributeSamples;
-    updateCenters: updateCenters;
+    runClustering({
+        samples,
+        attribution,
+        centers,
+        numIterations,
+    }: {
+        samples: number[][];
+        attribution: number[];
+        centers: number[][];
+        numIterations: number;
+    }): void;
+    [key: string]: any;
 }
 
-function getVariance(
-    samples: number[][],
-    attribution: number[],
-    centers: number[][]
-): number {
+function getVariance({
+    samples,
+    attribution,
+    centers,
+}: {
+    samples: number[][];
+    attribution: number[];
+    centers: number[][];
+}): number {
     return (
         Object.entries(samples)
             // go over all samples
@@ -57,11 +60,31 @@ function getVariance(
 }
 
 const Kmeans: ClusteringAlgorithm = {
-    attributeSamples: (
-        samples: number[][],
-        attribution: number[],
-        centers: number[][]
-    ) => {
+    runClustering({ samples, attribution, centers, numIterations }) {
+        for (const _ of Array(numIterations).fill(0)) {
+            this.attributeSamples({
+                samples,
+                attribution,
+                centers,
+                numIterations,
+            });
+            this.updateCenters({
+                samples,
+                attribution,
+                centers,
+                numIterations,
+            });
+        }
+    },
+    attributeSamples: ({
+        samples,
+        attribution,
+        centers,
+    }: {
+        samples: number[][];
+        attribution: number[];
+        centers: number[][];
+    }) => {
         for (const [sampleIndex, sample] of Object.entries(samples)) {
             attribution[sampleIndex] = Object.entries(centers)
                 // go over each cluster center
@@ -113,11 +136,15 @@ const Kmeans: ClusteringAlgorithm = {
         }
     },
 
-    updateCenters: (
-        samples: number[][],
-        attribution: number[],
-        centers: number[][]
-    ) => {
+    updateCenters: ({
+        samples,
+        attribution,
+        centers,
+    }: {
+        samples: number[][];
+        attribution: number[];
+        centers: number[][];
+    }) => {
         [...centers.keys()]
             // go over all centers
             .map((centerIndex) => {
@@ -161,4 +188,36 @@ const Kmeans: ClusteringAlgorithm = {
     },
 };
 
-export { Kmeans, getVariance };
+const RandomSwap: ClusteringAlgorithm = {
+    runClustering({ samples, attribution, centers, numIterations }) {
+        assert.equal(numIterations % 2, 0);
+
+        let oldVariance = getVariance({ samples, attribution, centers });
+        let oldCenters = centers.map((center) => center.slice());
+
+        for (const _ of Array(numIterations / 2).fill(0)) {
+            // swap
+            centers[Math.floor(Math.random() / centers.length)] =
+                samples[Math.floor(Math.random() / samples.length)].slice();
+
+            Kmeans.runClustering({
+                samples,
+                attribution,
+                centers,
+                numIterations: 2,
+            });
+
+            const newVariance = getVariance({ samples, attribution, centers });
+
+            if (newVariance > oldVariance) {
+                for (const centerIndex in centers) {
+                    centers[centerIndex] = oldCenters[centerIndex];
+                }
+            } else {
+                oldVariance = newVariance;
+            }
+        }
+    },
+};
+
+export { Kmeans, RandomSwap, getVariance };
