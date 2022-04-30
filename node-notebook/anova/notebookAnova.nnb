@@ -55,6 +55,13 @@
         {
             "language": "markdown",
             "source": [
+                "# Important\n\nUse standard deviation of sample distance from the nearest cluster as the measure clustering quality - its linear.\n\nAnalyze the means of standard deviation of clustering quality."
+            ],
+            "outputs": []
+        },
+        {
+            "language": "markdown",
+            "source": [
                 ""
             ],
             "outputs": []
