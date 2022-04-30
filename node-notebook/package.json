@@ -11,6 +11,7 @@
         "generate-validators": "ts-node ./scripts/clearValidators.ts && ts-interface-builder ./util/validators/Validators.ts -o ./util/validators/generated && tsc ./util/validators/generated/*"
     },
     "dependencies": {
+        "deepcopy": "^2.1.0",
         "deepmerge": "^4.2.2",
         "plotly": "^1.0.6",
         "pythonic": "^2.0.3",

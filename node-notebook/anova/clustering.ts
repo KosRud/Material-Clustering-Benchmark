@@ -192,6 +192,12 @@ const RandomSwap: ClusteringAlgorithm = {
     runClustering({ samples, attribution, centers, numIterations }) {
         assert.equal(numIterations % 2, 0);
 
+        Kmeans.attributeSamples({
+            samples,
+            attribution,
+            centers,
+        });
+
         let oldVariance = getVariance({ samples, attribution, centers });
         let oldCenters = centers.map((center) => center.slice());
 
