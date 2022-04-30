@@ -1,0 +1,109 @@
+{
+    "cells": [
+        {
+            "language": "javascript",
+            "source": [
+                "const { Plotly } = require('node-kernel');"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "import { zip } from 'pythonic';\n\nconst sharedLayout = {\n    width: 600,\n    height: 400,\n    font: {\n        size: 15,\n    },\n    margin: {\n        l: 80,\n        r: 4,\n        b: 40,\n        t: 50, // for title\n    },\n};\n\nconst transpose = (arr) => {\n    return [...zip(...arr)];\n}"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "import { Kmeans, getVariance } from './clustering.ts';\nimport fs from 'fs';\nimport { zip } from 'pythonic';\nconst merge = require('deepmerge');\n\nconst samples = (() => {\n    let samples = fs\n        .readFileSync('./datasets/S/S1.txt', 'utf-8')\n        // get rows\n        .split('\\n')\n        .map(\n            // split columns by space\n            (line) =>\n                line\n                    .split(' ')\n                    // drop empty columns\n                    .filter((linePart) => linePart != '')\n                    .map(\n                        // convert strings to numbers\n                        (s) => Number.parseFloat(s)\n                    )\n        )\n        .filter(\n            // drop rows with invalid number of columns (e.g. empty)\n            (row) => row.length == 2\n        )\n        .filter(\n            // leave 5% of samples (picked randomly)\n            () => Math.random() < 0.25\n        );\n    \n        samples = transpose(transpose(samples).map(\n            (column) => {\n                const min = column.reduce((a, b) => (Math.min(a,b)));\n                const max = column.reduce((a, b) => (Math.max(a,b)));\n                const range = max - min;\n                return column.map(\n                    (x) => (x - min) / range\n                )\n            }\n        ));\n\n    return samples;\n})();\n\nconst centers = Array(15)\n    .fill(0)\n    .map(() => [0, 0]);\nconst attribution = samples.map(\n    // init with random attribution\n    () => Math.floor(Math.random() * centers.length)\n);\n\n(() => {\n    const minX = samples.reduce((sampleA, sampleB) =>\n        sampleA[0] < sampleB[0] ? sampleA : sampleB\n    )[0];\n    const maxX = samples.reduce((sampleA, sampleB) =>\n        sampleA[0] > sampleB[0] ? sampleA : sampleB\n    )[0];\n    const rangeX = maxX - minX;\n    const minY = samples.reduce((sampleA, sampleB) =>\n        sampleA[1] < sampleB[1] ? sampleA : sampleB\n    )[1];\n    const maxY = samples.reduce((sampleA, sampleB) =>\n        sampleA[1] > sampleB[1] ? sampleA : sampleB\n    )[1];\n    const rangeY = maxY - minY;\n\n    for (const i in centers) {\n        centers[i] = [\n            Math.random() * rangeX + minX,\n            Math.random() * rangeY + minY,\n        ];\n    }\n})();\n\nconst variances = [];\n\nfor (const _ of Array(5)) {\n    variances.push(getVariance(samples, attribution, centers));\n    Kmeans.updateCenters(samples, attribution, centers);\n    Kmeans.attributeSamples(samples, attribution, centers);\n}\n\nconsole.dir(variances);\n\n(() => {\n    const data = [...centers.keys()]\n        // go over all centers\n        .map((centerIndex) => {\n            // generate Plotly data object for current center\n            const subset = Object.entries(samples)\n                // go over all samples\n                .map((entry) => {\n                    const [index, sample] = entry;\n                    return { index, sample, attribution: attribution[index] };\n                })\n                .filter(\n                    // filter samples belonging to current center\n                    (sampleInfo) => attribution[sampleInfo.index] == centerIndex\n                )\n                .map((sampleInfo) => sampleInfo.sample);\n\n            const transposedSubset = subset.length ? [...zip(...subset)] : [];\n\n            return {\n                x: transposedSubset[0],\n                y: transposedSubset[1],\n                type: 'scatter',\n                mode: 'markers',\n                name: `${centerIndex}`,\n            };\n        });\n\n    const layout = merge(sharedLayout, {\n        xaxis: { visible: false },\n        yaxis: { visible: false },\n        //showlegend: false,\n        margin: {\n            l: 0,\n            r: 0,\n            b: 0,\n            t: 0,\n        },\n    });\n\n    Plotly.newPlot('', data, layout);\n})();\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "[",
+                                "  0.33247802109046165,",
+                                "  0.11282821376981815,",
+                                "  0.027710253132718573,",
+                                "  0.017611429542713535,",
+                                "  0.012493770671594835",
+                                "]",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.error",
+                            "value": {
+                                "name": "TypeError",
+                                "message": "zip takes 2 iterables at least, 1 given",
+                                "stack": "    at /home/madcake/Projects/Thesis/Implementation/Highlight-Removal-for-MR/node-notebook/node_modules/.pnpm/pythonic@2.0.3/node_modules/pythonic/index.js:135:15\n    at <Cell 3> [105, 61]\n    at Array.map (<anonymous>)\n    at <Cell 3> [91, 12]\n    at <Cell 3> [129, 0]\n    at <Cell 3> [82, 46]\n    at Script.runInContext (node:vm:139:12)\n    at Script.runInNewContext (node:vm:144:17)\n    at Object.runInNewContext (node:vm:298:38)\n    at C (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:113345)"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "(() => {\n    const data = [\n        {\n            x: variances.keys(),\n            y: variances,\n            type: 'scatter',\n            mode: 'lines',\n        },\n    ];\n\n    const layout = merge(sharedLayout, {\n        //xaxis: { visible: false },\n        //yaxis: { visible: false },\n        //showlegend: false,\n    });\n\n    Plotly.newPlot('', data, layout);\n})();\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.ts.notebook.plotly+json",
+                            "value": {
+                                "requestId": "x6406416b8a93483f9970866da4caac0b",
+                                "type": "generatePlot",
+                                "ele": "",
+                                "data": [
+                                    {
+                                        "x": {},
+                                        "y": [
+                                            248034321300.03275,
+                                            93844657390.03627,
+                                            15410590501.7681,
+                                            11107806591.869278,
+                                            9161439309.96937
+                                        ],
+                                        "type": "scatter",
+                                        "mode": "lines"
+                                    }
+                                ],
+                                "layout": {
+                                    "width": 600,
+                                    "height": 400,
+                                    "font": {
+                                        "size": 15
+                                    },
+                                    "margin": {
+                                        "l": 80,
+                                        "r": 4,
+                                        "b": 40,
+                                        "t": 50
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                ""
+            ],
+            "outputs": []
+        }
+    ]
+}
