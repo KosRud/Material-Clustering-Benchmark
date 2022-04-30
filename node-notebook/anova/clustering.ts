@@ -195,8 +195,11 @@ const RandomSwap: ClusteringAlgorithm = {
         let oldVariance = getVariance({ samples, attribution, centers });
         let oldCenters = centers.map((center) => center.slice());
 
+        //console.log(`old variance: ${oldVariance}`);
+
         for (const _ of Array(numIterations / 2).fill(0)) {
             // swap
+
             centers[Math.floor(Math.random() / centers.length)] =
                 samples[Math.floor(Math.random() / samples.length)].slice();
 
@@ -215,8 +218,15 @@ const RandomSwap: ClusteringAlgorithm = {
                 }
             } else {
                 oldVariance = newVariance;
+                oldCenters = centers.map((center) => center.slice());
             }
         }
+
+        Kmeans.attributeSamples({
+            samples,
+            attribution,
+            centers,
+        });
     },
 };
 
