@@ -198,8 +198,6 @@ const RandomSwap: ClusteringAlgorithm = {
             centers,
         });
 
-        const swapLog = [];
-
         let oldVariance = getVariance({ samples, attribution, centers });
         let oldCenters = centers.map((center) => center.slice());
 
@@ -208,8 +206,8 @@ const RandomSwap: ClusteringAlgorithm = {
         for (const _ of Array(numIterations / 2).fill(0)) {
             // swap
 
-            centers[Math.floor(Math.random() / centers.length)] =
-                samples[Math.floor(Math.random() / samples.length)].slice();
+            centers[Math.floor(Math.random() * centers.length)] =
+                samples[Math.floor(Math.random() * samples.length)].slice();
 
             Kmeans.runClustering({
                 samples,
@@ -220,15 +218,13 @@ const RandomSwap: ClusteringAlgorithm = {
 
             const newVariance = getVariance({ samples, attribution, centers });
 
-            if (newVariance > oldVariance) {
+            if (newVariance >= oldVariance) {
                 for (const centerIndex in centers) {
                     centers[centerIndex] = oldCenters[centerIndex];
                 }
-                swapLog.push(' ');
             } else {
                 oldVariance = newVariance;
                 oldCenters = centers.map((center) => center.slice());
-                swapLog.push('+');
             }
         }
 
@@ -237,8 +233,6 @@ const RandomSwap: ClusteringAlgorithm = {
             attribution,
             centers,
         });
-
-        return swapLog;
     },
 };
 
