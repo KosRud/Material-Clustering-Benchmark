@@ -68,7 +68,7 @@ const kHarmonicMeans: ClusteringAlgorithm = {
 
         for (const _ of Array(numIterations)) {
             this.computeWeights({ samples, centers, weights });
-            this.updateCenters(samples, centers, weights);
+            this.updateCenters({ samples, centers, weights });
         }
 
         for (const sampleId of samples.keys()) {
@@ -178,12 +178,39 @@ const kHarmonicMeans: ClusteringAlgorithm = {
                 }
 
                 weights[sampleId][clusterId] = top / bottom ** 2;
-            }
 
-            // normalize weights (ensure they add up to 1)
-            const sumWeights = weights[sampleId].reduce((a, b) => a + b);
-            for (const clusterId of weights[sampleId].keys()) {
-                weights[sampleId][clusterId] /= sumWeights;
+                /*
+                if (minDistanceInfo.clusterId == clusterId) {
+                    weights[sampleId][clusterId] = 1;
+                } else {
+                    weights[sampleId][clusterId] = 0;
+                }
+                */
+            }
+        }
+
+        // normalize weights per-cluster (ensure they add up to 1)
+        {
+            const perClusterWeightSums = weights
+                // sum the weights of each cluster over all samples
+                .reduce((perClusterWeightsA, perClusterWeightsB) => {
+                    return (
+                        [...perClusterWeightsA.keys()]
+                            // go over the weight of every cluster
+                            .map(
+                                // sum weights
+                                (clusterId) =>
+                                    perClusterWeightsA[clusterId] +
+                                    perClusterWeightsB[clusterId]
+                            )
+                    );
+                });
+
+            for (const perClusterWeights of weights) {
+                for (const clusterId of perClusterWeights.keys()) {
+                    perClusterWeights[clusterId] /=
+                        perClusterWeightSums[clusterId];
+                }
             }
         }
     },
