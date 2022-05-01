@@ -78,7 +78,7 @@ const kHarmonicMeans: ClusteringAlgorithm = {
                 })
                 .reduce((weightInfoA, weightInfoB) => {
                     // find biggest cluster wieght
-                    if (weightInfoA.weight >= weightInfoB) {
+                    if (weightInfoA.weight >= weightInfoB.weight) {
                         return weightInfoA;
                     }
                     return weightInfoB;
@@ -120,8 +120,9 @@ const kHarmonicMeans: ClusteringAlgorithm = {
     }) => {
         for (const sampleId in samples) {
             const distanceInfos = Object.entries(
-                // array of distances
+                // array of distances to cluster centers
                 centers.map(
+                    // go over all cluster centers
                     (center) =>
                         [...center.keys()]
                             // go over all coordinates
@@ -153,30 +154,36 @@ const kHarmonicMeans: ClusteringAlgorithm = {
                 }
             );
 
-            for (const centerId in centers) {
+            for (const clusterId in centers) {
                 let top = minDistanceInfo.distance;
 
-                if (centerId != minDistanceInfo.clusterId) {
+                if (clusterId != minDistanceInfo.clusterId) {
                     top *=
                         (minDistanceInfo.distance /
-                            distanceInfos[centerId].distance) **
+                            distanceInfos[clusterId].distance) **
                         5;
                 }
 
                 let bottom = 1.0;
 
-                for (const otherCenterId in centers) {
-                    if (otherCenterId == minDistanceInfo.clusterId) {
+                for (const otherClusterId in centers) {
+                    if (otherClusterId == minDistanceInfo.clusterId) {
                         continue;
                     }
 
                     bottom +=
                         (minDistanceInfo.distance /
-                            distanceInfos[otherCenterId].distance) **
+                            distanceInfos[otherClusterId].distance) **
                         3;
                 }
 
-                weights[sampleId][centerId] = top / bottom ** 2;
+                weights[sampleId][clusterId] = top / bottom ** 2;
+            }
+
+            // normalize weights (ensure they add up to 1)
+            const sumWeights = weights[sampleId].reduce((a, b) => a + b);
+            for (const clusterId of weights[sampleId].keys()) {
+                weights[sampleId][clusterId] /= sumWeights;
             }
         }
     },
