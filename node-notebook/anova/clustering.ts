@@ -25,20 +25,22 @@ function getVariance({
     centers: number[][];
 }): number {
     return (
-        Object.entries(samples)
-            // go over all samples
-            .map((entry) => {
-                const [index, sample] = entry;
-                return { index, sample, cluster: centers[attribution[index]] };
+        samples
+            .map((sample, sampleId) => {
+                return {
+                    sampleId,
+                    sample,
+                    cluster: centers[attribution[sampleId]],
+                };
             })
             .map(
                 // squared distances to cluster center
                 (sampleInfo) =>
                     // go over all coordinates
-                    [...sampleInfo.cluster.keys()]
+                    sampleInfo.cluster
                         .map(
                             // differences between cluster coordinate and sample coordinate
-                            (coordIndex) =>
+                            (_, coordIndex) =>
                                 sampleInfo.cluster[coordIndex] -
                                 sampleInfo.sample[coordIndex]
                         )
@@ -96,21 +98,20 @@ const kHarmonicMeans: ClusteringAlgorithm = {
         weights: number[][];
     }) => {
         for (const centerId in centers) {
-            centers[centerId] = samples.reduce(
-                (prevSample, curSample, curSampleIndex) => {
-                    return [...prevSample.keys()].map(
-                        (coordIndex) =>
-                            prevSample[coordIndex] +
-                            curSample[coordIndex] *
-                                weights[curSampleIndex][centerId]
-                    );
-                },
-                /*
-                 * without setting initial value for reduce
-                 * the first sample will not have weight applied to it
-                 */
-                Array(samples[0].length).fill(0)
-            );
+            centers[centerId] = samples
+                // go over evey sample
+                .map((sample, sampleId) =>
+                    sample.map(
+                        // multiply every coordinate by cluster weight
+                        (coord) => coord * weights[sampleId][centerId]
+                    )
+                )
+                .reduce((prevSample, curSample) =>
+                    // weighted sum of samples
+                    prevSample.map(
+                        (coord, coordId) => coord + curSample[coordId]
+                    )
+                );
         }
     },
 
@@ -221,12 +222,10 @@ const kMeans: ClusteringAlgorithm = {
         centers: number[][];
     }) => {
         for (const [sampleIndex, sample] of Object.entries(samples)) {
-            attribution[sampleIndex] = Object.entries(centers)
-                // go over each cluster center
-                .map((entry) => {
-                    const [centerIndex, center] = entry;
+            attribution[sampleIndex] = centers
+                .map((center, centerId) => {
                     return {
-                        centerIndex,
+                        centerId,
                         center,
                         distanceToSampleSq: -1,
                     };
@@ -267,7 +266,7 @@ const kMeans: ClusteringAlgorithm = {
                             return centerInfoB;
                         }
                     }
-                ).centerIndex;
+                ).centerId;
         }
     },
 
