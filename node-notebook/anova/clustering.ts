@@ -104,7 +104,12 @@ const kHarmonicMeans: ClusteringAlgorithm = {
                             curSample[coordIndex] *
                                 weights[curSampleIndex][centerId]
                     );
-                }
+                },
+                /*
+                 * without setting initial value for reduce
+                 * the first sample will not have weight applied to it
+                 */
+                Array(samples[0].length).fill(0)
             );
         }
     },
