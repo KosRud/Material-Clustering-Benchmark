@@ -79,7 +79,18 @@ const kHarmonicMeans: ClusteringAlgorithm = {
         centers: number[][];
         weights: number[][];
     }) => {
-        //
+        for (const centerId in centers) {
+            centers[centerId] = samples.reduce(
+                (prevSample, curSample, curSampleIndex) => {
+                    return [...prevSample.keys()].map(
+                        (coordIndex) =>
+                            prevSample[coordIndex] +
+                            curSample[coordIndex] *
+                                weights[curSampleIndex][centerId]
+                    );
+                }
+            );
+        }
     },
 
     computeWeights: ({
@@ -241,46 +252,37 @@ const kMeans: ClusteringAlgorithm = {
         attribution: number[];
         centers: number[][];
     }) => {
-        [...centers.keys()]
-            // go over all centers
-            .map((centerIndex) => {
-                const mySamples = Object.entries(samples)
-                    // go over all samples
-                    .map((entry) => {
-                        const [sampleIndex, sample] = entry;
-                        return {
-                            sampleIndex,
-                            sample,
-                            attribution: attribution[sampleIndex],
-                        };
-                    })
-                    .filter(
-                        // filter sampels, which belong to current center
-                        (sampleInfo) => sampleInfo.attribution == centerIndex
-                    )
-                    .map(
-                        // now we only need coords
-                        (sampleInfo) => sampleInfo.sample
-                    );
+        for (const centerId of [...centers.keys()]) {
+            const mySamples = [...attribution.keys()]
+                // go over all sample ids
+                .filter(
+                    // choose samples attributed to this cluster
+                    (sampleId) => attribution[sampleId] == centerId
+                )
+                .map(
+                    // get samples from ids
+                    (sampleId) => samples[sampleId]
+                );
 
-                if (mySamples.length == 0) {
-                    mySamples.push([...centers[centerIndex]]);
-                }
+            if (mySamples.length == 0) {
+                // if no samples belong to this cluster, leave it unchanged
+                mySamples.push([...centers[centerId]]);
+            }
 
-                centers[centerIndex] = mySamples
-                    .reduce((sampleA, sampleB) =>
-                        // per-coordinate sum of samples
-                        [...sampleA.keys()].map(
-                            // sum coordinate values from two samples
-                            (coordIndex) =>
-                                sampleA[coordIndex] + sampleB[coordIndex]
-                        )
+            centers[centerId] = mySamples
+                .reduce((sampleA, sampleB) =>
+                    // per-coordinate sum of samples
+                    [...sampleA.keys()].map(
+                        // sum coordinate values from two samples
+                        (coordIndex) =>
+                            sampleA[coordIndex] + sampleB[coordIndex]
                     )
-                    .map(
-                        // divide by the number of samples
-                        (coordValue) => coordValue / mySamples.length
-                    );
-            });
+                )
+                .map(
+                    // divide by the number of samples
+                    (coordValue) => coordValue / mySamples.length
+                );
+        }
     },
 };
 
