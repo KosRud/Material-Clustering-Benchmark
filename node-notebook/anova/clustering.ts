@@ -124,7 +124,7 @@ const kHarmonicMeans: ClusteringAlgorithm = {
         centers: number[][];
         weights: number[][];
     }) => {
-        for (const sampleId in samples) {
+        for (const sampleId of samples.keys()) {
             const distances = centers.map(
                 // go over all cluster centers
                 (center) =>
