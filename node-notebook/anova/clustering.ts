@@ -180,6 +180,8 @@ const kHarmonicMeans: ClusteringAlgorithm = {
                 weights[sampleId][clusterId] = top / bottom ** 2;
 
                 /*
+                 * uncomment to turn this into Kmeans for debugging
+
                 if (minDistanceInfo.clusterId == clusterId) {
                     weights[sampleId][clusterId] = 1;
                 } else {
