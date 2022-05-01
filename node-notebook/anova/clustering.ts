@@ -125,61 +125,55 @@ const kHarmonicMeans: ClusteringAlgorithm = {
         weights: number[][];
     }) => {
         for (const sampleId in samples) {
-            const distanceInfos = Object.entries(
-                // array of distances to cluster centers
-                centers.map(
-                    // go over all cluster centers
-                    (center) =>
-                        [...center.keys()]
-                            // go over all coordinates
-                            .map(
-                                // coordinate differences
-                                (coordId) =>
-                                    center[coordId] - samples[sampleId][coordId]
-                            )
-                            .map(
-                                // squared coordinate differences
-                                (difference) => difference ** 2
-                            )
-                            .reduce(
-                                // sum squared coordinate differences
-                                (a, b) => a + b
-                            ) ** 0.5
-                )
-            ).map((entry) => {
-                const [clusterId, distance] = entry;
-                return { clusterId, distance };
-            });
+            const distances = centers.map(
+                // go over all cluster centers
+                (center) =>
+                    [...center.keys()]
+                        // go over all coordinates
+                        .map(
+                            // coordinate differences
+                            (coordId) =>
+                                center[coordId] - samples[sampleId][coordId]
+                        )
+                        .map(
+                            // squared coordinate differences
+                            (difference) => difference ** 2
+                        )
+                        .reduce(
+                            // sum squared coordinate differences
+                            (a, b) => a + b
+                        ) ** 0.5
+            );
 
-            const minDistanceInfo = distanceInfos.reduce(
-                (distanceInfoA, distanceInfoB) => {
+            const minDistanceInfo = distances
+                .map((distance, clusterId) => {
+                    return { distance, clusterId };
+                })
+                .reduce((distanceInfoA, distanceInfoB) => {
                     if (distanceInfoA.distance <= distanceInfoB.distance) {
                         return distanceInfoA;
                     }
                     return distanceInfoB;
-                }
-            );
+                });
 
-            for (const clusterId in centers) {
+            for (const clusterId of centers.keys()) {
                 let top = minDistanceInfo.distance;
 
                 if (clusterId != minDistanceInfo.clusterId) {
                     top *=
-                        (minDistanceInfo.distance /
-                            distanceInfos[clusterId].distance) **
-                        5;
+                        (minDistanceInfo.distance / distances[clusterId]) ** 5;
                 }
 
                 let bottom = 1.0;
 
-                for (const otherClusterId in centers) {
+                for (const otherClusterId of centers.keys()) {
                     if (otherClusterId == minDistanceInfo.clusterId) {
                         continue;
                     }
 
                     bottom +=
                         (minDistanceInfo.distance /
-                            distanceInfos[otherClusterId].distance) **
+                            distances[otherClusterId]) **
                         3;
                 }
 
