@@ -64,9 +64,25 @@ const kHarmonicMeans: ClusteringAlgorithm = {
             .fill(0)
             .map(() => Array(centers.length).fill(0));
 
-        for (const _ of Array(numIterations).fill(0)) {
+        for (const _ of Array(numIterations)) {
             this.computeWeights({ samples, centers, weights });
             this.updateCenters(samples, centers, weights);
+        }
+
+        for (const sampleId of samples.keys()) {
+            attribution[sampleId] = Object.entries(weights[sampleId])
+                // go over all cluster weights
+                .map((entry) => {
+                    const [clusterId, weight] = entry;
+                    return { clusterId: Number.parseInt(clusterId), weight };
+                })
+                .reduce((weightInfoA, weightInfoB) => {
+                    // find biggest cluster wieght
+                    if (weightInfoA.weight >= weightInfoB) {
+                        return weightInfoA;
+                    }
+                    return weightInfoB;
+                }).clusterId;
         }
     },
 
@@ -168,7 +184,7 @@ const kHarmonicMeans: ClusteringAlgorithm = {
 
 const kMeans: ClusteringAlgorithm = {
     runClustering({ samples, attribution, centers, numIterations }) {
-        for (const _ of Array(numIterations).fill(0)) {
+        for (const _ of Array(numIterations)) {
             this.attributeSamples({
                 samples,
                 attribution,
@@ -252,7 +268,7 @@ const kMeans: ClusteringAlgorithm = {
         attribution: number[];
         centers: number[][];
     }) => {
-        for (const centerId of [...centers.keys()]) {
+        for (const centerId of centers.keys()) {
             const mySamples = [...attribution.keys()]
                 // go over all sample ids
                 .filter(
@@ -301,7 +317,7 @@ const randomSwap: ClusteringAlgorithm = {
 
         //console.log(`old variance: ${oldVariance}`);
 
-        for (const _ of Array(numIterations / 2).fill(0)) {
+        for (const _ of Array(numIterations / 2)) {
             // swap
 
             centers[Math.floor(Math.random() * centers.length)] =
@@ -334,4 +350,4 @@ const randomSwap: ClusteringAlgorithm = {
     },
 };
 
-export { kMeans, randomSwap, getVariance };
+export { kMeans, randomSwap, kHarmonicMeans, getVariance };
