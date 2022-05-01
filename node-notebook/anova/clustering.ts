@@ -1,4 +1,3 @@
-import cluster from 'cluster';
 import assert from 'assert/strict';
 
 interface ClusteringAlgorithm {
@@ -59,7 +58,104 @@ function getVariance({
     );
 }
 
-const Kmeans: ClusteringAlgorithm = {
+const kHarmonicMeans: ClusteringAlgorithm = {
+    runClustering({ samples, attribution, centers, numIterations }) {
+        const weights = Array(samples.length)
+            .fill(0)
+            .map(() => Array(centers.length).fill(0));
+
+        for (const _ of Array(numIterations).fill(0)) {
+            this.computeWeights({ samples, centers, weights });
+            this.updateCenters(samples, centers, weights);
+        }
+    },
+
+    updateCenters: ({
+        samples,
+        centers,
+        weights,
+    }: {
+        samples: number[][];
+        centers: number[][];
+        weights: number[][];
+    }) => {
+        //
+    },
+
+    computeWeights: ({
+        samples,
+        centers,
+        weights,
+    }: {
+        samples: number[][];
+        centers: number[][];
+        weights: number[][];
+    }) => {
+        for (const sampleId in samples) {
+            const distanceInfos = Object.entries(
+                // array of distances
+                centers.map(
+                    (center) =>
+                        [...center.keys()]
+                            // go over all coordinates
+                            .map(
+                                // coordinate differences
+                                (coordId) =>
+                                    center[coordId] - samples[sampleId][coordId]
+                            )
+                            .map(
+                                // squared coordinate differences
+                                (difference) => difference ** 2
+                            )
+                            .reduce(
+                                // sum squared coordinate differences
+                                (a, b) => a + b
+                            ) ** 0.5
+                )
+            ).map((entry) => {
+                const [clusterId, distance] = entry;
+                return { clusterId, distance };
+            });
+
+            const minDistanceInfo = distanceInfos.reduce(
+                (distanceInfoA, distanceInfoB) => {
+                    if (distanceInfoA.distance <= distanceInfoB.distance) {
+                        return distanceInfoA;
+                    }
+                    return distanceInfoB;
+                }
+            );
+
+            for (const centerId in centers) {
+                let top = minDistanceInfo.distance;
+
+                if (centerId != minDistanceInfo.clusterId) {
+                    top *=
+                        (minDistanceInfo.distance /
+                            distanceInfos[centerId].distance) **
+                        5;
+                }
+
+                let bottom = 1.0;
+
+                for (const otherCenterId in centers) {
+                    if (otherCenterId == minDistanceInfo.clusterId) {
+                        continue;
+                    }
+
+                    bottom +=
+                        (minDistanceInfo.distance /
+                            distanceInfos[otherCenterId].distance) **
+                        3;
+                }
+
+                weights[sampleId][centerId] = top / bottom ** 2;
+            }
+        }
+    },
+};
+
+const kMeans: ClusteringAlgorithm = {
     runClustering({ samples, attribution, centers, numIterations }) {
         for (const _ of Array(numIterations).fill(0)) {
             this.attributeSamples({
@@ -188,11 +284,11 @@ const Kmeans: ClusteringAlgorithm = {
     },
 };
 
-const RandomSwap: ClusteringAlgorithm = {
+const randomSwap: ClusteringAlgorithm = {
     runClustering({ samples, attribution, centers, numIterations }) {
         assert.equal(numIterations % 2, 0);
 
-        Kmeans.attributeSamples({
+        kMeans.attributeSamples({
             samples,
             attribution,
             centers,
@@ -209,7 +305,7 @@ const RandomSwap: ClusteringAlgorithm = {
             centers[Math.floor(Math.random() * centers.length)] =
                 samples[Math.floor(Math.random() * samples.length)].slice();
 
-            Kmeans.runClustering({
+            kMeans.runClustering({
                 samples,
                 attribution,
                 centers,
@@ -228,7 +324,7 @@ const RandomSwap: ClusteringAlgorithm = {
             }
         }
 
-        Kmeans.attributeSamples({
+        kMeans.attributeSamples({
             samples,
             attribution,
             centers,
@@ -236,4 +332,4 @@ const RandomSwap: ClusteringAlgorithm = {
     },
 };
 
-export { Kmeans, RandomSwap, getVariance };
+export { kMeans, randomSwap, getVariance };
