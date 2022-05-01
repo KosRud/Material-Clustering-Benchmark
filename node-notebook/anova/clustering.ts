@@ -128,12 +128,12 @@ const kHarmonicMeans: ClusteringAlgorithm = {
             const distances = centers.map(
                 // go over all cluster centers
                 (center) =>
-                    [...center.keys()]
+                    center
                         // go over all coordinates
                         .map(
                             // coordinate differences
-                            (coordId) =>
-                                center[coordId] - samples[sampleId][coordId]
+                            (coord, coordId) =>
+                                coord - samples[sampleId][coordId]
                         )
                         .map(
                             // squared coordinate differences
