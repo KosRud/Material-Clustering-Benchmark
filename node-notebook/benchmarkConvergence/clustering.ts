@@ -4,9 +4,8 @@ const copy = require('deepcopy');
 
 interface AlgorithmResult {
     algorithm: string;
-
     numIterations: number;
-    quality: number;
+    variance: number;
 }
 
 interface BenchmarkResult extends AlgorithmResult {
@@ -114,7 +113,7 @@ class KHarmonicMeans extends ClusteringAlgorithm {
             results.push({
                 algorithm: 'K-harmonic means',
                 numIterations: iteration,
-                quality: KHarmonicMeans.getVariance({
+                variance: KHarmonicMeans.getVariance({
                     samples,
                     attribution,
                     centers,
@@ -309,7 +308,7 @@ class KMeans extends ClusteringAlgorithm {
             results.push({
                 algorithm: 'K-means',
                 numIterations: iteration,
-                quality: KMeans.getVariance({ samples, attribution, centers }),
+                variance: KMeans.getVariance({ samples, attribution, centers }),
             });
         }
 
@@ -468,7 +467,7 @@ class RandomSwap extends ClusteringAlgorithm {
             results.push({
                 algorithm: 'Random swap',
                 numIterations: iteration,
-                quality: oldVariance,
+                variance: oldVariance,
             });
         }
 

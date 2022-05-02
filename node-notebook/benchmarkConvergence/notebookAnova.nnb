@@ -38,7 +38,7 @@
         {
             "language": "javascript",
             "source": [
-                "import fs from 'fs';\nimport assert from 'assert/strict';\nimport loadDataset from './loadDataset';\nimport { KMeans, RandomSwap, KHarmonicMeans } from './clustering.ts';\nimport { assert } from 'console';\nimport path from 'path';\nconst copy = require('deepcopy');\n\nconst benchmarkResults = (() => {\n    let results = [];\n\n    const numCenters = 6,\n        maxSamples = 5000,\n        numInits = 2,\n        numRandomSwapRepsPerInit = 40,\n        dimensions = 2,\n        numIterations = 6;\n\n    const inits =\n        // array of initializations\n        Array(numInits)\n            .fill()\n            .map(() =>\n                //array of cluster centers\n                Array(numCenters)\n                    .fill()\n                    .map(() =>\n                        // iterate over coordinates\n                        Array(dimensions)\n                            .fill()\n                            .map(\n                                // uniform random initialization for each coordinate\n                                () => Math.random()\n                            )\n                    )\n            );\n\n    const datasetsPath = './datasets/',\n        filePaths = fs\n            .readdirSync(datasetsPath)\n            .map((filePath) => path.join(datasetsPath, filePath));\n\n    const kMeans = new KMeans(),\n        kHarmonicMeans = new KHarmonicMeans(),\n        randomSwap = new RandomSwap();\n\n    const arrLaunchParams = [];\n\n    for (const filePath of filePaths) {\n        const samples = loadDataset({\n            path: filePath,\n            maxSamples: maxSamples,\n        });\n\n        assert.equal(samples[0].length, dimensions);\n\n        inits.map((initCenters, initVectorId) => {\n            for (const _ of Array(numRandomSwapRepsPerInit)) {\n                arrLaunchParams.push({\n                    algorithm: randomSwap,\n                    samples: samples,\n                    initCenters: initCenters,\n                    initVectorId: initVectorId,\n                });\n            }\n\n            for (algorithm of [kMeans, kHarmonicMeans]) {\n                arrLaunchParams.push({\n                    algorithm: algorithm,\n                    samples: samples,\n                    initCenters: initCenters,\n                    initVectorId: initVectorId,\n                });\n            }\n        });\n    }\n\n    {\n        let lastPercent = 0;\n\n        arrLaunchParams.map((launchParams, launchId) => {\n            const samples = launchParams.samples,\n                attribution = samples.map(() => 0);\n\n            results = results.concat(\n                launchParams.algorithm.runBenchmark({\n                    samples: samples,\n                    attribution: attribution,\n                    initCenters: launchParams.initCenters,\n                    initVectorId: launchParams.initVectorId,\n                    numIterations: numIterations,\n                })\n            );\n            const percentFinished = (launchId / arrLaunchParams.length) * 100;\n            if (percentFinished > lastPercent + 1) {\n                console.log(\n                    `progress: ${percentFinished.toFixed(2).padStart(5)}%    ${\n                        new Date().toString().split(' ')[4]\n                    }`\n                );\n\n                lastPercent = Math.round(percentFinished);\n            }\n        });\n    }\n\n    console.log();\n    console.log(\"finished!\")\n\n    return results;\n})();\n"
+                "import fs from 'fs';\nimport assert from 'assert/strict';\nimport loadDataset from './loadDataset';\nimport { KMeans, RandomSwap, KHarmonicMeans } from './clustering.ts';\nimport { assert } from 'console';\nimport path from 'path';\nconst copy = require('deepcopy');\n\nconst benchmarkResults = (() => {\n    let results = [];\n\n    const numCenters = 6,\n        maxSamples = 5000,\n        numInits = 2,\n        numRandomSwapRepsPerInit = 40,\n        dimensions = 2,\n        numIterations = 6;\n\n    const inits =\n        // array of initializations\n        Array(numInits)\n            .fill()\n            .map(() =>\n                //array of cluster centers\n                Array(numCenters)\n                    .fill()\n                    .map(() =>\n                        // iterate over coordinates\n                        Array(dimensions)\n                            .fill()\n                            .map(\n                                // uniform random initialization for each coordinate\n                                () => Math.random()\n                            )\n                    )\n            );\n\n    const datasetsPath = './datasets/',\n        filePaths = fs\n            .readdirSync(datasetsPath)\n            .map((filePath) => path.join(datasetsPath, filePath));\n\n    const kMeans = new KMeans(),\n        kHarmonicMeans = new KHarmonicMeans(),\n        randomSwap = new RandomSwap();\n\n    const arrLaunchParams = [];\n\n    for (const filePath of filePaths) {\n        const samples = loadDataset({\n            path: filePath,\n            maxSamples: maxSamples,\n        });\n\n        assert.equal(samples[0].length, dimensions);\n\n        inits.map((initCenters, initVectorId) => {\n            for (const _ of Array(numRandomSwapRepsPerInit)) {\n                arrLaunchParams.push({\n                    algorithm: randomSwap,\n                    samples: samples,\n                    initCenters: initCenters,\n                    initVectorId: initVectorId,\n                });\n            }\n\n            for (algorithm of [kMeans, kHarmonicMeans]) {\n                arrLaunchParams.push({\n                    algorithm: algorithm,\n                    samples: samples,\n                    initCenters: initCenters,\n                    initVectorId: initVectorId,\n                });\n            }\n        });\n    }\n\n    {\n        let lastPercent = 0;\n\n        arrLaunchParams.map((launchParams, launchId) => {\n            const samples = launchParams.samples,\n                attribution = samples.map(() => 0);\n\n            results = results.concat(\n                launchParams.algorithm.runBenchmark({\n                    samples: samples,\n                    attribution: attribution,\n                    initCenters: launchParams.initCenters,\n                    initVectorId: launchParams.initVectorId,\n                    numIterations: numIterations,\n                })\n            );\n            const percentFinished = (launchId / arrLaunchParams.length) * 100;\n            if (percentFinished > lastPercent + 1) {\n                console.log(\n                    `progress: ${percentFinished.toFixed(2).padStart(5)}%    ${\n                        new Date().toString().split(' ')[4]\n                    }`\n                );\n\n                lastPercent = Math.round(percentFinished);\n            }\n        });\n    }\n\n    console.log(\"\");\n    console.log(\"finished!\")\n\n    return results;\n})();\n"
             ],
             "outputs": [
                 {
@@ -46,16 +46,137 @@
                         {
                             "mime": "application/vnd.code.notebook.stdout",
                             "value": [
-                                "progress:  1.08%    01:46:28",
-                                "progress:  2.06%    01:46:30",
-                                "progress:  3.03%    01:46:31",
-                                "progress:  4.00%    01:46:33",
-                                "progress:  5.09%    01:46:34",
-                                "progress:  6.06%    01:46:36",
-                                "progress:  7.03%    01:46:37",
-                                "progress:  8.01%    01:46:39",
-                                "progress:  9.09%    01:46:41",
-                                "progress: 10.06%    01:46:43",
+                                "progress:  1.08%    02:02:56",
+                                "progress:  2.06%    02:02:57",
+                                "progress:  3.03%    02:02:59",
+                                "progress:  4.00%    02:03:00",
+                                "progress:  5.09%    02:03:02",
+                                "progress:  6.06%    02:03:04",
+                                "progress:  7.03%    02:03:05",
+                                "progress:  8.01%    02:03:07",
+                                "progress:  9.09%    02:03:08",
+                                "progress: 10.06%    02:03:11",
+                                "progress: 11.04%    02:03:14",
+                                "progress: 12.01%    02:03:16",
+                                "progress: 13.10%    02:03:19",
+                                "progress: 14.07%    02:03:22",
+                                "progress: 15.04%    02:03:24",
+                                "progress: 16.02%    02:03:27",
+                                "progress: 17.10%    02:03:30",
+                                "progress: 18.07%    02:03:33",
+                                "progress: 19.05%    02:03:35",
+                                "progress: 20.02%    02:03:38",
+                                "progress: 21.10%    02:03:42",
+                                "progress: 22.08%    02:03:45",
+                                "progress: 23.05%    02:03:47",
+                                "progress: 24.03%    02:03:49",
+                                "progress: 25.11%    02:03:52",
+                                "progress: 26.08%    02:03:54",
+                                "progress: 27.06%    02:03:57",
+                                "progress: 28.03%    02:03:59",
+                                "progress: 29.00%    02:04:02",
+                                "progress: 30.09%    02:04:05",
+                                "progress: 31.06%    02:04:08",
+                                "progress: 32.03%    02:04:10",
+                                "progress: 33.01%    02:04:13",
+                                "progress: 34.09%    02:04:16",
+                                "progress: 35.06%    02:04:18",
+                                "progress: 36.04%    02:04:21",
+                                "progress: 37.01%    02:04:24",
+                                "progress: 38.10%    02:04:27",
+                                "progress: 39.07%    02:04:30",
+                                "progress: 40.04%    02:04:33",
+                                "progress: 41.02%    02:04:35",
+                                "progress: 42.10%    02:04:38",
+                                "progress: 43.07%    02:04:41",
+                                "progress: 44.05%    02:04:43",
+                                "progress: 45.02%    02:04:46",
+                                "progress: 46.10%    02:04:49",
+                                "progress: 47.08%    02:04:51",
+                                "progress: 48.05%    02:04:54",
+                                "progress: 49.03%    02:04:57",
+                                "progress: 50.11%    02:05:00",
+                                "progress: 51.08%    02:05:02",
+                                "progress: 52.06%    02:05:05",
+                                "progress: 53.03%    02:05:08",
+                                "progress: 54.00%    02:05:10",
+                                "progress: 55.09%    02:05:12",
+                                "progress: 56.06%    02:05:13",
+                                "progress: 57.03%    02:05:13",
+                                "progress: 58.01%    02:05:14",
+                                "progress: 59.09%    02:05:15",
+                                "progress: 60.06%    02:05:15",
+                                "progress: 61.04%    02:05:16",
+                                "progress: 62.01%    02:05:17",
+                                "progress: 63.10%    02:05:17",
+                                "progress: 64.07%    02:05:19",
+                                "progress: 65.04%    02:05:22",
+                                "progress: 66.02%    02:05:26",
+                                "progress: 67.10%    02:05:28",
+                                "progress: 68.07%    02:05:31",
+                                "progress: 69.05%    02:05:33",
+                                "progress: 70.02%    02:05:36",
+                                "progress: 71.10%    02:05:39",
+                                "progress: 72.08%    02:05:41",
+                                "progress: 73.05%    02:05:43",
+                                "progress: 74.03%    02:05:46",
+                                "progress: 75.11%    02:05:48",
+                                "progress: 76.08%    02:05:51",
+                                "progress: 77.06%    02:05:53",
+                                "progress: 78.03%    02:05:56",
+                                "progress: 79.00%    02:05:58",
+                                "progress: 80.09%    02:06:01",
+                                "progress: 81.06%    02:06:03",
+                                "progress: 82.03%    02:06:06",
+                                "progress: 83.01%    02:06:09",
+                                "progress: 84.09%    02:06:13",
+                                "progress: 85.06%    02:06:17",
+                                "progress: 86.04%    02:06:20",
+                                "progress: 87.01%    02:06:24",
+                                "progress: 88.10%    02:06:27",
+                                "progress: 89.07%    02:06:31",
+                                "progress: 90.04%    02:06:35",
+                                "progress: 91.02%    02:06:38",
+                                "progress: 92.10%    02:06:41",
+                                "progress: 93.07%    02:06:45",
+                                "progress: 94.05%    02:06:48",
+                                "progress: 95.02%    02:06:51",
+                                "progress: 96.10%    02:06:54",
+                                "progress: 97.08%    02:06:58",
+                                "progress: 98.05%    02:07:01",
+                                "progress: 99.03%    02:07:04",
+                                "finished!",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## Report format"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "console.log(JSON.stringify(benchmarkResults[0], null, 2));"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "{",
+                                "  \"algorithm\": \"Random swap\",",
+                                "  \"numIterations\": 2,",
+                                "  \"variance\": 0.025511749630274336,",
+                                "  \"initVectorId\": 0",
+                                "}",
                                 ""
                             ]
                         }
@@ -66,7 +187,7 @@
         {
             "language": "javascript",
             "source": [
-                "console.log(JSON.stringify(benchmarkResults, null, 2));"
+                "const algorithmOptions = Array.from(\n    new Set(benchmarkResults.map((result) => result.algorithm))\n);\n\nconst data = algorithmOptions.map((algorithm) => {\n    const subsetAlgorithm = benchmarkResults.filter(\n        (result) => result.algorithm == algorithm\n    );\n\n    const numIterationsOptions = Array.from(\n        new Set(subsetAlgorithm.map((result) => result.numIterations))\n    );\n\n    return {\n        x: numIterationsOptions,\n        y: numIterationsOptions.map((numIterations) => {\n            const subsetNumItrations = subsetAlgorithm.filter(\n                (result) => result.numIterations == numIterations\n            );\n\n            return (\n                subsetNumItrations\n                    .map((result) => result.variance)\n                    .reduce((varianceA, varianceB) => varianceA + varianceB) /\n                subsetNumItrations.length\n            );\n        }),\n        name: algorithm,\n        type: \"box\"\n    };\n});\n\nconst layout = merge(sharedLayout, {\n    //\n})\n\nPlotly.newPlot('', data, layout);\n\nconsole.dir(data);\n"
             ],
             "outputs": [
                 {
@@ -75,8 +196,8 @@
                             "mime": "application/vnd.code.notebook.error",
                             "value": {
                                 "name": "ReferenceError",
-                                "message": "results is not defined",
-                                "stack": "    at <Cell 7> [1, 7]\n    at <Cell 7> [4, 46]\n    at Script.runInContext (node:vm:139:12)\n    at Script.runInNewContext (node:vm:144:17)\n    at Object.runInNewContext (node:vm:298:38)\n    at C (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:113345)\n    at t.execCode (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:114312)\n    at k.<anonymous> (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:142156)\n    at k.emit (node:events:527:28)\n    at k.emit (node:domain:475:12)"
+                                "message": "merge is not defined",
+                                "stack": "    at <Cell 9> [33, 0]\n    at <Cell 9> [23, 46]\n    at Script.runInContext (node:vm:139:12)\n    at Script.runInNewContext (node:vm:144:17)\n    at Object.runInNewContext (node:vm:298:38)\n    at C (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:113345)\n    at t.execCode (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:114312)\n    at k.<anonymous> (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:142156)\n    at k.emit (node:events:527:28)\n    at k.emit (node:domain:475:12)"
                             }
                         }
                     ]
