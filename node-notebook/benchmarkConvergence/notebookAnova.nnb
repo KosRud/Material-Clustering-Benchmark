@@ -24,7 +24,7 @@
         {
             "language": "javascript",
             "source": [
-                "const sharedLayout = {\n    width: 600,\n    height: 400,\n    font: {\n        size: 15,\n    },\n    margin: {\n        l: 80,\n        r: 4,\n        b: 40,\n        t: 50, // for title\n    },\n};\n\n"
+                "const sharedLayout = {\n    width: 600,\n    height: 400,\n    font: {\n        size: 15,\n    },\n    margin: {\n        l: 80,\n        r: 4,\n        b: 40,\n        t: 50, // for title\n    },\n};\n\nconst numCenters = 6,\n    maxSamples = 5000,\n    numInits = 2,\n    numRandomSwapRepsPerInit = 5,\n    dimensions = 2,\n    numIterations = 24;\n"
             ],
             "outputs": []
         },
@@ -38,7 +38,7 @@
         {
             "language": "javascript",
             "source": [
-                "import fs from 'fs';\nimport assert from 'assert/strict';\nimport loadDataset from './loadDataset';\nimport { KMeans, RandomSwap, KHarmonicMeans } from './clustering.ts';\nimport { assert } from 'console';\nimport path from 'path';\nconst copy = require('deepcopy');\n\nconst benchmarkResults = (() => {\n    let results = [];\n\n    const numCenters = 6,\n        maxSamples = 5000,\n        numInits = 2,\n        numRandomSwapRepsPerInit = 40,\n        dimensions = 2,\n        numIterations = 6;\n\n    const inits =\n        // array of initializations\n        Array(numInits)\n            .fill()\n            .map(() =>\n                //array of cluster centers\n                Array(numCenters)\n                    .fill()\n                    .map(() =>\n                        // iterate over coordinates\n                        Array(dimensions)\n                            .fill()\n                            .map(\n                                // uniform random initialization for each coordinate\n                                () => Math.random()\n                            )\n                    )\n            );\n\n    const datasetsPath = './datasets/',\n        filePaths = fs\n            .readdirSync(datasetsPath)\n            .map((filePath) => path.join(datasetsPath, filePath));\n\n    const kMeans = new KMeans(),\n        kHarmonicMeans = new KHarmonicMeans(),\n        randomSwap = new RandomSwap();\n\n    const arrLaunchParams = [];\n\n    for (const filePath of filePaths) {\n        const samples = loadDataset({\n            path: filePath,\n            maxSamples: maxSamples,\n        });\n\n        assert.equal(samples[0].length, dimensions);\n\n        inits.map((initCenters, initVectorId) => {\n            for (const _ of Array(numRandomSwapRepsPerInit)) {\n                arrLaunchParams.push({\n                    algorithm: randomSwap,\n                    samples: samples,\n                    initCenters: initCenters,\n                    initVectorId: initVectorId,\n                });\n            }\n\n            for (algorithm of [kMeans, kHarmonicMeans]) {\n                arrLaunchParams.push({\n                    algorithm: algorithm,\n                    samples: samples,\n                    initCenters: initCenters,\n                    initVectorId: initVectorId,\n                });\n            }\n        });\n    }\n\n    {\n        let lastPercent = 0;\n\n        arrLaunchParams.map((launchParams, launchId) => {\n            const samples = launchParams.samples,\n                attribution = samples.map(() => 0);\n\n            results = results.concat(\n                launchParams.algorithm.runBenchmark({\n                    samples: samples,\n                    attribution: attribution,\n                    initCenters: launchParams.initCenters,\n                    initVectorId: launchParams.initVectorId,\n                    numIterations: numIterations,\n                })\n            );\n            const percentFinished = (launchId / arrLaunchParams.length) * 100;\n            if (percentFinished > lastPercent + 1) {\n                console.log(\n                    `progress: ${percentFinished.toFixed(2).padStart(5)}%    ${\n                        new Date().toString().split(' ')[4]\n                    }`\n                );\n\n                lastPercent = Math.round(percentFinished);\n            }\n        });\n    }\n\n    console.log(\"\");\n    console.log(\"finished!\")\n\n    return results;\n})();\n"
+                "import fs from 'fs';\nimport assert from 'assert/strict';\nimport loadDataset from './loadDataset';\nimport { KMeans, RandomSwap, KHarmonicMeans } from './clustering.ts';\nimport { assert } from 'console';\nimport path from 'path';\nconst copy = require('deepcopy');\n\nconst benchmarkResults = (() => {\n    let results = [];\n\n    const inits =\n        // array of initializations\n        Array(numInits)\n            .fill()\n            .map(() =>\n                //array of cluster centers\n                Array(numCenters)\n                    .fill()\n                    .map(() =>\n                        // iterate over coordinates\n                        Array(dimensions)\n                            .fill()\n                            .map(\n                                // uniform random initialization for each coordinate\n                                () => Math.random()\n                            )\n                    )\n            );\n\n    const datasetsPath = './datasets/',\n        filePaths = fs\n            .readdirSync(datasetsPath)\n            .map((filePath) => path.join(datasetsPath, filePath));\n\n    const kMeans = new KMeans(),\n        kHarmonicMeans = new KHarmonicMeans(),\n        randomSwap = new RandomSwap();\n\n    const arrLaunchParams = [];\n\n    for (const filePath of filePaths) {\n        const samples = loadDataset({\n            path: filePath,\n            maxSamples: maxSamples,\n        });\n\n        assert.equal(samples[0].length, dimensions);\n\n        inits.map((initCenters, initVectorId) => {\n            for (const _ of Array(numRandomSwapRepsPerInit)) {\n                arrLaunchParams.push({\n                    algorithm: randomSwap,\n                    samples: samples,\n                    initCenters: initCenters,\n                    initVectorId: initVectorId,\n                });\n            }\n\n            for (algorithm of [kMeans, kHarmonicMeans]) {\n                arrLaunchParams.push({\n                    algorithm: algorithm,\n                    samples: samples,\n                    initCenters: initCenters,\n                    initVectorId: initVectorId,\n                });\n            }\n        });\n    }\n\n    {\n        let lastPercent = 0;\n\n        arrLaunchParams.map((launchParams, launchId) => {\n            const samples = launchParams.samples,\n                attribution = samples.map(() => 0);\n\n            results = results.concat(\n                launchParams.algorithm.runBenchmark({\n                    samples: samples,\n                    attribution: attribution,\n                    initCenters: launchParams.initCenters,\n                    initVectorId: launchParams.initVectorId,\n                    numIterations: numIterations,\n                })\n            );\n            const percentFinished = (launchId / arrLaunchParams.length) * 100;\n            if (percentFinished > lastPercent + 1) {\n                console.log(\n                    `progress: ${percentFinished.toFixed(2).padStart(5)}%    ${\n                        new Date().toString().split(' ')[4]\n                    }`\n                );\n\n                lastPercent = Math.round(percentFinished);\n            }\n        });\n    }\n\n    console.log(\"\");\n    console.log(\"finished!\")\n\n    return results;\n})();\n"
             ],
             "outputs": [
                 {
@@ -187,17 +187,217 @@
         {
             "language": "javascript",
             "source": [
-                "const algorithmOptions = Array.from(\n    new Set(benchmarkResults.map((result) => result.algorithm))\n);\n\nconst data = algorithmOptions.map((algorithm) => {\n    const subsetAlgorithm = benchmarkResults.filter(\n        (result) => result.algorithm == algorithm\n    );\n\n    const numIterationsOptions = Array.from(\n        new Set(subsetAlgorithm.map((result) => result.numIterations))\n    );\n\n    return {\n        x: numIterationsOptions,\n        y: numIterationsOptions.map((numIterations) => {\n            const subsetNumItrations = subsetAlgorithm.filter(\n                (result) => result.numIterations == numIterations\n            );\n\n            return (\n                subsetNumItrations\n                    .map((result) => result.variance)\n                    .reduce((varianceA, varianceB) => varianceA + varianceB) /\n                subsetNumItrations.length\n            );\n        }),\n        name: algorithm,\n        type: \"box\"\n    };\n});\n\nconst layout = merge(sharedLayout, {\n    //\n})\n\nPlotly.newPlot('', data, layout);\n\nconsole.dir(data);\n"
+                "import merge from 'deepmerge';\n\nconst algorithmOptions = Array.from(\n    new Set(benchmarkResults.map((result) => result.algorithm))\n);\n\nconst aggregations = [\n    {\n        name: 'mean',\n        fn: (results) =>\n            results.reduce((varianceA, varianceB) => varianceA + varianceB) /\n            results.length,\n    },\n    {\n        name: 'peak',\n        fn: (results) =>\n            results.reduce((varianceA, varianceB) =>\n                Math.max(varianceA, varianceB)\n            ),\n    },\n];\n\nfor (const aggregation of aggregations) {\n    const data = algorithmOptions.map((algorithm) => {\n        const subsetAlgorithm = benchmarkResults.filter(\n            (result) => result.algorithm == algorithm\n        );\n\n        const numIterationsOptions = Array.from(\n            new Set(subsetAlgorithm.map((result) => result.numIterations))\n        );\n\n        return {\n            x: numIterationsOptions,\n            y: numIterationsOptions.map((numIterations) => {\n                const subsetNumItrations = subsetAlgorithm.filter(\n                    (result) => result.numIterations == numIterations\n                );\n\n                return aggregation.fn(\n                    subsetNumItrations.map((result) => result.variance)\n                );\n            }),\n            name: algorithm,\n            type: 'scatter',\n        };\n    });\n\n    const layout = merge(sharedLayout, {\n        title: {\n            text: aggregation.name,\n        },\n    });\n\n    Plotly.newPlot('', data, layout);\n}\n\nconsole.dir(data);\n"
             ],
             "outputs": [
                 {
                     "items": [
                         {
-                            "mime": "application/vnd.code.notebook.error",
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "[",
+                                "  {",
+                                "    x: [ 2, 4, 6 ],",
+                                "    y: [ 0.04655883218969167, 0.04395557752101232, 0.03311879826901834 ],",
+                                "    name: 'Random swap',",
+                                "    type: 'scatter'",
+                                "  },",
+                                "  {",
+                                "    x: [ 1, 2, 3, 4, 5, 6 ],",
+                                "    y: [",
+                                "      0.05866645117417733,",
+                                "      0.030832805052694843,",
+                                "      0.029213209325527043,",
+                                "      0.029213209325527043,",
+                                "      0.029213209325527043,",
+                                "      0.029213209325527043",
+                                "    ],",
+                                "    name: 'K-means',",
+                                "    type: 'scatter'",
+                                "  },",
+                                "  {",
+                                "    x: [ 1, 2, 3, 4, 5, 6 ],",
+                                "    y: [",
+                                "      0.07417754038552182,",
+                                "      0.03367251723104878,",
+                                "      0.02881264925348232,",
+                                "      0.0280231070935125,",
+                                "      0.02768515755723583,",
+                                "      0.027511902296940238",
+                                "    ],",
+                                "    name: 'K-harmonic means',",
+                                "    type: 'scatter'",
+                                "  }",
+                                "]",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "name": "ReferenceError",
-                                "message": "merge is not defined",
-                                "stack": "    at <Cell 9> [33, 0]\n    at <Cell 9> [23, 46]\n    at Script.runInContext (node:vm:139:12)\n    at Script.runInNewContext (node:vm:144:17)\n    at Object.runInNewContext (node:vm:298:38)\n    at C (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:113345)\n    at t.execCode (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:114312)\n    at k.<anonymous> (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/server/index.js:2:142156)\n    at k.emit (node:events:527:28)\n    at k.emit (node:domain:475:12)"
+                                "requestId": "x8625150904ce4a389a023d2160f9ffb9",
+                                "type": "generatePlot",
+                                "ele": "",
+                                "data": [
+                                    {
+                                        "x": [
+                                            2,
+                                            4,
+                                            6
+                                        ],
+                                        "y": [
+                                            0.02487745812721677,
+                                            0.022358727425848244,
+                                            0.02140121283263995
+                                        ],
+                                        "name": "Random swap",
+                                        "type": "scatter"
+                                    },
+                                    {
+                                        "x": [
+                                            1,
+                                            2,
+                                            3,
+                                            4,
+                                            5,
+                                            6
+                                        ],
+                                        "y": [
+                                            0.0328375796611894,
+                                            0.02402065281018486,
+                                            0.022433507381110142,
+                                            0.021867262566040126,
+                                            0.021605989861107292,
+                                            0.021469262679564977
+                                        ],
+                                        "name": "K-means",
+                                        "type": "scatter"
+                                    },
+                                    {
+                                        "x": [
+                                            1,
+                                            2,
+                                            3,
+                                            4,
+                                            5,
+                                            6
+                                        ],
+                                        "y": [
+                                            0.03750016111116577,
+                                            0.024796306630815144,
+                                            0.022049497993878273,
+                                            0.02136366199630417,
+                                            0.0210619188451024,
+                                            0.020929047026932688
+                                        ],
+                                        "name": "K-harmonic means",
+                                        "type": "scatter"
+                                    }
+                                ],
+                                "layout": {
+                                    "width": 600,
+                                    "height": 400,
+                                    "font": {
+                                        "size": 15
+                                    },
+                                    "margin": {
+                                        "l": 80,
+                                        "r": 4,
+                                        "b": 40,
+                                        "t": 50
+                                    },
+                                    "title": {
+                                        "text": "mean"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.ts.notebook.plotly+json",
+                            "value": {
+                                "requestId": "x8625150904ce4a389a023d2160f9ffb9",
+                                "type": "generatePlot",
+                                "ele": "",
+                                "data": [
+                                    {
+                                        "x": [
+                                            2,
+                                            4,
+                                            6
+                                        ],
+                                        "y": [
+                                            0.04655883218969167,
+                                            0.04395557752101232,
+                                            0.03311879826901834
+                                        ],
+                                        "name": "Random swap",
+                                        "type": "scatter"
+                                    },
+                                    {
+                                        "x": [
+                                            1,
+                                            2,
+                                            3,
+                                            4,
+                                            5,
+                                            6
+                                        ],
+                                        "y": [
+                                            0.05866645117417733,
+                                            0.030832805052694843,
+                                            0.029213209325527043,
+                                            0.029213209325527043,
+                                            0.029213209325527043,
+                                            0.029213209325527043
+                                        ],
+                                        "name": "K-means",
+                                        "type": "scatter"
+                                    },
+                                    {
+                                        "x": [
+                                            1,
+                                            2,
+                                            3,
+                                            4,
+                                            5,
+                                            6
+                                        ],
+                                        "y": [
+                                            0.07417754038552182,
+                                            0.03367251723104878,
+                                            0.02881264925348232,
+                                            0.0280231070935125,
+                                            0.02768515755723583,
+                                            0.027511902296940238
+                                        ],
+                                        "name": "K-harmonic means",
+                                        "type": "scatter"
+                                    }
+                                ],
+                                "layout": {
+                                    "width": 600,
+                                    "height": 400,
+                                    "font": {
+                                        "size": 15
+                                    },
+                                    "margin": {
+                                        "l": 80,
+                                        "r": 4,
+                                        "b": 40,
+                                        "t": 50
+                                    },
+                                    "title": {
+                                        "text": "peak"
+                                    }
+                                }
                             }
                         }
                     ]
