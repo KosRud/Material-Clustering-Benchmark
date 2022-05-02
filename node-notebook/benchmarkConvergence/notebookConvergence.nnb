@@ -76,7 +76,7 @@
         {
             "language": "javascript",
             "source": [
-                "import merge from 'deepmerge';\n\nconst algorithmOptions = Array.from(\n    new Set(benchmarkResults.map((result) => result.algorithm))\n);\n\nconst aggregations = [\n    {\n        name: 'mean',\n        fn: (results) =>\n            results.reduce((varianceA, varianceB) => varianceA + varianceB) /\n            results.length,\n    },\n    {\n        name: 'peak',\n        fn: (results) =>\n            results.reduce((varianceA, varianceB) =>\n                Math.max(varianceA, varianceB)\n            ),\n    },\n];\n\nfor (const aggregation of aggregations) {\n    const data = algorithmOptions.map((algorithm) => {\n        const subsetAlgorithm = benchmarkResults.filter(\n            (result) => result.algorithm == algorithm\n        );\n\n        const numIterationsOptions = Array.from(\n            new Set(subsetAlgorithm.map((result) => result.numIterations))\n        );\n\n        return {\n            x: numIterationsOptions,\n            y: numIterationsOptions.map((numIterations) => {\n                const subsetNumItrations = subsetAlgorithm.filter(\n                    (result) => result.numIterations == numIterations\n                );\n\n                return aggregation.fn(\n                    subsetNumItrations.map((result) => result.variance)\n                );\n            }),\n            name: algorithm,\n            type: 'scatter',\n        };\n    });\n\n    const layout = merge(sharedLayout, {\n        title: {\n            text: `${aggregation.name} variance`,\n        },\n    });\n\n    Plotly.newPlot('', data, layout);\n}\n"
+                "import merge from 'deepmerge';\n\nconst algorithmOptions = Array.from(\n    new Set(benchmarkResults.map((result) => result.algorithm))\n);\n\nconst aggregations = [\n    {\n        name: 'mean',\n        fn: (results) =>\n            results.reduce((varianceA, varianceB) => varianceA + varianceB) /\n            results.length,\n    },\n    {\n        name: 'peak',\n        fn: (results) =>\n            results.reduce((varianceA, varianceB) =>\n                Math.max(varianceA, varianceB)\n            ),\n    },\n];\n\nfor (const aggregation of aggregations) {\n    const data = algorithmOptions.map((algorithm) => {\n        const subsetAlgorithm = benchmarkResults.filter(\n            (result) => result.algorithm == algorithm\n        );\n\n        const numIterationsOptions = Array.from(\n            new Set(subsetAlgorithm.map((result) => result.numIterations))\n        );\n\n        return {\n            x: numIterationsOptions,\n            y: numIterationsOptions.map((numIterations) => {\n                const subsetNumItrations = subsetAlgorithm.filter(\n                    (result) => result.numIterations == numIterations\n                );\n\n                return aggregation.fn(\n                    subsetNumItrations.map((result) => result.variance)\n                );\n            }),\n            name: algorithm,\n            type: 'scatter',\n            mode: 'lines'\n        };\n    });\n\n    const layout = merge(sharedLayout, {\n        title: {\n            text: `${aggregation.name} variance`,\n        },\n    });\n\n    Plotly.newPlot('', data, layout);\n}\n"
             ],
             "outputs": [
                 {
@@ -84,7 +84,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xffef3870c854494494daa6368fdbb0d0",
+                                "requestId": "xc689b4902454462ea535924945906c27",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -118,7 +118,8 @@
                                             0.019765209088739244
                                         ],
                                         "name": "Random swap",
-                                        "type": "scatter"
+                                        "type": "scatter",
+                                        "mode": "lines"
                                     },
                                     {
                                         "x": [
@@ -174,7 +175,8 @@
                                             0.02053360993160469
                                         ],
                                         "name": "K-means",
-                                        "type": "scatter"
+                                        "type": "scatter",
+                                        "mode": "lines"
                                     },
                                     {
                                         "x": [
@@ -230,7 +232,8 @@
                                             0.019725662401197518
                                         ],
                                         "name": "K-harmonic means",
-                                        "type": "scatter"
+                                        "type": "scatter",
+                                        "mode": "lines"
                                     }
                                 ],
                                 "layout": {
@@ -258,7 +261,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xffef3870c854494494daa6368fdbb0d0",
+                                "requestId": "xc689b4902454462ea535924945906c27",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -292,7 +295,8 @@
                                             0.027987985558822093
                                         ],
                                         "name": "Random swap",
-                                        "type": "scatter"
+                                        "type": "scatter",
+                                        "mode": "lines"
                                     },
                                     {
                                         "x": [
@@ -348,7 +352,8 @@
                                             0.045767841694599916
                                         ],
                                         "name": "K-means",
-                                        "type": "scatter"
+                                        "type": "scatter",
+                                        "mode": "lines"
                                     },
                                     {
                                         "x": [
@@ -404,7 +409,8 @@
                                             0.027575497825171047
                                         ],
                                         "name": "K-harmonic means",
-                                        "type": "scatter"
+                                        "type": "scatter",
+                                        "mode": "lines"
                                     }
                                 ],
                                 "layout": {
