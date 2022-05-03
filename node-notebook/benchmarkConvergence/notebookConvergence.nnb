@@ -24,7 +24,7 @@
         {
             "language": "javascript",
             "source": [
-                "const sharedLayout = {\n    width: 600,\n    height: 400,\n    font: {\n        size: 15,\n    },\n    margin: {\n        l: 80,\n        r: 4,\n        b: 40,\n        t: 50, // for title\n    },\n};\n\nconst numCenters = 6,\n    maxSamples = 5000,\n    numInits = 40,\n    numRandomSwapRepsPerInit = 40,\n    dimensions = 2,\n    numIterations = 24;\n\nconst resultsFilePath = './results.json';\n\n/*\n    load results form the file\n    instead of running the benchmarks\n*/\nconst loadResults = true;\n"
+                "const sharedLayout = {\n    width: 600,\n    height: 400,\n    font: {\n        size: 15,\n    },\n    margin: {\n        l: 80,\n        r: 4,\n        b: 40,\n        t: 50, // for title\n    },\n};\n\nconst numCenters = 6,\n    maxSamples = 5000,\n    numInits = 40,\n    numRandomSwapRepsPerInit = 40,\n    dimensions = 2,\n    numIterations = 24;\n\nconst resultsFilePath = './results.json';\n\n/*\n    load results form the file\n    instead of running the benchmarks\n\n    in git the file is stored in a .zip archive\n    unpack it before using\n*/\nconst loadResults = true;\n"
             ],
             "outputs": []
         },
@@ -38,7 +38,7 @@
         {
             "language": "javascript",
             "source": [
-                "import fs from 'fs';\nimport assert from 'assert/strict';\nimport loadDataset from './loadDataset';\nimport { KMeans, RandomSwap, KHarmonicMeans } from './clustering.ts';\nimport { assert } from 'console';\nimport path from 'path';\n\n/*\nconst benchmarkResults = (() => {\n    let results = [];\n\n    const inits =\n        // array of initializations\n        Array(numInits)\n            .fill()\n            .map(() =>\n                //array of cluster centers\n                Array(numCenters)\n                    .fill()\n                    .map(() =>\n                        // iterate over coordinates\n                        Array(dimensions)\n                            .fill()\n                            .map(\n                                // uniform random initialization for each coordinate\n                                () => Math.random()\n                            )\n                    )\n            );\n\n    const datasetsPath = './datasets/',\n        filePaths = fs\n            .readdirSync(datasetsPath)\n            .map((filePath) => path.join(datasetsPath, filePath));\n\n    const kMeans = new KMeans(),\n        kHarmonicMeans = new KHarmonicMeans(),\n        randomSwap = new RandomSwap();\n\n    const arrLaunchParams = [];\n\n    for (const filePath of filePaths) {\n        const samples = loadDataset({\n            path: filePath,\n            maxSamples: maxSamples,\n        });\n\n        assert.equal(samples[0].length, dimensions);\n\n        inits.map((initCenters, initVectorId) => {\n            for (const _ of Array(numRandomSwapRepsPerInit)) {\n                arrLaunchParams.push({\n                    algorithm: randomSwap,\n                    samples: samples,\n                    initCenters: initCenters,\n                    initVectorId: initVectorId,\n                });\n            }\n\n            for (algorithm of [kMeans, kHarmonicMeans]) {\n                arrLaunchParams.push({\n                    algorithm: algorithm,\n                    samples: samples,\n                    initCenters: initCenters,\n                    initVectorId: initVectorId,\n                });\n            }\n        });\n    }\n\n    {\n        let lastPercent = 0;\n\n        arrLaunchParams.map((launchParams, launchId) => {\n            const samples = launchParams.samples,\n                attribution = samples.map(() => 0);\n\n            results = results.concat(\n                launchParams.algorithm.runBenchmark({\n                    samples: samples,\n                    attribution: attribution,\n                    initCenters: launchParams.initCenters,\n                    initVectorId: launchParams.initVectorId,\n                    numIterations: numIterations,\n                })\n            );\n            const percentFinished = (launchId / arrLaunchParams.length) * 100;\n            if (percentFinished > lastPercent + 1) {\n                console.log(\n                    `progress: ${percentFinished.toFixed(2).padStart(5)}%    ${\n                        new Date().toString().split(' ')[4]\n                    }`\n                );\n\n                lastPercent = Math.round(percentFinished);\n            }\n        });\n    }\n\n    console.log('');\n    console.log('finished!');\n\n    fs.writeFileSync(resultsFilePath, JSON.stringify(results, null, 2), {\n        flag: 'w',\n        encoding: 'utf-8',\n    });\n\n    return results;\n})();\n*/\n\nconst benchmarkResults = JSON.parse(fs.readFileSync(resultsFilePath, 'utf-8'));\n"
+                "import fs from 'fs';\nimport assert from 'assert/strict';\nimport loadDataset from './loadDataset';\nimport { KMeans, RandomSwap, KHarmonicMeans } from './clustering.ts';\nimport { assert } from 'console';\nimport path from 'path';\n\nconst benchmarkResults = (() => {\n    if (loadResults == false) {\n        let results = [];\n\n        const inits =\n            // array of initializations\n            Array(numInits)\n                .fill()\n                .map(() =>\n                    //array of cluster centers\n                    Array(numCenters)\n                        .fill()\n                        .map(() =>\n                            // iterate over coordinates\n                            Array(dimensions)\n                                .fill()\n                                .map(\n                                    // uniform random initialization for each coordinate\n                                    () => Math.random()\n                                )\n                        )\n                );\n\n        const datasetsPath = './datasets/',\n            filePaths = fs\n                .readdirSync(datasetsPath)\n                .map((filePath) => path.join(datasetsPath, filePath));\n\n        const kMeans = new KMeans(),\n            kHarmonicMeans = new KHarmonicMeans(),\n            randomSwap = new RandomSwap();\n\n        const arrLaunchParams = [];\n\n        for (const filePath of filePaths) {\n            const samples = loadDataset({\n                path: filePath,\n                maxSamples: maxSamples,\n            });\n\n            assert.equal(samples[0].length, dimensions);\n\n            inits.map((initCenters, initVectorId) => {\n                for (const _ of Array(numRandomSwapRepsPerInit)) {\n                    arrLaunchParams.push({\n                        algorithm: randomSwap,\n                        samples: samples,\n                        initCenters: initCenters,\n                        initVectorId: initVectorId,\n                    });\n                }\n\n                for (algorithm of [kMeans, kHarmonicMeans]) {\n                    arrLaunchParams.push({\n                        algorithm: algorithm,\n                        samples: samples,\n                        initCenters: initCenters,\n                        initVectorId: initVectorId,\n                    });\n                }\n            });\n        }\n\n        {\n            let lastPercent = 0;\n\n            arrLaunchParams.map((launchParams, launchId) => {\n                const samples = launchParams.samples,\n                    attribution = samples.map(() => 0);\n\n                results = results.concat(\n                    launchParams.algorithm.runBenchmark({\n                        samples: samples,\n                        attribution: attribution,\n                        initCenters: launchParams.initCenters,\n                        initVectorId: launchParams.initVectorId,\n                        numIterations: numIterations,\n                    })\n                );\n                const percentFinished =\n                    (launchId / arrLaunchParams.length) * 100;\n                if (percentFinished > lastPercent + 1) {\n                    console.log(\n                        `progress: ${percentFinished\n                            .toFixed(2)\n                            .padStart(5)}%    ${\n                            new Date().toString().split(' ')[4]\n                        }`\n                    );\n\n                    lastPercent = Math.round(percentFinished);\n                }\n            });\n        }\n\n        console.log('');\n        console.log('finished!');\n\n        fs.writeFileSync(resultsFilePath, JSON.stringify(results, null, 2), {\n            flag: 'w',\n            encoding: 'utf-8',\n        });\n\n        return results;\n    } else {\n        return JSON.parse(fs.readFileSync(resultsFilePath, 'utf-8'));\n    }\n})();\n"
             ],
             "outputs": []
         },
@@ -84,7 +84,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x1b25873ac0694eb7bc1a429fb421daf1",
+                                "requestId": "xcc0ac2cc21384a34af10b4c7ae0f086e",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -647,7 +647,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x1b25873ac0694eb7bc1a429fb421daf1",
+                                "requestId": "xcc0ac2cc21384a34af10b4c7ae0f086e",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1409,20 +1409,6 @@
                     ]
                 }
             ]
-        },
-        {
-            "language": "javascript",
-            "source": [
-                ""
-            ],
-            "outputs": []
-        },
-        {
-            "language": "javascript",
-            "source": [
-                ""
-            ],
-            "outputs": []
         }
     ]
 }
