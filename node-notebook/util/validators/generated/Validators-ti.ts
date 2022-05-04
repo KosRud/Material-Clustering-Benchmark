@@ -4,32 +4,48 @@
 import * as t from "ts-interface-checker";
 // tslint:disable:object-literal-key-quotes
 
-export const ReportCollection = t.iface([], {
-  "reports": t.tuple(t.iface([], {
-    "measurement": t.iface([], {
-      "varianceByFrame": t.tuple(t.iface([], {
-        "frameIdex": "number",
-        "variance": "number",
-      })),
-    }),
-    "serializableLaunchParameters": t.iface([], {
-      "dispatcherParameters": "any",
-      "videoName": "string",
-      "numIterations": "number",
-      "workingTextureSize": "number",
-      "numClusters": "number",
-      "jitterSize": "number",
-      "staggeredJitter": "boolean",
-      "doDownscale": "boolean",
-      "algorithm": "string",
-      "doRandomizeEmptyClusters": "boolean",
-      "stopCondition": t.opt("boolean"),
-    }),
-    "logType": "number",
+export const Measurement = t.iface([], {
+});
+
+export const VarianceMeasurement = t.iface(["Measurement"], {
+  "varianceByFrame": t.tuple(t.iface([], {
+    "frameIdex": "number",
+    "variance": "number",
   })),
 });
 
+export const FrameTimeMeasurement = t.iface(["Measurement"], {
+  "peakFrameTime": "number",
+  "avgFrameTime": "number",
+});
+
+export const Report = t.iface([], {
+  "measurement": t.union("VarianceMeasurement", "FrameTimeMeasurement"),
+  "serializableLaunchParameters": t.iface([], {
+    "dispatcherParameters": "any",
+    "videoName": "string",
+    "numIterations": "number",
+    "workingTextureSize": "number",
+    "numClusters": "number",
+    "jitterSize": "number",
+    "staggeredJitter": "boolean",
+    "doDownscale": "boolean",
+    "algorithm": "string",
+    "doRandomizeEmptyClusters": "boolean",
+    "stopCondition": t.opt("boolean"),
+  }),
+  "logType": "number",
+});
+
+export const ReportCollection = t.iface([], {
+  "reports": t.array("Report"),
+});
+
 const exportedTypeSuite: t.ITypeSuite = {
+  Measurement,
+  VarianceMeasurement,
+  FrameTimeMeasurement,
+  Report,
   ReportCollection,
 };
 export default exportedTypeSuite;

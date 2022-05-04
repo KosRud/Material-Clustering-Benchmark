@@ -1,59 +1,84 @@
-import { ReportCollection } from './validators/Validators';
+import {
+    ReportCollection,
+    VarianceMeasurement,
+    FrameTimeMeasurement,
+    Report,
+    Measurement,
+} from './validators/Validators';
 import * as validatorTemplates from './validators/generated/Validators-ti';
 import { createCheckers } from 'ts-interface-checker';
+import assert from 'assert/strict';
 
 const validators = createCheckers(validatorTemplates.default);
 
 interface ProcessedReport {
-    measurement: {
-        aggregated: {
-            mean: number;
-            peak: number;
-        };
-    };
-    launchParameters;
-    logType: string;
+    measurement:
+        | (VarianceMeasurement & {
+              aggregated: {
+                  mean: number;
+                  peak: number;
+              };
+          })
+        | FrameTimeMeasurement;
+    launchParameters: any;
+    logTypeName: 'variance' | 'frame time';
 }
-
-export type ProcessedReportCollection = ReportCollection & {
-    reports: [ProcessedReport];
-};
 
 export default function loadReportCollection(
     reportCollection: ReportCollection
-): ProcessedReportCollection {
+): ProcessedReport[] {
     validators.ReportCollection.check(reportCollection);
 
-    for (const report of reportCollection.reports) {
-        const processedReport = report as undefined as ProcessedReport;
+    return reportCollection.reports.map((report) => {
+        return {
+            measurement: (() => {
+                switch (report.measurement['varianceByFrame']) {
+                    case undefined:
+                        return report.measurement as FrameTimeMeasurement;
+                    default:
+                        const measurement: VarianceMeasurement =
+                            report.measurement as VarianceMeasurement;
 
-        const varianceByFrame = report.measurement.varianceByFrame;
-        const arrVariance = varianceByFrame.map(
-            (frameRecord) => frameRecord.variance
-        );
-        const aggregated = {
-            mean: -1,
-            peak: -1,
+                        const varianceByFrame = measurement.varianceByFrame;
+                        const arrVariance = varianceByFrame.map(
+                            (frameRecord) => frameRecord.variance
+                        );
+                        const aggregated = {
+                            mean: -1,
+                            peak: -1,
+                        };
+                        aggregated.mean =
+                            arrVariance.reduce((a, b) => a + b) /
+                            varianceByFrame.length;
+                        aggregated.peak = arrVariance.reduce((a, b) =>
+                            Math.max(a, b)
+                        );
+
+                        return {
+                            ...measurement,
+                            aggregated,
+                        };
+                }
+            })(),
+            launchParameters: report.serializableLaunchParameters,
+            logTypeName: ((): 'variance' | 'frame time' => {
+                switch (report.logType) {
+                    case 0:
+                        assert.notEqual(
+                            report.measurement['peakFrameTime'],
+                            undefined
+                        );
+                        return 'frame time';
+                    case 1:
+                        assert.notEqual(
+                            report.measurement['varianceByFrame'],
+                            undefined
+                        );
+                        return 'variance';
+                    default:
+                        throw 'incorrect report type';
+                }
+            })(),
         };
-        aggregated.mean =
-            arrVariance.reduce((a, b) => a + b) / varianceByFrame.length;
-        aggregated.peak = arrVariance.reduce((a, b) => Math.max(a, b));
-
-        ////////////////////////////////
-
-        processedReport.launchParameters = report.serializableLaunchParameters;
-        delete report.serializableLaunchParameters;
-
-        processedReport.measurement.aggregated = aggregated;
-
-        switch (report.logType) {
-            case 1:
-                processedReport.logType = 'variance';
-                break;
-            default:
-                throw 'invalid log type!';
-        }
-    }
-
-    return reportCollection as undefined as ProcessedReportCollection;
+    });
 }
