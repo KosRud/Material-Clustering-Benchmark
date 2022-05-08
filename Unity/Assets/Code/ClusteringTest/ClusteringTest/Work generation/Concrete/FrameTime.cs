@@ -19,115 +19,67 @@ namespace WorkGeneration
             {
                 foreach (UnityEngine.Video.VideoClip video in this.videos)
                 {
-                    foreach (int textureSize in new int[] { 512, 64 })
+                    // 3 iterations
                     {
-                        // 3 iterations
+                        const int numIterations = 3;
+
+                        // KM
+                        workList.runs.Push(
+                            new LaunchParameters(
+                                staggeredJitter: false,
+                                video: video,
+                                doDownscale: false,
+                                dispatcher: new DispatcherKM(
+                                    computeShader: this.csHighlightRemoval,
+                                    numIterations: numIterations,
+                                    doRandomizeEmptyClusters: false,
+                                    clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                                        numClusters: 6,
+                                        workingSize: 256,
+                                        fullSize: ClusteringTest.fullTextureSize,
+                                        jitterSize: 1
+                                    )
+                                )
+                            )
+                        );
+
+                        // KHM
+                        workList.runs.Push(
+                            new LaunchParameters(
+                                staggeredJitter: false,
+                                video: video,
+                                doDownscale: false,
+                                dispatcher: new DispatcherKHM(
+                                    computeShader: this.csHighlightRemoval,
+                                    numIterations: numIterations,
+                                    doRandomizeEmptyClusters: false,
+                                    clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                                        numClusters: 6,
+                                        workingSize: 256,
+                                        fullSize: ClusteringTest.fullTextureSize,
+                                        jitterSize: 1
+                                    )
+                                )
+                            )
+                        );
+
+                        foreach (bool doReadback in new bool[] { true, false })
                         {
-                            const int numIterations = 3;
-
-                            // KM
+                            // RS(2KM)
                             workList.runs.Push(
                                 new LaunchParameters(
                                     staggeredJitter: false,
                                     video: video,
                                     doDownscale: false,
-                                    dispatcher: new DispatcherKM(
+                                    dispatcher: new DispatcherRSfixed(
                                         computeShader: this.csHighlightRemoval,
                                         numIterations: numIterations,
                                         doRandomizeEmptyClusters: false,
+                                        numIterationsKM: 2,
+                                        doReadback: doReadback,
                                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                             numClusters: 6,
-                                            workingSize: textureSize,
-                                            fullSize: ClusteringTest.fullTextureSize,
-                                            jitterSize: 1
-                                        )
-                                    )
-                                )
-                            );
-
-                            // KHM
-                            workList.runs.Push(
-                                new LaunchParameters(
-                                    staggeredJitter: false,
-                                    video: video,
-                                    doDownscale: false,
-                                    dispatcher: new DispatcherKHM(
-                                        computeShader: this.csHighlightRemoval,
-                                        numIterations: numIterations,
-                                        doRandomizeEmptyClusters: false,
-                                        clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
-                                            numClusters: 6,
-                                            workingSize: textureSize,
-                                            fullSize: ClusteringTest.fullTextureSize,
-                                            jitterSize: 1
-                                        )
-                                    )
-                                )
-                            );
-
-                            foreach (bool doReadback in new bool[] { true, false })
-                            {
-                                // RS(2KM)
-                                workList.runs.Push(
-                                    new LaunchParameters(
-                                        staggeredJitter: false,
-                                        video: video,
-                                        doDownscale: false,
-                                        dispatcher: new DispatcherRSfixed(
-                                            computeShader: this.csHighlightRemoval,
-                                            numIterations: numIterations,
-                                            doRandomizeEmptyClusters: false,
-                                            numIterationsKM: 2,
-                                            doReadback: doReadback,
-                                            clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
-                                                numClusters: 6,
-                                                workingSize: textureSize,
-                                                fullSize: ClusteringTest.fullTextureSize,
-                                                jitterSize: 1
-                                            )
-                                        )
-                                    )
-                                );
-                            }
-                        }
-
-                        // 1 iteration
-                        {
-                            const int numIterations = 1;
-
-                            // KM
-                            workList.runs.Push(
-                                new LaunchParameters(
-                                    staggeredJitter: false,
-                                    video: video,
-                                    doDownscale: false,
-                                    dispatcher: new DispatcherKM(
-                                        computeShader: this.csHighlightRemoval,
-                                        numIterations: numIterations,
-                                        doRandomizeEmptyClusters: false,
-                                        clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
-                                            numClusters: 6,
-                                            workingSize: textureSize,
-                                            fullSize: ClusteringTest.fullTextureSize,
-                                            jitterSize: 1
-                                        )
-                                    )
-                                )
-                            );
-
-                            // KHM
-                            workList.runs.Push(
-                                new LaunchParameters(
-                                    staggeredJitter: false,
-                                    video: video,
-                                    doDownscale: false,
-                                    dispatcher: new DispatcherKHM(
-                                        computeShader: this.csHighlightRemoval,
-                                        numIterations: numIterations,
-                                        doRandomizeEmptyClusters: false,
-                                        clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
-                                            numClusters: 6,
-                                            workingSize: textureSize,
+                                            workingSize: 256,
                                             fullSize: ClusteringTest.fullTextureSize,
                                             jitterSize: 1
                                         )
@@ -135,14 +87,59 @@ namespace WorkGeneration
                                 )
                             );
                         }
+                    }
 
-                        AddStopCondtion(
-                            workList: workList,
-                            video: video,
-                            textureSize: textureSize,
-                            this.csHighlightRemoval
+                    // 1 iteration
+                    {
+                        const int numIterations = 1;
+
+                        // KM
+                        workList.runs.Push(
+                            new LaunchParameters(
+                                staggeredJitter: false,
+                                video: video,
+                                doDownscale: false,
+                                dispatcher: new DispatcherKM(
+                                    computeShader: this.csHighlightRemoval,
+                                    numIterations: numIterations,
+                                    doRandomizeEmptyClusters: false,
+                                    clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                                        numClusters: 6,
+                                        workingSize: 256,
+                                        fullSize: ClusteringTest.fullTextureSize,
+                                        jitterSize: 1
+                                    )
+                                )
+                            )
+                        );
+
+                        // KHM
+                        workList.runs.Push(
+                            new LaunchParameters(
+                                staggeredJitter: false,
+                                video: video,
+                                doDownscale: false,
+                                dispatcher: new DispatcherKHM(
+                                    computeShader: this.csHighlightRemoval,
+                                    numIterations: numIterations,
+                                    doRandomizeEmptyClusters: false,
+                                    clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                                        numClusters: 6,
+                                        workingSize: 256,
+                                        fullSize: ClusteringTest.fullTextureSize,
+                                        jitterSize: 1
+                                    )
+                                )
+                            )
                         );
                     }
+
+                    AddStopCondtion(
+                        workList: workList,
+                        video: video,
+                        textureSize: 256,
+                        this.csHighlightRemoval
+                    );
                 }
             }
 
