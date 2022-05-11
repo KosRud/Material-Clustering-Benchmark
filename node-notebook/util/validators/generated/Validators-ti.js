@@ -8,7 +8,7 @@ var t = require("ts-interface-checker");
 // tslint:disable:object-literal-key-quotes
 exports.Measurement = t.iface([], {});
 exports.VarianceMeasurement = t.iface(["Measurement"], {
-    "varianceByFrame": t.tuple(t.iface([], {
+    "varianceByFrame": t.array(t.iface([], {
         "frameIdex": "number",
         "variance": "number"
     }))

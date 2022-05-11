@@ -6,12 +6,10 @@
 export interface Measurement {}
 
 export interface VarianceMeasurement extends Measurement {
-    varianceByFrame: [
-        {
-            frameIdex: number;
-            variance: number;
-        }
-    ];
+    varianceByFrame: {
+        frameIdex: number;
+        variance: number;
+    }[];
 }
 
 export interface FrameTimeMeasurement extends Measurement {

@@ -8,7 +8,7 @@ export const Measurement = t.iface([], {
 });
 
 export const VarianceMeasurement = t.iface(["Measurement"], {
-  "varianceByFrame": t.tuple(t.iface([], {
+  "varianceByFrame": t.array(t.iface([], {
     "frameIdex": "number",
     "variance": "number",
   })),

@@ -11,15 +11,19 @@ import assert from 'assert/strict';
 
 const validators = createCheckers(validatorTemplates.default);
 
+export interface QualityMeasurement extends Measurement {
+    rmseByFrame: {
+        frameIdex: number;
+        rmse: number;
+    }[];
+    aggregated: {
+        mean: number;
+        peak: number;
+    };
+}
+
 interface ProcessedReport {
-    measurement:
-        | (VarianceMeasurement & {
-              aggregated: {
-                  mean: number;
-                  peak: number;
-              };
-          })
-        | FrameTimeMeasurement;
+    measurement: QualityMeasurement | FrameTimeMeasurement;
     launchParameters: any;
     logTypeName: 'variance' | 'frame time';
 }
@@ -40,22 +44,30 @@ export default function loadReportCollection(
                             report.measurement as VarianceMeasurement;
 
                         const varianceByFrame = measurement.varianceByFrame;
-                        const arrVariance = varianceByFrame.map(
-                            (frameRecord) => frameRecord.variance
+
+                        const arrSqrtVariance = varianceByFrame.map(
+                            (frameRecord) => frameRecord.variance ** 0.5
                         );
                         const aggregated = {
                             mean: -1,
                             peak: -1,
                         };
                         aggregated.mean =
-                            arrVariance.reduce((a, b) => a + b) /
+                            arrSqrtVariance.reduce((a, b) => a + b) /
                             varianceByFrame.length;
-                        aggregated.peak = arrVariance.reduce((a, b) =>
+                        aggregated.peak = arrSqrtVariance.reduce((a, b) =>
                             Math.max(a, b)
                         );
 
                         return {
-                            ...measurement,
+                            rmseByFrame: measurement.varianceByFrame.map(
+                                (record) => {
+                                    return {
+                                        frameIdex: record.frameIdex,
+                                        rmse: record.variance ** 0.5,
+                                    };
+                                }
+                            ),
                             aggregated,
                         };
                 }
