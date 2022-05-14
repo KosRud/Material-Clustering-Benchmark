@@ -39,7 +39,7 @@ namespace ClusteringAlgorithms
             );
         }
 
-        public sealed override string name => "RS";
+        public override string name => "RS";
 
         public abstract override void RunClustering(ClusteringTextures clusteringTextures);
 

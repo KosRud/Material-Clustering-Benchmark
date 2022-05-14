@@ -76,7 +76,7 @@ namespace WorkGeneration
                                         numIterations: numIterations,
                                         doRandomizeEmptyClusters: false,
                                         numIterationsKM: 2,
-                                        doReadback: doReadback,
+                                        doReadback: false,
                                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                             numClusters: 6,
                                             workingSize: 256,
@@ -89,9 +89,9 @@ namespace WorkGeneration
                         }
                     }
 
-                    // 1 iteration
+                    // 2 iterations
                     {
-                        const int numIterations = 1;
+                        const int numIterations = 2;
 
                         // KM
                         workList.runs.Push(
@@ -112,6 +112,27 @@ namespace WorkGeneration
                                 )
                             )
                         );
+                        // KM + readback
+                        workList.runs.Push(
+                            new LaunchParameters(
+                                staggeredJitter: false,
+                                video: video,
+                                doDownscale: false,
+                                dispatcher: new WrapperArtificialReadback(
+                                    new DispatcherKM(
+                                        computeShader: this.csHighlightRemoval,
+                                        numIterations: numIterations,
+                                        doRandomizeEmptyClusters: false,
+                                        clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                                            numClusters: 6,
+                                            workingSize: 256,
+                                            fullSize: ClusteringTest.fullTextureSize,
+                                            jitterSize: 1
+                                        )
+                                    )
+                                )
+                            )
+                        );
 
                         // KHM
                         workList.runs.Push(
@@ -128,6 +149,27 @@ namespace WorkGeneration
                                         workingSize: 256,
                                         fullSize: ClusteringTest.fullTextureSize,
                                         jitterSize: 1
+                                    )
+                                )
+                            )
+                        );
+                        // KHM + readback
+                        workList.runs.Push(
+                            new LaunchParameters(
+                                staggeredJitter: false,
+                                video: video,
+                                doDownscale: false,
+                                dispatcher: new WrapperArtificialReadback(
+                                    new DispatcherKHM(
+                                        computeShader: this.csHighlightRemoval,
+                                        numIterations: numIterations,
+                                        doRandomizeEmptyClusters: false,
+                                        clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                                            numClusters: 6,
+                                            workingSize: 256,
+                                            fullSize: ClusteringTest.fullTextureSize,
+                                            jitterSize: 1
+                                        )
                                     )
                                 )
                             )

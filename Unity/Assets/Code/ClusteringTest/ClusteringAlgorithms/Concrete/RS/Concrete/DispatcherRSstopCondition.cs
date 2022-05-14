@@ -16,12 +16,14 @@ namespace ClusteringAlgorithms
                 doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                 numIterationsKm: numIterationsKM,
                 clusteringRTsAndBuffers: clusteringRTsAndBuffers
-            )
-        {
-            this._parameters.numIterationsKm = numIterationsKM;
-        }
+            ) { }
+
+        // stop condition impossible without readback
+        public override bool doesReadback => true;
 
         public override bool usesStopCondition => true;
+
+        public override string name => $"{base.name} (readback)";
 
         public override void RunClustering(ClusteringTextures clusteringTextures)
         {
@@ -44,7 +46,7 @@ namespace ClusteringAlgorithms
                 {
                     failedSwaps++;
 
-                    if (failedSwaps == StopCondition.maxConsecutiveFailedSwaps)
+                    if (failedSwaps > StopCondition.maxFailedSwaps)
                     {
                         return;
                     }
@@ -52,10 +54,6 @@ namespace ClusteringAlgorithms
                 else if (-varianceChange < StopCondition.varianceChangeThreshold)
                 {
                     return;
-                }
-                else
-                {
-                    failedSwaps = 0;
                 }
             }
         }

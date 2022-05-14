@@ -16,6 +16,8 @@ namespace ClusteringAlgorithms
             }
         }
 
+        public override bool doesReadback => false;
+
         private readonly Parameters _parameters;
         public override DispatcherParameters parameters => this._parameters;
 

@@ -22,6 +22,7 @@ namespace WorkGeneration
             public string algorithm;
             public bool doRandomizeEmptyClusters;
             public bool stopCondition;
+            public bool readback;
 
             public SerializableLaunchParameters(
                 string videoName,
@@ -34,6 +35,7 @@ namespace WorkGeneration
                 string algorithm,
                 bool doRandomizeEmptyClusters,
                 bool stopCondition,
+                bool readback,
                 DispatcherParameters dispatcherParameters
             )
             {
@@ -48,6 +50,7 @@ namespace WorkGeneration
                 this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
                 this.dispatcherParameters = dispatcherParameters;
                 this.stopCondition = stopCondition;
+                this.readback = readback;
             }
         }
 
@@ -64,7 +67,8 @@ namespace WorkGeneration
                 algorithm: this.dispatcher.name,
                 doRandomizeEmptyClusters: this.dispatcher.doRandomizeEmptyClusters,
                 dispatcherParameters: this.dispatcher.parameters,
-                stopCondition: this.dispatcher.usesStopCondition
+                stopCondition: this.dispatcher.usesStopCondition,
+                readback: this.dispatcher.doesReadback
             );
         }
 

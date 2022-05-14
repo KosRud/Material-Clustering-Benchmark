@@ -272,7 +272,7 @@ public class MeasurementRunner : IDisposable
     private void MakeVarianceLogEntry()
     {
         this.benchmarkMeasurementVariance.varianceByFrame.Add(
-            new BenchmarkMeasurementVariance.FrametVariance(
+            new BenchmarkMeasurementVariance.FrameVariance(
                 frameIndex: this.videoPlayer.frame,
                 variance: this.launchParameters.dispatcher.GetVariance()
             )

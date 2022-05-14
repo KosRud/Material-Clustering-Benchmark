@@ -42,23 +42,23 @@ public abstract class ABenchmarkMeasurement { }
 public class BenchmarkMeasurementVariance : ABenchmarkMeasurement
 {
     [Serializable]
-    public class FrametVariance
+    public class FrameVariance
     {
-        public long frameIdex;
+        public long frameIndex;
         public float variance;
 
-        public FrametVariance(long frameIndex, float variance)
+        public FrameVariance(long frameIndex, float variance)
         {
-            this.frameIdex = frameIndex;
+            this.frameIndex = frameIndex;
             this.variance = variance;
         }
     }
 
-    public List<FrametVariance> varianceByFrame;
+    public List<FrameVariance> varianceByFrame;
 
     public BenchmarkMeasurementVariance()
     {
-        this.varianceByFrame = new List<FrametVariance>();
+        this.varianceByFrame = new List<FrameVariance>();
     }
 }
 

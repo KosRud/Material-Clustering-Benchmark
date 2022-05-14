@@ -23,6 +23,10 @@ namespace ClusteringAlgorithms
             this.wrappedDispatcher.Dispose();
         }
 
+        /*
+            impossible to use stop condition without readback
+        */
+        public bool doesReadback => true;
         public bool usesStopCondition => true;
 
         public virtual string name => this.wrappedDispatcher.name;

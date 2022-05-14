@@ -14,6 +14,8 @@ namespace ClusteringAlgorithms
 
         public override string name => "KM";
 
+        public override bool doesReadback => false;
+
         /// <summary>
         /// Each iteration first attributes pixels to clusters,
         /// then updates cluster centers.

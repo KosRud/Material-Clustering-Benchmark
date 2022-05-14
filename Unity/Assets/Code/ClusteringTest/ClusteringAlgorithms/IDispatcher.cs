@@ -13,6 +13,7 @@ namespace ClusteringAlgorithms
         string name { get; }
 
         bool usesStopCondition { get; }
+        bool doesReadback { get; }
 
         void RunClustering(ClusteringTextures clusteringTextures);
 

@@ -15,6 +15,7 @@ namespace ClusteringAlgorithms
         private readonly DispatcherParameters _parameters;
 
         public abstract bool usesStopCondition { get; }
+        public abstract bool doesReadback { get; }
 
         // internal
         public readonly ComputeShader computeShader;
