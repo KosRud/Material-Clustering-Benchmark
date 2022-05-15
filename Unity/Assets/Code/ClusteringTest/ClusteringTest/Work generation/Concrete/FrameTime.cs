@@ -76,7 +76,7 @@ namespace WorkGeneration
                                         numIterations: numIterations,
                                         doRandomizeEmptyClusters: false,
                                         numIterationsKM: 2,
-                                        doReadback: false,
+                                        doReadback: doReadback,
                                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                             numClusters: 6,
                                             workingSize: 256,
