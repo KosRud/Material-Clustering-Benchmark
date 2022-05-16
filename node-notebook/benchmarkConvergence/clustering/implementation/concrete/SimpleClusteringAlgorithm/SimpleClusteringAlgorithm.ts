@@ -37,6 +37,7 @@ export abstract class SimpleClusteringAlgorithm extends ClusteringAlgorithm {
                     this.attributeSamples();
 
                     const newVariance = this.getVariance();
+
                     if (
                         lastVariance - newVariance <
                         stopCondition.deltaVariance
@@ -49,6 +50,8 @@ export abstract class SimpleClusteringAlgorithm extends ClusteringAlgorithm {
                             },
                         ];
                     }
+
+                    lastVariance = newVariance;
                 }
 
             default:

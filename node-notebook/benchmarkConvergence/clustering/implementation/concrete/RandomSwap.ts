@@ -100,9 +100,6 @@ export class RandomSwap extends ClusteringAlgorithm {
                     const newVariance = this.getVariance();
 
                     if (newVariance < oldVariance) {
-                        oldVariance = newVariance;
-                        oldCenters = copy(this.centers);
-
                         if (
                             oldVariance - newVariance <
                             stopCondition.deltaVariance
@@ -115,6 +112,9 @@ export class RandomSwap extends ClusteringAlgorithm {
                                 },
                             ];
                         }
+
+                        oldVariance = newVariance;
+                        oldCenters = copy(this.centers);
                     } else {
                         for (const centerIndex of this.centers.keys()) {
                             this.centers[centerIndex] = oldCenters[centerIndex];
@@ -128,6 +128,7 @@ export class RandomSwap extends ClusteringAlgorithm {
                                     algorithm: this.name,
                                     numIterations: numIterations,
                                     variance: this.getVariance(),
+                                    stopCondition: stopCondition,
                                 },
                             ];
                         }

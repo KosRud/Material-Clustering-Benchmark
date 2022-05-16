@@ -91,7 +91,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x431a36825d8441b1954a4f6bd20d41dc",
+                                "requestId": "x69f307b49cbb439a9475439e8781b933",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -654,7 +654,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x431a36825d8441b1954a4f6bd20d41dc",
+                                "requestId": "x69f307b49cbb439a9475439e8781b933",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1445,25 +1445,20 @@
                         {
                             "mime": "application/vnd.code.notebook.stderr",
                             "value": [
-                                "Debugger ending on ws://127.0.0.1:39165/08643322-808a-4c6e-ae2c-af0e21fc3bbd",
+                                "Debugger ending on ws://127.0.0.1:37169/2e04a9f0-13d9-49e1-a8bb-b49dfd8c9076",
                                 ""
                             ]
                         }
                     ]
-                },
-                {
-                    "items": [
-                        {
-                            "mime": "application/vnd.code.notebook.error",
-                            "value": {
-                                "name": "unknown",
-                                "message": "unknown",
-                                "stack": "\tat S.onMessage (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:230057)\n\tat O.<anonymous> (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:226799)\n\tat O.emit (events.js:315:20)\n\tat e.exports.j (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:281666)\n\tat e.exports.emit (events.js:315:20)\n\tat e.exports.dataMessage (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:262817)\n\tat e.exports.getData (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:261999)\n\tat e.exports.startLoop (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:258860)\n\tat e.exports._write (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:258215)\n\tat writeOrBuffer (internal/streams/writable.js:358:12)\n\tat e.exports.Writable.write (internal/streams/writable.js:303:10)\n\tat Socket.U (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:282192)\n\tat Socket.emit (events.js:315:20)\n\tat addChunk (internal/streams/readable.js:309:12)\n\tat readableAddChunk (internal/streams/readable.js:284:9)\n\tat Socket.Readable.push (internal/streams/readable.js:223:10)\n\tat TCP.onStreamRead (internal/stream_base_commons.js:188:23)"
-                            }
-                        }
-                    ]
                 }
             ]
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "console.log(JSON.stringify(benchmarkStopConditionResults, null, 2))"
+            ],
+            "outputs": []
         },
         {
             "language": "javascript",

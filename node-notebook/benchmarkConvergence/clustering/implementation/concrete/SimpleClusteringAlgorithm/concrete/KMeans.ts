@@ -7,7 +7,7 @@ export class KMeans extends SimpleClusteringAlgorithm {
 
     override attributeSamples() {
         for (const [sampleIndex, sample] of Object.entries(this.samples)) {
-            this.attribution[sampleIndex] = this.centers
+            this.attribution[sampleIndex as any as number] = this.centers
                 .map((center, centerId) => {
                     return {
                         centerId,
