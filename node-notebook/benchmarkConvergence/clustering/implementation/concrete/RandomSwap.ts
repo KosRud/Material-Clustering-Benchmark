@@ -7,8 +7,6 @@ import { KMeans } from './SimpleClusteringAlgorithm/concrete/KMeans';
 
 import assert from 'assert/strict';
 
-import copy from 'deepcopy';
-
 export class RandomSwap extends ClusteringAlgorithm {
     private kmeans: KMeans;
 
@@ -43,9 +41,10 @@ export class RandomSwap extends ClusteringAlgorithm {
     }
 
     private randomSwap() {
-        this.centers[Math.floor(Math.random() * this.centers.length)] = copy(
-            this.samples[Math.floor(Math.random() * this.samples.length)]
-        );
+        this.centers[Math.floor(Math.random() * this.centers.length)] =
+            this.samples[
+                Math.floor(Math.random() * this.samples.length)
+            ].slice();
     }
 
     override runClustering() {
@@ -54,7 +53,7 @@ export class RandomSwap extends ClusteringAlgorithm {
         this.kmeans.attributeSamples();
 
         let oldVariance = this.getVariance();
-        let oldCenters = copy(this.centers);
+        let oldCenters = this.centers.map((center) => center.slice());
 
         switch (typeof this.numIterations) {
             case 'number':
@@ -72,7 +71,9 @@ export class RandomSwap extends ClusteringAlgorithm {
 
                     if (newVariance < oldVariance) {
                         oldVariance = newVariance;
-                        oldCenters = copy(this.centers);
+                        oldCenters = this.centers.map((center) =>
+                            center.slice()
+                        );
                     } else {
                         for (const centerIndex of this.centers.keys()) {
                             this.centers[centerIndex] = oldCenters[centerIndex];
@@ -115,7 +116,9 @@ export class RandomSwap extends ClusteringAlgorithm {
                         }
 
                         oldVariance = newVariance;
-                        oldCenters = copy(this.centers);
+                        oldCenters = this.centers.map((center) =>
+                            center.slice()
+                        );
                     } else {
                         for (const centerIndex of this.centers.keys()) {
                             this.centers[centerIndex] = oldCenters[centerIndex];
