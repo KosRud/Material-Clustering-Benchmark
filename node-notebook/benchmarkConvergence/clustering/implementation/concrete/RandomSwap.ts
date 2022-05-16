@@ -3,7 +3,7 @@ import {
     StopCondition,
     AlgorithmResult,
 } from '../ClusteringAlgorithm';
-import { KMeans } from './SimpleClusteringAlgorithm/concrete/Km';
+import { KMeans } from './SimpleClusteringAlgorithm/concrete/KMeans';
 
 import assert from 'assert/strict';
 
