@@ -31,7 +31,7 @@
         {
             "language": "javascript",
             "source": [
-                "const sharedLayout = {\n    width: 600,\n    height: 400,\n    font: {\n        size: 15,\n    },\n    margin: {\n        l: 80,\n        r: 4,\n        b: 40,\n        t: 50, // for title\n    },\n};"
+                "const normalSizeLayout = {\n    width: 600,\n    height: 400,\n    font: {\n        size: 15,\n    },\n    margin: {\n        l: 80,\n        r: 4,\n        b: 40,\n        t: 50, // for title\n    },\n    yaxis: {\n        title: {\n            standoff: 4,\n        },\n        automargin: true,\n    },\n    xaxis: {\n        automargin: true,\n    }\n}\n\nconst doubleSizeLayout = merge(normalSizeLayout, {\n    width: 1200,\n    height: 800,\n    font: {\n        size: 30,\n    },\n    margin: {\n        l: 160,\n        r: 8,\n        b: 80,\n        t: 100, // for title\n    },\n});\n\nconst sharedLayout = doubleSizeLayout;"
             ],
             "outputs": []
         },
@@ -45,7 +45,7 @@
         {
             "language": "javascript",
             "source": [
-                "import fs from 'fs';\nimport assert from 'assert/strict';\nimport loadDataset from './loadDataset';\nimport { KMeans, RandomSwap, KHarmonicMeans } from './clustering/clustering';\nimport path from 'path';\nimport copy from 'deepcopy';\n\nconst benchmarkConvergenceResults = loadOrGenerateReport({\n    loadFromFile: true,\n    filePath: './results/convergence.json',\n    generationFunc: () => {\n        const numCenters = 6,\n            maxSamples = 5000,\n            numInits = 4,\n            numRandomSwapRepsPerInit = 4,\n            dimensions = 2,\n            numIterations = 10;\n\n        let results = [];\n\n        const inits =\n            // array of initializations\n            Array(numInits)\n                .fill()\n                .map(() =>\n                    //array of cluster centers\n                    Array(numCenters)\n                        .fill()\n                        .map(() =>\n                            // iterate over coordinates\n                            Array(dimensions)\n                                .fill()\n                                .map(\n                                    // uniform random initialization for each coordinate\n                                    () => Math.random()\n                                )\n                        )\n                );\n\n        const datasetsPath = './datasets/',\n            filePaths = fs\n                .readdirSync(datasetsPath)\n                .map((filePath) => path.join(datasetsPath, filePath));\n\n        const arrLaunchParams = [];\n\n        for (const filePath of filePaths) {\n            const samples = loadDataset({\n                path: filePath,\n                maxSamples: maxSamples,\n            });\n\n            assert.equal(samples[0].length, dimensions);\n\n            for (const initCenters of inits) {\n                arrLaunchParams.push({\n                    samples: samples,\n                    initCenters: initCenters,\n                });\n            }\n        }\n\n        let lastPercent = 0;\n\n        for (const launchId in arrLaunchParams) {\n            const { samples, initCenters } = arrLaunchParams[launchId];\n\n            results = results.concat(\n                new KMeans({\n                    samples: samples,\n                    attribution: samples.map(() => 0),\n                    centers: copy(initCenters),\n                    numIterations: numIterations,\n                }).runClustering()\n            );\n\n            results = results.concat(\n                new KHarmonicMeans({\n                    samples: samples,\n                    attribution: samples.map(() => 0),\n                    centers: copy(initCenters),\n                    numIterations: numIterations,\n                    weights: samples.map(() => initCenters[0].map(() => -1)),\n                }).runClustering()\n            );\n\n            for (const _ of Array(numRandomSwapRepsPerInit)) {\n                results = results.concat(\n                    new RandomSwap({\n                        samples: samples,\n                        attribution: samples.map(() => 0),\n                        centers: copy(initCenters),\n                        numIterations: numIterations,\n                    }).runClustering()\n                );\n            }\n\n            const percentFinished = (launchId / arrLaunchParams.length) * 100;\n            if (percentFinished > lastPercent + 1) {\n                console.log(\n                    `progress: ${percentFinished.toFixed(2).padStart(5)}%    ${\n                        new Date().toString().split(' ')[4]\n                    }`\n                );\n\n                lastPercent = percentFinished;\n            }\n        }\n\n        console.log('');\n        console.log('finished!');\n\n        return results;\n    },\n});\n"
+                "import fs from 'fs';\nimport assert from 'assert/strict';\nimport loadDataset from './loadDataset';\nimport { KMeans, RandomSwap, KHarmonicMeans } from './clustering/clustering';\nimport path from 'path';\nimport copy from 'deepcopy';\n\nconst benchmarkConvergenceResults = loadOrGenerateReport({\n    loadFromFile: true,\n    filePath: './results/convergence.json',\n    generationFunc: () => {\n        const numCenters = 6,\n            maxSamples = 5000,\n            numInits = 40,\n            numRandomSwapRepsPerInit = 40,\n            dimensions = 2,\n            numIterations = 10;\n\n        let results = [];\n\n        const inits =\n            // array of initializations\n            Array(numInits)\n                .fill()\n                .map(() =>\n                    //array of cluster centers\n                    Array(numCenters)\n                        .fill()\n                        .map(() =>\n                            // iterate over coordinates\n                            Array(dimensions)\n                                .fill()\n                                .map(\n                                    // uniform random initialization for each coordinate\n                                    () => Math.random()\n                                )\n                        )\n                );\n\n        const datasetsPath = './datasets/',\n            filePaths = fs\n                .readdirSync(datasetsPath)\n                .map((filePath) => path.join(datasetsPath, filePath));\n\n        const arrLaunchParams = [];\n\n        for (const filePath of filePaths) {\n            const samples = loadDataset({\n                path: filePath,\n                maxSamples: maxSamples,\n            });\n\n            assert.equal(samples[0].length, dimensions);\n\n            for (const initCenters of inits) {\n                arrLaunchParams.push({\n                    samples: samples,\n                    initCenters: initCenters,\n                });\n            }\n        }\n\n        let lastPercent = 0;\n\n        for (const launchId in arrLaunchParams) {\n            const { samples, initCenters } = arrLaunchParams[launchId];\n\n            results = results.concat(\n                new KMeans({\n                    samples: samples,\n                    attribution: samples.map(() => 0),\n                    centers: copy(initCenters),\n                    numIterations: numIterations,\n                }).runClustering()\n            );\n\n            results = results.concat(\n                new KHarmonicMeans({\n                    samples: samples,\n                    attribution: samples.map(() => 0),\n                    centers: copy(initCenters),\n                    numIterations: numIterations,\n                    weights: samples.map(() => initCenters[0].map(() => -1)),\n                }).runClustering()\n            );\n\n            for (const _ of Array(numRandomSwapRepsPerInit)) {\n                results = results.concat(\n                    new RandomSwap({\n                        samples: samples,\n                        attribution: samples.map(() => 0),\n                        centers: copy(initCenters),\n                        numIterations: numIterations,\n                    }).runClustering()\n                );\n            }\n\n            const percentFinished = (launchId / arrLaunchParams.length) * 100;\n            if (percentFinished > lastPercent + 1) {\n                console.log(\n                    `progress: ${percentFinished.toFixed(2).padStart(5)}%    ${\n                        new Date().toString().split(' ')[4]\n                    }`\n                );\n\n                lastPercent = percentFinished;\n            }\n        }\n\n        console.log('');\n        console.log('finished!');\n\n        return results;\n    },\n});\n"
             ],
             "outputs": []
         },
@@ -81,6 +81,13 @@
             ]
         },
         {
+            "language": "markdown",
+            "source": [
+                "## Plots"
+            ],
+            "outputs": []
+        },
+        {
             "language": "javascript",
             "source": [
                 "import merge from 'deepmerge';\n\n{\n    const algorithmOptions = Array.from(\n        new Set(benchmarkConvergenceResults.map((result) => result.algorithm))\n    );\n\n    // sqrt(variance)\n    {\n        const data = algorithmOptions.map((algorithm) => {\n            const subsetAlgorithm = benchmarkConvergenceResults.filter(\n                (result) => result.algorithm == algorithm\n            );\n\n            const numIterationsOptions = Array.from(\n                new Set(subsetAlgorithm.map((result) => result.numIterations))\n            );\n\n            return {\n                x: numIterationsOptions,\n                y: numIterationsOptions.map((numIterations) => {\n                    const subsetNumItrations = subsetAlgorithm.filter(\n                        (result) => result.numIterations == numIterations\n                    );\n\n                    return (\n                        subsetNumItrations\n                            .map((result) => result.variance ** 0.5)\n                            .reduce((a, b) => a + b) / subsetNumItrations.length\n                    );\n                }),\n                name: algorithm,\n                type: 'scatter',\n                mode: 'lines',\n            };\n        });\n\n        const layout = merge(sharedLayout, {\n            yaxis: {\n                title: `RMSE`,\n            },\n            xaxis: {\n                title: 'number of iterations',\n            },\n            title: {\n                text: `aggregated RMSE`,\n            },\n        });\n\n        Plotly.newPlot('', data, layout);\n    }\n\n    // change of variance\n    {\n        const sharedData = {\n            type: 'scatter',\n            mode: 'lines',\n        };\n\n        const data = merge(\n            sharedData,\n            algorithmOptions.map((algorithm) => {\n                const subsetAlgorithm = benchmarkConvergenceResults.filter(\n                    (result) => result.algorithm == algorithm\n                );\n\n                const numIterationsOptions = Array.from(\n                    new Set(\n                        subsetAlgorithm.map((result) => result.numIterations)\n                    )\n                );\n\n                const variancePerIteration = numIterationsOptions.map(\n                    (numIterations) => {\n                        return {\n                            numIterations: numIterations,\n                            variance: (() => {\n                                const subsetNumIterations =\n                                    subsetAlgorithm.filter(\n                                        (result) =>\n                                            result.numIterations ==\n                                            numIterations\n                                    );\n                                return (\n                                    subsetNumIterations\n                                        .map((result) => result.variance)\n                                        .reduce((a, b) => a + b) /\n                                    subsetNumIterations.length\n                                );\n                            })(),\n                        };\n                    }\n                );\n                for (const index of [...variancePerIteration.keys()].splice(\n                    1\n                )) {\n                    variancePerIteration[index].deltaVariance =\n                        variancePerIteration[index - 1].variance -\n                        variancePerIteration[index].variance;\n                }\n\n                variancePerIteration.shift();\n\n                return {\n                    x: variancePerIteration.map(\n                        (record) => record.numIterations\n                    ),\n                    y: variancePerIteration.map(\n                        (record) => record.deltaVariance\n                    ),\n                    name: algorithm,\n                    type: 'scatter',\n                    mode: 'lines',\n                };\n            })\n        );\n\n        data.push(\n            merge(\n                sharedData,\n                (() => {\n                    const numIterationsOptions = Array.from(\n                        new Set(\n                            benchmarkConvergenceResults\n                                .filter(\n                                    (result) => result.algorithm == 'K-means'\n                                )\n                                .map((result) => result.numIterations)\n                        )\n                    );\n\n                    return {\n                        x: numIterationsOptions,\n                        y: numIterationsOptions.map(() => 1e-4),\n                        name: 'stop condition',\n                    };\n                })()\n            )\n        );\n\n        const layout = merge(sharedLayout, {\n            yaxis: {\n                title: { text: `Δ MSE`, standoff: 20 },\n            },\n            xaxis: {\n                title: 'number of iterations',\n            },\n            title: {\n                text: `MSE change between iterations`,\n            },\n        });\n\n        Plotly.newPlot('', data, layout);\n    }\n}\n"
@@ -91,7 +98,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x78b6770aaae64e899b1fa1e4d4da1ec9",
+                                "requestId": "x4cdf9bbe98044b0fbc5fb0f8bdf7d5a5",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -654,7 +661,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x78b6770aaae64e899b1fa1e4d4da1ec9",
+                                "requestId": "x4cdf9bbe98044b0fbc5fb0f8bdf7d5a5",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1423,12 +1430,244 @@
         {
             "language": "markdown",
             "source": [
-                "## Benchmark stop condition"
+                "# Benchmark stop condition"
             ],
             "outputs": []
         },
         {
+            "language": "javascript",
+            "source": [
+                "import fs from 'fs';\nimport assert from 'assert/strict';\nimport loadDataset from './loadDataset';\nimport { KMeans, RandomSwap, KHarmonicMeans } from './clustering/clustering';\nimport path from 'path';\nimport copy from 'deepcopy';\n\nconst benchmarkStopConditionResults = loadOrGenerateReport({\n    loadFromFile: false,\n    filePath: './results/stopCondition.json',\n    generationFunc: () => {\n        const numCenters = 6,\n            maxSamples = 5000,\n            numInits = 40,\n            numRandomSwapRepsPerInit = 40,\n            dimensions = 2,\n            deltaVarianceThreshold = 1e-4;\n\n        let results = [];\n\n        const inits =\n            // array of initializations\n            Array(numInits)\n                .fill()\n                .map(() =>\n                    //array of cluster centers\n                    Array(numCenters)\n                        .fill()\n                        .map(() =>\n                            // iterate over coordinates\n                            Array(dimensions)\n                                .fill()\n                                .map(\n                                    // uniform random initialization for each coordinate\n                                    () => Math.random()\n                                )\n                        )\n                );\n\n        const datasetsPath = './datasets/',\n            filePaths = fs\n                .readdirSync(datasetsPath)\n                .map((filePath) => path.join(datasetsPath, filePath));\n\n        const arrLaunchParams = [];\n\n        for (const filePath of filePaths) {\n            const samples = loadDataset({\n                path: filePath,\n                maxSamples: maxSamples,\n            });\n\n            assert.equal(samples[0].length, dimensions);\n\n            for (const initCenters of inits) {\n                arrLaunchParams.push({\n                    samples: samples,\n                    initCenters: initCenters,\n                });\n            }\n        }\n\n        let lastPercent = 0;\n\n        for (const launchId in arrLaunchParams) {\n            const { samples, initCenters } = arrLaunchParams[launchId];\n\n            const stopCondition = {\n                deltaVariance: deltaVarianceThreshold,\n                failedSwaps: 0,\n            };\n\n            results = results.concat(\n                new KMeans({\n                    samples: samples,\n                    attribution: samples.map(() => 0),\n                    centers: copy(initCenters),\n                    numIterations: stopCondition,\n                }).runClustering()\n            );\n\n            results = results.concat(\n                new KHarmonicMeans({\n                    samples: samples,\n                    attribution: samples.map(() => 0),\n                    centers: copy(initCenters),\n                    numIterations: stopCondition,\n                    weights: samples.map(() => initCenters[0].map(() => -1)),\n                }).runClustering()\n            );\n\n            for (const failedSwaps of [0, 1, 2, 3, 4, 5, 6, 7, 8]) {\n                const stopCondition = {\n                    deltaVariance: deltaVarianceThreshold,\n                    failedSwaps: failedSwaps,\n                };\n\n                for (const _ of Array(numRandomSwapRepsPerInit)) {\n                    results = results.concat(\n                        new RandomSwap({\n                            samples: samples,\n                            attribution: samples.map(() => 0),\n                            centers: copy(initCenters),\n                            numIterations: stopCondition,\n                        }).runClustering()\n                    );\n                }\n            }\n\n            const percentFinished = (launchId / arrLaunchParams.length) * 100;\n            if (percentFinished > lastPercent + 1) {\n                console.log(\n                    `progress: ${percentFinished.toFixed(2).padStart(5)}%    ${\n                        new Date().toString().split(' ')[4]\n                    }`\n                );\n\n                lastPercent = percentFinished;\n            }\n        }\n\n        console.log('');\n        console.log('finished!');\n\n        return results;\n    },\n});\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "progress:  2.27%    20:07:20",
+                                "progress:  4.55%    20:07:36",
+                                "progress:  6.82%    20:07:51",
+                                "progress:  9.09%    20:08:15",
+                                "progress: 11.36%    20:08:42",
+                                "progress: 13.64%    20:09:10",
+                                "progress: 15.91%    20:09:34",
+                                "progress: 18.18%    20:09:57",
+                                "progress: 20.45%    20:10:24",
+                                "progress: 22.73%    20:10:49",
+                                "progress: 25.00%    20:11:13",
+                                "progress: 27.27%    20:11:37",
+                                "progress: 29.55%    20:12:02",
+                                "progress: 31.82%    20:12:25",
+                                "progress: 34.09%    20:12:48",
+                                "progress: 36.36%    20:13:12",
+                                "progress: 38.64%    20:13:36",
+                                "progress: 40.91%    20:14:02",
+                                "progress: 43.18%    20:14:27",
+                                "progress: 45.45%    20:14:49",
+                                "progress: 47.73%    20:15:13",
+                                "progress: 50.00%    20:15:39",
+                                "progress: 52.27%    20:16:07",
+                                "progress: 54.55%    20:16:13",
+                                "progress: 56.82%    20:16:19",
+                                "progress: 59.09%    20:16:25",
+                                "progress: 61.36%    20:16:31",
+                                "progress: 63.64%    20:16:55",
+                                "progress: 65.91%    20:17:16",
+                                "progress: 68.18%    20:17:36",
+                                "progress: 70.45%    20:17:57",
+                                "progress: 72.73%    20:18:15",
+                                "progress: 75.00%    20:18:34",
+                                "progress: 77.27%    20:18:53",
+                                "progress: 79.55%    20:19:11",
+                                "progress: 81.82%    20:19:31",
+                                "progress: 84.09%    20:19:50",
+                                "progress: 86.36%    20:20:11",
+                                "progress: 88.64%    20:20:29",
+                                "progress: 90.91%    20:20:47",
+                                "progress: 93.18%    20:21:07",
+                                "progress: 95.45%    20:21:26",
+                                "finished!",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "language": "markdown",
+            "source": [
+                "## Report format"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "console.log(\n    JSON.stringify(\n        benchmarkStopConditionResults.find(\n            (report) => report.algorithm == 'Random swap'\n        ),\n        null,\n        2\n    )\n);\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "undefined",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## Plots"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "import copy from 'deepcopy';\nconst merge = require('deepmerge');\n\n{\n    function getResultId(report) {\n        return JSON.stringify({\n            algorithm: report.algorithm,\n            stopCondition: report.stopCondition,\n        });\n    }\n    const resultIdOptions = Array.from(\n        new Set(\n            benchmarkStopConditionResults.map((result) => getResultId(result))\n        )\n    );\n\n    const aggregatedResults = resultIdOptions\n        .map((resultId) => {\n            const subsetResultId = benchmarkStopConditionResults.filter(\n                (result) => getResultId(result) == resultId\n            );\n\n            function getResultName(result) {\n                let name = result.algorithm;\n\n                if (result.stopCondition != undefined) {\n                    name += ` - ${result.stopCondition.failedSwaps} bad swaps`;\n                }\n\n                return name;\n            }\n\n            return {\n                name: getResultName(subsetResultId[0]),\n                meanRMSE:\n                    subsetResultId\n                        .map((result) => result.variance ** 0.5)\n                        .reduce((rmseA, rmseB) => rmseA + rmseB) /\n                    subsetResultId.length,\n                meanNumIterations:\n                    subsetResultId\n                        .map((result) => result.numIterations)\n                        .reduce(\n                            (numIterationsA, numIterationsB) =>\n                                numIterationsA + numIterationsB\n                        ) / subsetResultId.length,\n            };\n        })\n        .sort((resultA, resultB) => resultA.name > resultB.name);\n\n    // mean RMSE\n    {\n        const data = [\n            {\n                x: aggregatedResults.map((result) => result.name),\n                y: aggregatedResults.map((result) => result.meanRMSE),\n                type: 'bar',\n            },\n        ];\n\n        const layout = merge(sharedLayout, {\n            yaxis: {\n                title: 'mean RMSE',\n            },\n            xaxis: {\n                tickangle: 60,\n            },\n            bargap: 800,\n        });\n\n        Plotly.newPlot('', data, layout);\n    }\n\n    // mean number of iterations\n    {\n        const data = [\n            {\n                x: aggregatedResults.map((result) => result.name),\n                y: aggregatedResults.map((result) => result.meanNumIterations),\n                type: 'bar',\n            },\n        ];\n\n        const layout = merge(sharedLayout, {\n            yaxis: {\n                title: 'mean number of iterations',\n            },\n            xaxis: {\n                tickangle: 60,\n            },\n            bargap: 800,\n        });\n\n        Plotly.newPlot('', data, layout);\n    }\n}\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.ts.notebook.plotly+json",
+                            "value": {
+                                "requestId": "x136b65102b9e4c35aa7518a00320f84b",
+                                "type": "generatePlot",
+                                "ele": "",
+                                "data": [
+                                    {
+                                        "x": [
+                                            "KM",
+                                            "KHM",
+                                            "RS - 0 bad swaps",
+                                            "RS - 1 bad swaps",
+                                            "RS - 2 bad swaps",
+                                            "RS - 3 bad swaps",
+                                            "RS - 4 bad swaps",
+                                            "RS - 5 bad swaps",
+                                            "RS - 6 bad swaps",
+                                            "RS - 7 bad swaps",
+                                            "RS - 8 bad swaps"
+                                        ],
+                                        "y": [
+                                            0.14535478022730985,
+                                            0.14108590800612186,
+                                            0.23749837715728156,
+                                            0.22370764456528727,
+                                            0.21465537601327406,
+                                            0.2104774747398186,
+                                            0.21232996593900158,
+                                            0.20328443395605278,
+                                            0.1957199494310757,
+                                            0.200190592588029,
+                                            0.20167888490009372
+                                        ],
+                                        "type": "bar"
+                                    }
+                                ],
+                                "layout": {
+                                    "width": 1200,
+                                    "height": 800,
+                                    "font": {
+                                        "size": 30
+                                    },
+                                    "margin": {
+                                        "l": 160,
+                                        "r": 8,
+                                        "b": 80,
+                                        "t": 100
+                                    },
+                                    "yaxis": {
+                                        "title": "mean RMSE",
+                                        "automargin": true
+                                    },
+                                    "xaxis": {
+                                        "automargin": true,
+                                        "tickangle": 60
+                                    },
+                                    "bargap": 800
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.ts.notebook.plotly+json",
+                            "value": {
+                                "requestId": "x136b65102b9e4c35aa7518a00320f84b",
+                                "type": "generatePlot",
+                                "ele": "",
+                                "data": [
+                                    {
+                                        "x": [
+                                            "KM",
+                                            "KHM",
+                                            "RS - 0 bad swaps",
+                                            "RS - 1 bad swaps",
+                                            "RS - 2 bad swaps",
+                                            "RS - 3 bad swaps",
+                                            "RS - 4 bad swaps",
+                                            "RS - 5 bad swaps",
+                                            "RS - 6 bad swaps",
+                                            "RS - 7 bad swaps",
+                                            "RS - 8 bad swaps"
+                                        ],
+                                        "y": [
+                                            7.2272727272727275,
+                                            7.318181818181818,
+                                            6.909090909090909,
+                                            9.886363636363637,
+                                            12.181818181818182,
+                                            14.329545454545455,
+                                            16.704545454545453,
+                                            18.238636363636363,
+                                            20.09090909090909,
+                                            21.670454545454547,
+                                            22.818181818181817
+                                        ],
+                                        "type": "bar"
+                                    }
+                                ],
+                                "layout": {
+                                    "width": 1200,
+                                    "height": 800,
+                                    "font": {
+                                        "size": 30
+                                    },
+                                    "margin": {
+                                        "l": 160,
+                                        "r": 8,
+                                        "b": 80,
+                                        "t": 100
+                                    },
+                                    "yaxis": {
+                                        "title": "mean number of iterations",
+                                        "automargin": true
+                                    },
+                                    "xaxis": {
+                                        "automargin": true,
+                                        "tickangle": 60
+                                    },
+                                    "bargap": 800
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
             "source": [
                 ""
             ],

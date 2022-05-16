@@ -22,7 +22,7 @@ export class KHarmonicMeans extends SimpleClusteringAlgorithm {
     }
 
     override get name() {
-        return 'K-harmonic means';
+        return 'KHM';
     }
 
     setAttribution({

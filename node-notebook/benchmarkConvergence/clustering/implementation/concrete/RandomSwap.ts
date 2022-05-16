@@ -12,6 +12,10 @@ import copy from 'deepcopy';
 export class RandomSwap extends ClusteringAlgorithm {
     private kmeans: KMeans;
 
+    override get name() {
+        return 'RS';
+    }
+
     constructor({
         samples,
         attribution,
@@ -66,15 +70,13 @@ export class RandomSwap extends ClusteringAlgorithm {
 
                     const newVariance = this.getVariance();
 
-                    if (newVariance >= oldVariance) {
-                        for (const centerIndex in this.centers) {
+                    if (newVariance < oldVariance) {
+                        oldVariance = newVariance;
+                        oldCenters = copy(this.centers);
+                    } else {
+                        for (const centerIndex of this.centers.keys()) {
                             this.centers[centerIndex] = oldCenters[centerIndex];
                         }
-                    } else {
-                        oldVariance = newVariance;
-                        oldCenters = this.centers.map((center) =>
-                            center.slice()
-                        );
                     }
 
                     results.push({
@@ -87,9 +89,54 @@ export class RandomSwap extends ClusteringAlgorithm {
                 this.kmeans.attributeSamples();
 
                 return results;
+            case 'object':
+                const stopCondition: StopCondition = this.numIterations;
 
+                let failedSwaps = 0;
+                for (let numIterations = 2; ; numIterations += 2) {
+                    this.randomSwap();
+                    this.kmeans.runClustering();
+
+                    const newVariance = this.getVariance();
+
+                    if (newVariance < oldVariance) {
+                        if (
+                            oldVariance - newVariance <
+                            stopCondition.deltaVariance
+                        ) {
+                            return [
+                                {
+                                    algorithm: this.name,
+                                    numIterations: numIterations,
+                                    variance: this.getVariance(),
+                                    stopCondition: stopCondition,
+                                },
+                            ];
+                        }
+
+                        oldVariance = newVariance;
+                        oldCenters = copy(this.centers);
+                    } else {
+                        for (const centerIndex of this.centers.keys()) {
+                            this.centers[centerIndex] = oldCenters[centerIndex];
+                        }
+
+                        failedSwaps++;
+
+                        if (failedSwaps > stopCondition.failedSwaps) {
+                            return [
+                                {
+                                    algorithm: this.name,
+                                    numIterations: numIterations,
+                                    variance: this.getVariance(),
+                                    stopCondition: stopCondition,
+                                },
+                            ];
+                        }
+                    }
+                }
             default:
-                throw 'not imlpemented';
+                throw new Error('not imlpemented');
         }
     }
 }

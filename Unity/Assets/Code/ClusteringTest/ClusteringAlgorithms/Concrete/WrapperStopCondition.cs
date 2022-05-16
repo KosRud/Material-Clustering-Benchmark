@@ -101,8 +101,9 @@ namespace ClusteringAlgorithms
                 this.wrappedDispatcher.clusteringRTsAndBuffers.GetClusterCenters();
 
             /*
-                start at 1
-                because 1 iteration was already performed
+                start at 2
+                iteration #1 was already performed
+                iteration #2 is the current one
 
                 we need variance change between 2 iterations
                 thus we can't check stop condition after the first iteration
@@ -113,7 +114,7 @@ namespace ClusteringAlgorithms
                 because the input texture changed
             */
 
-            for (int kmIteration = 1; kmIteration < StopCondition.maxKMiterations; kmIteration++)
+            for (int kmIteration = 2; kmIteration < StopCondition.maxIterations; kmIteration++)
             {
                 /*
                     * dispose previous cluster centers
