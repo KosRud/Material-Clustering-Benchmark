@@ -17,6 +17,8 @@ abstract class ClusteringAlgorithm {
     protected centers: number[][];
     protected numIterations: number | StopCondition;
 
+    abstract get name(): string;
+
     constructor({
         samples,
         attribution,
@@ -36,6 +38,9 @@ abstract class ClusteringAlgorithm {
 
     abstract runClustering(): AlgorithmResult[];
 
+    /**
+     * Uses current attribution array (does not update attribution).
+     */
     getVariance(): number {
         return (
             this.samples

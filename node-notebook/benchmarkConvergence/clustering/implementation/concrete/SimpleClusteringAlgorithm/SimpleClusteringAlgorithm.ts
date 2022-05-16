@@ -5,8 +5,6 @@ import {
 } from '../../ClusteringAlgorithm';
 
 export abstract class SimpleClusteringAlgorithm extends ClusteringAlgorithm {
-    abstract get name(): string;
-
     override runClustering() {
         switch (typeof this.numIterations) {
             case 'number':
@@ -28,8 +26,33 @@ export abstract class SimpleClusteringAlgorithm extends ClusteringAlgorithm {
 
                 return results;
 
+            case 'object':
+                const stopCondition: StopCondition = this.numIterations;
+
+                this.attributeSamples();
+
+                let lastVariance = this.getVariance();
+                for (let numIterations = 1; ; numIterations++) {
+                    this.updateCenters();
+                    this.attributeSamples();
+
+                    const newVariance = this.getVariance();
+                    if (
+                        lastVariance - newVariance <
+                        stopCondition.deltaVariance
+                    ) {
+                        return [
+                            {
+                                algorithm: this.name,
+                                numIterations: numIterations,
+                                variance: this.getVariance(),
+                            },
+                        ];
+                    }
+                }
+
             default:
-                throw 'not imlpemented';
+                throw new Error('not imlpemented');
         }
     }
 
