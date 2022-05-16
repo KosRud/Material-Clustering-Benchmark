@@ -91,7 +91,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x78b6770aaae64e899b1fa1e4d4da1ec9",
+                                "requestId": "x431a36825d8441b1954a4f6bd20d41dc",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -654,7 +654,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x78b6770aaae64e899b1fa1e4d4da1ec9",
+                                "requestId": "x431a36825d8441b1954a4f6bd20d41dc",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1429,6 +1429,44 @@
         },
         {
             "language": "markdown",
+            "source": [
+                ""
+            ],
+            "outputs": []
+        },
+        {
+            "language": "javascript",
+            "source": [
+                "import fs from 'fs';\nimport assert from 'assert/strict';\nimport loadDataset from './loadDataset';\nimport { KMeans, RandomSwap, KHarmonicMeans } from './clustering/clustering';\nimport path from 'path';\nimport copy from 'deepcopy';\n\nconst benchmarkStopConditionResults = loadOrGenerateReport({\n    loadFromFile: false,\n    filePath: './results/stopCondition.json',\n    generationFunc: () => {\n        const numCenters = 6,\n            maxSamples = 5000,\n            numInits = 4,\n            numRandomSwapRepsPerInit = 4,\n            dimensions = 2,\n            deltaVarianceThreshold = 1e-4;\n\n        let results = [];\n\n        const inits =\n            // array of initializations\n            Array(numInits)\n                .fill()\n                .map(() =>\n                    //array of cluster centers\n                    Array(numCenters)\n                        .fill()\n                        .map(() =>\n                            // iterate over coordinates\n                            Array(dimensions)\n                                .fill()\n                                .map(\n                                    // uniform random initialization for each coordinate\n                                    () => Math.random()\n                                )\n                        )\n                );\n\n        const datasetsPath = './datasets/',\n            filePaths = fs\n                .readdirSync(datasetsPath)\n                .map((filePath) => path.join(datasetsPath, filePath));\n\n        const arrLaunchParams = [];\n\n        for (const filePath of filePaths) {\n            const samples = loadDataset({\n                path: filePath,\n                maxSamples: maxSamples,\n            });\n\n            assert.equal(samples[0].length, dimensions);\n\n            for (const initCenters of inits) {\n                arrLaunchParams.push({\n                    samples: samples,\n                    initCenters: initCenters,\n                });\n            }\n        }\n\n        let lastPercent = 0;\n\n        for (const launchId in arrLaunchParams) {\n            const { samples, initCenters } = arrLaunchParams[launchId];\n\n            const stopCondition = {\n                deltaVariance: deltaVarianceThreshold,\n                failedSwaps: 0,\n            };\n\n            results = results.concat(\n                new KMeans({\n                    samples: samples,\n                    attribution: samples.map(() => 0),\n                    centers: copy(initCenters),\n                    numIterations: stopCondition,\n                }).runClustering()\n            );\n\n            results = results.concat(\n                new KHarmonicMeans({\n                    samples: samples,\n                    attribution: samples.map(() => 0),\n                    centers: copy(initCenters),\n                    numIterations: stopCondition,\n                    weights: samples.map(() => initCenters[0].map(() => -1)),\n                }).runClustering()\n            );\n\n            for (const failedSwaps of [0, 1, 2, 3, 4, 5]) {\n                const stopCondition = {\n                    deltaVariance: deltaVarianceThreshold,\n                    failedSwaps: failedSwaps,\n                };\n\n                for (const _ of Array(numRandomSwapRepsPerInit)) {\n                    results = results.concat(\n                        new RandomSwap({\n                            samples: samples,\n                            attribution: samples.map(() => 0),\n                            centers: copy(initCenters),\n                            numIterations: stopCondition,\n                        }).runClustering()\n                    );\n                }\n            }\n\n            const percentFinished = (launchId / arrLaunchParams.length) * 100;\n            if (percentFinished > lastPercent + 1) {\n                console.log(\n                    `progress: ${percentFinished.toFixed(2).padStart(5)}%    ${\n                        new Date().toString().split(' ')[4]\n                    }`\n                );\n\n                lastPercent = percentFinished;\n            }\n        }\n\n        console.log('');\n        console.log('finished!');\n\n        return results;\n    },\n});\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stderr",
+                            "value": [
+                                "Debugger ending on ws://127.0.0.1:39165/08643322-808a-4c6e-ae2c-af0e21fc3bbd",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.error",
+                            "value": {
+                                "name": "unknown",
+                                "message": "unknown",
+                                "stack": "\tat S.onMessage (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:230057)\n\tat O.<anonymous> (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:226799)\n\tat O.emit (events.js:315:20)\n\tat e.exports.j (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:281666)\n\tat e.exports.emit (events.js:315:20)\n\tat e.exports.dataMessage (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:262817)\n\tat e.exports.getData (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:261999)\n\tat e.exports.startLoop (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:258860)\n\tat e.exports._write (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:258215)\n\tat writeOrBuffer (internal/streams/writable.js:358:12)\n\tat e.exports.Writable.write (internal/streams/writable.js:303:10)\n\tat Socket.U (/home/madcake/.vscode/extensions/donjayamanne.typescript-notebook-2.0.6/out/extension/index.js:2:282192)\n\tat Socket.emit (events.js:315:20)\n\tat addChunk (internal/streams/readable.js:309:12)\n\tat readableAddChunk (internal/streams/readable.js:284:9)\n\tat Socket.Readable.push (internal/streams/readable.js:223:10)\n\tat TCP.onStreamRead (internal/stream_base_commons.js:188:23)"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "javascript",
             "source": [
                 ""
             ],
