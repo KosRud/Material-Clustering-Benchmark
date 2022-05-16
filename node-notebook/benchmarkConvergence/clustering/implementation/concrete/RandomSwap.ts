@@ -13,7 +13,7 @@ export class RandomSwap extends ClusteringAlgorithm {
     private kmeans: KMeans;
 
     override get name() {
-        return 'Random swap';
+        return 'RS';
     }
 
     constructor({
@@ -109,6 +109,7 @@ export class RandomSwap extends ClusteringAlgorithm {
                                     algorithm: this.name,
                                     numIterations: numIterations,
                                     variance: this.getVariance(),
+                                    stopCondition: stopCondition,
                                 },
                             ];
                         }

@@ -2,7 +2,7 @@ import { SimpleClusteringAlgorithm } from '../SimpleClusteringAlgorithm';
 
 export class KMeans extends SimpleClusteringAlgorithm {
     override get name() {
-        return 'K-means';
+        return 'KM';
     }
 
     override attributeSamples() {
