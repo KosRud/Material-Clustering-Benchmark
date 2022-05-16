@@ -11,34 +11,18 @@ export class KMeans extends SimpleClusteringAlgorithm {
                 .map((center, centerId) => {
                     return {
                         centerId,
-                        center,
-                        distanceToSampleSq: -1,
+                        distanceToSampleSq: center
+                            .map(
+                                // squared coordinate differences
+                                (centerCoord, coordId) =>
+                                    (centerCoord - sample[coordId]) ** 2
+                            )
+                            .reduce(
+                                // sum squared differences
+                                (a, b) => a + b
+                            ),
                     };
                 })
-                .map(
-                    // generate squared distances to the current sample for each center
-                    (centerInfo) => {
-                        centerInfo.distanceToSampleSq =
-                            // go over each coordinate
-                            [...centerInfo.center.keys()]
-                                .map(
-                                    // differences in each coordinate between center and sample
-                                    (coordIndex) =>
-                                        centerInfo.center[coordIndex] -
-                                        sample[coordIndex]
-                                )
-                                .map(
-                                    // squared differences
-                                    (difference) => difference ** 2
-                                )
-                                .reduce(
-                                    // sum of squared differences
-                                    (a, b) => a + b
-                                ) / [...centerInfo.center.keys()].length;
-
-                        return centerInfo;
-                    }
-                )
                 .reduce(
                     // find the center with smallest distance to sample
                     (centerInfoA, centerInfoB) => {
@@ -70,17 +54,19 @@ export class KMeans extends SimpleClusteringAlgorithm {
 
             if (mySamples.length == 0) {
                 // if no samples belong to this cluster, leave it unchanged
-                mySamples.push([...this.centers[centerId]]);
+                mySamples.push(this.centers[centerId].slice());
             }
 
             this.centers[centerId] = mySamples
-                .reduce((sampleA, sampleB) =>
+                .reduce(
                     // per-coordinate sum of samples
-                    [...sampleA.keys()].map(
-                        // sum coordinate values from two samples
-                        (coordIndex) =>
-                            sampleA[coordIndex] + sampleB[coordIndex]
-                    )
+                    (sampleA, sampleB) => {
+                        for (const coordId of sampleA.keys()) {
+                            sampleA[coordId] += sampleB[coordId];
+                        }
+                        return sampleA;
+                    },
+                    mySamples[0].map(() => 0)
                 )
                 .map(
                     // divide by the number of samples

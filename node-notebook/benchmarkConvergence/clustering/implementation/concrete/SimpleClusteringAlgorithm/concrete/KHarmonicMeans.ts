@@ -25,32 +25,6 @@ export class KHarmonicMeans extends SimpleClusteringAlgorithm {
         return 'KHM';
     }
 
-    setAttribution({
-        samples,
-        weights,
-        attribution,
-    }: {
-        samples: number[][];
-        weights: number[][];
-        attribution: number[];
-    }) {
-        for (const sampleId of samples.keys()) {
-            attribution[sampleId] = Object.entries(weights[sampleId])
-                // go over all cluster weights
-                .map((entry) => {
-                    const [clusterId, weight] = entry;
-                    return { clusterId: Number.parseInt(clusterId), weight };
-                })
-                .reduce((weightInfoA, weightInfoB) => {
-                    // find biggest cluster wieght
-                    if (weightInfoA.weight >= weightInfoB.weight) {
-                        return weightInfoA;
-                    }
-                    return weightInfoB;
-                }).clusterId;
-        }
-    }
-
     override updateCenters() {
         for (const centerId of this.centers.keys()) {
             this.centers[centerId] = this.samples
@@ -78,13 +52,9 @@ export class KHarmonicMeans extends SimpleClusteringAlgorithm {
                     center
                         // go over all coordinates
                         .map(
-                            // coordinate differences
-                            (coord, coordId) =>
-                                coord - this.samples[sampleId][coordId]
-                        )
-                        .map(
                             // squared coordinate differences
-                            (difference) => difference ** 2
+                            (coord, coordId) =>
+                                (coord - this.samples[sampleId][coordId]) ** 2
                         )
                         .reduce(
                             // sum squared coordinate differences
