@@ -35,6 +35,8 @@ namespace ClusteringAlgorithms
 
         public override bool doesReadback => this.doReadback;
 
+        public override string name => this.doesReadback ? $"{base.name} (readback)" : base.name;
+
         public override void RunClustering(ClusteringTextures clusteringTextures)
         {
             this.KMiteration(clusteringTextures, rejectOld: true);
