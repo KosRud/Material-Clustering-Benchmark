@@ -7,7 +7,7 @@ export interface Measurement {}
 
 export interface VarianceMeasurement extends Measurement {
     varianceByFrame: {
-        frameIdex: number;
+        frameIndex: number;
         variance: number;
     }[];
 }
@@ -30,8 +30,7 @@ export interface Report {
         doDownscale: boolean;
         algorithm: string;
         doRandomizeEmptyClusters: boolean;
-        // ToDo remove optional - redo reports
-        stopCondition?: boolean;
+        stopCondition: boolean;
     };
     logType: number;
 }

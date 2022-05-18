@@ -2,7 +2,6 @@ import {
     ReportCollection,
     VarianceMeasurement,
     FrameTimeMeasurement,
-    Report,
     Measurement,
 } from './validators/Validators';
 import * as validatorTemplates from './validators/generated/Validators-ti';
@@ -63,7 +62,7 @@ export default function loadReportCollection(
                             rmseByFrame: measurement.varianceByFrame.map(
                                 (record) => {
                                     return {
-                                        frameIdex: record.frameIdex,
+                                        frameIdex: record.frameIndex,
                                         rmse: record.variance ** 0.5,
                                     };
                                 }
@@ -88,7 +87,7 @@ export default function loadReportCollection(
                         );
                         return 'variance';
                     default:
-                        throw 'incorrect report type';
+                        throw new Error('incorrect report type');
                 }
             })(),
         };

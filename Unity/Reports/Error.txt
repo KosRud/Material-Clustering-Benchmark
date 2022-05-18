@@ -1,1 +1,0 @@
-Exception during processing a frame (InvalidClustersException): all clusters are invalid

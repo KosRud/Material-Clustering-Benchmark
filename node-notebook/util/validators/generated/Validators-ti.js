@@ -9,7 +9,7 @@ var t = require("ts-interface-checker");
 exports.Measurement = t.iface([], {});
 exports.VarianceMeasurement = t.iface(["Measurement"], {
     "varianceByFrame": t.array(t.iface([], {
-        "frameIdex": "number",
+        "frameIndex": "number",
         "variance": "number"
     }))
 });
@@ -30,7 +30,7 @@ exports.Report = t.iface([], {
         "doDownscale": "boolean",
         "algorithm": "string",
         "doRandomizeEmptyClusters": "boolean",
-        "stopCondition": t.opt("boolean")
+        "stopCondition": "boolean"
     }),
     "logType": "number"
 });

@@ -9,7 +9,7 @@ export const Measurement = t.iface([], {
 
 export const VarianceMeasurement = t.iface(["Measurement"], {
   "varianceByFrame": t.array(t.iface([], {
-    "frameIdex": "number",
+    "frameIndex": "number",
     "variance": "number",
   })),
 });
@@ -32,7 +32,7 @@ export const Report = t.iface([], {
     "doDownscale": "boolean",
     "algorithm": "string",
     "doRandomizeEmptyClusters": "boolean",
-    "stopCondition": t.opt("boolean"),
+    "stopCondition": "boolean",
   }),
   "logType": "number",
 });
