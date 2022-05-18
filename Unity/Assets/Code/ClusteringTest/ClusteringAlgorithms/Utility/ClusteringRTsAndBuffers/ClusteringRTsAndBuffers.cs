@@ -211,6 +211,11 @@ namespace ClusteringAlgorithms
                 this.texturesFullRes.size / this.texturesWorkRes.size
             );
 
+            csHighlightRemoval.SetInt(
+                "subsample_mip_level",
+                this.texturesFullRes.mipLevel - this.texturesWorkRes.mipLevel
+            );
+
             if (staggeredJitter)
             {
                 csHighlightRemoval.SetInts(

@@ -5,6 +5,23 @@ public class ClusteringTextures : System.IDisposable
     public readonly RenderTexture rtInput;
     public readonly RenderTexture rtArr;
 
+    public int mipLevel
+    {
+        get
+        {
+            {
+                int mipLevel = 0;
+                int targetSize = 1;
+                while (targetSize != this.size)
+                {
+                    mipLevel++;
+                    targetSize *= 2;
+                }
+                return mipLevel;
+            }
+        }
+    }
+
     private RenderTexture MakeRtArr(int textureSize)
     {
         var rtDesc = new RenderTextureDescriptor(

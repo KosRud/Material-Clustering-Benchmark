@@ -17,8 +17,8 @@ bool do_random_sample_empty_clusters;
 bool KHM;
 
 uint randomClusterCenter;
+uint subsample_mip_level;
 uint mip_level;
-uint ref_mip_level;
 uint texture_size;
 
 uint num_clusters;
@@ -164,7 +164,7 @@ void SubSample (uint3 id : SV_DispatchThreadID)
             float2(
                 (id.xy + 0.5) / texture_size
             ),
-            ref_mip_level - mip_level
+            subsample_mip_level
         );
     }
 }
@@ -172,11 +172,11 @@ void SubSample (uint3 id : SV_DispatchThreadID)
 [numthreads(8,8,1)]
 void AttributeClusters (uint3 id : SV_DispatchThreadID)
 {
-	float min_dist = invalid_variance + 1.0; // +1 for easier debug
-	// difference calculated on 2 coordinates within [0,1] range
+	float min_dist = 1000;
+	// 2 coordinates within [0,1] range
 	// theoretical maximum distance is sqrt(2)
 	
-	uint clusterID = 0;
+	uint clusterID = -1;
 
 	float3 col = tex_input[id.xy].rgb;
     float2 projCol = project(col);

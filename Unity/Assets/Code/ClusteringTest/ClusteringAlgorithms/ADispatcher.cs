@@ -68,6 +68,8 @@ namespace ClusteringAlgorithms
                 "cbuf_random_positions",
                 this.clusteringRTsAndBuffers.cbufRandomPositions
             );
+            this.computeShader.SetInt("mip_level", clusteringTextures.mipLevel);
+
             this.computeShader.Dispatch(this.kernelUpdateClusterCenters, 1, 1, 1);
         }
 

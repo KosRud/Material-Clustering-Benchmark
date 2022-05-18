@@ -90,8 +90,6 @@ public class MeasurementRunner : IDisposable
         );
         Debug.Assert(workingTextureSize <= fullTextureSize);
 
-        this.csHighlightRemoval.SetInt("mip_level", this.MipLevel(workingTextureSize));
-        this.csHighlightRemoval.SetInt("ref_mip_level", this.MipLevel(fullTextureSize));
         this.csHighlightRemoval.SetInt("texture_size", workingTextureSize);
     }
 
@@ -294,18 +292,6 @@ public class MeasurementRunner : IDisposable
             final: true,
             khm: false
         );
-    }
-
-    private int MipLevel(int textureSize)
-    {
-        int mipLevel = 0;
-        int targetSize = 1;
-        while (targetSize != textureSize)
-        {
-            mipLevel++;
-            targetSize *= 2;
-        }
-        return mipLevel;
     }
 
     public void RenderResult(RenderTexture target)
