@@ -48,7 +48,7 @@
                                 "      videoName: '2',",
                                 "      numIterations: 3,",
                                 "      workingTextureSize: 8,",
-                                "      numClusters: 4,",
+                                "      numClusters: 16,",
                                 "      jitterSize: 1,",
                                 "      staggeredJitter: false,",
                                 "      doDownscale: false,",
@@ -77,7 +77,7 @@
         {
             "language": "javascript",
             "source": [
-                "const merge = require('deepmerge');\n\n{\n    const reports = reportCollections['Subsampling'];\n\n    const textureSizeOptions = Array.from(\n        new Set(\n            reports.map((report) => report.launchParameters.workingTextureSize)\n        )\n    );\n\n    const videoNameOptions = Array.from(\n        new Set(reports.map((report) => report.launchParameters.videoName))\n    ).sort();\n\n    for (const aggregatedStatName of ['mean', 'peak']) {\n        for (const videoName of videoNameOptions) {\n            const subsetVideo = reports.filter(\n                (report) => report.launchParameters.videoName == videoName\n            );\n\n            const data = textureSizeOptions.map((textureSize) => {\n                const subsetTextureSize = subsetVideo\n                    .filter(\n                        (report) =>\n                            report.launchParameters.workingTextureSize ==\n                            textureSize\n                    )\n                    .reverse();\n\n                return {\n                    y: subsetTextureSize.map(\n                        (report) =>\n                            report.measurement.aggregated[aggregatedStatName]\n                    ),\n\n                    x: subsetTextureSize.map(\n                        (report) => `${report.launchParameters.numClusters}`\n                    ),\n\n                    name: `${textureSize}`,\n                    type: 'bar',\n                };\n            });\n\n            // todo fix definitions Plotly.Layout\n            const layout = merge(sharedLayout, {\n                xaxis: {\n                    title: 'number of clusters',\n                    type: 'category',\n                },\n\n                yaxis: {\n                    title: {\n                        text: `${aggregatedStatName} sqrt(variance)`,\n                    },\n                },\n\n                legend: {\n                    title: {\n                        text: 'texture size',\n                    },\n                },\n\n                title: `Subsampling (video ${videoName})`,\n            });\n\n            Plotly.newPlot('', data, layout);\n            display.html('<br>');\n        }\n    }\n}\n"
+                "const merge = require('deepmerge');\n\n{\n    const reports = reportCollections['Subsampling'];\n\n    const textureSizeOptions = Array.from(\n        new Set(\n            reports.map((report) => report.launchParameters.workingTextureSize)\n        )\n    );\n\n    const videoNameOptions = Array.from(\n        new Set(reports.map((report) => report.launchParameters.videoName))\n    ).sort();\n\n    for (const aggregatedStatName of ['mean', 'peak']) {\n        for (const videoName of videoNameOptions) {\n            const subsetVideo = reports.filter(\n                (report) => report.launchParameters.videoName == videoName\n            );\n\n            const data = textureSizeOptions.map((textureSize) => {\n                const subsetTextureSize = subsetVideo\n                    .filter(\n                        (report) =>\n                            report.launchParameters.workingTextureSize ==\n                            textureSize\n                    )\n                    .reverse();\n\n                return {\n                    y: subsetTextureSize.map(\n                        (report) =>\n                            report.measurement.aggregated[aggregatedStatName]\n                    ),\n\n                    x: subsetTextureSize.map(\n                        (report) => `${report.launchParameters.numClusters}`\n                    ),\n\n                    name: `${textureSize}`,\n                    type: 'bar',\n                };\n            });\n\n            // todo fix definitions Plotly.Layout\n            const layout = merge(sharedLayout, {\n                xaxis: {\n                    title: 'number of clusters',\n                    type: 'category',\n                },\n\n                yaxis: {\n                    title: {\n                        text: `${aggregatedStatName} RMSE`,\n                    },\n                },\n\n                legend: {\n                    title: {\n                        text: 'texture size',\n                    },\n                },\n\n                title: `Subsampling (video ${videoName})`,\n            });\n\n            Plotly.newPlot('', data, layout);\n            display.html('<br>');\n        }\n    }\n}\n"
             ],
             "outputs": [
                 {
@@ -85,48 +85,134 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xe0824aad45d44745ba9defd172d9b761",
+                                "requestId": "xc7f5796e1fb349b6881c81984562324c",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
                                     {
                                         "y": [
-                                            0.1021488209457361
+                                            0.1021488209457361,
+                                            0.10218488398138993,
+                                            0.10218766885540695,
+                                            0.10219005517530635,
+                                            0.10215015627375433
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "8",
                                         "type": "bar"
                                     },
                                     {
                                         "y": [
-                                            0.09658119269932323
+                                            0.09658119269932323,
+                                            0.09670201424909694,
+                                            0.09662303225278288,
+                                            0.09670489811650522,
+                                            0.09662182897618574
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "16",
                                         "type": "bar"
                                     },
                                     {
                                         "y": [
-                                            0.09637875609681297
+                                            0.09637875609681297,
+                                            0.09648646194852095,
+                                            0.09638555090560397,
+                                            0.09641510883127424,
+                                            0.09649099508249867
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "32",
                                         "type": "bar"
                                     },
                                     {
                                         "y": [
-                                            0.09572121053753217
+                                            0.09572121053753217,
+                                            0.09585129856713473,
+                                            0.09572599884789186,
+                                            0.09574272846123852,
+                                            0.09572066723737396
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "64",
+                                        "type": "bar"
+                                    },
+                                    {
+                                        "y": [
+                                            0.0952813969435809,
+                                            0.09551740581367446,
+                                            0.09528591489390215,
+                                            0.09530085035816624,
+                                            0.09528057538172378
+                                        ],
+                                        "x": [
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
+                                        ],
+                                        "name": "128",
+                                        "type": "bar"
+                                    },
+                                    {
+                                        "y": [
+                                            0.09537188199712676,
+                                            0.09548246935819095,
+                                            0.09537634942394965,
+                                            0.09539042656712551,
+                                            0.09537092486935439
+                                        ],
+                                        "x": [
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
+                                        ],
+                                        "name": "256",
+                                        "type": "bar"
+                                    },
+                                    {
+                                        "y": [
+                                            0.09535281958747681,
+                                            0.09546135466390289,
+                                            0.09535737809853909,
+                                            0.0953713870862342,
+                                            0.09535190118748017
+                                        ],
+                                        "x": [
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
+                                        ],
+                                        "name": "512",
                                         "type": "bar"
                                     }
                                 ],
@@ -145,7 +231,7 @@
                                     "yaxis": {
                                         "title": {
                                             "standoff": 4,
-                                            "text": "mean sqrt(variance)"
+                                            "text": "mean RMSE"
                                         },
                                         "automargin": true
                                     },
@@ -180,48 +266,134 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xe0824aad45d44745ba9defd172d9b761",
+                                "requestId": "xc7f5796e1fb349b6881c81984562324c",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
                                     {
                                         "y": [
-                                            0.10596124971768178
+                                            0.10596124971768178,
+                                            0.10596256935082383,
+                                            0.10580272889809174,
+                                            0.1057636124389924,
+                                            0.10575945747793809
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "8",
                                         "type": "bar"
                                     },
                                     {
                                         "y": [
-                                            0.10030138239684441
+                                            0.10030138239684441,
+                                            0.10030745442467244,
+                                            0.10025186267237897,
+                                            0.10028462400551277,
+                                            0.10025152221055848
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "16",
                                         "type": "bar"
                                     },
                                     {
                                         "y": [
-                                            0.0996877526927162
+                                            0.0996877526927162,
+                                            0.0999222583425861,
+                                            0.09965630133951635,
+                                            0.09970803207996116,
+                                            0.09970249588934976
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "32",
                                         "type": "bar"
                                     },
                                     {
                                         "y": [
-                                            0.09918966510904954
+                                            0.09918966510904954,
+                                            0.09936783553051858,
+                                            0.09916492559886522,
+                                            0.09913799522120957,
+                                            0.09912905691786011
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "64",
+                                        "type": "bar"
+                                    },
+                                    {
+                                        "y": [
+                                            0.09879903835477923,
+                                            0.09906013084409403,
+                                            0.09890017681611148,
+                                            0.09883965433104164,
+                                            0.09883026230546409
+                                        ],
+                                        "x": [
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
+                                        ],
+                                        "name": "128",
+                                        "type": "bar"
+                                    },
+                                    {
+                                        "y": [
+                                            0.09887760989129625,
+                                            0.0990918245398093,
+                                            0.0989796887489383,
+                                            0.09891796884709005,
+                                            0.09890853450997723
+                                        ],
+                                        "x": [
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
+                                        ],
+                                        "name": "256",
+                                        "type": "bar"
+                                    },
+                                    {
+                                        "y": [
+                                            0.09889502810922109,
+                                            0.09910574941254183,
+                                            0.09899633969972493,
+                                            0.0989352544763854,
+                                            0.0989259110605638
+                                        ],
+                                        "x": [
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
+                                        ],
+                                        "name": "512",
                                         "type": "bar"
                                     }
                                 ],
@@ -240,7 +412,7 @@
                                     "yaxis": {
                                         "title": {
                                             "standoff": 4,
-                                            "text": "mean sqrt(variance)"
+                                            "text": "mean RMSE"
                                         },
                                         "automargin": true
                                     },
@@ -275,48 +447,134 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xe0824aad45d44745ba9defd172d9b761",
+                                "requestId": "xc7f5796e1fb349b6881c81984562324c",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
                                     {
                                         "y": [
+                                            0.14982036125618745,
+                                            0.14982036125618745,
+                                            0.14982036125618745,
+                                            0.14982036125618745,
                                             0.14982036125618745
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "8",
                                         "type": "bar"
                                     },
                                     {
                                         "y": [
+                                            0.1439614986910341,
+                                            0.1439614986910341,
+                                            0.1439614986910341,
+                                            0.1439614986910341,
                                             0.1439614986910341
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "16",
                                         "type": "bar"
                                     },
                                     {
                                         "y": [
-                                            0.13694525756477935
+                                            0.13694525756477935,
+                                            0.13694525756477935,
+                                            0.13694525756477935,
+                                            0.13913398630453638,
+                                            0.13798185388885884
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "32",
                                         "type": "bar"
                                     },
                                     {
                                         "y": [
+                                            0.1337325192440941,
+                                            0.1337325192440941,
+                                            0.1337325192440941,
+                                            0.1395899776993447,
                                             0.1337325192440941
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "64",
+                                        "type": "bar"
+                                    },
+                                    {
+                                        "y": [
+                                            0.1325092500030991,
+                                            0.1325092500030991,
+                                            0.1325092500030991,
+                                            0.13909732002274014,
+                                            0.1325092500030991
+                                        ],
+                                        "x": [
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
+                                        ],
+                                        "name": "128",
+                                        "type": "bar"
+                                    },
+                                    {
+                                        "y": [
+                                            0.1320228452659618,
+                                            0.1320228452659618,
+                                            0.13216014134795356,
+                                            0.1388317516306164,
+                                            0.1320228452659618
+                                        ],
+                                        "x": [
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
+                                        ],
+                                        "name": "256",
+                                        "type": "bar"
+                                    },
+                                    {
+                                        "y": [
+                                            0.1319626093652331,
+                                            0.1319626093652331,
+                                            0.13219180643448258,
+                                            0.13885725417738368,
+                                            0.1319626093652331
+                                        ],
+                                        "x": [
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
+                                        ],
+                                        "name": "512",
                                         "type": "bar"
                                     }
                                 ],
@@ -335,7 +593,7 @@
                                     "yaxis": {
                                         "title": {
                                             "standoff": 4,
-                                            "text": "peak sqrt(variance)"
+                                            "text": "peak RMSE"
                                         },
                                         "automargin": true
                                     },
@@ -370,48 +628,134 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xe0824aad45d44745ba9defd172d9b761",
+                                "requestId": "xc7f5796e1fb349b6881c81984562324c",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
                                     {
                                         "y": [
+                                            0.24493023403328565,
+                                            0.24493023403328565,
+                                            0.24493023403328565,
+                                            0.24493023403328565,
                                             0.24493023403328565
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "8",
                                         "type": "bar"
                                     },
                                     {
                                         "y": [
+                                            0.2011953358719628,
+                                            0.2011953358719628,
+                                            0.2011953358719628,
+                                            0.2011953358719628,
                                             0.2011953358719628
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "16",
                                         "type": "bar"
                                     },
                                     {
                                         "y": [
+                                            0.17571890043116206,
+                                            0.17571890043116206,
+                                            0.17571890043116206,
+                                            0.17571890043116206,
                                             0.17571890043116206
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "32",
                                         "type": "bar"
                                     },
                                     {
                                         "y": [
+                                            0.15739801784563007,
+                                            0.15739801784563007,
+                                            0.15739801784563007,
+                                            0.15739801784563007,
                                             0.15739801784563007
                                         ],
                                         "x": [
-                                            "4"
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
                                         ],
                                         "name": "64",
+                                        "type": "bar"
+                                    },
+                                    {
+                                        "y": [
+                                            0.15683745577066616,
+                                            0.15683745577066616,
+                                            0.15683745577066616,
+                                            0.15683745577066616,
+                                            0.15683745577066616
+                                        ],
+                                        "x": [
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
+                                        ],
+                                        "name": "128",
+                                        "type": "bar"
+                                    },
+                                    {
+                                        "y": [
+                                            0.156932253259181,
+                                            0.156932253259181,
+                                            0.156932253259181,
+                                            0.156932253259181,
+                                            0.156932253259181
+                                        ],
+                                        "x": [
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
+                                        ],
+                                        "name": "256",
+                                        "type": "bar"
+                                    },
+                                    {
+                                        "y": [
+                                            0.1569592531469003,
+                                            0.1569592531469003,
+                                            0.1569592531469003,
+                                            0.1569592531469003,
+                                            0.1569592531469003
+                                        ],
+                                        "x": [
+                                            "4",
+                                            "6",
+                                            "8",
+                                            "12",
+                                            "16"
+                                        ],
+                                        "name": "512",
                                         "type": "bar"
                                     }
                                 ],
@@ -430,7 +774,7 @@
                                     "yaxis": {
                                         "title": {
                                             "standoff": 4,
-                                            "text": "peak sqrt(variance)"
+                                            "text": "peak RMSE"
                                         },
                                         "automargin": true
                                     },
