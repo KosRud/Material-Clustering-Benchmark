@@ -160,6 +160,7 @@ namespace ClusteringAlgorithms
             this.cbufClusterCenters.SetData(this.clusterCentersTempData);
         }
 
+        /*
         public void SetFakeValidClusterCenters()
         {
             for (int i = 0; i < this.numClusters; i++)
@@ -173,6 +174,7 @@ namespace ClusteringAlgorithms
             }
             this.cbufClusterCenters.SetData(this.clusterCentersTempData);
         }
+        */
 
         public void RandomizeClusterCenters()
         {
