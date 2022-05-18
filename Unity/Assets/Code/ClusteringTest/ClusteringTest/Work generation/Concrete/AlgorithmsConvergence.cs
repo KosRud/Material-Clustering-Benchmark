@@ -17,25 +17,25 @@ namespace WorkGeneration
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                foreach (int textureSize in new int[] { 64, 256 })
+                const int textureSize = 64;
+
+                for (int numIterations = 1; numIterations < 31; numIterations++)
                 {
-                    for (int numIterations = 1; numIterations < 31; numIterations++)
-                    {
-                        AddFixedIterations(
-                            workList: workList,
-                            video: video,
-                            textureSize: textureSize,
-                            numIterations: numIterations,
-                            csHighlightRemoval: this.csHighlightRemoval
-                        );
-                    }
-                    AddStopCondtion(
+                    AddFixedIterations(
                         workList: workList,
                         video: video,
                         textureSize: textureSize,
+                        numIterations: numIterations,
                         csHighlightRemoval: this.csHighlightRemoval
                     );
                 }
+
+                AddStopCondtion(
+                    workList: workList,
+                    video: video,
+                    textureSize: textureSize,
+                    csHighlightRemoval: this.csHighlightRemoval
+                );
             }
 
             return workList;

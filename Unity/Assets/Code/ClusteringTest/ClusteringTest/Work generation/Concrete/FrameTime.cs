@@ -15,6 +15,8 @@ namespace WorkGeneration
         {
             var workList = new WorkList(ClusteringTest.LogType.FrameTime, "Frame time");
 
+            const int textureSize = 64;
+
             for (int i = 0; i < 5; i++)
             {
                 foreach (UnityEngine.Video.VideoClip video in this.videos)
@@ -35,7 +37,7 @@ namespace WorkGeneration
                                     doRandomizeEmptyClusters: false,
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,
-                                        workingSize: 256,
+                                        workingSize: textureSize,
                                         fullSize: ClusteringTest.fullTextureSize,
                                         jitterSize: 1
                                     )
@@ -55,7 +57,7 @@ namespace WorkGeneration
                                     doRandomizeEmptyClusters: false,
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,
-                                        workingSize: 256,
+                                        workingSize: textureSize,
                                         fullSize: ClusteringTest.fullTextureSize,
                                         jitterSize: 1
                                     )
@@ -79,7 +81,7 @@ namespace WorkGeneration
                                         doReadback: doReadback,
                                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                             numClusters: 6,
-                                            workingSize: 256,
+                                            workingSize: textureSize,
                                             fullSize: ClusteringTest.fullTextureSize,
                                             jitterSize: 1
                                         )
@@ -105,7 +107,7 @@ namespace WorkGeneration
                                     doRandomizeEmptyClusters: false,
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,
-                                        workingSize: 256,
+                                        workingSize: textureSize,
                                         fullSize: ClusteringTest.fullTextureSize,
                                         jitterSize: 1
                                     )
@@ -125,7 +127,7 @@ namespace WorkGeneration
                                         doRandomizeEmptyClusters: false,
                                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                             numClusters: 6,
-                                            workingSize: 256,
+                                            workingSize: textureSize,
                                             fullSize: ClusteringTest.fullTextureSize,
                                             jitterSize: 1
                                         )
@@ -146,7 +148,7 @@ namespace WorkGeneration
                                     doRandomizeEmptyClusters: false,
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,
-                                        workingSize: 256,
+                                        workingSize: textureSize,
                                         fullSize: ClusteringTest.fullTextureSize,
                                         jitterSize: 1
                                     )
@@ -166,7 +168,7 @@ namespace WorkGeneration
                                         doRandomizeEmptyClusters: false,
                                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                             numClusters: 6,
-                                            workingSize: 256,
+                                            workingSize: textureSize,
                                             fullSize: ClusteringTest.fullTextureSize,
                                             jitterSize: 1
                                         )
@@ -179,7 +181,7 @@ namespace WorkGeneration
                     AddStopCondtion(
                         workList: workList,
                         video: video,
-                        textureSize: 256,
+                        textureSize: textureSize,
                         this.csHighlightRemoval
                     );
                 }
