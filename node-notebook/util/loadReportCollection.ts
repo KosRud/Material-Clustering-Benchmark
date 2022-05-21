@@ -12,7 +12,7 @@ const validators = createCheckers(validatorTemplates.default);
 
 export interface QualityMeasurement extends Measurement {
     rmseByFrame: {
-        frameIdex: number;
+        frameIndex: number;
         rmse: number;
     }[];
     aggregated: {
@@ -62,7 +62,7 @@ export default function loadReportCollection(
                             rmseByFrame: measurement.varianceByFrame.map(
                                 (record) => {
                                     return {
-                                        frameIdex: record.frameIndex,
+                                        frameIndex: record.frameIndex,
                                         rmse: record.variance ** 0.5,
                                     };
                                 }
