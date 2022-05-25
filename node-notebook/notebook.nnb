@@ -3,7 +3,7 @@
         {
             "language": "javascript",
             "source": [
-                "const { Plotly, display } = require('node-kernel');\r\nconst merge = require('deepmerge');\r\n\r\nconst normalSizeLayout = {\r\n    width: 600,\r\n    height: 400,\r\n    font: {\r\n        size: 15,\r\n    },\r\n    margin: {\r\n        l: 80,\r\n        r: 4,\r\n        b: 40,\r\n        t: 50, // for title\r\n    },\r\n    yaxis: {\r\n        title: {\r\n            standoff: 4,\r\n        },\r\n        automargin: true,\r\n    },\r\n    xaxis: {\r\n        automargin: true,\r\n    }\r\n}\r\n\r\nconst doubleSizeLayout = merge(normalSizeLayout, {\r\n    width: 1200,\r\n    height: 800,\r\n    font: {\r\n        size: 30,\r\n    },\r\n    margin: {\r\n        l: 160,\r\n        r: 8,\r\n        b: 80,\r\n        t: 100, // for title\r\n    },\r\n});\r\n\r\nconst sharedLayout = doubleSizeLayout;\r\n"
+                "const { Plotly, display } = require('node-kernel');\r\nconst merge = require('deepmerge');\r\n\r\nconst normalSizeLayout = {\r\n    width: 600,\r\n    height: 400,\r\n    font: {\r\n        size: 15,\r\n    },\r\n    margin: {\r\n        l: 80,\r\n        r: 4,\r\n        b: 40,\r\n        t: 50, // for title\r\n    },\r\n    yaxis: {\r\n        title: {\r\n            standoff: 4,\r\n        },\r\n        automargin: true,\r\n    },\r\n    xaxis: {\r\n        automargin: true,\r\n    }\r\n}\r\n\r\nconst doubleSizeLayout = merge(normalSizeLayout, {\r\n    width: 2400,\r\n    height: 1600,\r\n    font: {\r\n        size: 60,\r\n    },\r\n    margin: {\r\n        l: 320,\r\n        r: 200,\r\n        b: 160,\r\n        t: 200, // for title\r\n    },\r\n});\r\n\r\nconst sharedLayout = doubleSizeLayout;\r\n"
             ],
             "outputs": [
                 {
@@ -119,7 +119,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xc606880cb1e044d197daee52d444b465",
+                                "requestId": "xb4877d6c5d7348b6b774b55da32f7fe4",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -251,16 +251,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -300,7 +300,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xc606880cb1e044d197daee52d444b465",
+                                "requestId": "xb4877d6c5d7348b6b774b55da32f7fe4",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -432,16 +432,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -481,7 +481,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xc606880cb1e044d197daee52d444b465",
+                                "requestId": "xb4877d6c5d7348b6b774b55da32f7fe4",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -613,16 +613,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -662,7 +662,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xc606880cb1e044d197daee52d444b465",
+                                "requestId": "xb4877d6c5d7348b6b774b55da32f7fe4",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -794,16 +794,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -869,7 +869,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x7a766a0d1a0c4bff810044c3e77e829b",
+                                "requestId": "x68fc0d0b0a8840debdad2ff7a41c5e47",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -915,16 +915,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -959,7 +959,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x7a766a0d1a0c4bff810044c3e77e829b",
+                                "requestId": "x68fc0d0b0a8840debdad2ff7a41c5e47",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1005,16 +1005,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -1049,7 +1049,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x7a766a0d1a0c4bff810044c3e77e829b",
+                                "requestId": "x68fc0d0b0a8840debdad2ff7a41c5e47",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1095,16 +1095,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -1139,7 +1139,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x7a766a0d1a0c4bff810044c3e77e829b",
+                                "requestId": "x68fc0d0b0a8840debdad2ff7a41c5e47",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1185,16 +1185,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -1255,7 +1255,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x6919d4bdb0eb4bea86ae831ee0bb443b",
+                                "requestId": "x7517b92e57084e6aae38106f87bddc46",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1349,16 +1349,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -1398,7 +1398,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x6919d4bdb0eb4bea86ae831ee0bb443b",
+                                "requestId": "x7517b92e57084e6aae38106f87bddc46",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1492,16 +1492,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -1541,7 +1541,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x6919d4bdb0eb4bea86ae831ee0bb443b",
+                                "requestId": "x7517b92e57084e6aae38106f87bddc46",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1635,16 +1635,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -1684,7 +1684,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x6919d4bdb0eb4bea86ae831ee0bb443b",
+                                "requestId": "x7517b92e57084e6aae38106f87bddc46",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1778,16 +1778,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -1853,7 +1853,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x1492f89f3286499abb25aa93dfa04328",
+                                "requestId": "x76c28bbb4132439c8109aa8e31965216",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1947,16 +1947,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -1996,7 +1996,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x1492f89f3286499abb25aa93dfa04328",
+                                "requestId": "x76c28bbb4132439c8109aa8e31965216",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -2090,16 +2090,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -2139,7 +2139,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x1492f89f3286499abb25aa93dfa04328",
+                                "requestId": "x76c28bbb4132439c8109aa8e31965216",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -2233,16 +2233,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -2282,7 +2282,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x1492f89f3286499abb25aa93dfa04328",
+                                "requestId": "x76c28bbb4132439c8109aa8e31965216",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -2376,16 +2376,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -2451,7 +2451,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xd0caa519a3294ccea4d0014aaf61d1c9",
+                                "requestId": "x57bbe9af55d64080b0f7da7490a86fc2",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -2545,16 +2545,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -2594,7 +2594,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xd0caa519a3294ccea4d0014aaf61d1c9",
+                                "requestId": "x57bbe9af55d64080b0f7da7490a86fc2",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -2688,16 +2688,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -2737,7 +2737,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xd0caa519a3294ccea4d0014aaf61d1c9",
+                                "requestId": "x57bbe9af55d64080b0f7da7490a86fc2",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -2831,16 +2831,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -2880,7 +2880,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xd0caa519a3294ccea4d0014aaf61d1c9",
+                                "requestId": "x57bbe9af55d64080b0f7da7490a86fc2",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -2974,16 +2974,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -3049,7 +3049,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x2666d6de34a84de1a5bc40bf1452382d",
+                                "requestId": "xc77485afa38243a4ae700ac5f8a89271",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -3099,16 +3099,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -3148,7 +3148,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x2666d6de34a84de1a5bc40bf1452382d",
+                                "requestId": "xc77485afa38243a4ae700ac5f8a89271",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -3198,16 +3198,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -3247,7 +3247,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x2666d6de34a84de1a5bc40bf1452382d",
+                                "requestId": "xc77485afa38243a4ae700ac5f8a89271",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -3297,16 +3297,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -3346,7 +3346,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x2666d6de34a84de1a5bc40bf1452382d",
+                                "requestId": "xc77485afa38243a4ae700ac5f8a89271",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -3396,16 +3396,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -3463,7 +3463,7 @@
         {
             "language": "javascript",
             "source": [
-                "const merge = require('deepmerge');\r\n\r\n{\r\n    const reports = reportCollections['Random swap (1KM) vs Random swap (2KM)'];\r\n\r\n    const numIterationsKmOptions = Array.from(\r\n        new Set(\r\n            reports.map((report) =>\r\n                Number.parseInt(\r\n                    report.launchParameters.dispatcherParameters.numIterationsKm\r\n                )\r\n            )\r\n        )\r\n    );\r\n    numIterationsKmOptions.sort((a, b) => a - b);\r\n\r\n    const videoNameOptions = Array.from(\r\n        new Set(reports.map((report) => report.launchParameters.videoName))\r\n    ).sort();\r\n\r\n    for (const aggregatedStatName of ['mean', 'peak']) {\r\n        for (const videoName of videoNameOptions) {\r\n            const subsetVideo = reports.filter(\r\n                (report) => report.launchParameters.videoName == videoName\r\n            );\r\n\r\n            const data = numIterationsKmOptions.map((numIterationsKm) => {\r\n                const subsetNumIterationsKm = subsetVideo\r\n                    .filter(\r\n                        (report) =>\r\n                            report.launchParameters.dispatcherParameters\r\n                                .numIterationsKm == numIterationsKm\r\n                    )\r\n                    .sort(\r\n                        (reportA, reportB) =>\r\n                            reportA.launchParameters.numIterations -\r\n                            reportB.launchParameters.numIterations\r\n                    );\r\n\r\n                return {\r\n                    y: subsetNumIterationsKm.map(\r\n                        (report) =>\r\n                            report.measurement.aggregated[aggregatedStatName]\r\n                    ),\r\n\r\n                    x: subsetNumIterationsKm.map(\r\n                        (report) => `${report.launchParameters.numIterations}`\r\n                    ),\r\n\r\n                    name: `${numIterationsKm}`,\r\n                    type: 'scatter',\r\n                    mode: 'lines',\r\n                    line: {\r\n                        width: 5,\r\n                    },\r\n                };\r\n            });\r\n\r\n            // todo fix definitions Plotly.Layout\r\n            const layout = merge(sharedLayout, {\r\n                xaxis: {\r\n                    title: 'total KM iterations',\r\n                    type: 'category',\r\n                },\r\n\r\n                yaxis: {\r\n                    title: {\r\n                        text: `${aggregatedStatName} RMSE`,\r\n                    },\r\n                },\r\n\r\n                legend: {\r\n                    title: {\r\n                        text: 'KM iterations<br>per swap',\r\n                    },\r\n                },\r\n\r\n                title: `Random swap (video ${videoName})`,\r\n            });\r\n\r\n            Plotly.newPlot('', data, layout);\r\n            display.html('<br>');\r\n        }\r\n    }\r\n}\r\n"
+                "const merge = require('deepmerge');\r\n\r\n{\r\n    const reports = reportCollections['Random swap (1KM) vs Random swap (2KM)'];\r\n\r\n    const numIterationsKmOptions = Array.from(\r\n        new Set(\r\n            reports.map((report) =>\r\n                Number.parseInt(\r\n                    report.launchParameters.dispatcherParameters.numIterationsKm\r\n                )\r\n            )\r\n        )\r\n    );\r\n    numIterationsKmOptions.sort((a, b) => a - b);\r\n\r\n    const videoNameOptions = Array.from(\r\n        new Set(reports.map((report) => report.launchParameters.videoName))\r\n    ).sort();\r\n\r\n    for (const aggregatedStatName of ['mean', 'peak']) {\r\n        for (const videoName of videoNameOptions) {\r\n            const subsetVideo = reports.filter(\r\n                (report) => report.launchParameters.videoName == videoName\r\n            );\r\n\r\n            const data = numIterationsKmOptions.map((numIterationsKm) => {\r\n                const subsetNumIterationsKm = subsetVideo\r\n                    .filter(\r\n                        (report) =>\r\n                            report.launchParameters.dispatcherParameters\r\n                                .numIterationsKm == numIterationsKm\r\n                    )\r\n                    .sort(\r\n                        (reportA, reportB) =>\r\n                            reportA.launchParameters.numIterations -\r\n                            reportB.launchParameters.numIterations\r\n                    );\r\n\r\n                return {\r\n                    y: subsetNumIterationsKm.map(\r\n                        (report) =>\r\n                            report.measurement.aggregated[aggregatedStatName]\r\n                    ),\r\n\r\n                    x: subsetNumIterationsKm.map(\r\n                        (report) => `${report.launchParameters.numIterations}`\r\n                    ),\r\n\r\n                    name: `${numIterationsKm}`,\r\n                    type: 'scatter',\r\n                    mode: 'lines',\r\n                    line: {\r\n                        width: 16,\r\n                    },\r\n                };\r\n            });\r\n\r\n            // todo fix definitions Plotly.Layout\r\n            const layout = merge(sharedLayout, {\r\n                xaxis: {\r\n                    title: 'total KM iterations',\r\n                    type: 'category',\r\n                },\r\n\r\n                yaxis: {\r\n                    title: {\r\n                        text: `${aggregatedStatName} RMSE`,\r\n                    },\r\n                },\r\n\r\n                legend: {\r\n                    title: {\r\n                        text: 'KM iterations<br>per swap',\r\n                    },\r\n                },\r\n\r\n                title: `Random swap (video ${videoName})`,\r\n            });\r\n\r\n            Plotly.newPlot('', data, layout);\r\n            display.html('<br>');\r\n        }\r\n    }\r\n}\r\n"
             ],
             "outputs": [
                 {
@@ -3471,7 +3471,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x0d21318373484f13bbec0f84ae2ec5ad",
+                                "requestId": "xda80a7e9bd2d4eefb0b97daca8396c6f",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -3542,7 +3542,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -3582,21 +3582,21 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -3636,7 +3636,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x0d21318373484f13bbec0f84ae2ec5ad",
+                                "requestId": "xda80a7e9bd2d4eefb0b97daca8396c6f",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -3707,7 +3707,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -3747,21 +3747,21 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -3801,7 +3801,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x0d21318373484f13bbec0f84ae2ec5ad",
+                                "requestId": "xda80a7e9bd2d4eefb0b97daca8396c6f",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -3872,7 +3872,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -3912,21 +3912,21 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -3966,7 +3966,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x0d21318373484f13bbec0f84ae2ec5ad",
+                                "requestId": "xda80a7e9bd2d4eefb0b97daca8396c6f",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -4037,7 +4037,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -4077,21 +4077,21 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -4149,7 +4149,7 @@
         {
             "language": "javascript",
             "source": [
-                "const merge = require(\"deepmerge\");\r\n\r\n{\r\n    const reports = reportCollections[\"Algorithm convergence\"];\r\n\r\n    const algorithmOptions = Array.from(\r\n        new Set(reports.map((report) => report.launchParameters.algorithm))\r\n    );\r\n    algorithmOptions.sort();\r\n\r\n    const videoNameOptions = Array.from(\r\n        new Set(reports.map((report) => report.launchParameters.videoName))\r\n    ).sort();\r\n\r\n    for (const aggregatedStatName of [\"mean\", \"peak\"]) {\r\n        const subsetStopCondition = reports.filter(\r\n            (report) => report.launchParameters.stopCondition\r\n        );\r\n\r\n        // stop condition bar plot\r\n        {\r\n            let data = algorithmOptions.map((algorithm) => {\r\n                const subsetAlgorithm = subsetStopCondition.filter(\r\n                    (report) => report.launchParameters.algorithm == algorithm\r\n                );\r\n                subsetAlgorithm.sort((report) => report.videoName).reverse();\r\n\r\n                return {\r\n                    y: subsetAlgorithm.map(\r\n                        (report) =>\r\n                            report.measurement.aggregated[aggregatedStatName]\r\n                    ),\r\n                    x: subsetAlgorithm.map(\r\n                        (report) => report.launchParameters.videoName\r\n                    ),\r\n                    name: `${algorithm}`,\r\n                    type: \"bar\",\r\n                };\r\n            });\r\n\r\n            const layout = merge(sharedLayout, {\r\n                xaxis: {\r\n                    title: \"video\",\r\n                    type: \"category\",\r\n                },\r\n\r\n                yaxis: {\r\n                    title: {\r\n                        text: `${aggregatedStatName} RMSE`,\r\n                    },\r\n                },\r\n\r\n                title: `Stop condition`,\r\n            });\r\n\r\n            Plotly.newPlot(\"\", data, layout);\r\n        }\r\n\r\n        for (const lineStopCondition of [true, false]) {\r\n            for (const videoName of videoNameOptions) {\r\n                const subsetVideo = reports\r\n                    .filter(\r\n                        (report) =>\r\n                            report.launchParameters.videoName == videoName\r\n                    )\r\n                    .filter(\r\n                        (report) =>\r\n                            report.launchParameters.stopCondition == false\r\n                    );\r\n\r\n                const data = algorithmOptions.map((algorithm) => {\r\n                    let subsetAlgorithm = subsetVideo\r\n                        .filter(\r\n                            (report) =>\r\n                                report.launchParameters.algorithm == algorithm\r\n                        )\r\n                        .sort(\r\n                            (reportA, reportB) =>\r\n                                reportA.launchParameters.numIterations -\r\n                                reportB.launchParameters.numIterations\r\n                        );\r\n\r\n                    if (subsetAlgorithm.length == 0) {\r\n                        return {};\r\n                    }\r\n\r\n                    return {\r\n                        y: subsetAlgorithm.map(\r\n                            (report) =>\r\n                                report.measurement.aggregated[\r\n                                    aggregatedStatName\r\n                                ]\r\n                        ),\r\n                        x: subsetAlgorithm.map(\r\n                            (report) =>\r\n                                `${report.launchParameters.numIterations}`\r\n                        ),\r\n                        name: `${algorithm}`,\r\n                        legendgroup: `${algorithm}`,\r\n                        type: \"scatter\",\r\n                        mode: \"lines\",\r\n                        line: {\r\n                            width: 5,\r\n                        },\r\n                    };\r\n                });\r\n\r\n                // lines for stop condition\r\n                if (lineStopCondition) {\r\n                    const numIterationOptions = Array.from(\r\n                        new Set(\r\n                            reports.map(\r\n                                (report) =>\r\n                                    report.launchParameters.numIterations\r\n                            )\r\n                        )\r\n                    );\r\n\r\n                    for (const stopConditionReport of subsetStopCondition.filter(\r\n                        (report) =>\r\n                            report.launchParameters.videoName == videoName\r\n                    )) {\r\n                        data.push({\r\n                            y: numIterationOptions.map(\r\n                                () =>\r\n                                    stopConditionReport.measurement.aggregated[\r\n                                        aggregatedStatName\r\n                                    ]\r\n                            ),\r\n                            x: numIterationOptions,\r\n                            name: `${stopConditionReport.launchParameters.algorithm} (stop condition)`,\r\n                            legendgroup: `${stopConditionReport.launchParameters.algorithm}`,\r\n                            type: \"scatter\",\r\n                            mode: \"lines\",\r\n                            line: {\r\n                                width: 5,\r\n                            },\r\n                        });\r\n                    }\r\n                }\r\n\r\n                // todo fix definitions Plotly.Layout\r\n                const layout = merge(sharedLayout, {\r\n                    xaxis: {\r\n                        title: \"total KM iterations\",\r\n                        type: \"linear\",\r\n                    },\r\n\r\n                    yaxis: {\r\n                        title: {\r\n                            text: `${aggregatedStatName} RMSE`,\r\n                        },\r\n                    },\r\n\r\n                    title: `video ${videoName}`,\r\n                });\r\n\r\n                Plotly.newPlot(\"\", data, layout);\r\n            }\r\n        }\r\n    }\r\n}\r\n"
+                "const merge = require(\"deepmerge\");\r\n\r\n{\r\n    const reports = reportCollections[\"Algorithm convergence\"];\r\n\r\n    const algorithmOptions = Array.from(\r\n        new Set(reports.map((report) => report.launchParameters.algorithm))\r\n    );\r\n    algorithmOptions.sort();\r\n\r\n    const videoNameOptions = Array.from(\r\n        new Set(reports.map((report) => report.launchParameters.videoName))\r\n    ).sort();\r\n\r\n    for (const aggregatedStatName of [\"mean\", \"peak\"]) {\r\n        const subsetStopCondition = reports.filter(\r\n            (report) => report.launchParameters.stopCondition\r\n        );\r\n\r\n        // stop condition bar plot\r\n        {\r\n            let data = algorithmOptions.map((algorithm) => {\r\n                const subsetAlgorithm = subsetStopCondition.filter(\r\n                    (report) => report.launchParameters.algorithm == algorithm\r\n                );\r\n                subsetAlgorithm.sort((report) => report.videoName).reverse();\r\n\r\n                return {\r\n                    y: subsetAlgorithm.map(\r\n                        (report) =>\r\n                            report.measurement.aggregated[aggregatedStatName]\r\n                    ),\r\n                    x: subsetAlgorithm.map(\r\n                        (report) => report.launchParameters.videoName\r\n                    ),\r\n                    name: `${algorithm}`,\r\n                    type: \"bar\",\r\n                };\r\n            });\r\n\r\n            const layout = merge(sharedLayout, {\r\n                xaxis: {\r\n                    title: \"video\",\r\n                    type: \"category\",\r\n                },\r\n\r\n                yaxis: {\r\n                    title: {\r\n                        text: `${aggregatedStatName} RMSE`,\r\n                    },\r\n                },\r\n\r\n                title: `Stop condition`,\r\n            });\r\n\r\n            Plotly.newPlot(\"\", data, layout);\r\n        }\r\n\r\n        for (const lineStopCondition of [true, false]) {\r\n            for (const videoName of videoNameOptions) {\r\n                const subsetVideo = reports\r\n                    .filter(\r\n                        (report) =>\r\n                            report.launchParameters.videoName == videoName\r\n                    )\r\n                    .filter(\r\n                        (report) =>\r\n                            report.launchParameters.stopCondition == false\r\n                    );\r\n\r\n                const data = algorithmOptions.map((algorithm) => {\r\n                    let subsetAlgorithm = subsetVideo\r\n                        .filter(\r\n                            (report) =>\r\n                                report.launchParameters.algorithm == algorithm\r\n                        )\r\n                        .sort(\r\n                            (reportA, reportB) =>\r\n                                reportA.launchParameters.numIterations -\r\n                                reportB.launchParameters.numIterations\r\n                        );\r\n\r\n                    if (subsetAlgorithm.length == 0) {\r\n                        return {};\r\n                    }\r\n\r\n                    return {\r\n                        y: subsetAlgorithm.map(\r\n                            (report) =>\r\n                                report.measurement.aggregated[\r\n                                    aggregatedStatName\r\n                                ]\r\n                        ),\r\n                        x: subsetAlgorithm.map(\r\n                            (report) =>\r\n                                `${report.launchParameters.numIterations}`\r\n                        ),\r\n                        name: `${algorithm}`,\r\n                        legendgroup: `${algorithm}`,\r\n                        type: \"scatter\",\r\n                        mode: \"lines\",\r\n                        line: {\r\n                            width: 16,\r\n                        },\r\n                    };\r\n                });\r\n\r\n                // lines for stop condition\r\n                if (lineStopCondition) {\r\n                    const numIterationOptions = Array.from(\r\n                        new Set(\r\n                            reports.map(\r\n                                (report) =>\r\n                                    report.launchParameters.numIterations\r\n                            )\r\n                        )\r\n                    );\r\n\r\n                    for (const stopConditionReport of subsetStopCondition.filter(\r\n                        (report) =>\r\n                            report.launchParameters.videoName == videoName\r\n                    )) {\r\n                        data.push({\r\n                            y: numIterationOptions.map(\r\n                                () =>\r\n                                    stopConditionReport.measurement.aggregated[\r\n                                        aggregatedStatName\r\n                                    ]\r\n                            ),\r\n                            x: numIterationOptions,\r\n                            name: (()=>{\r\n\t\t\t\t\t\t\t\tswitch(stopConditionReport.launchParameters.algorithm){\r\n\t\t\t\t\t\t\t\t\tcase 'RS (readback)':\r\n\t\t\t\t\t\t\t\t\t\treturn 'RS (stop condition)';\r\n\t\t\t\t\t\t\t\t\tdefault: \r\n\t\t\t\t\t\t\t\t\t\treturn `${stopConditionReport.launchParameters.algorithm} (stop condition)`;\r\n\t\t\t\t\t\t\t\t}\r\n\r\n\t\t\t\t\t\t\t})() ,\r\n                            legendgroup: (()=>{\r\n\t\t\t\t\t\t\t\tswitch(stopConditionReport.launchParameters.algorithm){\r\n\t\t\t\t\t\t\t\t\tcase 'RS (readback)':\r\n\t\t\t\t\t\t\t\t\t\treturn 'RS';\r\n\t\t\t\t\t\t\t\t\tdefault: \r\n\t\t\t\t\t\t\t\t\t\treturn `${stopConditionReport.launchParameters.algorithm}`;\r\n\t\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t\t})(),\r\n                            type: \"scatter\",\r\n                            mode: \"lines\",\r\n                            line: {\r\n                                width: 16,\r\n                            },\r\n                        });\r\n                    }\r\n                }\r\n\r\n                // todo fix definitions Plotly.Layout\r\n                const layout = merge(sharedLayout, {\r\n                    xaxis: {\r\n                        title: \"total KM iterations\",\r\n                        type: \"linear\",\r\n                    },\r\n\r\n                    yaxis: {\r\n                        title: {\r\n                            text: `${aggregatedStatName} RMSE`,\r\n                        },\r\n                    },\r\n\r\n                    title: `video ${videoName}`,\r\n                });\r\n\r\n                Plotly.newPlot(\"\", data, layout);\r\n            }\r\n        }\r\n    }\r\n}\r\n"
             ],
             "outputs": [
                 {
@@ -4157,7 +4157,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xb993bb0a27e047198cb9f46e700279ad",
+                                "requestId": "xeae111abd2b64fc3937c15e64ee77794",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -4217,16 +4217,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -4251,7 +4251,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xb993bb0a27e047198cb9f46e700279ad",
+                                "requestId": "xeae111abd2b64fc3937c15e64ee77794",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -4325,7 +4325,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -4398,7 +4398,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {},
@@ -4440,7 +4440,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {},
@@ -4514,7 +4514,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -4587,7 +4587,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -4655,12 +4655,12 @@
                                             3,
                                             2
                                         ],
-                                        "name": "RS (readback) (stop condition)",
-                                        "legendgroup": "RS (readback)",
+                                        "name": "RS (stop condition)",
+                                        "legendgroup": "RS",
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -4733,21 +4733,21 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -4772,7 +4772,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xb993bb0a27e047198cb9f46e700279ad",
+                                "requestId": "xeae111abd2b64fc3937c15e64ee77794",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -4846,7 +4846,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -4919,7 +4919,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {},
@@ -4961,7 +4961,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {},
@@ -5035,7 +5035,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -5108,7 +5108,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -5176,12 +5176,12 @@
                                             3,
                                             2
                                         ],
-                                        "name": "RS (readback) (stop condition)",
-                                        "legendgroup": "RS (readback)",
+                                        "name": "RS (stop condition)",
+                                        "legendgroup": "RS",
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -5254,21 +5254,21 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -5293,7 +5293,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xb993bb0a27e047198cb9f46e700279ad",
+                                "requestId": "xeae111abd2b64fc3937c15e64ee77794",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -5367,7 +5367,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -5440,7 +5440,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {},
@@ -5482,22 +5482,22 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {}
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -5522,7 +5522,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xb993bb0a27e047198cb9f46e700279ad",
+                                "requestId": "xeae111abd2b64fc3937c15e64ee77794",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -5596,7 +5596,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -5669,7 +5669,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {},
@@ -5711,22 +5711,22 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {}
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -5751,7 +5751,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xb993bb0a27e047198cb9f46e700279ad",
+                                "requestId": "xeae111abd2b64fc3937c15e64ee77794",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -5811,16 +5811,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -5845,7 +5845,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xb993bb0a27e047198cb9f46e700279ad",
+                                "requestId": "xeae111abd2b64fc3937c15e64ee77794",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -5919,7 +5919,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -5992,7 +5992,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {},
@@ -6034,7 +6034,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {},
@@ -6108,7 +6108,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -6181,7 +6181,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -6249,12 +6249,12 @@
                                             3,
                                             2
                                         ],
-                                        "name": "RS (readback) (stop condition)",
-                                        "legendgroup": "RS (readback)",
+                                        "name": "RS (stop condition)",
+                                        "legendgroup": "RS",
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -6327,21 +6327,21 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -6366,7 +6366,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xb993bb0a27e047198cb9f46e700279ad",
+                                "requestId": "xeae111abd2b64fc3937c15e64ee77794",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -6440,7 +6440,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -6513,7 +6513,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {},
@@ -6555,7 +6555,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {},
@@ -6629,7 +6629,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -6702,7 +6702,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -6770,12 +6770,12 @@
                                             3,
                                             2
                                         ],
-                                        "name": "RS (readback) (stop condition)",
-                                        "legendgroup": "RS (readback)",
+                                        "name": "RS (stop condition)",
+                                        "legendgroup": "RS",
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -6848,21 +6848,21 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -6887,7 +6887,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xb993bb0a27e047198cb9f46e700279ad",
+                                "requestId": "xeae111abd2b64fc3937c15e64ee77794",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -6961,7 +6961,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -7034,7 +7034,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {},
@@ -7076,22 +7076,22 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {}
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -7116,7 +7116,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xb993bb0a27e047198cb9f46e700279ad",
+                                "requestId": "xeae111abd2b64fc3937c15e64ee77794",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -7190,7 +7190,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {
@@ -7263,7 +7263,7 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {},
@@ -7305,22 +7305,22 @@
                                         "type": "scatter",
                                         "mode": "lines",
                                         "line": {
-                                            "width": 5
+                                            "width": 16
                                         }
                                     },
                                     {}
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": {
@@ -7371,7 +7371,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x5ca1d5b89043417084aef835a50bf8df",
+                                "requestId": "xc61abe21f4f846b882a3d59998415b7b",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -7457,16 +7457,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": "mean frame time",
@@ -7490,7 +7490,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x5ca1d5b89043417084aef835a50bf8df",
+                                "requestId": "xc61abe21f4f846b882a3d59998415b7b",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -7576,16 +7576,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": "peak frame time",
@@ -7609,7 +7609,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x5ca1d5b89043417084aef835a50bf8df",
+                                "requestId": "xc61abe21f4f846b882a3d59998415b7b",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -7695,16 +7695,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": "mean frame time",
@@ -7728,7 +7728,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x5ca1d5b89043417084aef835a50bf8df",
+                                "requestId": "xc61abe21f4f846b882a3d59998415b7b",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -7814,16 +7814,16 @@
                                     }
                                 ],
                                 "layout": {
-                                    "width": 1200,
-                                    "height": 800,
+                                    "width": 2400,
+                                    "height": 1600,
                                     "font": {
-                                        "size": 30
+                                        "size": 60
                                     },
                                     "margin": {
-                                        "l": 160,
-                                        "r": 8,
-                                        "b": 80,
-                                        "t": 100
+                                        "l": 320,
+                                        "r": 200,
+                                        "b": 160,
+                                        "t": 200
                                     },
                                     "yaxis": {
                                         "title": "peak frame time",
