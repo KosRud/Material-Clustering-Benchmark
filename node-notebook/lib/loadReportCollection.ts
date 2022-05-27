@@ -7,6 +7,7 @@ import {
 import * as validatorTemplates from './validators/generated/Validators-ti';
 import { createCheckers } from 'ts-interface-checker';
 import assert from 'assert/strict';
+import smoothPeak from './smoothPeak';
 
 const validators = createCheckers(validatorTemplates.default);
 
@@ -54,9 +55,7 @@ export default function loadReportCollection(
                         aggregated.mean =
                             arrSqrtVariance.reduce((a, b) => a + b) /
                             varianceByFrame.length;
-                        aggregated.peak = arrSqrtVariance.reduce((a, b) =>
-                            Math.max(a, b)
-                        );
+                        aggregated.peak = smoothPeak(arrSqrtVariance);
 
                         return {
                             rmseByFrame: measurement.varianceByFrame.map(
