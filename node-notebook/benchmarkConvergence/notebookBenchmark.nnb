@@ -146,7 +146,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x7f1d74e8fdb2422ca6472d21226b0376",
+                                "requestId": "xde15ac576bf94e748ff46e32293f4050",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -520,7 +520,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x7f1d74e8fdb2422ca6472d21226b0376",
+                                "requestId": "xde15ac576bf94e748ff46e32293f4050",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1094,15 +1094,37 @@
         {
             "language": "javascript",
             "source": [
-                "const merge = require('deepmerge');\r\n\r\n{\r\n    function getResultId(report) {\r\n        return JSON.stringify({\r\n            algorithm: report.algorithm,\r\n            stopCondition: report.stopCondition,\r\n        });\r\n    }\r\n    const resultIdOptions = Array.from(\r\n        new Set(\r\n            benchmarkStopConditionResults.map((result) => getResultId(result))\r\n        )\r\n    );\r\n\r\n    const aggregatedResults = resultIdOptions\r\n        .map((resultId) => {\r\n            const subsetResultId = benchmarkStopConditionResults.filter(\r\n                (result) => getResultId(result) == resultId\r\n            );\r\n\r\n            function getResultName(result) {\r\n                let name = result.algorithm;\r\n\r\n                if (result.stopCondition != undefined) {\r\n                    name += ` - ${result.stopCondition.failedSwaps} bad swaps`;\r\n                }\r\n\r\n                return name;\r\n            }\r\n\r\n            return {\r\n                name: getResultName(subsetResultId[0]),\r\n                meanRMSE:\r\n                    subsetResultId\r\n                        .map((result) => result.variance ** 0.5)\r\n                        .reduce((rmseA, rmseB) => rmseA + rmseB) /\r\n                    subsetResultId.length,\r\n                meanNumIterations:\r\n                    subsetResultId\r\n                        .map((result) => result.numIterations)\r\n                        .reduce(\r\n                            (numIterationsA, numIterationsB) =>\r\n                                numIterationsA + numIterationsB\r\n                        ) / subsetResultId.length,\r\n                peakRMSE: subsetResultId\r\n                    .map((result) => result.variance ** 0.5)\r\n                    .reduce((rmseA, rmseB) => Math.max(rmseA, rmseB)),\r\n                peakNumIterations: subsetResultId\r\n                    .map((result) => result.numIterations)\r\n                    .reduce((numIterationsA, numIterationsB) =>\r\n                        Math.max(numIterationsA, numIterationsB)\r\n                    ),\r\n            };\r\n        })\r\n        .sort((resultA, resultB) => resultA.name > resultB.name);\r\n\r\n    // mean RMSE\r\n    {\r\n        const data = [\r\n            {\r\n                x: aggregatedResults.map((result) => result.name),\r\n                y: aggregatedResults.map((result) => result.meanRMSE),\r\n                type: 'bar',\r\n            },\r\n        ];\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: 'mean RMSE',\r\n            },\r\n            xaxis: {\r\n                tickangle: 60,\r\n            },\r\n            bargap: 800,\r\n        });\r\n\r\n        Plotly.newPlot('', data, layout);\r\n    }\r\n\r\n    // mean number of iterations\r\n    {\r\n        const data = [\r\n            {\r\n                x: aggregatedResults.map((result) => result.name),\r\n                y: aggregatedResults.map((result) => result.meanNumIterations),\r\n                type: 'bar',\r\n            },\r\n        ];\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: 'mean number of iterations',\r\n            },\r\n            xaxis: {\r\n                tickangle: 60,\r\n            },\r\n            bargap: 800,\r\n        });\r\n\r\n        Plotly.newPlot('', data, layout);\r\n    }\r\n\r\n    // peak RMSE\r\n    {\r\n        const data = [\r\n            {\r\n                x: aggregatedResults.map((result) => result.name),\r\n                y: aggregatedResults.map((result) => result.peakRMSE),\r\n                type: 'bar',\r\n            },\r\n        ];\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: 'peak RMSE',\r\n            },\r\n            xaxis: {\r\n                tickangle: 60,\r\n            },\r\n            bargap: 800,\r\n        });\r\n\r\n        Plotly.newPlot('', data, layout);\r\n    }\r\n\r\n    // peak number of iterations\r\n    {\r\n        const data = [\r\n            {\r\n                x: aggregatedResults.map((result) => result.name),\r\n                y: aggregatedResults.map((result) => result.peakNumIterations),\r\n                type: 'bar',\r\n            },\r\n        ];\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: 'peak number of iterations',\r\n            },\r\n            xaxis: {\r\n                tickangle: 60,\r\n            },\r\n            bargap: 800,\r\n        });\r\n\r\n        Plotly.newPlot('', data, layout);\r\n    }\r\n}\r\n"
+                "import smoothPeak from '../lib/smoothPeak'\r\n\r\nconst merge = require(\"deepmerge\");\r\n\r\n{\r\n    function getResultId(report) {\r\n        return JSON.stringify({\r\n            algorithm: report.algorithm,\r\n            stopCondition: report.stopCondition,\r\n        });\r\n    }\r\n    const resultIdOptions = Array.from(\r\n        new Set(\r\n            benchmarkStopConditionResults.map((result) => getResultId(result))\r\n        )\r\n    );\r\n\r\n    \r\n\r\n    const aggregatedResults = resultIdOptions\r\n        .map((resultId) => {\r\n            const subsetResultId = benchmarkStopConditionResults.filter(\r\n                (result) => getResultId(result) == resultId\r\n            );\r\n\r\n            function getResultName(result) {\r\n                let name = result.algorithm;\r\n\r\n                if (result.stopCondition != undefined) {\r\n                    name += ` - ${result.stopCondition.failedSwaps} bad swaps`;\r\n                }\r\n\r\n                return name;\r\n            }\r\n\r\n            return {\r\n                name: getResultName(subsetResultId[0]),\r\n                meanRMSE:\r\n                    subsetResultId\r\n                        .map((result) => result.variance ** 0.5)\r\n                        .reduce((rmseA, rmseB) => rmseA + rmseB) /\r\n                    subsetResultId.length,\r\n                meanNumIterations:\r\n                    subsetResultId\r\n                        .map((result) => result.numIterations)\r\n                        .reduce(\r\n                            (numIterationsA, numIterationsB) =>\r\n                                numIterationsA + numIterationsB\r\n                        ) / subsetResultId.length,\r\n                peakRMSE: smoothPeak(\r\n                    subsetResultId.map((result) => result.variance ** 0.5)\r\n                ),\r\n                peakNumIterations: smoothPeak(\r\n                    subsetResultId.map((result) => result.numIterations)\r\n                ),\r\n            };\r\n        })\r\n        .sort((resultA, resultB) => resultA.name > resultB.name);\r\n\r\n    // mean RMSE\r\n    {\r\n        const data = [\r\n            {\r\n                x: aggregatedResults.map((result) => result.name),\r\n                y: aggregatedResults.map((result) => result.meanRMSE),\r\n                type: \"bar\",\r\n            },\r\n        ];\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: \"mean RMSE\",\r\n            },\r\n            xaxis: {\r\n                tickangle: 60,\r\n            },\r\n            bargap: 800,\r\n        });\r\n\r\n        Plotly.newPlot(\"\", data, layout);\r\n    }\r\n\r\n    // mean number of iterations\r\n    {\r\n        const data = [\r\n            {\r\n                x: aggregatedResults.map((result) => result.name),\r\n                y: aggregatedResults.map((result) => result.meanNumIterations),\r\n                type: \"bar\",\r\n            },\r\n        ];\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: \"mean number of iterations\",\r\n            },\r\n            xaxis: {\r\n                tickangle: 60,\r\n            },\r\n            bargap: 800,\r\n        });\r\n\r\n        Plotly.newPlot(\"\", data, layout);\r\n    }\r\n\r\n    // peak RMSE\r\n    {\r\n        const data = [\r\n            {\r\n                x: aggregatedResults.map((result) => result.name),\r\n                y: aggregatedResults.map((result) => result.peakRMSE),\r\n                type: \"bar\",\r\n            },\r\n        ];\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: \"peak RMSE\",\r\n            },\r\n            xaxis: {\r\n                tickangle: 60,\r\n            },\r\n            bargap: 800,\r\n        });\r\n\r\n        Plotly.newPlot(\"\", data, layout);\r\n    }\r\n\r\n    // peak number of iterations\r\n    {\r\n        const data = [\r\n            {\r\n                x: aggregatedResults.map((result) => result.name),\r\n                y: aggregatedResults.map((result) => result.peakNumIterations),\r\n                type: \"bar\",\r\n            },\r\n        ];\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: \"peak number of iterations\",\r\n            },\r\n            xaxis: {\r\n                tickangle: 60,\r\n            },\r\n            bargap: 800,\r\n        });\r\n\r\n        Plotly.newPlot(\"\", data, layout);\r\n    }\r\n}\r\n"
             ],
             "outputs": [
                 {
                     "items": [
                         {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "220",
+                                "220",
+                                "220",
+                                "220",
+                                "220",
+                                "220",
+                                "220",
+                                "220",
+                                "220",
+                                "220",
+                                "220",
+                                "220",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x65cb70910aa14edeba69dcbe5f4287ac",
+                                "requestId": "x579e4e7ba8204da7be3f277d521cdc95",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1167,7 +1189,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x65cb70910aa14edeba69dcbe5f4287ac",
+                                "requestId": "x579e4e7ba8204da7be3f277d521cdc95",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1232,7 +1254,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x65cb70910aa14edeba69dcbe5f4287ac",
+                                "requestId": "x579e4e7ba8204da7be3f277d521cdc95",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1251,17 +1273,17 @@
                                             "RS - 8 bad swaps"
                                         ],
                                         "y": [
-                                            0.24231893916105413,
-                                            0.22384012865973293,
-                                            0.45612672384135666,
-                                            0.49507239030208067,
-                                            0.4277077135796555,
-                                            0.43661763711250207,
-                                            0.43661763711250207,
-                                            0.42765264723785534,
-                                            0.43634301866361697,
-                                            0.43634301866361697,
-                                            0.43634301866361697
+                                            0.1693678030119715,
+                                            0.15658441038090562,
+                                            0.3548439839484935,
+                                            0.34723895957739354,
+                                            0.3424963653211392,
+                                            0.3410493152510163,
+                                            0.33878592907533656,
+                                            0.33701874888317646,
+                                            0.3343537311609667,
+                                            0.33450457150344753,
+                                            0.33292610451181254
                                         ],
                                         "type": "bar"
                                     }
@@ -1297,7 +1319,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x65cb70910aa14edeba69dcbe5f4287ac",
+                                "requestId": "x579e4e7ba8204da7be3f277d521cdc95",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1316,17 +1338,17 @@
                                             "RS - 8 bad swaps"
                                         ],
                                         "y": [
-                                            26,
-                                            29,
-                                            20,
-                                            24,
-                                            28,
-                                            30,
-                                            30,
-                                            40,
-                                            38,
-                                            40,
-                                            42
+                                            16.43,
+                                            17.94,
+                                            14.8,
+                                            18.3,
+                                            21.04,
+                                            24.04,
+                                            26.68,
+                                            29.14,
+                                            31.58,
+                                            33.66,
+                                            36.18
                                         ],
                                         "type": "bar"
                                     }
