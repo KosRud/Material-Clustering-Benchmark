@@ -1,8 +1,10 @@
+import assert from "assert/strict";
+
 export default function smoothPeak(inArr) {
 	const arr = inArr.slice();
 	const numParts = 100;
 	const partSize = Math.round(arr.length / numParts);
-	console.log(partSize);
+	assert.ok(partSize > 100);
 	const partialPeaks = [];
 	while (1) {
 		const nextPart = arr.splice(0, partSize);
