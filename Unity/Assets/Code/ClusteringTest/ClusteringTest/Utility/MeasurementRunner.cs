@@ -10,10 +10,10 @@ public class MeasurementRunner : IDisposable
 
     private class VideoSection
     {
-        public readonly ulong start;
-        public readonly ulong end;
+        public readonly long start;
+        public readonly long end;
 
-        public VideoSection(ulong start, ulong end)
+        public VideoSection(long start, long end)
         {
             this.start = start;
             this.end = end;
@@ -22,14 +22,14 @@ public class MeasurementRunner : IDisposable
 
     private List<VideoSection> sections;
 
-    private void FillSectionList(ulong numFrames)
+    private void FillSectionList(long numFrames)
     {
         this.sections = new List<VideoSection>();
 
-        ulong numSections = numFrames / sectionLength;
+        long numSections = numFrames / sectionLength;
         Debug.Assert(numSections > 0);
         for (
-            ulong sectionStart = 0;
+            long sectionStart = 0;
             sectionStart + sectionLength <= numFrames && sections.Count < totalSections;
             sectionStart += sectionLength
         )
@@ -64,8 +64,7 @@ public class MeasurementRunner : IDisposable
 
     private long? lastProcessedFrame;
 
-    public bool finished =>
-        this.lastProcessedFrame == (this.frameEndOrNull ?? (long)this.videoPlayer.frameCount - 1);
+    public bool finished;
 
     /// <summary>
     /// Takes ownership of launchParameters
@@ -91,6 +90,7 @@ public class MeasurementRunner : IDisposable
         this.frameEndOrNull = frameEnd;
         this.frameStart = frameStart ?? 0;
         this.noGcAvailable = noGcAvailable;
+        this.finished = false;
 
         if (this.launchParameters.dispatcher.clusteringRTsAndBuffers.isAllocated == false)
         {
@@ -100,7 +100,7 @@ public class MeasurementRunner : IDisposable
         this.SetTextureSize();
         this.InitVideoPlayer(videoPlayer, frameStart);
 
-        FillSectionList(this.videoPlayer.frameCount);
+        FillSectionList((long)this.videoPlayer.frameCount);
     }
 
     private void InitVideoPlayer(UnityEngine.Video.VideoPlayer videoPlayer, long? frameStart)
@@ -165,17 +165,6 @@ public class MeasurementRunner : IDisposable
             after measurements were finished
         */
         Debug.Assert(this.finished == false);
-
-        /*
-            throw an error
-            if current frame somehow exceeds intended end frame
-        */
-        if (this.videoPlayer.frame > this.frameEndOrNull)
-        {
-            throw new Exception(
-                $"Current video frame ({this.videoPlayer.frame}) exceeds indended end frame ({this.frameEndOrNull})."
-            );
-        }
 
         /*
             check, that frames are being processed one by one
@@ -286,7 +275,29 @@ public class MeasurementRunner : IDisposable
             }
         }
 
-        this.videoPlayer.frame++;
+        // if the frame we just processed is the last in current section
+        if (this.videoPlayer.frame == this.sections[0].end - 1)
+        {
+            // drop processed section
+            this.sections.RemoveAt(0);
+
+            // if there are no sections left
+            if (this.sections.Count == 0)
+            {
+                this.finished = true;
+            }
+            // if there are sections left
+            else
+            {
+                this.videoPlayer.frame = this.sections[0].start;
+                this.lastProcessedFrame = null; // not consecutive, reset checks
+            }
+        }
+        // if the frame we just processed is not the last in current section
+        else
+        {
+            this.videoPlayer.frame++;
+        }
 
         this.RenderResult(dst);
     }
