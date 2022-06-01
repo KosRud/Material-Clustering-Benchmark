@@ -17,7 +17,7 @@ namespace WorkGeneration
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                const int textureSize = 128;
+                const int textureSize = 512;
 
                 for (int numIterations = 1; numIterations < 31; numIterations++)
                 {
