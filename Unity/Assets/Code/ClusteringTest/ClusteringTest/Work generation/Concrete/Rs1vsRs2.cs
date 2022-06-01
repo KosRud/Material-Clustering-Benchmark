@@ -67,7 +67,7 @@ namespace WorkGeneration
                             doReadback: false,
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                 numClusters: 6,
-                                workingSize: 128,
+                                workingSize: 512,
                                 fullSize: ClusteringTest.fullTextureSize,
                                 jitterSize: 1
                             )

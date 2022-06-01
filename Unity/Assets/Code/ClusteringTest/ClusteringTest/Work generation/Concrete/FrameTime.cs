@@ -15,7 +15,7 @@ namespace WorkGeneration
         {
             var workList = new WorkList(ClusteringTest.LogType.FrameTime, "Frame time");
 
-            const int textureSize = 128;
+            const int textureSize = 512;
 
             for (int i = 0; i < 5; i++)
             {
