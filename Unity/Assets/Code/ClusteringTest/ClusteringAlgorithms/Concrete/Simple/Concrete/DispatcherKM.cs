@@ -8,9 +8,16 @@ namespace ClusteringAlgorithms
             ComputeShader computeShader,
             int numIterations,
             bool doRandomizeEmptyClusters,
+            bool useFullResTexRef,
             ClusteringRTsAndBuffers clusteringRTsAndBuffers
-        ) : base(computeShader, numIterations, doRandomizeEmptyClusters, clusteringRTsAndBuffers)
-        { }
+        )
+            : base(
+                computeShader: computeShader,
+                numIterations: numIterations,
+                doRandomizeEmptyClusters: doRandomizeEmptyClusters,
+                useFullResTexRef: useFullResTexRef,
+                clusteringRTsAndBuffers: clusteringRTsAndBuffers
+            ) { }
 
         public override string name => "KM";
 

@@ -7,6 +7,7 @@ namespace ClusteringAlgorithms
         public DispatcherRSstopCondition(
             ComputeShader computeShader,
             bool doRandomizeEmptyClusters,
+            bool useFullResTexRef,
             int numIterationsKM,
             ClusteringRTsAndBuffers clusteringRTsAndBuffers
         )
@@ -14,6 +15,7 @@ namespace ClusteringAlgorithms
                 computeShader: computeShader,
                 numIterations: 1,
                 doRandomizeEmptyClusters: doRandomizeEmptyClusters,
+                useFullResTexRef: useFullResTexRef,
                 numIterationsKm: numIterationsKM,
                 clusteringRTsAndBuffers: clusteringRTsAndBuffers
             ) { }

@@ -29,6 +29,7 @@ namespace ClusteringAlgorithms
             ComputeShader computeShader,
             int numIterations,
             bool doRandomizeEmptyClusters,
+            bool useFullResTexRef,
             ClusteringRTsAndBuffers clusteringRTsAndBuffers
         )
         {
@@ -39,6 +40,7 @@ namespace ClusteringAlgorithms
             this.numIterations = numIterations;
             this.clusteringRTsAndBuffers = clusteringRTsAndBuffers;
             this._parameters = new DispatcherParameters();
+            this.useFullResTexRef = useFullResTexRef;
         }
 
         public abstract void RunClustering(ClusteringTextures clusteringTextures);
@@ -103,6 +105,8 @@ namespace ClusteringAlgorithms
             clusteringTextures.rtArr.GenerateMips();
         }
 
+        public bool useFullResTexRef { get; private set; }
+
         /// <summary>
         /// Computes variance on full-resolution input texture, without thresholding of dark pixels.
         /// </summary>
@@ -110,17 +114,19 @@ namespace ClusteringAlgorithms
         {
             using (ClusterCenters backupCenters = this.clusteringRTsAndBuffers.GetClusterCenters())
             {
+                ClusteringTextures refTextures = this.useFullResTexRef switch
+                {
+                    true => this.clusteringRTsAndBuffers.texturesFullRes,
+                    false => this.clusteringRTsAndBuffers.texturesWorkRes
+                };
+
                 /*
                   one final attribution
                   (we finished by getting cluster centers)
         
                   also ensure final=true (no threshold)
                 */
-                this.AttributeClusters(
-                    clusteringTextures: this.clusteringRTsAndBuffers.texturesFullRes,
-                    final: true,
-                    khm: false
-                );
+                this.AttributeClusters(clusteringTextures: refTextures, final: true, khm: false);
 
                 /*
                   the variance computation is delayed by 1 iteration
@@ -135,10 +141,7 @@ namespace ClusteringAlgorithms
                   from attribution with "final: true"
                   which disables thresholding of dark pixels
                 */
-                this.UpdateClusterCenters(
-                    clusteringTextures: this.clusteringRTsAndBuffers.texturesFullRes,
-                    rejectOld: false
-                );
+                this.UpdateClusterCenters(clusteringTextures: refTextures, rejectOld: false);
 
                 using (ClusterCenters centers = this.clusteringRTsAndBuffers.GetClusterCenters())
                 {

@@ -33,6 +33,7 @@ namespace WorkGeneration
                                     computeShader: this.csHighlightRemoval,
                                     numIterations: 3,
                                     doRandomizeEmptyClusters: doRandomizeEmptyClusters,
+                                    useFullResTexRef: true,
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,
                                         workingSize: textureSize,

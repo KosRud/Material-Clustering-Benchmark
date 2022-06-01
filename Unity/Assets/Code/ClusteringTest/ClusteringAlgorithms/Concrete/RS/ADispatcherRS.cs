@@ -28,9 +28,17 @@ namespace ClusteringAlgorithms
             ComputeShader computeShader,
             int numIterations,
             bool doRandomizeEmptyClusters,
+            bool useFullResTexRef,
             int numIterationsKm,
             ClusteringRTsAndBuffers clusteringRTsAndBuffers
-        ) : base(computeShader, numIterations, doRandomizeEmptyClusters, clusteringRTsAndBuffers)
+        )
+            : base(
+                computeShader: computeShader,
+                numIterations: numIterations,
+                doRandomizeEmptyClusters: doRandomizeEmptyClusters,
+                useFullResTexRef: useFullResTexRef,
+                clusteringRTsAndBuffers: clusteringRTsAndBuffers
+            )
         {
             this._parameters = new Parameters(numIterationsKm: numIterationsKm);
             this.kernelHandleRandomSwap = this.computeShader.FindKernel("RandomSwap");

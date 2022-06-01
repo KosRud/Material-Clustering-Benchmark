@@ -62,11 +62,12 @@ namespace WorkGeneration
                             computeShader: csHighlightRemoval,
                             numIterations: numIterations,
                             doRandomizeEmptyClusters: false,
+                            useFullResTexRef: false,
                             numIterationsKM: numIterationsKM,
                             doReadback: false,
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                 numClusters: 6,
-                                workingSize: 64,
+                                workingSize: 128,
                                 fullSize: ClusteringTest.fullTextureSize,
                                 jitterSize: 1
                             )

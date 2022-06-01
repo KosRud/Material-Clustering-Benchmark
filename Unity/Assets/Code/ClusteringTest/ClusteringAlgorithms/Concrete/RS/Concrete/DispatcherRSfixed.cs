@@ -14,6 +14,7 @@ namespace ClusteringAlgorithms
             ComputeShader computeShader,
             int numIterations,
             bool doRandomizeEmptyClusters,
+            bool useFullResTexRef,
             int numIterationsKM,
             bool doReadback,
             ClusteringRTsAndBuffers clusteringRTsAndBuffers
@@ -22,6 +23,7 @@ namespace ClusteringAlgorithms
                 computeShader: computeShader,
                 numIterations: numIterations,
                 doRandomizeEmptyClusters: doRandomizeEmptyClusters,
+                useFullResTexRef: useFullResTexRef,
                 numIterationsKm: numIterationsKM,
                 clusteringRTsAndBuffers: clusteringRTsAndBuffers
             )

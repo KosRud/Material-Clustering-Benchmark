@@ -15,7 +15,7 @@ namespace WorkGeneration
         {
             var workList = new WorkList(ClusteringTest.LogType.FrameTime, "Frame time");
 
-            const int textureSize = 64;
+            const int textureSize = 128;
 
             for (int i = 0; i < 5; i++)
             {
@@ -35,6 +35,7 @@ namespace WorkGeneration
                                     computeShader: this.csHighlightRemoval,
                                     numIterations: numIterations,
                                     doRandomizeEmptyClusters: false,
+                                    useFullResTexRef: false,
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,
                                         workingSize: textureSize,
@@ -55,6 +56,7 @@ namespace WorkGeneration
                                     computeShader: this.csHighlightRemoval,
                                     numIterations: numIterations,
                                     doRandomizeEmptyClusters: false,
+                                    useFullResTexRef: false,
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,
                                         workingSize: textureSize,
@@ -77,6 +79,7 @@ namespace WorkGeneration
                                         computeShader: this.csHighlightRemoval,
                                         numIterations: numIterations,
                                         doRandomizeEmptyClusters: false,
+                                        useFullResTexRef: false,
                                         numIterationsKM: 2,
                                         doReadback: doReadback,
                                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
@@ -105,6 +108,7 @@ namespace WorkGeneration
                                     computeShader: this.csHighlightRemoval,
                                     numIterations: numIterations,
                                     doRandomizeEmptyClusters: false,
+                                    useFullResTexRef: false,
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,
                                         workingSize: textureSize,
@@ -125,6 +129,7 @@ namespace WorkGeneration
                                         computeShader: this.csHighlightRemoval,
                                         numIterations: numIterations,
                                         doRandomizeEmptyClusters: false,
+                                        useFullResTexRef: false,
                                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                             numClusters: 6,
                                             workingSize: textureSize,
@@ -146,6 +151,7 @@ namespace WorkGeneration
                                     computeShader: this.csHighlightRemoval,
                                     numIterations: numIterations,
                                     doRandomizeEmptyClusters: false,
+                                    useFullResTexRef: false,
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,
                                         workingSize: textureSize,
@@ -166,6 +172,7 @@ namespace WorkGeneration
                                         computeShader: this.csHighlightRemoval,
                                         numIterations: numIterations,
                                         doRandomizeEmptyClusters: false,
+                                        useFullResTexRef: false,
                                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                             numClusters: 6,
                                             workingSize: textureSize,
@@ -225,6 +232,7 @@ namespace WorkGeneration
                     dispatcher: new DispatcherRSstopCondition(
                         computeShader: csHighlightRemoval,
                         doRandomizeEmptyClusters: false,
+                        useFullResTexRef: false,
                         numIterationsKM: 2,
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
@@ -246,6 +254,7 @@ namespace WorkGeneration
                         new DispatcherKM(
                             computeShader: csHighlightRemoval,
                             doRandomizeEmptyClusters: false,
+                            useFullResTexRef: false,
                             numIterations: 1,
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                 numClusters: 6,
@@ -268,6 +277,7 @@ namespace WorkGeneration
                         new DispatcherKHM(
                             computeShader: csHighlightRemoval,
                             doRandomizeEmptyClusters: false,
+                            useFullResTexRef: false,
                             numIterations: 1,
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                 numClusters: 6,

@@ -53,6 +53,8 @@ namespace ClusteringAlgorithms
             );
         }
 
+        public bool useFullResTexRef => this.wrappedDispatcher.useFullResTexRef;
+
         public float GetVariance()
         {
             return this.wrappedDispatcher.GetVariance();
@@ -95,6 +97,11 @@ namespace ClusteringAlgorithms
         public RunUntilConvergesResult RunUntilConverges(ClusteringTextures clusteringTextures)
         {
             this.wrappedDispatcher.SingleIteration(clusteringTextures);
+
+            /*
+                direcrly runing getVariance is not an option
+                because its implementation is not optimized
+            */
 
             ClusterCenters clusterCenters = null;
             ClusterCenters newClusterCenters =

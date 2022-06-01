@@ -17,6 +17,7 @@ namespace ClusteringAlgorithms
                     computeShader,
                     1,
                     doRandomizeEmptyClusters,
+                    useFullResTexRef: false,
                     clusteringRTsAndBuffers
                 )
             )

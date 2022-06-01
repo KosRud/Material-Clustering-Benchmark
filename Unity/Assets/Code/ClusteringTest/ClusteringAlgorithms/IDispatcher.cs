@@ -14,6 +14,7 @@ namespace ClusteringAlgorithms
 
         bool usesStopCondition { get; }
         bool doesReadback { get; }
+        bool useFullResTexRef { get; }
 
         void RunClustering(ClusteringTextures clusteringTextures);
 
