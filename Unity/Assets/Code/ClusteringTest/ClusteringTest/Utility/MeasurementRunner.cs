@@ -22,6 +22,8 @@ public class MeasurementRunner : IDisposable
 
     private List<VideoSection> sections;
 
+    private bool loading;
+
     private void FillSectionList(long numFrames)
     {
         this.sections = new List<VideoSection>();
@@ -91,6 +93,7 @@ public class MeasurementRunner : IDisposable
         this.frameStart = frameStart ?? 0;
         this.noGcAvailable = noGcAvailable;
         this.finished = false;
+        this.loading = true;
 
         if (this.launchParameters.dispatcher.clusteringRTsAndBuffers.isAllocated == false)
         {
@@ -109,6 +112,13 @@ public class MeasurementRunner : IDisposable
         this.videoPlayer.playbackSpeed = 0;
         this.videoPlayer.clip = this.launchParameters.video;
         this.videoPlayer.Play();
+        /*
+            if the frame was 0
+            we won't be able to figure out when the video loads
+
+            TODO robust check
+        */
+        Debug.Assert(this.videoPlayer.frame != 0);
         this.videoPlayer.frame = frameStart ?? 0;
     }
 
@@ -150,6 +160,13 @@ public class MeasurementRunner : IDisposable
         if (
             // not yet loaded video file
             this.videoPlayer.frame == -1
+            /*
+                ! will be a bug if previous run ended on frame 0
+                (which should not normally happen)
+
+                TODO robust check
+            */
+            || this.videoPlayer.frame != 0 && this.loading
             // not yet loaded next frame
             || this.lastProcessedFrame == this.videoPlayer.frame
         )
@@ -157,6 +174,8 @@ public class MeasurementRunner : IDisposable
             Graphics.Blit(src, dst);
             return;
         }
+
+        this.loading = false;
 
         /*
             ProcessNextFrame() should not be called
