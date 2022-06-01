@@ -312,6 +312,9 @@ public class MeasurementRunner : IDisposable
                     this.lastProcessedFrame == this.videoPlayer.frame
                     we can use this to wait for the frame to load
                 */
+
+                // random init for each new section
+                this.launchParameters.dispatcher.clusteringRTsAndBuffers.RandomizeClusterCenters();
             }
         }
         // if the frame we just processed is not the last in current section
