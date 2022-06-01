@@ -42,36 +42,47 @@ public abstract class ABenchmarkMeasurement { }
 public class BenchmarkMeasurementVariance : ABenchmarkMeasurement
 {
     [Serializable]
-    public class FrameVariance
+    public class FrameVarianceRecord
     {
         public long frameIndex;
         public float variance;
 
-        public FrameVariance(long frameIndex, float variance)
+        public FrameVarianceRecord(long frameIndex, float variance)
         {
             this.frameIndex = frameIndex;
             this.variance = variance;
         }
     }
 
-    public List<FrameVariance> varianceByFrame;
+    public List<FrameVarianceRecord> frameVarianceRecords;
 
     public BenchmarkMeasurementVariance()
     {
-        this.varianceByFrame = new List<FrameVariance>();
+        this.frameVarianceRecords = new List<FrameVarianceRecord>();
     }
 }
 
 [Serializable]
 public class BenchmarkMeasurementFrameTime : ABenchmarkMeasurement
 {
-    public float peakFrameTime;
-    public float avgFrameTime;
-
-    public BenchmarkMeasurementFrameTime(float peakFrameTime, float avgFrameTime)
+    [Serializable]
+    public class FrameTimeRecord
     {
-        this.peakFrameTime = peakFrameTime;
-        this.avgFrameTime = avgFrameTime;
+        public long frameIndex;
+        public float time;
+
+        public FrameTimeRecord(long frameIndex, float time)
+        {
+            this.frameIndex = frameIndex;
+            this.time = time;
+        }
+    }
+
+    public List<FrameTimeRecord> frameTimeRecords;
+
+    public BenchmarkMeasurementFrameTime()
+    {
+        this.frameTimeRecords = new List<FrameTimeRecord>();
     }
 }
 

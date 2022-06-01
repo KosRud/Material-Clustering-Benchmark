@@ -11,10 +11,6 @@ public class MeasurementRunner : IDisposable
 
     private readonly WorkGeneration.LaunchParameters launchParameters;
 
-    private float peakFrameTime;
-    private float totalTime;
-    private long framesMeasured;
-
     private readonly System.Diagnostics.Stopwatch stopwatch;
 
     private UnityEngine.Video.VideoPlayer videoPlayer;
@@ -22,6 +18,7 @@ public class MeasurementRunner : IDisposable
     private readonly long? frameEndOrNull;
 
     private readonly BenchmarkMeasurementVariance benchmarkMeasurementVariance;
+    private readonly BenchmarkMeasurementFrameTime benchmarkMeasurementFrameTime;
 
     private readonly ClusteringTest.LogType logType;
 
@@ -52,6 +49,7 @@ public class MeasurementRunner : IDisposable
         this.stopwatch = new System.Diagnostics.Stopwatch();
         this.lastProcessedFrame = null;
         this.benchmarkMeasurementVariance = new BenchmarkMeasurementVariance();
+        this.benchmarkMeasurementFrameTime = new BenchmarkMeasurementFrameTime();
         this.frameEndOrNull = frameEnd;
         this.frameStart = frameStart ?? 0;
         this.noGcAvailable = noGcAvailable;
@@ -95,27 +93,16 @@ public class MeasurementRunner : IDisposable
 
     public BenchmarkReport GetReport()
     {
-        return this.logType switch
-        {
-            ClusteringTest.LogType.Variance
-              => new BenchmarkReport(
-                  measurement: this.benchmarkMeasurementVariance,
-                  serializableLaunchParameters: this.launchParameters.GetSerializable(),
-                  logType: this.logType
-              ),
-
-            ClusteringTest.LogType.FrameTime
-              => new BenchmarkReport(
-                  measurement: new BenchmarkMeasurementFrameTime(
-                      peakFrameTime: this.peakFrameTime,
-                      avgFrameTime: this.totalTime / this.framesMeasured
-                  ),
-                  serializableLaunchParameters: this.launchParameters.GetSerializable(),
-                  logType: this.logType
-              ),
-
-            _ => throw new System.NotImplementedException()
-        };
+        return new BenchmarkReport(
+            measurement: this.logType switch
+            {
+                ClusteringTest.LogType.Variance => this.benchmarkMeasurementVariance,
+                ClusteringTest.LogType.FrameTime => this.benchmarkMeasurementFrameTime,
+                _ => throw new System.NotImplementedException()
+            },
+            serializableLaunchParameters: this.launchParameters.GetSerializable(),
+            logType: this.logType
+        );
     }
 
     public void ProcessNextFrame(RenderTexture src, RenderTexture dst)
@@ -250,10 +237,12 @@ public class MeasurementRunner : IDisposable
                 float measuredtimeMS = (float)this.stopwatch.Elapsed.TotalMilliseconds;
                 float avgTime = measuredtimeMS / numRepetitions;
 
-                this.totalTime += avgTime;
-                this.peakFrameTime = Mathf.Max(this.peakFrameTime, avgTime);
-
-                this.framesMeasured++;
+                this.benchmarkMeasurementFrameTime.frameTimeRecords.Add(
+                    new BenchmarkMeasurementFrameTime.FrameTimeRecord(
+                        frameIndex: this.videoPlayer.frame,
+                        time: avgTime
+                    )
+                );
             }
         }
 
@@ -269,8 +258,8 @@ public class MeasurementRunner : IDisposable
 
     private void MakeVarianceLogEntry()
     {
-        this.benchmarkMeasurementVariance.varianceByFrame.Add(
-            new BenchmarkMeasurementVariance.FrameVariance(
+        this.benchmarkMeasurementVariance.frameVarianceRecords.Add(
+            new BenchmarkMeasurementVariance.FrameVarianceRecord(
                 frameIndex: this.videoPlayer.frame,
                 variance: this.launchParameters.dispatcher.GetVariance()
             )
