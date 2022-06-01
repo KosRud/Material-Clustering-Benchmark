@@ -150,8 +150,6 @@ public class MeasurementRunner : IDisposable
         if (
             // not yet loaded video file
             this.videoPlayer.frame == -1
-            // not yet loaded first frame
-            || this.lastProcessedFrame == null && this.videoPlayer.frame != this.frameStart
             // not yet loaded next frame
             || this.lastProcessedFrame == this.videoPlayer.frame
         )
@@ -172,11 +170,28 @@ public class MeasurementRunner : IDisposable
         */
         if (this.lastProcessedFrame != null)
         {
-            Debug.Assert(this.lastProcessedFrame + 1 == this.videoPlayer.frame);
-        }
-        else
-        {
-            Debug.Assert(this.videoPlayer.frame == this.frameStart);
+            if (this.lastProcessedFrame + 1 != this.videoPlayer.frame)
+            {
+                /*
+                    the order will not be x => x+1
+                    when jumping from section to section
+
+                    setting lastProcessedFrame to null doesn't work
+
+                    lastProcessedFrame = videoPlayer.frame
+                    means the frame is still loading
+
+                    setting lastProcessedFrame to null
+                    will loose this information
+                    and we won't know how many frames to skip
+                */
+                if (this.videoPlayer.frame != this.sections[0].start)
+                {
+                    throw new System.Exception(
+                        $"Incorrect frame processing order. Current frame: {this.videoPlayer.frame}. Previous frame: {this.lastProcessedFrame}"
+                    );
+                }
+            }
         }
         this.lastProcessedFrame = this.videoPlayer.frame;
 
@@ -290,7 +305,13 @@ public class MeasurementRunner : IDisposable
             else
             {
                 this.videoPlayer.frame = this.sections[0].start;
-                this.lastProcessedFrame = null; // not consecutive, reset checks
+                /*
+                    ! we do not reset this.lastProcessedFrame
+
+                    while the video is loading
+                    this.lastProcessedFrame == this.videoPlayer.frame
+                    we can use this to wait for the frame to load
+                */
             }
         }
         // if the frame we just processed is not the last in current section
