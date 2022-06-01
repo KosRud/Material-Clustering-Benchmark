@@ -1,9 +1,47 @@
 using UnityEngine;
 using ClusteringAlgorithms;
 using System;
+using System.Collections.Generic;
 
 public class MeasurementRunner : IDisposable
 {
+    private const int sectionLength = 1000;
+    private const int totalSections = 20; // counting repeats as unique sections
+
+    private class VideoSection
+    {
+        public readonly ulong start;
+        public readonly ulong end;
+
+        public VideoSection(ulong start, ulong end)
+        {
+            this.start = start;
+            this.end = end;
+        }
+    }
+
+    private List<VideoSection> sections;
+
+    private void FillSectionList(ulong numFrames)
+    {
+        this.sections = new List<VideoSection>();
+
+        ulong numSections = numFrames / sectionLength;
+        Debug.Assert(numSections > 0);
+        for (
+            ulong sectionStart = 0;
+            sectionStart + sectionLength <= numFrames && sections.Count < totalSections;
+            sectionStart += sectionLength
+        )
+        {
+            sections.Add(new VideoSection(start: sectionStart, end: sectionStart + sectionLength));
+        }
+        for (int i = 0; sections.Count < totalSections; i++)
+        {
+            sections.Add(sections[i]);
+        }
+    }
+
     private readonly bool noGcAvailable;
 
     private readonly ComputeShader csHighlightRemoval;
@@ -61,6 +99,8 @@ public class MeasurementRunner : IDisposable
 
         this.SetTextureSize();
         this.InitVideoPlayer(videoPlayer, frameStart);
+
+        FillSectionList(this.videoPlayer.frameCount);
     }
 
     private void InitVideoPlayer(UnityEngine.Video.VideoPlayer videoPlayer, long? frameStart)
