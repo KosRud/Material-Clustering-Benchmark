@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class MeasurementRunner : IDisposable
 {
     private const int sectionLength = 1000;
-    private const int totalSections = 20; // counting repeats as unique sections
+    private const int totalSections = 100; // counting repeats as unique sections
 
     private class VideoSection
     {

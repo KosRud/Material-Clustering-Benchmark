@@ -36,14 +36,14 @@ export default function loadReportCollection(
     return reportCollection.reports.map((report) => {
         return {
             measurement: (() => {
-                switch (report.measurement['varianceByFrame']) {
+                switch (report.measurement['frameVarianceRecords']) {
                     case undefined:
                         return report.measurement as FrameTimeMeasurement;
                     default:
                         const measurement: VarianceMeasurement =
                             report.measurement as VarianceMeasurement;
 
-                        const varianceByFrame = measurement.varianceByFrame;
+                        const varianceByFrame = measurement.frameVarianceRecords;
 
                         const arrSqrtVariance = varianceByFrame.map(
                             (frameRecord) => frameRecord.variance ** 0.5
@@ -58,7 +58,7 @@ export default function loadReportCollection(
                         aggregated.peak = smoothPeak(arrSqrtVariance);
 
                         return {
-                            rmseByFrame: measurement.varianceByFrame.map(
+                            rmseByFrame: measurement.frameVarianceRecords.map(
                                 (record) => {
                                     return {
                                         frameIndex: record.frameIndex,
@@ -75,13 +75,13 @@ export default function loadReportCollection(
                 switch (report.logType) {
                     case 0:
                         assert.notEqual(
-                            report.measurement['peakFrameTime'],
+                            report.measurement['frameTimeRecords'],
                             undefined
                         );
                         return 'frame time';
                     case 1:
                         assert.notEqual(
-                            report.measurement['varianceByFrame'],
+                            report.measurement['frameVarianceRecords'],
                             undefined
                         );
                         return 'variance';

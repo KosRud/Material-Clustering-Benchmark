@@ -8,15 +8,17 @@ export const Measurement = t.iface([], {
 });
 
 export const VarianceMeasurement = t.iface(["Measurement"], {
-  "varianceByFrame": t.array(t.iface([], {
+  "frameVarianceRecords": t.array(t.iface([], {
     "frameIndex": "number",
     "variance": "number",
   })),
 });
 
 export const FrameTimeMeasurement = t.iface(["Measurement"], {
-  "peakFrameTime": "number",
-  "avgFrameTime": "number",
+  "frameTimeRecords": t.iface([], {
+    "frameIndex": "number",
+    "time": "number",
+  }),
 });
 
 export const Report = t.iface([], {
