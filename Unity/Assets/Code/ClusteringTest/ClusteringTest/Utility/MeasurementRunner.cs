@@ -228,11 +228,10 @@ public class MeasurementRunner : IDisposable
         if (
             this.logType == ClusteringTest.LogType.Variance
             /*
-                first frame does not have valid variance
-                so trying to extract cluster centers
-                will result in a validation error
+                at the start of a section cluster centers are randomized
+                and variance is lost
             */
-            || this.videoPlayer.frame == this.frameStart
+            || this.videoPlayer.frame == this.sections[0].start
         )
         {
             this.RunDispatcher();
