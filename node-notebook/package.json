@@ -13,6 +13,7 @@
     "dependencies": {
         "deepcopy": "^2.1.0",
         "deepmerge": "^4.2.2",
+        "JSONStream": "^1.3.5",
         "plotly": "^1.0.6",
         "pythonic": "^2.0.3",
         "tslab-plotly": "^2.0.4"
