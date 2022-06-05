@@ -287,6 +287,8 @@ public class MeasurementRunner : IDisposable
                         )
                         {
                             temp.centers[0] = temp.centers[1];
+                            // useless line, safeguard to prevent compiler optimization
+
                             // force current thread to wait until GPU finishes computations
                         }
                     }
