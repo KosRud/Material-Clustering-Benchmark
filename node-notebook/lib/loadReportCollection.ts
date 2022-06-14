@@ -55,7 +55,7 @@ export default function loadReportCollection(
                         aggregated.mean =
                             arrSqrtVariance.reduce((a, b) => a + b) /
                             varianceByFrame.length;
-                        aggregated.peak = smoothPeak(arrSqrtVariance);
+                        aggregated.peak = smoothPeak(arrSqrtVariance, 100);
 
                         return {
                             rmseByFrame: measurement.frameVarianceRecords.map(

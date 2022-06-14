@@ -146,7 +146,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x692dfd4049914d2585e43debb2f415ae",
+                                "requestId": "x28af01f9d27d4ac2ad2a2047c1a5e60f",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -720,7 +720,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x692dfd4049914d2585e43debb2f415ae",
+                                "requestId": "x28af01f9d27d4ac2ad2a2047c1a5e60f",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -1574,32 +1574,15 @@
         {
             "language": "javascript",
             "source": [
-                "import smoothPeak from '../lib/smoothPeak'\r\n\r\nconst merge = require(\"deepmerge\");\r\n\r\n{\r\n    function getResultId(report) {\r\n        return JSON.stringify({\r\n            algorithm: report.algorithm,\r\n            stopCondition: report.stopCondition,\r\n        });\r\n    }\r\n    const resultIdOptions = Array.from(\r\n        new Set(\r\n            benchmarkStopConditionResults.map((result) => getResultId(result))\r\n        )\r\n    );\r\n\r\n    \r\n\r\n    const aggregatedResults = resultIdOptions\r\n        .map((resultId) => {\r\n            const subsetResultId = benchmarkStopConditionResults.filter(\r\n                (result) => getResultId(result) == resultId\r\n            );\r\n\r\n            function getResultName(result) {\r\n                let name = result.algorithm;\r\n\r\n                if (result.stopCondition != undefined) {\r\n                    name += ` - ${result.stopCondition.failedSwaps} bad swaps`;\r\n                }\r\n\r\n                return name;\r\n            }\r\n\r\n            return {\r\n                name: getResultName(subsetResultId[0]),\r\n                meanRMSE:\r\n                    subsetResultId\r\n                        .map((result) => result.variance ** 0.5)\r\n                        .reduce((rmseA, rmseB) => rmseA + rmseB) /\r\n                    subsetResultId.length,\r\n                meanNumIterations:\r\n                    subsetResultId\r\n                        .map((result) => result.numIterations)\r\n                        .reduce(\r\n                            (numIterationsA, numIterationsB) =>\r\n                                numIterationsA + numIterationsB\r\n                        ) / subsetResultId.length,\r\n                peakRMSE: smoothPeak(\r\n                    subsetResultId.map((result) => result.variance ** 0.5)\r\n                ),\r\n                peakNumIterations: smoothPeak(\r\n                    subsetResultId.map((result) => result.numIterations)\r\n                ),\r\n            };\r\n        })\r\n        .sort((resultA, resultB) => resultA.name > resultB.name);\r\n\r\n    // mean RMSE\r\n    {\r\n        const data = resultIdOptions.map(\r\n\t\t\t(resultId) => {\r\n\t\t\t\tconst subsetResultId = benchmarkStopConditionResults.filter(\r\n\t\t\t\t\t(result) => getResultId(result) == resultId\r\n\t\t\t\t);\r\n\r\n\t\t\t\tfunction getResultName(result) {\r\n\t\t\t\t\tlet name = result.algorithm;\r\n\t\r\n\t\t\t\t\tif (result.stopCondition != undefined) {\r\n\t\t\t\t\t\tname += ` - ${result.stopCondition.failedSwaps} bad swaps`;\r\n\t\t\t\t\t}\r\n\t\r\n\t\t\t\t\treturn name;\r\n\t\t\t\t}\r\n\r\n\t\t\t\treturn {\r\n\t\t\t\t\tname: getResultName(subsetResultId[0]),\r\n\t\t\t\t\ty: subsetResultId.map((result) => result.variance ** 0.5),\r\n\t\t\t\t\ttype: 'box',\r\n\t\t\t\t\tboxpoints: false\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t)\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: \"RMSE\",\r\n            },\r\n            xaxis: {\r\n                tickangle: 60,\r\n            },\r\n\t\t\tshowlegend: false,\r\n            bargap: 800,\r\n        });\r\n\r\n        Plotly.newPlot(\"\", data, layout);\r\n    }\r\n\r\n    // number of iterations\r\n    {\r\n        const data = resultIdOptions.map(\r\n\t\t\t(resultId) => {\r\n\t\t\t\tconst subsetResultId = benchmarkStopConditionResults.filter(\r\n\t\t\t\t\t(result) => getResultId(result) == resultId\r\n\t\t\t\t);\r\n\r\n\t\t\t\tfunction getResultName(result) {\r\n\t\t\t\t\tlet name = result.algorithm;\r\n\t\r\n\t\t\t\t\tif (result.stopCondition != undefined) {\r\n\t\t\t\t\t\tname += ` - ${result.stopCondition.failedSwaps} bad swaps`;\r\n\t\t\t\t\t}\r\n\t\r\n\t\t\t\t\treturn name;\r\n\t\t\t\t}\r\n\r\n\t\t\t\treturn {\r\n\t\t\t\t\tname: getResultName(subsetResultId[0]),\r\n\t\t\t\t\ty: subsetResultId.map((result) => result.numIterations),\r\n\t\t\t\t\ttype: 'box',\r\n\t\t\t\t\tboxpoints: false\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t)\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: \"number of iterations\",\r\n            },\r\n            xaxis: {\r\n                tickangle: 60,\r\n            },\r\n\t\t\tshowlegend: false,\r\n            bargap: 800,\r\n        });\r\n\r\n        Plotly.newPlot(\"\", data, layout);\r\n    }\r\n}\r\n"
+                "const merge = require(\"deepmerge\");\r\n\r\n{\r\n    function getResultId(report) {\r\n        return JSON.stringify({\r\n            algorithm: report.algorithm,\r\n            stopCondition: report.stopCondition,\r\n        });\r\n    }\r\n    const resultIdOptions = Array.from(\r\n        new Set(\r\n            benchmarkStopConditionResults.map((result) => getResultId(result))\r\n        )\r\n    );\r\n\r\n    // mean RMSE\r\n    {\r\n        const data = resultIdOptions.map(\r\n\t\t\t(resultId) => {\r\n\t\t\t\tconst subsetResultId = benchmarkStopConditionResults.filter(\r\n\t\t\t\t\t(result) => getResultId(result) == resultId\r\n\t\t\t\t);\r\n\r\n\t\t\t\tfunction getResultName(result) {\r\n\t\t\t\t\tlet name = result.algorithm;\r\n\t\r\n\t\t\t\t\tif (result.stopCondition != undefined) {\r\n\t\t\t\t\t\tname += ` - ${result.stopCondition.failedSwaps} bad swaps`;\r\n\t\t\t\t\t}\r\n\t\r\n\t\t\t\t\treturn name;\r\n\t\t\t\t}\r\n\r\n\t\t\t\treturn {\r\n\t\t\t\t\tname: getResultName(subsetResultId[0]),\r\n\t\t\t\t\ty: subsetResultId.map((result) => result.variance ** 0.5),\r\n\t\t\t\t\ttype: 'box',\r\n\t\t\t\t\tboxpoints: false\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t)\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: \"RMSE\",\r\n            },\r\n            xaxis: {\r\n                tickangle: 60,\r\n            },\r\n\t\t\tshowlegend: false,\r\n            bargap: 800,\r\n        });\r\n\r\n        Plotly.newPlot(\"\", data, layout);\r\n    }\r\n\r\n    // number of iterations\r\n    {\r\n        const data = resultIdOptions.map(\r\n\t\t\t(resultId) => {\r\n\t\t\t\tconst subsetResultId = benchmarkStopConditionResults.filter(\r\n\t\t\t\t\t(result) => getResultId(result) == resultId\r\n\t\t\t\t);\r\n\r\n\t\t\t\tfunction getResultName(result) {\r\n\t\t\t\t\tlet name = result.algorithm;\r\n\t\r\n\t\t\t\t\tif (result.stopCondition != undefined) {\r\n\t\t\t\t\t\tname += ` - ${result.stopCondition.failedSwaps} bad swaps`;\r\n\t\t\t\t\t}\r\n\t\r\n\t\t\t\t\treturn name;\r\n\t\t\t\t}\r\n\r\n\t\t\t\treturn {\r\n\t\t\t\t\tname: getResultName(subsetResultId[0]),\r\n\t\t\t\t\ty: subsetResultId.map((result) => result.numIterations),\r\n\t\t\t\t\ttype: 'box',\r\n\t\t\t\t\tboxpoints: false\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t)\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: \"number of iterations\",\r\n            },\r\n            xaxis: {\r\n                tickangle: 60,\r\n            },\r\n\t\t\tshowlegend: false,\r\n            bargap: 800,\r\n        });\r\n\r\n        Plotly.newPlot(\"\", data, layout);\r\n    }\r\n}\r\n"
             ],
             "outputs": [
                 {
                     "items": [
                         {
-                            "mime": "application/vnd.code.notebook.stdout",
-                            "value": [
-                                "warning: partSize=55",
-                                "warning: partSize=55",
-                                "warning: partSize=55",
-                                "warning: partSize=55",
-                                "warning: partSize=55",
-                                "warning: partSize=55",
-                                "warning: partSize=55",
-                                ""
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "items": [
-                        {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x1bc71f77a9f844678cbd4a3007475198",
+                                "requestId": "x1e92246e45054088a8185a6fa054e57c",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -13813,7 +13796,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "x1bc71f77a9f844678cbd4a3007475198",
+                                "requestId": "x1e92246e45054088a8185a6fa054e57c",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
