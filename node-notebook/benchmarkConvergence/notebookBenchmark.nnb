@@ -139,7 +139,7 @@
         {
             "language": "javascript",
             "source": [
-                "import merge from \"deepmerge\";\r\n\r\n{\r\n    const algorithmOptions = Array.from(\r\n        new Set(benchmarkConvergenceResults.map((result) => result.algorithm))\r\n    );\r\n\r\n    const datasetOptions = Array.from(\r\n        new Set(benchmarkConvergenceResults.map((result) => result.datasetFile))\r\n    );\r\n\r\n    function getPercentile(arr, percentile) {\r\n        return arr.slice().sort()[Math.round(arr.length * percentile * 0.01)];\r\n    }\r\n\r\n    const errorBandPercentileWidth = 25;\r\n\r\n    // sqrt(variance)\r\n    {\r\n        const data = [];\r\n\r\n        for (const [ algorightId, algorithm ] of Object.entries(\r\n            algorithmOptions\r\n        )) {\r\n\t\t\tconst colorString = (() => {\r\n\t\t\t\tswitch (true) {\r\n\t\t\t\t\tcase algorightId == 0:\r\n\t\t\t\t\t\treturn \"#F00\";\r\n\t\t\t\t\tcase algorightId == 1:\r\n\t\t\t\t\t\treturn \"0F0\";\r\n\t\t\t\t\tcase algorightId == 2:\r\n\t\t\t\t\t\treturn \"00F\";\r\n\t\t\t\t\tdefault:\r\n\t\t\t\t\t\tthrow new Error(\"too many algorithms\");\r\n\t\t\t\t}\r\n\t\t\t})();\r\n\r\n            const subsetAlgorithm = benchmarkConvergenceResults.filter(\r\n                (result) => result.algorithm == algorithm\r\n            );\r\n\r\n            const numIterationsOptions = Array.from(\r\n                new Set(subsetAlgorithm.map((result) => result.numIterations))\r\n            );\r\n\r\n            const sharedData = {\r\n                type: \"scatter\",\r\n                mode: \"lines\",\r\n            };\r\n\r\n            // lower bound\r\n            data.push(\r\n                merge(sharedData, {\r\n                    x: numIterationsOptions,\r\n                    y: numIterationsOptions.map((numIterations) => {\r\n                        const subsetNumItrations = subsetAlgorithm.filter(\r\n                            (result) => result.numIterations == numIterations\r\n                        );\r\n\r\n                        const perDatasetMin = datasetOptions.map(\r\n                            (datasetFile) =>\r\n                                getPercentile(\r\n                                    subsetNumItrations\r\n                                        .filter(\r\n                                            (result) =>\r\n                                                result.datasetFile ==\r\n                                                datasetFile\r\n                                        )\r\n                                        .map(\r\n                                            (result) => result.variance ** 0.5\r\n                                        ),\r\n                                    50 - errorBandPercentileWidth * 0.5\r\n                                )\r\n                        );\r\n\r\n                        return (\r\n                            perDatasetMin.reduce((a, b) => a + b) /\r\n                            perDatasetMin.length\r\n                        );\r\n                    }),\r\n                    name: \"\",\r\n                    line: {\r\n                        width: 0,\r\n                    },\r\n                })\r\n            );\r\n\r\n            // mean\r\n            data.push(\r\n                merge(sharedData, {\r\n                    x: numIterationsOptions,\r\n                    y: numIterationsOptions.map((numIterations) => {\r\n                        const subsetNumItrations = subsetAlgorithm.filter(\r\n                            (result) => result.numIterations == numIterations\r\n                        );\r\n\r\n                        return (\r\n                            subsetNumItrations\r\n                                .map((result) => result.variance ** 0.5)\r\n                                .reduce((a, b) => a + b) /\r\n                            subsetNumItrations.length\r\n                        );\r\n                    }),\r\n                    name: algorithm,\r\n                    fill: \"tonexty\",\r\n                    fillcolor: colorString + \"5\",\r\n                    line: {\r\n                        width: 4,\r\n                        color: colorString,\r\n                    },\r\n                })\r\n            );\r\n\r\n            // upper bound\r\n            data.push(\r\n                merge(sharedData, {\r\n                    x: numIterationsOptions,\r\n                    y: numIterationsOptions.map((numIterations) => {\r\n                        const subsetNumItrations = subsetAlgorithm.filter(\r\n                            (result) => result.numIterations == numIterations\r\n                        );\r\n\r\n                        const perDatasetMax = datasetOptions.map(\r\n                            (datasetFile) =>\r\n                                getPercentile(\r\n                                    subsetNumItrations\r\n                                        .filter(\r\n                                            (result) =>\r\n                                                result.datasetFile ==\r\n                                                datasetFile\r\n                                        )\r\n                                        .map(\r\n                                            (result) => result.variance ** 0.5\r\n                                        ),\r\n                                    50 + errorBandPercentileWidth * 0.5\r\n                                )\r\n                        );\r\n\r\n                        return (\r\n                            perDatasetMax.reduce((a, b) => a + b) /\r\n                            perDatasetMax.length\r\n                        );\r\n                    }),\r\n                    name: \"\",\r\n                    fill: \"tonexty\",\r\n                    fillcolor: colorString + \"5\",\r\n                    line: {\r\n                        width: 0,\r\n                    },\r\n                })\r\n            );\r\n        }\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: `RMSE`,\r\n            },\r\n            xaxis: {\r\n                title: \"number of iterations\",\r\n            },\r\n            title: {\r\n                text: `aggregated RMSE`,\r\n            },\r\n        });\r\n\r\n        Plotly.newPlot(\"\", data, layout);\r\n    }\r\n\r\n    // change of variance\r\n    {\r\n        const sharedData = {\r\n            type: \"scatter\",\r\n            mode: \"lines\",\r\n            line: {\r\n                width: 4,\r\n            },\r\n        };\r\n\r\n        const data = merge(\r\n            sharedData,\r\n            algorithmOptions.map((algorithm) => {\r\n                const subsetAlgorithm = benchmarkConvergenceResults.filter(\r\n                    (result) => result.algorithm == algorithm\r\n                );\r\n\r\n                const numIterationsOptions = Array.from(\r\n                    new Set(\r\n                        subsetAlgorithm.map((result) => result.numIterations)\r\n                    )\r\n                );\r\n\r\n                const variancePerIteration = numIterationsOptions.map(\r\n                    (numIterations) => {\r\n                        return {\r\n                            numIterations: numIterations,\r\n                            variance: (() => {\r\n                                const subsetNumIterations =\r\n                                    subsetAlgorithm.filter(\r\n                                        (result) =>\r\n                                            result.numIterations ==\r\n                                            numIterations\r\n                                    );\r\n                                return (\r\n                                    subsetNumIterations\r\n                                        .map((result) => result.variance)\r\n                                        .reduce((a, b) => a + b) /\r\n                                    subsetNumIterations.length\r\n                                );\r\n                            })(),\r\n                        };\r\n                    }\r\n                );\r\n                for (const index of [...variancePerIteration.keys()].splice(\r\n                    1\r\n                )) {\r\n                    variancePerIteration[index].deltaVariance =\r\n                        variancePerIteration[index - 1].variance -\r\n                        variancePerIteration[index].variance;\r\n                }\r\n\r\n                variancePerIteration.shift();\r\n\r\n                return {\r\n                    x: variancePerIteration.map(\r\n                        (record) => record.numIterations\r\n                    ),\r\n                    y: variancePerIteration.map(\r\n                        (record) => record.deltaVariance\r\n                    ),\r\n                    name: algorithm,\r\n                    type: \"scatter\",\r\n                    mode: \"lines\",\r\n                    line: {\r\n                        width: 4,\r\n                    },\r\n                };\r\n            })\r\n        );\r\n\r\n        data.push(\r\n            merge(\r\n                sharedData,\r\n                (() => {\r\n                    const numIterationsOptions = Array.from(\r\n                        new Set(\r\n                            benchmarkConvergenceResults\r\n                                .filter((result) => result.algorithm == \"KM\")\r\n                                .map((result) => result.numIterations)\r\n                        )\r\n                    );\r\n\r\n                    return {\r\n                        x: numIterationsOptions,\r\n                        y: numIterationsOptions.map(() => 1e-4),\r\n                        name: \"stop condition\",\r\n                    };\r\n                })()\r\n            )\r\n        );\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: { text: `Δ MSE`, standoff: 20 },\r\n            },\r\n            xaxis: {\r\n                title: \"number of iterations\",\r\n            },\r\n            title: {\r\n                text: `MSE change between iterations`,\r\n            },\r\n        });\r\n\r\n        Plotly.newPlot(\"\", data, layout);\r\n    }\r\n}\r\n"
+                "import merge from \"deepmerge\";\r\n\r\n{\r\n    const algorithmOptions = Array.from(\r\n        new Set(benchmarkConvergenceResults.map((result) => result.algorithm))\r\n    );\r\n\r\n    const datasetOptions = Array.from(\r\n        new Set(benchmarkConvergenceResults.map((result) => result.datasetFile))\r\n    );\r\n\r\n    function getPercentile(arr, percentile) {\r\n        return arr.slice().sort()[Math.round(arr.length * percentile * 0.01)];\r\n    }\r\n\r\n    const errorBandPercentileWidth = 25;\r\n\r\n    // sqrt(variance)\r\n    {\r\n        const data = [];\r\n\r\n        for (const [ algorightId, algorithm ] of Object.entries(\r\n            algorithmOptions\r\n        )) {\r\n\t\t\tconst colorString = (() => {\r\n\t\t\t\tswitch (true) {\r\n\t\t\t\t\tcase algorightId == 0:\r\n\t\t\t\t\t\treturn \"#F55\";\r\n\t\t\t\t\tcase algorightId == 1:\r\n\t\t\t\t\t\treturn \"5F5\";\r\n\t\t\t\t\tcase algorightId == 2:\r\n\t\t\t\t\t\treturn \"55F\";\r\n\t\t\t\t\tdefault:\r\n\t\t\t\t\t\tthrow new Error(\"too many algorithms\");\r\n\t\t\t\t}\r\n\t\t\t})();\r\n\r\n            const subsetAlgorithm = benchmarkConvergenceResults.filter(\r\n                (result) => result.algorithm == algorithm\r\n            );\r\n\r\n            const numIterationsOptions = Array.from(\r\n                new Set(subsetAlgorithm.map((result) => result.numIterations))\r\n            );\r\n\r\n            const sharedData = {\r\n                type: \"scatter\",\r\n                mode: \"lines\",\r\n            };\r\n\r\n            // lower bound\r\n            data.push(\r\n                merge(sharedData, {\r\n                    x: numIterationsOptions,\r\n                    y: numIterationsOptions.map((numIterations) => {\r\n                        const subsetNumItrations = subsetAlgorithm.filter(\r\n                            (result) => result.numIterations == numIterations\r\n                        );\r\n\r\n                        const perDatasetMin = datasetOptions.map(\r\n                            (datasetFile) =>\r\n                                getPercentile(\r\n                                    subsetNumItrations\r\n                                        .filter(\r\n                                            (result) =>\r\n                                                result.datasetFile ==\r\n                                                datasetFile\r\n                                        )\r\n                                        .map(\r\n                                            (result) => result.variance ** 0.5\r\n                                        ),\r\n                                    50 - errorBandPercentileWidth * 0.5\r\n                                )\r\n                        );\r\n\r\n                        return (\r\n                            perDatasetMin.reduce((a, b) => a + b) /\r\n                            perDatasetMin.length\r\n                        );\r\n                    }),\r\n                    name: \"\",\r\n                    line: {\r\n                        width: 0,\r\n                    },\r\n\t\t\t\t\tshowlegend: false\r\n                })\r\n            );\r\n\r\n            // mean\r\n            data.push(\r\n                merge(sharedData, {\r\n                    x: numIterationsOptions,\r\n                    y: numIterationsOptions.map((numIterations) => {\r\n                        const subsetNumItrations = subsetAlgorithm.filter(\r\n                            (result) => result.numIterations == numIterations\r\n                        );\r\n\r\n                        return (\r\n                            subsetNumItrations\r\n                                .map((result) => result.variance ** 0.5)\r\n                                .reduce((a, b) => a + b) /\r\n                            subsetNumItrations.length\r\n                        );\r\n                    }),\r\n                    name: algorithm,\r\n                    fill: \"tonexty\",\r\n                    fillcolor: colorString + \"5\",\r\n                    line: {\r\n                        width: 4,\r\n                        color: colorString,\r\n                    },\r\n                })\r\n            );\r\n\r\n            // upper bound\r\n            data.push(\r\n                merge(sharedData, {\r\n                    x: numIterationsOptions,\r\n                    y: numIterationsOptions.map((numIterations) => {\r\n                        const subsetNumItrations = subsetAlgorithm.filter(\r\n                            (result) => result.numIterations == numIterations\r\n                        );\r\n\r\n                        const perDatasetMax = datasetOptions.map(\r\n                            (datasetFile) =>\r\n                                getPercentile(\r\n                                    subsetNumItrations\r\n                                        .filter(\r\n                                            (result) =>\r\n                                                result.datasetFile ==\r\n                                                datasetFile\r\n                                        )\r\n                                        .map(\r\n                                            (result) => result.variance ** 0.5\r\n                                        ),\r\n                                    50 + errorBandPercentileWidth * 0.5\r\n                                )\r\n                        );\r\n\r\n                        return (\r\n                            perDatasetMax.reduce((a, b) => a + b) /\r\n                            perDatasetMax.length\r\n                        );\r\n                    }),\r\n                    name: \"\",\r\n                    fill: \"tonexty\",\r\n                    fillcolor: colorString + \"5\",\r\n                    line: {\r\n                        width: 0,\r\n                    },\r\n\t\t\t\t\tshowlegend: false\r\n                })\r\n            );\r\n        }\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: `RMSE`,\r\n            },\r\n            xaxis: {\r\n                title: \"number of iterations\",\r\n            },\r\n            title: {\r\n                text: `aggregated RMSE`,\r\n            },\r\n        });\r\n\r\n        Plotly.newPlot(\"\", data, layout);\r\n    }\r\n\r\n    // change of variance\r\n    {\r\n        const sharedData = {\r\n            type: \"scatter\",\r\n            mode: \"lines\",\r\n            line: {\r\n                width: 4,\r\n            },\r\n        };\r\n\r\n        const data = merge(\r\n            sharedData,\r\n            algorithmOptions.map((algorithm) => {\r\n                const subsetAlgorithm = benchmarkConvergenceResults.filter(\r\n                    (result) => result.algorithm == algorithm\r\n                );\r\n\r\n                const numIterationsOptions = Array.from(\r\n                    new Set(\r\n                        subsetAlgorithm.map((result) => result.numIterations)\r\n                    )\r\n                );\r\n\r\n                const variancePerIteration = numIterationsOptions.map(\r\n                    (numIterations) => {\r\n                        return {\r\n                            numIterations: numIterations,\r\n                            variance: (() => {\r\n                                const subsetNumIterations =\r\n                                    subsetAlgorithm.filter(\r\n                                        (result) =>\r\n                                            result.numIterations ==\r\n                                            numIterations\r\n                                    );\r\n                                return (\r\n                                    subsetNumIterations\r\n                                        .map((result) => result.variance)\r\n                                        .reduce((a, b) => a + b) /\r\n                                    subsetNumIterations.length\r\n                                );\r\n                            })(),\r\n                        };\r\n                    }\r\n                );\r\n                for (const index of [...variancePerIteration.keys()].splice(\r\n                    1\r\n                )) {\r\n                    variancePerIteration[index].deltaVariance =\r\n                        variancePerIteration[index - 1].variance -\r\n                        variancePerIteration[index].variance;\r\n                }\r\n\r\n                variancePerIteration.shift();\r\n\r\n                return {\r\n                    x: variancePerIteration.map(\r\n                        (record) => record.numIterations\r\n                    ),\r\n                    y: variancePerIteration.map(\r\n                        (record) => record.deltaVariance\r\n                    ),\r\n                    name: algorithm,\r\n                    type: \"scatter\",\r\n                    mode: \"lines\",\r\n                    line: {\r\n                        width: 4,\r\n                    },\r\n                };\r\n            })\r\n        );\r\n\r\n        data.push(\r\n            merge(\r\n                sharedData,\r\n                (() => {\r\n                    const numIterationsOptions = Array.from(\r\n                        new Set(\r\n                            benchmarkConvergenceResults\r\n                                .filter((result) => result.algorithm == \"KM\")\r\n                                .map((result) => result.numIterations)\r\n                        )\r\n                    );\r\n\r\n                    return {\r\n                        x: numIterationsOptions,\r\n                        y: numIterationsOptions.map(() => 1e-4),\r\n                        name: \"stop condition\",\r\n                    };\r\n                })()\r\n            )\r\n        );\r\n\r\n        const layout = merge(sharedLayout, {\r\n            yaxis: {\r\n                title: { text: `Δ MSE`, standoff: 20 },\r\n            },\r\n            xaxis: {\r\n                title: \"number of iterations\",\r\n            },\r\n            title: {\r\n                text: `MSE change between iterations`,\r\n            },\r\n        });\r\n\r\n        Plotly.newPlot(\"\", data, layout);\r\n    }\r\n}\r\n"
             ],
             "outputs": [
                 {
@@ -147,7 +147,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xe03d7d25675f46d7b8caf3c4a1bd35ee",
+                                "requestId": "x0b7dbcb96e4c4c9e81b00a2ce45c4222",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
@@ -281,7 +281,8 @@
                                         "name": "",
                                         "line": {
                                             "width": 0
-                                        }
+                                        },
+                                        "showlegend": false
                                     },
                                     {
                                         "type": "scatter",
@@ -412,10 +413,10 @@
                                         ],
                                         "name": "KM",
                                         "fill": "tonexty",
-                                        "fillcolor": "#F005",
+                                        "fillcolor": "#F555",
                                         "line": {
                                             "width": 4,
-                                            "color": "#F00"
+                                            "color": "#F55"
                                         }
                                     },
                                     {
@@ -547,10 +548,11 @@
                                         ],
                                         "name": "",
                                         "fill": "tonexty",
-                                        "fillcolor": "#F005",
+                                        "fillcolor": "#F555",
                                         "line": {
                                             "width": 0
-                                        }
+                                        },
+                                        "showlegend": false
                                     },
                                     {
                                         "type": "scatter",
@@ -682,7 +684,8 @@
                                         "name": "",
                                         "line": {
                                             "width": 0
-                                        }
+                                        },
+                                        "showlegend": false
                                     },
                                     {
                                         "type": "scatter",
@@ -813,10 +816,10 @@
                                         ],
                                         "name": "KHM",
                                         "fill": "tonexty",
-                                        "fillcolor": "0F05",
+                                        "fillcolor": "5F55",
                                         "line": {
                                             "width": 4,
-                                            "color": "0F0"
+                                            "color": "5F5"
                                         }
                                     },
                                     {
@@ -948,10 +951,11 @@
                                         ],
                                         "name": "",
                                         "fill": "tonexty",
-                                        "fillcolor": "0F05",
+                                        "fillcolor": "5F55",
                                         "line": {
                                             "width": 0
-                                        }
+                                        },
+                                        "showlegend": false
                                     },
                                     {
                                         "type": "scatter",
@@ -1023,7 +1027,8 @@
                                         "name": "",
                                         "line": {
                                             "width": 0
-                                        }
+                                        },
+                                        "showlegend": false
                                     },
                                     {
                                         "type": "scatter",
@@ -1094,10 +1099,10 @@
                                         ],
                                         "name": "Random swap",
                                         "fill": "tonexty",
-                                        "fillcolor": "00F5",
+                                        "fillcolor": "55F5",
                                         "line": {
                                             "width": 4,
-                                            "color": "00F"
+                                            "color": "55F"
                                         }
                                     },
                                     {
@@ -1169,10 +1174,11 @@
                                         ],
                                         "name": "",
                                         "fill": "tonexty",
-                                        "fillcolor": "00F5",
+                                        "fillcolor": "55F5",
                                         "line": {
                                             "width": 0
-                                        }
+                                        },
+                                        "showlegend": false
                                     }
                                 ],
                                 "layout": {
@@ -1208,7 +1214,7 @@
                         {
                             "mime": "application/vnd.ts.notebook.plotly+json",
                             "value": {
-                                "requestId": "xe03d7d25675f46d7b8caf3c4a1bd35ee",
+                                "requestId": "x0b7dbcb96e4c4c9e81b00a2ce45c4222",
                                 "type": "generatePlot",
                                 "ele": "",
                                 "data": [
