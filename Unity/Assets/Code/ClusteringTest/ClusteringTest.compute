@@ -223,27 +223,30 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 	}
 
 	for (uint k = 0; k < num_clusters; k++) {
-		float4 result;
+		float4 result = 0;
 
 		if (!KHM || final){
 			result.w = (k == clusterID);
 		} else {
             float top = min_dist;
-
-            if (k != clusterID) {
-                top *= pow5(
-                    min_dist / dist_list[k]
-                );
-            }
-
             float bottom = 1.0;
 
-            for (uint n = 0; n < num_clusters; n++){
-                if (n == clusterID) {
-                    continue;
+            if (min_dist == 0) {
+                top = (k == clusterID);
+            } else {
+                if (k != clusterID) {
+                    top *= pow5(
+                        min_dist / dist_list[k]
+                    );
                 }
-                
-                bottom += pow3(min_dist / dist_list[n]);
+
+                for (uint n = 0; n < num_clusters; n++){
+                    if (n == clusterID) {
+                        continue;
+                    }
+                    
+                    bottom += pow3(min_dist / dist_list[n]);
+                }
             }
 
             result.w = top / pow2(bottom);

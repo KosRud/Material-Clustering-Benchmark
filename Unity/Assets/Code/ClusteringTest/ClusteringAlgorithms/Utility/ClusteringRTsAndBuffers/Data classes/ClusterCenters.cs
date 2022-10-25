@@ -62,11 +62,13 @@ namespace ClusteringAlgorithms
 
                 if (float.IsNaN(center.x) || float.IsNaN(center.y))
                 {
+                    LogClusterCenters(numClusters, centersBufferData);
                     throw new System.Exception("NaN in shader");
                 }
 
                 if (center.x < -0.5 || center.x > 0.5 || center.y < -0.5 || center.y > 0.5)
                 {
+                    LogClusterCenters(numClusters, centersBufferData);
                     throw new System.Exception($"invalid cluster center record: {center}");
                 }
             }
@@ -90,14 +92,18 @@ namespace ClusteringAlgorithms
                 }
             }
 
+            LogClusterCenters(numClusters, centersBufferData);
+            throw new InvalidClustersException("all clusters are invalid");
+        }
+
+        private static void LogClusterCenters(int numClusters, Vector4[] centersBufferData)
+        {
             for (int i = 0; i < numClusters; i++)
             {
                 Vector4 center = centersBufferData[i];
 
                 Debug.Log(center);
             }
-
-            throw new InvalidClustersException("all clusters are invalid");
         }
 
         public class InvalidClustersException : System.Exception
