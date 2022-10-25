@@ -129,6 +129,7 @@ namespace ClusteringAlgorithms
             */
             this.cbufClusterCenters = new ComputeBuffer(this.numClusters * 2, sizeof(float) * 4);
             this.clusterCentersTempData = new Vector4[this.numClusters * 2];
+#pragma warning disable 162
             if (randomInit)
             {
                 this.RandomizeClusterCenters();
@@ -137,6 +138,7 @@ namespace ClusteringAlgorithms
             {
                 this.SetDeterministicClusterCenters();
             }
+#pragma warning restore 162
         }
 
         public bool isAllocated => this.cbufClusterCenters != null;
