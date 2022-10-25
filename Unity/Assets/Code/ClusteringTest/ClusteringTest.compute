@@ -45,6 +45,18 @@ SamplerState sampler_tex_variance_r;
 RWStructuredBuffer<float4> cbuf_cluster_centers;
 RWStructuredBuffer<int4> cbuf_random_positions;
 
+const float3x3 kkk2rgb_matrix = {
+	1,	1, -0.6667,
+	1,	0,	1.3333,
+	1,	-1,	-0.6667
+};
+
+const float3x3 rgb2kkk_matrix = {
+	0.3333,	0.3333,	0.3333,
+	0.5,	0,		-0.5,
+	-0.25,	0.5,	-0.25
+};
+
 inline float pow2(float x){
 	return x*x;
 }
@@ -65,6 +77,10 @@ inline float pow5(float x){
 
 float2 project(float3 col)
 {
+	/* 
+		specular-free
+		i.e., maximize saturation
+	*/
 	col -= min(
 		col.r,
 		min(
@@ -72,18 +88,17 @@ float2 project(float3 col)
 			col.b
 		)
 	);
-    /*
-        Add a small bias to prevent division by zero
 
-        using a threshold on a very low-res image
-        can create a situation, where all pixels are ignored
-        which means we can not get variance for this frame
-    */
-	col /= dot(1, col + 0.0001);
-	return col.rg;
+	// transform to kkk color space
+	col = mul(rgb2kkk_matrix,col);
+
+	// return chromaticity axes, ignore intensity
+	return col.gb;
 }
 
 float test(float3 col) {
+
+	// specular-free
 	col -= min(
 		col.r,
 		min(
@@ -140,7 +155,15 @@ void ShowResult (uint3 id : SV_DispatchThreadID)
 			tex_arr_clusters_r[uint3(id.xy, i)].a == 1
 		) {
 			color.rg = cbuf_cluster_centers[i].rg;
-			color.b = 1.0 - color.r - color.g;
+			
+			/*
+				convert from kkk chromaticity to RGB
+				assume maximum intensity
+			*/
+			color.rgb = mul(
+				kkk2rgb_matrix,
+				float3(1, color.rg)
+			);
 		}
 	}
 
@@ -226,8 +249,8 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
             result.w = top / pow2(bottom);
         }
 
-        result.xy = project(col) * result.w;
-        // used for Variance monitoring
+        result.xy = projCol * result.w;
+        // used for variance monitoring
         // all random swap attempts are done on the same input frame
         // bias from included flag remains constant and does not affect choice
         result.z = pow2(min_dist);
