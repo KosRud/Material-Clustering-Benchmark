@@ -333,8 +333,17 @@ public class MeasurementRunner : IDisposable
                     we can use this to wait for the frame to load
                 */
 
-                // random init for each new section
-                this.launchParameters.dispatcher.clusteringRTsAndBuffers.RandomizeClusterCenters();
+                // new init for each new section
+#pragma warning disable 162
+                if (ClusteringRTsAndBuffers.randomInit)
+                {
+                    this.launchParameters.dispatcher.clusteringRTsAndBuffers.RandomizeClusterCenters();
+                }
+                else
+                {
+                    this.launchParameters.dispatcher.clusteringRTsAndBuffers.SetDeterministicClusterCenters();
+                }
+#pragma warning restore 162
             }
         }
         // if the frame we just processed is not the last in current section

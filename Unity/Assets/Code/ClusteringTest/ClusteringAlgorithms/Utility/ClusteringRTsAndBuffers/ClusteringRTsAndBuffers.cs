@@ -5,7 +5,7 @@ namespace ClusteringAlgorithms
     public class ClusteringRTsAndBuffers : System.IDisposable
     {
         public const int max_num_clusters = 32;
-        public const bool randomInit = false;
+        public const bool randomInit = true;
 
         public RenderTexture rtResult;
         public ClusteringTextures texturesWorkRes { get; private set; }
