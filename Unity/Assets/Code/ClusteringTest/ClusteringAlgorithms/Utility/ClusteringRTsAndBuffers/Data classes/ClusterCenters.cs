@@ -65,7 +65,7 @@ namespace ClusteringAlgorithms
                     throw new System.Exception("NaN in shader");
                 }
 
-                if (center.x < 0 || center.x > 1.0 || center.y < 0 || center.y > 1.0)
+                if (center.x < -0.5 || center.x > 0.5 || center.y < -0.5 || center.y > 0.5)
                 {
                     throw new System.Exception($"invalid cluster center record: {center}");
                 }

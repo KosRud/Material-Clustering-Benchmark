@@ -18,7 +18,7 @@ namespace WorkGeneration
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                for (int textureSize = 256; textureSize >= 8; textureSize /= 2)
+                for (int textureSize = 512; textureSize >= 32; textureSize /= 2)
                 {
                     foreach (bool doDownscale in new bool[] { true, false })
                     {
