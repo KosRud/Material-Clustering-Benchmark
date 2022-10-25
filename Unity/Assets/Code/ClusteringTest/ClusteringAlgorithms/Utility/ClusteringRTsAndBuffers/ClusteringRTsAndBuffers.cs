@@ -145,7 +145,6 @@ namespace ClusteringAlgorithms
 
         private Vector3 RGB2KKK(Vector3 rgb)
         {
-            Debug.Log(rgb);
             var result =
                 new Matrix4x4(
                     new Vector4(1.0f / 3, 1.0f / 2, -1.0f / 4, 0.0f),
@@ -153,7 +152,6 @@ namespace ClusteringAlgorithms
                     new Vector4(1.0f / 3, -1.0f / 2, -1.0f / 4, 0.0f),
                     Vector4.zero
                 ) * new Vector4(rgb.x, rgb.y, rgb.z, 0);
-            Debug.Log(result);
             return result;
         }
 
