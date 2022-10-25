@@ -45,13 +45,13 @@ SamplerState sampler_tex_variance_r;
 RWStructuredBuffer<float4> cbuf_cluster_centers;
 RWStructuredBuffer<int4> cbuf_random_positions;
 
-const float3x3 kkk2rgb_matrix = {
+static const float3x3 kkk2rgb_matrix = {
 	1,	1, -0.6667,
 	1,	0,	1.3333,
 	1,	-1,	-0.6667
 };
 
-const float3x3 rgb2kkk_matrix = {
+static const float3x3 rgb2kkk_matrix = {
 	0.3333,	0.3333,	0.3333,
 	0.5,	0,		-0.5,
 	-0.25,	0.5,	-0.25
@@ -88,6 +88,9 @@ float2 project(float3 col)
 			col.b
 		)
 	);
+
+    // normalize
+    col /= (dot(col, 1) + 0.00001);
 
 	// transform to kkk color space
 	col = mul(rgb2kkk_matrix,col);
@@ -162,7 +165,7 @@ void ShowResult (uint3 id : SV_DispatchThreadID)
 			*/
 			color.rgb = mul(
 				kkk2rgb_matrix,
-				float3(1, color.rg)
+				float3(0.3333, color.rg)
 			);
 		}
 	}
