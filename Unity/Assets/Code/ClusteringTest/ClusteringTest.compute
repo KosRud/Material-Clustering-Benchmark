@@ -286,7 +286,6 @@ void RandomSwap (uint3 id : SV_DispatchThreadID)
 	cbuf_cluster_centers[randomClusterCenter].xy = project(sampleCol);
 }
 
-
 [numthreads(32,1,1)]
 void ValidateCandidates (uint3 id : SV_DispatchThreadID)
 {

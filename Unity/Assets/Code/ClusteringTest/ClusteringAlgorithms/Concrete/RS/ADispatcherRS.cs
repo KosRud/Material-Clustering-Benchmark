@@ -105,6 +105,7 @@ namespace ClusteringAlgorithms
                 "cbuf_cluster_centers",
                 this.clusteringRTsAndBuffers.cbufClusterCenters
             );
+            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
             this.computeShader.Dispatch(this.kernelHandleValidateCandidates, 1, 1, 1);
         }
 
