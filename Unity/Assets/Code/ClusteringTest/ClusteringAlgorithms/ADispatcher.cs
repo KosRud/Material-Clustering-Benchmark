@@ -50,6 +50,9 @@ namespace ClusteringAlgorithms
             this.clusteringRTsAndBuffers.UpdateRandomPositions();
 
             this.computeShader.SetBool("reject_old", rejectOld);
+            this.computeShader.SetInt("mip_level", clusteringTextures.mipLevel);
+            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
+
             this.computeShader.SetTexture(
                 this.kernelUpdateClusterCenters,
                 "tex_arr_clusters_r",
@@ -70,7 +73,6 @@ namespace ClusteringAlgorithms
                 "cbuf_random_positions",
                 this.clusteringRTsAndBuffers.cbufRandomPositions
             );
-            this.computeShader.SetInt("mip_level", clusteringTextures.mipLevel);
 
             this.computeShader.Dispatch(this.kernelUpdateClusterCenters, 1, 1, 1);
         }
@@ -79,6 +81,7 @@ namespace ClusteringAlgorithms
         {
             this.computeShader.SetBool("KHM", khm);
             this.computeShader.SetBool("final", final);
+            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
 
             this.computeShader.SetTexture(
                 this.kernelHandleAttributeClusters,
@@ -95,6 +98,7 @@ namespace ClusteringAlgorithms
                 "cbuf_cluster_centers",
                 this.clusteringRTsAndBuffers.cbufClusterCenters
             );
+
             this.computeShader.Dispatch(
                 this.kernelHandleAttributeClusters,
                 clusteringTextures.size / ClusteringTest.kernelSize,
