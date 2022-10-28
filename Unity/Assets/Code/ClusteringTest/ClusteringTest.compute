@@ -6,7 +6,7 @@
 #pragma kernel ValidateCandidates
 #pragma kernel SubSample
 
-#define threshold 0.01
+#define threshold 0.05
 #define max_num_clusters 16
 #define invalid_variance 100 // impossibly large distance to indicate empty cluster
 
