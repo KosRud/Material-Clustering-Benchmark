@@ -20,30 +20,27 @@ namespace WorkGeneration
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                for (int textureSize = 64; textureSize >= 64; textureSize /= 2)
+                foreach (bool doRandomizeEmptyClusters in new bool[] { true, false })
                 {
-                    foreach (bool doRandomizeEmptyClusters in new bool[] { true, false })
-                    {
-                        workList.runs.Push(
-                            new LaunchParameters(
-                                staggeredJitter: false,
-                                video: video,
-                                doDownscale: false,
-                                dispatcher: new DispatcherKM(
-                                    computeShader: this.csHighlightRemoval,
-                                    numIterations: 3,
-                                    doRandomizeEmptyClusters: doRandomizeEmptyClusters,
-                                    useFullResTexRef: true,
-                                    clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
-                                        numClusters: 6,
-                                        workingSize: textureSize,
-                                        fullSize: ClusteringTest.fullTextureSize,
-                                        jitterSize: 1
-                                    )
+                    workList.runs.Push(
+                        new LaunchParameters(
+                            staggeredJitter: false,
+                            video: video,
+                            doDownscale: false,
+                            dispatcher: new DispatcherKM(
+                                computeShader: this.csHighlightRemoval,
+                                numIterations: 3,
+                                doRandomizeEmptyClusters: doRandomizeEmptyClusters,
+                                useFullResTexRef: false,
+                                clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                                    numClusters: 6,
+                                    workingSize: 64,
+                                    fullSize: ClusteringTest.fullTextureSize,
+                                    jitterSize: 1
                                 )
                             )
-                        );
-                    }
+                        )
+                    );
                 }
             }
 
