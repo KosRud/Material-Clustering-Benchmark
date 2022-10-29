@@ -5,6 +5,8 @@ namespace WorkGeneration
 {
     public class FrameTime : AWorkGenerator
     {
+        private const int textureSize = 64;
+
         public FrameTime(
             int kernelSize,
             UnityEngine.Video.VideoClip[] videos,
@@ -14,8 +16,6 @@ namespace WorkGeneration
         public override WorkList GenerateWork()
         {
             var workList = new WorkList(ClusteringTest.LogType.FrameTime, "Frame time");
-
-            const int textureSize = 64;
 
             for (int i = 0; i < 5; i++)
             {

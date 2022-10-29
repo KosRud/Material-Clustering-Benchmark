@@ -6,6 +6,8 @@ namespace WorkGeneration
 {
     public class ScanlineJitter : AWorkGenerator
     {
+        private const int textureSize = 64;
+
         public ScanlineJitter(
             int kernelSize,
             UnityEngine.Video.VideoClip[] videos,
@@ -18,8 +20,6 @@ namespace WorkGeneration
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                const int textureSize = 32;
-
                 for (
                     int jitterSize = 1;
                     jitterSize * textureSize <= 512 && jitterSize <= 16;

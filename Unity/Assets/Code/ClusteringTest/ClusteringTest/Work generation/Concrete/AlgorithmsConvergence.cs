@@ -5,6 +5,8 @@ namespace WorkGeneration
 {
     public class AlgorithmsConvergence : AWorkGenerator
     {
+        private const int textureSize = 64;
+
         public AlgorithmsConvergence(
             int kernelSize,
             UnityEngine.Video.VideoClip[] videos,
@@ -17,8 +19,6 @@ namespace WorkGeneration
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                const int textureSize = 32;
-
                 for (int numIterations = 1; numIterations < 31; numIterations++)
                 {
                     AddFixedIterations(
