@@ -18,34 +18,33 @@ namespace WorkGeneration
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                for (int textureSize = 256; textureSize >= 32; textureSize /= 2)
+                const int textureSize = 32;
+
+                for (
+                    int jitterSize = 1;
+                    jitterSize * textureSize <= 512 && jitterSize <= 16;
+                    jitterSize *= 2
+                )
                 {
-                    for (
-                        int jitterSize = 1;
-                        jitterSize * textureSize <= 512 && jitterSize <= 16;
-                        jitterSize *= 2
-                    )
-                    {
-                        workList.runs.Push(
-                            new LaunchParameters(
-                                staggeredJitter: false,
-                                video: video,
-                                doDownscale: false,
-                                dispatcher: new DispatcherKM(
-                                    computeShader: this.csHighlightRemoval,
-                                    numIterations: 3,
-                                    doRandomizeEmptyClusters: false,
-                                    useFullResTexRef: true,
-                                    clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
-                                        numClusters: 6,
-                                        workingSize: textureSize,
-                                        fullSize: ClusteringTest.fullTextureSize,
-                                        jitterSize: jitterSize
-                                    )
+                    workList.runs.Push(
+                        new LaunchParameters(
+                            staggeredJitter: false,
+                            video: video,
+                            doDownscale: false,
+                            dispatcher: new DispatcherKM(
+                                computeShader: this.csHighlightRemoval,
+                                numIterations: 3,
+                                doRandomizeEmptyClusters: true,
+                                useFullResTexRef: true,
+                                clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                                    numClusters: 6,
+                                    workingSize: textureSize,
+                                    fullSize: ClusteringTest.fullTextureSize,
+                                    jitterSize: jitterSize
                                 )
                             )
-                        );
-                    }
+                        )
+                    );
                 }
             }
 

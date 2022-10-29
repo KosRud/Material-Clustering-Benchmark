@@ -61,13 +61,13 @@ namespace WorkGeneration
                         dispatcher: new DispatcherRSfixed(
                             computeShader: csHighlightRemoval,
                             numIterations: numIterations,
-                            doRandomizeEmptyClusters: false,
+                            doRandomizeEmptyClusters: true,
                             useFullResTexRef: false,
                             numIterationsKM: numIterationsKM,
                             doReadback: false,
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                 numClusters: 6,
-                                workingSize: 64,
+                                workingSize: 32,
                                 fullSize: ClusteringTest.fullTextureSize,
                                 jitterSize: 1
                             )

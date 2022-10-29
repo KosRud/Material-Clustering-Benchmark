@@ -34,7 +34,7 @@ namespace WorkGeneration
                                 useFullResTexRef: false,
                                 clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                     numClusters: 6,
-                                    workingSize: 64,
+                                    workingSize: 32,
                                     fullSize: ClusteringTest.fullTextureSize,
                                     jitterSize: 1
                                 )
