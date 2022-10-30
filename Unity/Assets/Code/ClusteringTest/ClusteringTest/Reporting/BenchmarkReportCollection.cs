@@ -45,9 +45,9 @@ public class BenchmarkMeasurementVariance : ABenchmarkMeasurement
     public class FrameVarianceRecord
     {
         public long frameIndex;
-        public float variance;
+        public float? variance;
 
-        public FrameVarianceRecord(long frameIndex, float variance)
+        public FrameVarianceRecord(long frameIndex, float? variance)
         {
             this.frameIndex = frameIndex;
             this.variance = variance;

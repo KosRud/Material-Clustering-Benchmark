@@ -9,7 +9,7 @@ namespace ClusteringAlgorithms
         public const int invalidVariance = 10;
 
         public Vector4[] centers;
-        public float variance;
+        public float? variance;
 
         private readonly int numClusters;
 
@@ -92,8 +92,12 @@ namespace ClusteringAlgorithms
                 }
             }
 
+            obj.variance = null;
+
             LogClusterCenters(numClusters, centersBufferData);
-            throw new InvalidClustersException("all clusters are invalid");
+            Debug.Log("[Warning] All clusters are empty");
+
+            return obj;
         }
 
         private static void LogClusterCenters(int numClusters, Vector4[] centersBufferData)

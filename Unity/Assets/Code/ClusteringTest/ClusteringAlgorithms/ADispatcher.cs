@@ -114,7 +114,7 @@ namespace ClusteringAlgorithms
         /// <summary>
         /// Computes variance on full-resolution input texture, without thresholding of dark pixels.
         /// </summary>
-        public float GetVariance()
+        public float? GetVariance()
         {
             using (ClusterCenters backupCenters = this.clusteringRTsAndBuffers.GetClusterCenters())
             {
