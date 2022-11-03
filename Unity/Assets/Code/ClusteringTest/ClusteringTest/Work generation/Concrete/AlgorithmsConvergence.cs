@@ -5,7 +5,7 @@ namespace WorkGeneration
 {
     public class AlgorithmsConvergence : AWorkGenerator
     {
-        private const int textureSize = 64;
+        private const int textureSize = 512;
 
         public AlgorithmsConvergence(
             int kernelSize,
@@ -17,9 +17,14 @@ namespace WorkGeneration
         {
             var workList = new WorkList(ClusteringTest.LogType.Variance, "Algorithm convergence");
 
-            foreach (UnityEngine.Video.VideoClip video in this.videos)
+            foreach (
+                UnityEngine.Video.VideoClip video in new UnityEngine.Video.VideoClip[]
+                {
+                    this.videos[0]
+                }
+            )
             {
-                for (int numIterations = 1; numIterations < 31; numIterations++)
+                for (int numIterations = 3; numIterations <= 3; numIterations++)
                 {
                     AddFixedIterations(
                         workList: workList,
@@ -29,13 +34,13 @@ namespace WorkGeneration
                         csHighlightRemoval: this.csHighlightRemoval
                     );
                 }
-
-                AddStopCondtion(
-                    workList: workList,
-                    video: video,
-                    textureSize: textureSize,
-                    csHighlightRemoval: this.csHighlightRemoval
-                );
+                /*
+                                AddStopCondtion(
+                                    workList: workList,
+                                    video: video,
+                                    textureSize: textureSize,
+                                    csHighlightRemoval: this.csHighlightRemoval
+                                );*/
             }
 
             return workList;

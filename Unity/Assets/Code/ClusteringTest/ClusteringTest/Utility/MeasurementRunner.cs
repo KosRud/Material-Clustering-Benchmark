@@ -157,6 +157,13 @@ public class MeasurementRunner : IDisposable
 
     public void ProcessNextFrame(RenderTexture src, RenderTexture dst)
     {
+        /*
+        if (this.videoPlayer.frame == 500)
+        {
+            this.RenderResult(dst);
+            return;
+        }
+        */
         if (
             // not yet loaded video file
             this.videoPlayer.frame == -1

@@ -21,9 +21,9 @@ namespace WorkGeneration
                 /*
                   ! lowest textureSize must be no less, than kernel size
                 */
-                for (int textureSize = 32; textureSize >= 4; textureSize /= 2)
+                for (int textureSize = 512; textureSize >= 32; textureSize /= 2)
                 {
-                    foreach (int numClusters in new int[] { 4, 6, 8 })
+                    foreach (int numClusters in new int[] { 3, 4, 6, 9, 13 })
                     {
                         workList.runs.Push(
                             new LaunchParameters(
