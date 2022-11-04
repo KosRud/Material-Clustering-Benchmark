@@ -5,12 +5,13 @@
 #pragma kernel RandomSwap
 #pragma kernel ValidateCandidates
 #pragma kernel SubSample
+#pragma kernel ComputeError
+#pragma kernel GatherMSE
 
 #define threshold 0.05
 #define max_num_clusters 16
 #define invalid_variance 100 // impossibly large distance to indicate empty cluster
 
-bool final;
 bool reject_old;
 bool store_variance;
 bool do_random_sample_empty_clusters;
@@ -149,7 +150,7 @@ float3 HSVtoRGB(in float3 HSV)
 	return ((RGB - 1) * HSV.y + 1) * HSV.z;
 }
 
-[numthreads(4,4,1)]
+[numthreads(8,8,1)]
 void ShowResult (uint3 id : SV_DispatchThreadID)
 {
 	float4 color = float4(0,0,0,1);
@@ -177,7 +178,7 @@ void ShowResult (uint3 id : SV_DispatchThreadID)
 	tex_output[id.xy] = color;
 }
 
-[numthreads(4,4,1)]
+[numthreads(8,8,1)]
 void SubSample (uint3 id : SV_DispatchThreadID)
 {
     if (downscale == false){
@@ -195,7 +196,7 @@ void SubSample (uint3 id : SV_DispatchThreadID)
     }
 }
 
-[numthreads(4,4,1)]
+[numthreads(8,8,1)]
 void AttributeClusters (uint3 id : SV_DispatchThreadID)
 {
 	float min_dist = 1000;
@@ -228,7 +229,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 	for (uint k = 0; k < num_clusters; k++) {
 		float4 result = 0;
 
-		if (!KHM || final){
+		if (!KHM){
 			result.w = (k == clusterID);
 		} else {
             float top = min_dist;
@@ -261,7 +262,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
         // bias from included flag remains constant and does not affect choice
         result.z = pow2(min_dist);
 
-		if (!included && !final) {
+		if (!included) {
 			result = 0;
 		}
 
@@ -326,6 +327,10 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 
 	if (aggregatedColor.w != 0) {
 		clusterCenter.xy = aggregatedColor.xy / aggregatedColor.w;
+		/*
+			z (error) is shared for all clusters
+			so no division by aggregatedColor.w
+		*/
         clusterCenter.z = aggregatedColor.z;
 	} else {
 		if (do_random_sample_empty_clusters) {
@@ -344,4 +349,79 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 	if (reject_old) {
 		cbuf_cluster_centers[id.x + num_clusters] = clusterCenter;
 	}
+}
+
+//================================================//
+//			Final MSE calculation
+//================================================//
+
+[numthreads(8,8,1)]
+void ComputeError (uint3 id : SV_DispatchThreadID)
+{
+	float min_dist = 1000;
+	// 2 coordinates within [-0.5; 0.5] range
+	// theoretical maximum distance is sqrt(2)
+	
+	uint clusterID = -1;
+
+	float3 col = tex_input[id.xy].rgb;
+    float2 projCol = project(col);
+
+	bool included = test(col) > threshold;
+
+	float dist_list[max_num_clusters];
+
+	for (uint i = 0; i < num_clusters; i++) {
+		float dist = length(
+			cbuf_cluster_centers[i].rg -
+			projCol
+		);
+
+		dist_list[i] = dist;
+
+		if (dist < min_dist) {
+			clusterID = i;
+			min_dist = dist;
+		}
+	}
+
+	float4 result = 0;
+	result.xy = 0;
+	if (included) {
+		result.z = pow2(min_dist);
+	} else {
+		result.z = 0;
+	}
+	result.w = included;
+
+	tex_arr_clusters_rw[uint3(id.xy, 0)] = result;
+}
+
+[numthreads(1,1,1)]
+void GatherMSE (uint3 id : SV_DispatchThreadID)
+{
+    float4 aggregatedColor = tex_arr_clusters_r.SampleLevel(
+		sampler_tex_arr_clusters_r,
+		float3(0.5, 0.5, 0),
+		mip_level
+	);
+
+	float4 clusterCenter = 0;
+
+	clusterCenter.w = aggregatedColor.w;
+
+	if (aggregatedColor.w != 0) {
+		/*
+			aggregatedColor.w is a flag
+			which is true for included (chromatic) pixels
+			and false for achromatic (noisy)
+
+			z (error) is set to 0 for noisy pixels
+		*/
+        clusterCenter.z = aggregatedColor.z / aggregatedColor.w;
+	} else {
+        clusterCenter.z = invalid_variance;
+	}
+
+	cbuf_cluster_centers[0] = clusterCenter;
 }
