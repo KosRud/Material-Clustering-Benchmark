@@ -86,17 +86,17 @@ namespace ClusteringAlgorithms
             this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
 
             this.computeShader.SetTexture(
-                this.kernelHandleAttributeClusters,
+                this.kernelComputeError,
                 "tex_input",
                 clusteringTextures.rtInput
             );
             this.computeShader.SetTexture(
-                this.kernelHandleAttributeClusters,
+                this.kernelComputeError,
                 "tex_arr_clusters_rw",
                 clusteringTextures.rtArr
             );
             this.computeShader.SetBuffer(
-                this.kernelHandleAttributeClusters,
+                this.kernelComputeError,
                 "cbuf_cluster_centers",
                 this.clusteringRTsAndBuffers.cbufClusterCenters
             );
@@ -119,17 +119,17 @@ namespace ClusteringAlgorithms
             this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
 
             this.computeShader.SetTexture(
-                this.kernelUpdateClusterCenters,
+                this.kernelHandlGatherMSE,
                 "tex_arr_clusters_r",
                 clusteringTextures.rtArr
             );
             this.computeShader.SetTexture(
-                this.kernelUpdateClusterCenters,
+                this.kernelHandlGatherMSE,
                 "tex_input",
                 clusteringTextures.rtInput
             );
             this.computeShader.SetBuffer(
-                this.kernelUpdateClusterCenters,
+                this.kernelHandlGatherMSE,
                 "cbuf_cluster_centers",
                 this.clusteringRTsAndBuffers.cbufClusterCenters
             );
@@ -139,7 +139,7 @@ namespace ClusteringAlgorithms
                 this.clusteringRTsAndBuffers.cbufRandomPositions
             );
 
-            this.computeShader.Dispatch(this.kernelUpdateClusterCenters, 1, 1, 1);
+            this.computeShader.Dispatch(this.kernelHandlGatherMSE, 1, 1, 1);
         }
 
         public void AttributeClusters(ClusteringTextures clusteringTextures, bool final, bool khm)
