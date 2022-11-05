@@ -20,7 +20,7 @@ namespace WorkGeneration
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                for (int textureSize = 512; textureSize >= 32; textureSize /= 2)
+                for (int textureSize = 64; textureSize >= 4; textureSize /= 2)
                 {
                     foreach (bool doRandomizeEmptyClusters in new bool[] { true, false })
                     {
