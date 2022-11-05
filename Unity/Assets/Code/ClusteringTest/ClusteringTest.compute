@@ -150,7 +150,7 @@ float3 HSVtoRGB(in float3 HSV)
 	return ((RGB - 1) * HSV.y + 1) * HSV.z;
 }
 
-[numthreads(4,4,1)]
+[numthreads(8,8,1)]
 void ShowResult (uint3 id : SV_DispatchThreadID)
 {
 	float4 color = float4(0,0,0,1);
@@ -178,7 +178,7 @@ void ShowResult (uint3 id : SV_DispatchThreadID)
 	tex_output[id.xy] = color;
 }
 
-[numthreads(4,4,1)]
+[numthreads(8,8,1)]
 void SubSample (uint3 id : SV_DispatchThreadID)
 {
     if (downscale == false){
@@ -196,7 +196,7 @@ void SubSample (uint3 id : SV_DispatchThreadID)
     }
 }
 
-[numthreads(4,4,1)]
+[numthreads(8,8,1)]
 void AttributeClusters (uint3 id : SV_DispatchThreadID)
 {
 	float min_dist = 1000;
@@ -355,7 +355,7 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 //			Final MSE calculation
 //================================================//
 
-[numthreads(4,4,1)]
+[numthreads(8,8,1)]
 void ComputeError (uint3 id : SV_DispatchThreadID)
 {
 	float min_dist = 1000;
