@@ -21,6 +21,8 @@ namespace ClusteringAlgorithms
         public readonly ComputeShader computeShader;
         private readonly int kernelHandleAttributeClusters;
         private readonly int kernelUpdateClusterCenters;
+        private readonly int kernelComputeError;
+        private readonly int kernelHandlGatherMSE;
 
         /// <summary>
         /// Takes ownership of the clusteringRTsAndBuffers
@@ -36,6 +38,8 @@ namespace ClusteringAlgorithms
             this.computeShader = computeShader;
             this.kernelHandleAttributeClusters = this.computeShader.FindKernel("AttributeClusters");
             this.kernelUpdateClusterCenters = computeShader.FindKernel("UpdateClusterCenters");
+            this.kernelComputeError = this.computeShader.FindKernel("ComputeError");
+            this.kernelHandlGatherMSE = computeShader.FindKernel("GatherMSE");
             this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
             this.numIterations = numIterations;
             this.clusteringRTsAndBuffers = clusteringRTsAndBuffers;
@@ -98,7 +102,7 @@ namespace ClusteringAlgorithms
             );
 
             this.computeShader.Dispatch(
-                this.kernelHandleAttributeClusters,
+                this.kernelComputeError,
                 clusteringTextures.size / ClusteringTest.kernelSize,
                 clusteringTextures.size / ClusteringTest.kernelSize,
                 1
@@ -130,7 +134,7 @@ namespace ClusteringAlgorithms
                 this.clusteringRTsAndBuffers.cbufClusterCenters
             );
             this.computeShader.SetBuffer(
-                this.kernelUpdateClusterCenters,
+                this.kernelHandlGatherMSE,
                 "cbuf_random_positions",
                 this.clusteringRTsAndBuffers.cbufRandomPositions
             );
