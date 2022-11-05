@@ -21,7 +21,7 @@ namespace WorkGeneration
                 /*
                   ! lowest textureSize must be no less, than kernel size
                 */
-                for (int textureSize = 512; textureSize >= 32; textureSize /= 2)
+                for (int textureSize = 512; textureSize >= 8; textureSize /= 2)
                 {
                     for (
                         int jitterSize = 1;
