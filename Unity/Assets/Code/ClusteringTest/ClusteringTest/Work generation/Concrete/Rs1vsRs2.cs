@@ -5,6 +5,8 @@ namespace WorkGeneration
 {
     public class Rs1VsRs2 : AWorkGenerator
     {
+        private const int textureSize = 64;
+
         public Rs1VsRs2(
             int kernelSize,
             UnityEngine.Video.VideoClip[] videos,
@@ -61,13 +63,13 @@ namespace WorkGeneration
                         dispatcher: new DispatcherRSfixed(
                             computeShader: csHighlightRemoval,
                             numIterations: numIterations,
-                            doRandomizeEmptyClusters: false,
+                            doRandomizeEmptyClusters: true,
                             useFullResTexRef: false,
                             numIterationsKM: numIterationsKM,
                             doReadback: false,
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                 numClusters: 6,
-                                workingSize: 512,
+                                workingSize: textureSize,
                                 fullSize: ClusteringTest.fullTextureSize,
                                 jitterSize: 1
                             )

@@ -73,7 +73,6 @@ namespace ClusteringAlgorithms
                 "do_random_sample_empty_clusters",
                 this.doRandomizeEmptyClusters
             );
-
             this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
 
             this.KHMiteration(textures);

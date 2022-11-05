@@ -21,6 +21,8 @@ namespace ClusteringAlgorithms
         public readonly ComputeShader computeShader;
         private readonly int kernelHandleAttributeClusters;
         private readonly int kernelUpdateClusterCenters;
+        private readonly int kernelComputeError;
+        private readonly int kernelHandlGatherMSE;
 
         /// <summary>
         /// Takes ownership of the clusteringRTsAndBuffers
@@ -36,6 +38,8 @@ namespace ClusteringAlgorithms
             this.computeShader = computeShader;
             this.kernelHandleAttributeClusters = this.computeShader.FindKernel("AttributeClusters");
             this.kernelUpdateClusterCenters = computeShader.FindKernel("UpdateClusterCenters");
+            this.kernelComputeError = this.computeShader.FindKernel("ComputeError");
+            this.kernelHandlGatherMSE = computeShader.FindKernel("GatherMSE");
             this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
             this.numIterations = numIterations;
             this.clusteringRTsAndBuffers = clusteringRTsAndBuffers;
@@ -50,6 +54,9 @@ namespace ClusteringAlgorithms
             this.clusteringRTsAndBuffers.UpdateRandomPositions();
 
             this.computeShader.SetBool("reject_old", rejectOld);
+            this.computeShader.SetInt("mip_level", clusteringTextures.mipLevel);
+            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
+
             this.computeShader.SetTexture(
                 this.kernelUpdateClusterCenters,
                 "tex_arr_clusters_r",
@@ -70,15 +77,76 @@ namespace ClusteringAlgorithms
                 "cbuf_random_positions",
                 this.clusteringRTsAndBuffers.cbufRandomPositions
             );
-            this.computeShader.SetInt("mip_level", clusteringTextures.mipLevel);
 
             this.computeShader.Dispatch(this.kernelUpdateClusterCenters, 1, 1, 1);
+        }
+
+        private void ComputeError(ClusteringTextures clusteringTextures)
+        {
+            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
+
+            this.computeShader.SetTexture(
+                this.kernelComputeError,
+                "tex_input",
+                clusteringTextures.rtInput
+            );
+            this.computeShader.SetTexture(
+                this.kernelComputeError,
+                "tex_arr_clusters_rw",
+                clusteringTextures.rtArr
+            );
+            this.computeShader.SetBuffer(
+                this.kernelComputeError,
+                "cbuf_cluster_centers",
+                this.clusteringRTsAndBuffers.cbufClusterCenters
+            );
+
+            this.computeShader.Dispatch(
+                this.kernelComputeError,
+                clusteringTextures.size / ClusteringTest.kernelSize,
+                clusteringTextures.size / ClusteringTest.kernelSize,
+                1
+            );
+
+            clusteringTextures.rtArr.GenerateMips();
+        }
+
+        private void GatherMSE(ClusteringTextures clusteringTextures)
+        {
+            this.clusteringRTsAndBuffers.UpdateRandomPositions();
+
+            this.computeShader.SetInt("mip_level", clusteringTextures.mipLevel);
+            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
+
+            this.computeShader.SetTexture(
+                this.kernelHandlGatherMSE,
+                "tex_arr_clusters_r",
+                clusteringTextures.rtArr
+            );
+            this.computeShader.SetTexture(
+                this.kernelHandlGatherMSE,
+                "tex_input",
+                clusteringTextures.rtInput
+            );
+            this.computeShader.SetBuffer(
+                this.kernelHandlGatherMSE,
+                "cbuf_cluster_centers",
+                this.clusteringRTsAndBuffers.cbufClusterCenters
+            );
+            this.computeShader.SetBuffer(
+                this.kernelHandlGatherMSE,
+                "cbuf_random_positions",
+                this.clusteringRTsAndBuffers.cbufRandomPositions
+            );
+
+            this.computeShader.Dispatch(this.kernelHandlGatherMSE, 1, 1, 1);
         }
 
         public void AttributeClusters(ClusteringTextures clusteringTextures, bool final, bool khm)
         {
             this.computeShader.SetBool("KHM", khm);
             this.computeShader.SetBool("final", final);
+            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
 
             this.computeShader.SetTexture(
                 this.kernelHandleAttributeClusters,
@@ -95,6 +163,7 @@ namespace ClusteringAlgorithms
                 "cbuf_cluster_centers",
                 this.clusteringRTsAndBuffers.cbufClusterCenters
             );
+
             this.computeShader.Dispatch(
                 this.kernelHandleAttributeClusters,
                 clusteringTextures.size / ClusteringTest.kernelSize,
@@ -110,7 +179,7 @@ namespace ClusteringAlgorithms
         /// <summary>
         /// Computes variance on full-resolution input texture, without thresholding of dark pixels.
         /// </summary>
-        public float GetVariance()
+        public float? GetVariance()
         {
             using (ClusterCenters backupCenters = this.clusteringRTsAndBuffers.GetClusterCenters())
             {
@@ -126,7 +195,7 @@ namespace ClusteringAlgorithms
         
                   also ensure final=true (no threshold)
                 */
-                this.AttributeClusters(clusteringTextures: refTextures, final: true, khm: false);
+                this.ComputeError(clusteringTextures: refTextures);
 
                 /*
                   the variance computation is delayed by 1 iteration
@@ -141,7 +210,7 @@ namespace ClusteringAlgorithms
                   from attribution with "final: true"
                   which disables thresholding of dark pixels
                 */
-                this.UpdateClusterCenters(clusteringTextures: refTextures, rejectOld: false);
+                this.GatherMSE(clusteringTextures: refTextures);
 
                 using (ClusterCenters centers = this.clusteringRTsAndBuffers.GetClusterCenters())
                 {

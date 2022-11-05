@@ -9,7 +9,7 @@ namespace ClusteringAlgorithms
         public const int invalidVariance = 10;
 
         public Vector4[] centers;
-        public float variance;
+        public float? variance;
 
         private readonly int numClusters;
 
@@ -62,11 +62,13 @@ namespace ClusteringAlgorithms
 
                 if (float.IsNaN(center.x) || float.IsNaN(center.y))
                 {
+                    LogClusterCenters(numClusters, centersBufferData);
                     throw new System.Exception("NaN in shader");
                 }
 
-                if (center.x < 0 || center.x > 1.0 || center.y < 0 || center.y > 1.0)
+                if (center.x < -0.5 || center.x > 0.5 || center.y < -0.5 || center.y > 0.5)
                 {
+                    LogClusterCenters(numClusters, centersBufferData);
                     throw new System.Exception($"invalid cluster center record: {center}");
                 }
             }
@@ -90,14 +92,22 @@ namespace ClusteringAlgorithms
                 }
             }
 
+            obj.variance = null;
+
+            LogClusterCenters(numClusters, centersBufferData);
+            Debug.Log("[Warning] All clusters are empty");
+
+            return obj;
+        }
+
+        private static void LogClusterCenters(int numClusters, Vector4[] centersBufferData)
+        {
             for (int i = 0; i < numClusters; i++)
             {
                 Vector4 center = centersBufferData[i];
 
                 Debug.Log(center);
             }
-
-            throw new InvalidClustersException("all clusters are invalid");
         }
 
         public class InvalidClustersException : System.Exception

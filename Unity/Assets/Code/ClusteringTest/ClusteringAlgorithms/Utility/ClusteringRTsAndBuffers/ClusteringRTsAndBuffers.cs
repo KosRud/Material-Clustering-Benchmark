@@ -143,56 +143,67 @@ namespace ClusteringAlgorithms
 
         public bool isAllocated => this.cbufClusterCenters != null;
 
+        private Vector3 RGB2KKK(Vector3 rgb)
+        {
+            var result =
+                new Matrix4x4(
+                    new Vector4(1.0f / 3, 1.0f / 2, -1.0f / 4, 0.0f),
+                    new Vector4(1.0f / 3, 0.0f, 1.0f / 2, 0.0f),
+                    new Vector4(1.0f / 3, -1.0f / 2, -1.0f / 4, 0.0f),
+                    Vector4.zero
+                ) * new Vector4(rgb.x, rgb.y, rgb.z, 0);
+            return result;
+        }
+
         public void SetDeterministicClusterCenters()
         {
             for (int i = 0; i < this.numClusters; i++)
             {
                 var c = Color.HSVToRGB(i / (float)(this.numClusters), 1, 1);
-                c *= 1.0f / (c.r + c.g + c.b);
+
+                Vector3 kkkColor = RGB2KKK(new Vector4(c.r, c.g, c.b, 0));
 
                 // variance infinity to ensure new cluster centers will replace these ones
-                this.clusterCentersTempData[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0); // "new"
-                this.clusterCentersTempData[i + this.numClusters] = new Vector4(
-                    c.r,
-                    c.g,
+                this.clusterCentersTempData[i] = new Vector4(
+                    // chromaticity axes
+                    kkkColor.y,
+                    kkkColor.z,
                     Mathf.Infinity,
                     0
-                ); // "old"
+                ); // "new" cluster center
+                this.clusterCentersTempData[i + this.numClusters] = new Vector4(
+                    // chromaticity axes
+                    kkkColor.y,
+                    kkkColor.z,
+                    Mathf.Infinity,
+                    0
+                ); // "old" cluster center
             }
             this.cbufClusterCenters.SetData(this.clusterCentersTempData);
         }
-
-        /*
-        public void SetFakeValidClusterCenters()
-        {
-            for (int i = 0; i < this.numClusters; i++)
-            {
-                var c = Color.HSVToRGB(i / (float)(this.numClusters), 1, 1);
-                c *= 1.0f / (c.r + c.g + c.b);
-
-                // variance infinity to ensure new cluster centers will replace these ones
-                this.clusterCentersTempData[i] = new Vector4(c.r, c.g, 0.1f, 0); // "new"
-                this.clusterCentersTempData[i + this.numClusters] = new Vector4(c.r, c.g, 0.1f, 0); // "old"
-            }
-            this.cbufClusterCenters.SetData(this.clusterCentersTempData);
-        }
-        */
 
         public void RandomizeClusterCenters()
         {
             for (int i = 0; i < this.numClusters; i++)
             {
                 var c = Color.HSVToRGB((float)this.random.NextDouble(), 1, 1);
-                c *= 1.0f / (c.r + c.g + c.b);
+                Vector4 kkkColor = RGB2KKK(new Vector4(c.r, c.g, c.b, 0));
 
                 // variance infinity to ensure new cluster centers will replace these ones
-                this.clusterCentersTempData[i] = new Vector4(c.r, c.g, Mathf.Infinity, 0); // "new"
-                this.clusterCentersTempData[i + this.numClusters] = new Vector4(
-                    c.r,
-                    c.g,
+                this.clusterCentersTempData[i] = new Vector4(
+                    // chromaticity axes
+                    kkkColor.y,
+                    kkkColor.z,
                     Mathf.Infinity,
                     0
-                ); // "old"
+                ); // "new" cluster center
+                this.clusterCentersTempData[i + this.numClusters] = new Vector4(
+                    // chromaticity axes
+                    kkkColor.y,
+                    kkkColor.z,
+                    Mathf.Infinity,
+                    0
+                ); // "old" cluster center
             }
             this.cbufClusterCenters.SetData(this.clusterCentersTempData);
         }

@@ -3,11 +3,11 @@ import {
     VarianceMeasurement,
     FrameTimeMeasurement,
     Measurement,
-} from './validators/Validators';
-import * as validatorTemplates from './validators/generated/Validators-ti';
-import { createCheckers } from 'ts-interface-checker';
-import assert from 'assert/strict';
-import smoothPeak from './smoothPeak';
+} from "./validators/Validators";
+import * as validatorTemplates from "./validators/generated/Validators-ti";
+import { createCheckers } from "ts-interface-checker";
+import assert from "assert/strict";
+import smoothPeak from "./smoothPeak";
 
 const validators = createCheckers(validatorTemplates.default);
 
@@ -25,7 +25,7 @@ export interface QualityMeasurement extends Measurement {
 interface ProcessedReport {
     measurement: QualityMeasurement | FrameTimeMeasurement;
     launchParameters: any;
-    logTypeName: 'variance' | 'frame time';
+    logTypeName: "variance" | "frame time";
 }
 
 export default function loadReportCollection(
@@ -36,14 +36,20 @@ export default function loadReportCollection(
     return reportCollection.reports.map((report) => {
         return {
             measurement: (() => {
-                switch (report.measurement['frameVarianceRecords']) {
+                switch (report.measurement["frameVarianceRecords"]) {
                     case undefined:
                         return report.measurement as FrameTimeMeasurement;
                     default:
                         const measurement: VarianceMeasurement =
                             report.measurement as VarianceMeasurement;
 
-                        const varianceByFrame = measurement.frameVarianceRecords;
+                        const varianceByFrame =
+                            measurement.frameVarianceRecords;
+                        varianceByFrame.forEach((varianceRecord) => {
+                            if (varianceRecord.variance < 0) {
+                                varianceRecord.variance = null;
+                            }
+                        });
 
                         const arrSqrtVariance = varianceByFrame.map(
                             (frameRecord) => frameRecord.variance ** 0.5
@@ -71,22 +77,22 @@ export default function loadReportCollection(
                 }
             })(),
             launchParameters: report.serializableLaunchParameters,
-            logTypeName: ((): 'variance' | 'frame time' => {
+            logTypeName: ((): "variance" | "frame time" => {
                 switch (report.logType) {
                     case 0:
                         assert.notEqual(
-                            report.measurement['frameTimeRecords'],
+                            report.measurement["frameTimeRecords"],
                             undefined
                         );
-                        return 'frame time';
+                        return "frame time";
                     case 1:
                         assert.notEqual(
-                            report.measurement['frameVarianceRecords'],
+                            report.measurement["frameVarianceRecords"],
                             undefined
                         );
-                        return 'variance';
+                        return "variance";
                     default:
-                        throw new Error('incorrect report type');
+                        throw new Error("incorrect report type");
                 }
             })(),
         };

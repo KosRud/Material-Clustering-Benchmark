@@ -100,11 +100,14 @@ namespace ClusteringAlgorithms
 
         protected void ValidateCandidatesGPU()
         {
+            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
+
             this.computeShader.SetBuffer(
                 this.kernelHandleValidateCandidates,
                 "cbuf_cluster_centers",
                 this.clusteringRTsAndBuffers.cbufClusterCenters
             );
+
             this.computeShader.Dispatch(this.kernelHandleValidateCandidates, 1, 1, 1);
         }
 

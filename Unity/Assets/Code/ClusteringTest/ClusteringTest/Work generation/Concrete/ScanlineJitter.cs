@@ -18,11 +18,14 @@ namespace WorkGeneration
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                for (int textureSize = 256; textureSize >= 8; textureSize /= 2)
+                /*
+                  ! lowest textureSize must be no less, than kernel size
+                */
+                for (int textureSize = 512; textureSize >= 32; textureSize /= 2)
                 {
                     for (
                         int jitterSize = 1;
-                        jitterSize * textureSize <= 512 && jitterSize <= 16;
+                        jitterSize * textureSize <= 512 && jitterSize <= 32;
                         jitterSize *= 2
                     )
                     {
@@ -34,7 +37,7 @@ namespace WorkGeneration
                                 dispatcher: new DispatcherKM(
                                     computeShader: this.csHighlightRemoval,
                                     numIterations: 3,
-                                    doRandomizeEmptyClusters: false,
+                                    doRandomizeEmptyClusters: true,
                                     useFullResTexRef: true,
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,

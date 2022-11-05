@@ -25,6 +25,6 @@ namespace ClusteringAlgorithms
         /// <summary>
         /// Computes variance on full-resolution input texture, without thresholding of dark pixels.
         /// </summary>
-        float GetVariance();
+        float? GetVariance();
     }
 }

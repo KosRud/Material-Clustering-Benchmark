@@ -20,7 +20,10 @@ namespace WorkGeneration
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                for (int textureSize = 512; textureSize >= 8; textureSize /= 2)
+                /*
+                  ! lowest textureSize must be no less, than kernel size
+                */
+                for (int textureSize = 64; textureSize >= 8; textureSize /= 2)
                 {
                     foreach (bool doRandomizeEmptyClusters in new bool[] { true, false })
                     {
@@ -33,7 +36,7 @@ namespace WorkGeneration
                                     computeShader: this.csHighlightRemoval,
                                     numIterations: 3,
                                     doRandomizeEmptyClusters: doRandomizeEmptyClusters,
-                                    useFullResTexRef: true,
+                                    useFullResTexRef: false,
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,
                                         workingSize: textureSize,

@@ -5,6 +5,8 @@ namespace WorkGeneration
 {
     public class AlgorithmsConvergence : AWorkGenerator
     {
+        private const int textureSize = 512;
+
         public AlgorithmsConvergence(
             int kernelSize,
             UnityEngine.Video.VideoClip[] videos,
@@ -15,11 +17,14 @@ namespace WorkGeneration
         {
             var workList = new WorkList(ClusteringTest.LogType.Variance, "Algorithm convergence");
 
-            foreach (UnityEngine.Video.VideoClip video in this.videos)
+            foreach (
+                UnityEngine.Video.VideoClip video in new UnityEngine.Video.VideoClip[]
+                {
+                    this.videos[0]
+                }
+            )
             {
-                const int textureSize = 64;
-
-                for (int numIterations = 1; numIterations < 31; numIterations++)
+                for (int numIterations = 3; numIterations <= 3; numIterations++)
                 {
                     AddFixedIterations(
                         workList: workList,
@@ -29,13 +34,13 @@ namespace WorkGeneration
                         csHighlightRemoval: this.csHighlightRemoval
                     );
                 }
-
-                AddStopCondtion(
-                    workList: workList,
-                    video: video,
-                    textureSize: textureSize,
-                    csHighlightRemoval: this.csHighlightRemoval
-                );
+                /*
+                                AddStopCondtion(
+                                    workList: workList,
+                                    video: video,
+                                    textureSize: textureSize,
+                                    csHighlightRemoval: this.csHighlightRemoval
+                                );*/
             }
 
             return workList;
@@ -58,7 +63,7 @@ namespace WorkGeneration
                     dispatcher: new DispatcherKM(
                         computeShader: csHighlightRemoval,
                         numIterations: numIterations,
-                        doRandomizeEmptyClusters: false,
+                        doRandomizeEmptyClusters: true,
                         useFullResTexRef: false,
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
@@ -79,7 +84,7 @@ namespace WorkGeneration
                     dispatcher: new DispatcherKHM(
                         computeShader: csHighlightRemoval,
                         numIterations: numIterations,
-                        doRandomizeEmptyClusters: false,
+                        doRandomizeEmptyClusters: true,
                         useFullResTexRef: false,
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
@@ -102,7 +107,7 @@ namespace WorkGeneration
                         dispatcher: new DispatcherRSfixed(
                             computeShader: csHighlightRemoval,
                             numIterations: numIterations,
-                            doRandomizeEmptyClusters: false,
+                            doRandomizeEmptyClusters: true,
                             useFullResTexRef: false,
                             numIterationsKM: 2,
                             doReadback: false,
@@ -133,7 +138,7 @@ namespace WorkGeneration
                     doDownscale: false,
                     dispatcher: new DispatcherKnecht(
                         computeShader: csHighlightRemoval,
-                        doRandomizeEmptyClusters: false,
+                        doRandomizeEmptyClusters: true,
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
                             workingSize: textureSize,
@@ -152,7 +157,7 @@ namespace WorkGeneration
                     doDownscale: false,
                     dispatcher: new DispatcherRSstopCondition(
                         computeShader: csHighlightRemoval,
-                        doRandomizeEmptyClusters: false,
+                        doRandomizeEmptyClusters: true,
                         useFullResTexRef: false,
                         numIterationsKM: 2,
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
@@ -174,7 +179,7 @@ namespace WorkGeneration
                     dispatcher: new WrapperStopCondition(
                         new DispatcherKM(
                             computeShader: csHighlightRemoval,
-                            doRandomizeEmptyClusters: false,
+                            doRandomizeEmptyClusters: true,
                             useFullResTexRef: false,
                             numIterations: 1,
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
@@ -197,7 +202,7 @@ namespace WorkGeneration
                     dispatcher: new WrapperStopCondition(
                         new DispatcherKHM(
                             computeShader: csHighlightRemoval,
-                            doRandomizeEmptyClusters: false,
+                            doRandomizeEmptyClusters: true,
                             useFullResTexRef: false,
                             numIterations: 1,
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(

@@ -18,7 +18,7 @@ namespace WorkGeneration
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                for (int textureSize = 256; textureSize >= 8; textureSize /= 2)
+                for (int textureSize = 256; textureSize >= 32; textureSize /= 2)
                 {
                     foreach (bool doDownscale in new bool[] { true, false })
                     {
@@ -30,7 +30,7 @@ namespace WorkGeneration
                                 dispatcher: new DispatcherKM(
                                     computeShader: this.csHighlightRemoval,
                                     numIterations: 3,
-                                    doRandomizeEmptyClusters: false,
+                                    doRandomizeEmptyClusters: true,
                                     useFullResTexRef: true,
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,

@@ -55,7 +55,7 @@ namespace ClusteringAlgorithms
 
         public bool useFullResTexRef => this.wrappedDispatcher.useFullResTexRef;
 
-        public float GetVariance()
+        public float? GetVariance()
         {
             return this.wrappedDispatcher.GetVariance();
         }

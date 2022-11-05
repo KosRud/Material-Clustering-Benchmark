@@ -51,6 +51,7 @@ namespace ClusteringAlgorithms
                 {
                     this.KMiteration(clusteringTextures, rejectOld: false);
                 }
+
                 if (this.doReadback)
                 {
                     this.ValidateCandidatesReadback();
