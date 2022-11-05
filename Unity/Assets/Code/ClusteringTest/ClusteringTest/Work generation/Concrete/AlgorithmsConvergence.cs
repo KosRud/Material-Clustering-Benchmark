@@ -17,30 +17,24 @@ namespace WorkGeneration
         {
             var workList = new WorkList(ClusteringTest.LogType.Variance, "Algorithm convergence");
 
-            foreach (
-                UnityEngine.Video.VideoClip video in new UnityEngine.Video.VideoClip[]
-                {
-                    this.videos[0]
-                }
-            )
+            foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                for (int numIterations = 3; numIterations <= 3; numIterations++)
-                {
-                    AddFixedIterations(
-                        workList: workList,
-                        video: video,
-                        textureSize: textureSize,
-                        numIterations: numIterations,
-                        csHighlightRemoval: this.csHighlightRemoval
-                    );
-                }
-                /*
-                                AddStopCondtion(
-                                    workList: workList,
-                                    video: video,
-                                    textureSize: textureSize,
-                                    csHighlightRemoval: this.csHighlightRemoval
-                                );*/
+                const int numIterations = 3;
+
+                AddFixedIterations(
+                    workList: workList,
+                    video: video,
+                    textureSize: textureSize,
+                    numIterations: numIterations,
+                    csHighlightRemoval: this.csHighlightRemoval
+                );
+
+                AddStopCondtion(
+                    workList: workList,
+                    video: video,
+                    textureSize: textureSize,
+                    csHighlightRemoval: this.csHighlightRemoval
+                );
             }
 
             return workList;
