@@ -5,7 +5,7 @@ namespace WorkGeneration
 {
     public class AlgorithmsConvergence : AWorkGenerator
     {
-        private const int textureSize = 512;
+        private const int textureSize = 64;
 
         public AlgorithmsConvergence(
             int kernelSize,
