@@ -6,6 +6,7 @@ namespace WorkGeneration
     public class AlgorithmsConvergence : AWorkGenerator
     {
         private const int textureSize = 64;
+        private const bool doRandomizeEmptyClusters = false;
 
         public AlgorithmsConvergence(
             int kernelSize,
@@ -57,7 +58,7 @@ namespace WorkGeneration
                     dispatcher: new DispatcherKM(
                         computeShader: csHighlightRemoval,
                         numIterations: numIterations,
-                        doRandomizeEmptyClusters: true,
+                        doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                         useFullResTexRef: false,
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
@@ -78,7 +79,7 @@ namespace WorkGeneration
                     dispatcher: new DispatcherKHM(
                         computeShader: csHighlightRemoval,
                         numIterations: numIterations,
-                        doRandomizeEmptyClusters: true,
+                        doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                         useFullResTexRef: false,
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
@@ -101,7 +102,7 @@ namespace WorkGeneration
                         dispatcher: new DispatcherRSfixed(
                             computeShader: csHighlightRemoval,
                             numIterations: numIterations,
-                            doRandomizeEmptyClusters: true,
+                            doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                             useFullResTexRef: false,
                             numIterationsKM: 2,
                             doReadback: false,
@@ -132,7 +133,7 @@ namespace WorkGeneration
                     doDownscale: false,
                     dispatcher: new DispatcherKnecht(
                         computeShader: csHighlightRemoval,
-                        doRandomizeEmptyClusters: true,
+                        doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
                             workingSize: textureSize,
@@ -151,7 +152,7 @@ namespace WorkGeneration
                     doDownscale: false,
                     dispatcher: new DispatcherRSstopCondition(
                         computeShader: csHighlightRemoval,
-                        doRandomizeEmptyClusters: true,
+                        doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                         useFullResTexRef: false,
                         numIterationsKM: 2,
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
@@ -173,7 +174,7 @@ namespace WorkGeneration
                     dispatcher: new WrapperStopCondition(
                         new DispatcherKM(
                             computeShader: csHighlightRemoval,
-                            doRandomizeEmptyClusters: true,
+                            doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                             useFullResTexRef: false,
                             numIterations: 1,
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
@@ -196,7 +197,7 @@ namespace WorkGeneration
                     dispatcher: new WrapperStopCondition(
                         new DispatcherKHM(
                             computeShader: csHighlightRemoval,
-                            doRandomizeEmptyClusters: true,
+                            doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                             useFullResTexRef: false,
                             numIterations: 1,
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(

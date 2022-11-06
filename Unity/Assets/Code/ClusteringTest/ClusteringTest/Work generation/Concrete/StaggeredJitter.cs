@@ -37,7 +37,7 @@ namespace WorkGeneration
                                 dispatcher: new DispatcherKM(
                                     computeShader: this.csHighlightRemoval,
                                     numIterations: 3,
-                                    doRandomizeEmptyClusters: true,
+                                    doRandomizeEmptyClusters: false,
                                     useFullResTexRef: true,
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,

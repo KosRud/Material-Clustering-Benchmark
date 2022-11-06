@@ -63,7 +63,7 @@ namespace WorkGeneration
                         dispatcher: new DispatcherRSfixed(
                             computeShader: csHighlightRemoval,
                             numIterations: numIterations,
-                            doRandomizeEmptyClusters: true,
+                            doRandomizeEmptyClusters: false,
                             useFullResTexRef: false,
                             numIterationsKM: numIterationsKM,
                             doReadback: false,
