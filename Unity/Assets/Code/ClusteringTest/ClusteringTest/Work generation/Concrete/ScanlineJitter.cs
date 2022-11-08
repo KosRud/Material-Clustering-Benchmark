@@ -34,13 +34,13 @@ namespace WorkGeneration
                                 staggeredJitter: false,
                                 video: video,
                                 doDownscale: false,
-                                dispatcher: new DispatcherKM(
+                                dispatcher: new DispatcherKHM(
                                     computeShader: this.csHighlightRemoval,
                                     numIterations: 3,
-                                    doRandomizeEmptyClusters: false,
+                                    doRandomizeEmptyClusters: true,
                                     useFullResTexRef: true,
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
-                                        numClusters: 6,
+                                        numClusters: 32,
                                         workingSize: textureSize,
                                         fullSize: ClusteringTest.fullTextureSize,
                                         jitterSize: jitterSize

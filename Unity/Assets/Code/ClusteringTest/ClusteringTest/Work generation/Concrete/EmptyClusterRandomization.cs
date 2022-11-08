@@ -38,7 +38,7 @@ namespace WorkGeneration
                                     doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                                     useFullResTexRef: false,
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
-                                        numClusters: 6,
+                                        numClusters: 32,
                                         workingSize: textureSize,
                                         fullSize: ClusteringTest.fullTextureSize,
                                         jitterSize: 1
