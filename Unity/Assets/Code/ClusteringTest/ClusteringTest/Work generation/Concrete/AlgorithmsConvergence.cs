@@ -20,15 +20,16 @@ namespace WorkGeneration
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                const int numIterations = 3;
-
-                AddFixedIterations(
-                    workList: workList,
-                    video: video,
-                    textureSize: textureSize,
-                    numIterations: numIterations,
-                    csHighlightRemoval: this.csHighlightRemoval
-                );
+                for (int numIterations = 1; numIterations < 30; numIterations++)
+                {
+                    AddFixedIterations(
+                        workList: workList,
+                        video: video,
+                        textureSize: textureSize,
+                        numIterations: numIterations,
+                        csHighlightRemoval: this.csHighlightRemoval
+                    );
+                }
 
                 AddStopCondtion(
                     workList: workList,
