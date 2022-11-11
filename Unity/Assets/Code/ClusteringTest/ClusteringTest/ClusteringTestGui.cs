@@ -76,7 +76,7 @@ public class ClusteringTestGui : MonoBehaviour
 
         this.workOptions.Add(
             new WorkOption(
-                new Rs1VsRs2(
+                new RSnumKM(
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval

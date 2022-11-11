@@ -3,11 +3,11 @@ using ClusteringAlgorithms;
 
 namespace WorkGeneration
 {
-    public class Rs1VsRs2 : AWorkGenerator
+    public class RSnumKM : AWorkGenerator
     {
         private const int textureSize = 64;
 
-        public Rs1VsRs2(
+        public RSnumKM(
             int kernelSize,
             UnityEngine.Video.VideoClip[] videos,
             ComputeShader csHighlightRemoval
@@ -24,7 +24,7 @@ namespace WorkGeneration
             {
                 for (int numIterations = 1; numIterations < 31; numIterations++)
                 {
-                    foreach (int numIterationsKM in new int[] { 1, 2 })
+                    foreach (int numIterationsKM in new int[] { 1, 2, 3 })
                     {
                         AddRs(
                             workList: workList,
