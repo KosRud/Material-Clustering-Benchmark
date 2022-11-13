@@ -14,11 +14,11 @@ const validators = createCheckers(validatorTemplates.default);
 export interface QualityMeasurement extends Measurement {
     rmseByFrame: {
         frameIndex: number;
-        rmse: number;
+        variance: number;
     }[];
     aggregated: {
-        mean: number;
-        peak: number;
+        rmse: number;
+        peakRmse: number;
     };
 }
 
@@ -51,25 +51,29 @@ export default function loadReportCollection(
                             }
                         });
 
-                        const arrSqrtVariance = varianceByFrame.map(
-                            (frameRecord) => frameRecord.variance ** 0.5
-                        );
                         const aggregated = {
-                            mean: -1,
-                            peak: -1,
+                            rmse: -1,
+                            peakRmse: -1,
                         };
-                        aggregated.mean =
-                            arrSqrtVariance.reduce((a, b) => a + b) /
-                            varianceByFrame.length;
-                        //aggregated.peak = smoothPeak(arrSqrtVariance, 100);
-						aggregated.peak = Math.max(...arrSqrtVariance);
+                        aggregated.rmse =
+                            (varianceByFrame
+                                .map((frameRecord) => frameRecord.variance)
+                                .reduce((a, b) => a + b) /
+                                varianceByFrame.filter((x) => x !== null)
+                                    .length) **
+                            0.5;
+                        aggregated.peakRmse = Math.max(
+                            ...varianceByFrame.map(
+                                (frameRecord) => frameRecord.variance ** 0.5
+                            )
+                        );
 
                         return {
                             rmseByFrame: measurement.frameVarianceRecords.map(
                                 (record) => {
                                     return {
                                         frameIndex: record.frameIndex,
-                                        rmse: record.variance ** 0.5,
+                                        variance: record.variance,
                                     };
                                 }
                             ),
