@@ -9,7 +9,7 @@
 #pragma kernel GatherMSE
 
 #define threshold 0.05
-#define max_num_clusters 16
+#define max_num_clusters 32
 #define invalid_variance 100 // impossibly large distance to indicate empty cluster
 
 bool reject_old;
@@ -324,6 +324,24 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 	);
 
 	float4 clusterCenter = 0;
+
+	float sumWeights = 0;
+	[unroll(max_num_clusters)]
+	for (uint i = 0; i < num_clusters; i++){
+		sumWeights += tex_arr_clusters_r.SampleLevel(
+			sampler_tex_arr_clusters_r,
+			float3(0.5, 0.5, i),
+			mip_level
+		).w;
+	}
+
+	if (sumWeights < 0.01) {
+		// prevent division by zero
+		sumWeights = 1;
+	}
+	// compensate for excluded pixels
+	aggregatedColor.z /= sumWeights;
+
 
 	if (aggregatedColor.w != 0) {
 		clusterCenter.xy = aggregatedColor.xy / aggregatedColor.w;
