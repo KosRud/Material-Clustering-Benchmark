@@ -128,6 +128,15 @@ namespace ClusteringAlgorithms
                 LogClusterCenters(numClusters, centersBufferData);
                 Debug.Log("All cluster centers are empty");
             }
+
+            /*
+                LogClusterCenters(numClusters, centersBufferData);
+                Debug.Log(
+                    string.Format("variance:{0} / {1}", centersBufferData[0].z, clusterCenters.variance)
+                );
+                Debug.Log("--------------");
+            */
+
             return clusterCenters;
         }
 
