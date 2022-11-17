@@ -123,7 +123,7 @@ namespace ClusteringAlgorithms
                 clusterCenters.variance = centersBufferData[0].z;
             }
 
-            if (!AreAllClusterCentersEmpty(numClusters, centersBufferData))
+            if (AreAllClusterCentersEmpty(numClusters, centersBufferData))
             {
                 LogClusterCenters(numClusters, centersBufferData);
                 Debug.Log("All cluster centers are empty");
