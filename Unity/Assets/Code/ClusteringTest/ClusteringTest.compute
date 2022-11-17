@@ -312,7 +312,7 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 			sampler_tex_arr_clusters_r,
 			float3(0.5, 0.5, 1),
 			mip_level
-		).z
+		).z;
 
 		// clusterCenter.z = variance
 		if (!isNearZero(aggregatedIncluded)){
