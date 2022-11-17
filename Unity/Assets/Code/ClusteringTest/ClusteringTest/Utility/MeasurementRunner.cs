@@ -381,7 +381,7 @@ public class MeasurementRunner : IDisposable
     }
 
     /// <summary>
-    /// Runsclustering iterations plus one final attribution. Without the final attribution we would have the latest cluster centers, but we wouldn't know which pixels belong to which cluster. The additional attribution does not create a "bonus" iteration, because the next frame starts with new attribution (this is required as the input has changed).
+    /// Runs clustering iterations plus one final attribution. Without the final attribution we would have the latest cluster centers, but we wouldn't know which pixels belong to which cluster. The additional attribution does not create a "bonus" iteration, because the next frame starts with new attribution (this is required as the input has changed).
     /// </summary>
     private void RunDispatcher()
     {
