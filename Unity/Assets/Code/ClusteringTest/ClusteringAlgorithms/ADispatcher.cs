@@ -121,8 +121,6 @@ namespace ClusteringAlgorithms
                     false => this.clusteringRTsAndBuffers.texturesWorkRes
                 };
 
-                this.GetVariance();
-
                 // Attribution to ensure cluster memberships match current cluster centers. It is techinically unnecessary if attribution was ran after the latest update of cluster centers, the algorithm used was KM, and the variance is computed on working resolution texture. For simplicity, we do not make a special case and always perform attribution.
                 this.AttributeClusters(clusteringTextures: refTextures, khm: false);
 
