@@ -20,10 +20,10 @@ namespace ClusteringAlgorithms
 
         void UpdateClusterCenters(ClusteringTextures textures, bool rejectOld);
 
-        void AttributeClusters(ClusteringTextures textures, bool final, bool khm);
+        void AttributeClusters(ClusteringTextures textures, bool khm);
 
         /// <summary>
-        /// Computes variance on full-resolution input texture, without thresholding of dark pixels.
+        /// Computes variance for the current cluster centers. Depending on <see cref="this.useFullResTexRef"/> uses either working resolution (<see cref="this.clusteringRTsAndBuffers.texturesWorkRes"/>), or full resolution (<see cref="this.clusteringRTsAndBuffers.texturesFullRes"/>) input.
         /// </summary>
         float? GetVariance();
     }

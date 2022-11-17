@@ -47,11 +47,10 @@ namespace ClusteringAlgorithms
             );
         }
 
-        public void AttributeClusters(ClusteringTextures clusteringTextures, bool final, bool khm)
+        public void AttributeClusters(ClusteringTextures clusteringTextures, bool khm)
         {
             this.wrappedDispatcher.AttributeClusters(
                 clusteringTextures: clusteringTextures,
-                final: final,
                 khm: khm
             );
         }

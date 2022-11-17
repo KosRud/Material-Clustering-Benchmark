@@ -21,8 +21,6 @@ namespace ClusteringAlgorithms
         public readonly ComputeShader computeShader;
         private readonly int kernelHandleAttributeClusters;
         private readonly int kernelUpdateClusterCenters;
-        private readonly int kernelComputeError;
-        private readonly int kernelHandlGatherMSE;
 
         /// <summary>
         /// Takes ownership of the clusteringRTsAndBuffers
@@ -38,8 +36,6 @@ namespace ClusteringAlgorithms
             this.computeShader = computeShader;
             this.kernelHandleAttributeClusters = this.computeShader.FindKernel("AttributeClusters");
             this.kernelUpdateClusterCenters = computeShader.FindKernel("UpdateClusterCenters");
-            this.kernelComputeError = this.computeShader.FindKernel("ComputeError");
-            this.kernelHandlGatherMSE = computeShader.FindKernel("GatherMSE");
             this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
             this.numIterations = numIterations;
             this.clusteringRTsAndBuffers = clusteringRTsAndBuffers;
@@ -81,71 +77,9 @@ namespace ClusteringAlgorithms
             this.computeShader.Dispatch(this.kernelUpdateClusterCenters, 1, 1, 1);
         }
 
-        private void ComputeError(ClusteringTextures clusteringTextures)
-        {
-            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
-
-            this.computeShader.SetTexture(
-                this.kernelComputeError,
-                "tex_input",
-                clusteringTextures.rtInput
-            );
-            this.computeShader.SetTexture(
-                this.kernelComputeError,
-                "tex_arr_clusters_rw",
-                clusteringTextures.rtArr
-            );
-            this.computeShader.SetBuffer(
-                this.kernelComputeError,
-                "cbuf_cluster_centers",
-                this.clusteringRTsAndBuffers.cbufClusterCenters
-            );
-
-            this.computeShader.Dispatch(
-                this.kernelComputeError,
-                clusteringTextures.size / ClusteringTest.kernelSize,
-                clusteringTextures.size / ClusteringTest.kernelSize,
-                1
-            );
-
-            clusteringTextures.rtArr.GenerateMips();
-        }
-
-        private void GatherMSE(ClusteringTextures clusteringTextures)
-        {
-            this.clusteringRTsAndBuffers.UpdateRandomPositions();
-
-            this.computeShader.SetInt("mip_level", clusteringTextures.mipLevel);
-            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
-
-            this.computeShader.SetTexture(
-                this.kernelHandlGatherMSE,
-                "tex_arr_clusters_r",
-                clusteringTextures.rtArr
-            );
-            this.computeShader.SetTexture(
-                this.kernelHandlGatherMSE,
-                "tex_input",
-                clusteringTextures.rtInput
-            );
-            this.computeShader.SetBuffer(
-                this.kernelHandlGatherMSE,
-                "cbuf_cluster_centers",
-                this.clusteringRTsAndBuffers.cbufClusterCenters
-            );
-            this.computeShader.SetBuffer(
-                this.kernelHandlGatherMSE,
-                "cbuf_random_positions",
-                this.clusteringRTsAndBuffers.cbufRandomPositions
-            );
-
-            this.computeShader.Dispatch(this.kernelHandlGatherMSE, 1, 1, 1);
-        }
-
-        public void AttributeClusters(ClusteringTextures clusteringTextures, bool final, bool khm)
+        public void AttributeClusters(ClusteringTextures clusteringTextures, bool khm)
         {
             this.computeShader.SetBool("KHM", khm);
-            this.computeShader.SetBool("final", final);
             this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
 
             this.computeShader.SetTexture(
@@ -176,45 +110,29 @@ namespace ClusteringAlgorithms
 
         public bool useFullResTexRef { get; private set; }
 
-        /// <summary>
-        /// Computes variance on full-resolution input texture, without thresholding of dark pixels.
-        /// </summary>
         public float? GetVariance()
         {
             using (ClusterCenters backupCenters = this.clusteringRTsAndBuffers.GetClusterCenters())
             {
+                // We need to perform cluster centers update to get variance. However, we don't want to actually update cluster centers as it would interfere with the benchmarks. So we backup the current cluster centers and restore them afterwards.
                 ClusteringTextures refTextures = this.useFullResTexRef switch
                 {
                     true => this.clusteringRTsAndBuffers.texturesFullRes,
                     false => this.clusteringRTsAndBuffers.texturesWorkRes
                 };
 
-                /*
-                  one final attribution
-                  (we finished by getting cluster centers)
-        
-                  also ensure final=true (no threshold)
-                */
-                this.ComputeError(clusteringTextures: refTextures);
+                this.GetVariance();
 
-                /*
-                  the variance computation is delayed by 1 iteration
-        
-                  after updating cluster centers for the 1st time
-                  we get the variance of 0 iterations
-        
-                  so in order to get current variance,
-                  we need one more cluster center update
-        
-                  additionally, we want to get tha variance
-                  from attribution with "final: true"
-                  which disables thresholding of dark pixels
-                */
-                this.GatherMSE(clusteringTextures: refTextures);
+                // Attribution to ensure cluster memberships match current cluster centers. It is techinically unnecessary if attribution was ran after the latest update of cluster centers, the algorithm used was KM, and the variance is computed on working resolution texture. For simplicity, we do not make a special case and always perform attribution.
+                this.AttributeClusters(clusteringTextures: refTextures, khm: false);
+
+                this.UpdateClusterCenters(clusteringTextures: refTextures, rejectOld: false);
 
                 using (ClusterCenters centers = this.clusteringRTsAndBuffers.GetClusterCenters())
                 {
+                    // Restore original cluster centers as to not interfere with the benchmark.
                     this.clusteringRTsAndBuffers.SetClusterCenters(backupCenters.centers);
+
                     return centers.variance;
                 }
             }

@@ -367,6 +367,9 @@ public class MeasurementRunner : IDisposable
         this.videoPlayer.StepForward();
     }
 
+    /// <summary>
+    /// Makes a variance log entry for the current cluster centers.
+    /// </summary>
     private void MakeVarianceLogEntry()
     {
         this.benchmarkMeasurementVariance.frameVarianceRecords.Add(
@@ -377,6 +380,9 @@ public class MeasurementRunner : IDisposable
         );
     }
 
+    /// <summary>
+    /// Runsclustering iterations plus one final attribution. Without the final attribution we would have the latest cluster centers, but we wouldn't know which pixels belong to which cluster. The additional attribution does not create a "bonus" iteration, because the next frame starts with new attribution (this is required as the input has changed).
+    /// </summary>
     private void RunDispatcher()
     {
         this.launchParameters.dispatcher.RunClustering(
@@ -384,12 +390,15 @@ public class MeasurementRunner : IDisposable
         );
 
         /*
-            one final attribution is required,
-            because RunClustering finishes with updating cluster centers
+            RunClustering finishes with updating cluster centers
+            so we have the latest cluster centers
+            but we don't have appropriate attribution
+
+            this final attribution does not create a "bonus" iteration
+            because the next frame starts with attribution
         */
         this.launchParameters.dispatcher.AttributeClusters(
             this.launchParameters.dispatcher.clusteringRTsAndBuffers.texturesWorkRes,
-            final: true,
             khm: false
         );
     }

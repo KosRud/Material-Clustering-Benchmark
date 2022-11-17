@@ -63,7 +63,7 @@ namespace ClusteringAlgorithms
         /// </summary>
         protected void KHMiteration(ClusteringTextures textures)
         {
-            this.AttributeClusters(textures, final: false, khm: true);
+            this.AttributeClusters(textures, khm: true);
             this.UpdateClusterCenters(textures, rejectOld: false);
         }
 
