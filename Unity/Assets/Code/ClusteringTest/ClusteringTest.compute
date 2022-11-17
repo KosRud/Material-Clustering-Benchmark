@@ -57,7 +57,7 @@ static const float3x3 rgb2kkk_matrix = {
 
 inline float isNearZero(float x){
 	// 32 bit float = 6 digits precision
-	return abs(x) < 0.000001;
+	return abs(x) < 0.00001;
 }
 
 float2 project(float3 col)
@@ -298,17 +298,9 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 	if (id.x == 0){
 		// compute variance
 
-		float aggregatedVariance = 
-		// included ? (min_dist * min_dist) : 0
-		tex_arr_clusters_r.SampleLevel(
-			sampler_tex_arr_clusters_r,
-			float3(0.5, 0.5, 0),
-			mip_level
-		).z;
+		float aggregatedVariance = aggregatedColor.z;
 
-		float aggregatedIncluded = 
-		// included
-		tex_arr_clusters_r.SampleLevel(
+		float aggregatedIncluded = tex_arr_clusters_r.SampleLevel(
 			sampler_tex_arr_clusters_r,
 			float3(0.5, 0.5, 1),
 			mip_level
@@ -323,21 +315,22 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 	}
 
 	// clusterCenter.w = not empty (flag)
-	clusterCenter.w = 1;
+	clusterCenter.w = 0;
 
 	// clusterCenter.xy = cluster center
 	if (!isNearZero(aggregatedColor.w)) {
 		// cluster is not empty
 
+		// clusterCenter.w = not empty (flag)
+		clusterCenter.w = 1;
+
 		clusterCenter.xy = aggregatedColor.xy / aggregatedColor.w;
 	} else {
 		// cluster is empty
 
-		// cluser is empty (flag)
-		clusterCenter.w = 0;
-
 		if (do_random_sample_empty_clusters) {
 			// randomize empty cluster
+
 			clusterCenter.xy = project(
 				tex_input[
 					cbuf_random_positions[id.x].xy
@@ -345,6 +338,7 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 			);
 		} else {
 			// keep previous cluster center
+			
 			clusterCenter.xy = cbuf_cluster_centers[id.x].xy;
 		}
 	}
