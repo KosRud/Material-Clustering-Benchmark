@@ -6,7 +6,7 @@
 #pragma kernel ValidateCandidates
 #pragma kernel SubSample
 
-#define threshold 0.05
+#define chromaticThreshold 0.05
 #define max_num_clusters 32
 
 bool reject_old;
@@ -84,7 +84,7 @@ float2 project(float3 col)
 	return col.gb;
 }
 
-float test(float3 col) {
+bool isChromatic(float3 col) {
 
 	// specular-free
 	col -= min(
@@ -95,7 +95,7 @@ float test(float3 col) {
 		)
 	);
 
-	return dot(col, 1);
+	return dot(col, 1) > chromaticThreshold;
 }
 
 [numthreads(8,8,1)]
@@ -119,8 +119,8 @@ void ShowResult (uint3 id : SV_DispatchThreadID)
 		}
 	}
 
-	if (test(tex_input[id.xy].rgb) <= threshold){
-		color.rgb /= 32.0;
+	if (!isChromatic(tex_input[id.xy].rgb)){
+		color.rgb /= 16.0;
 	}
 
 	tex_output[id.xy] = color;
@@ -156,7 +156,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 	float3 col = tex_input[id.xy].rgb;
     float2 projCol = project(col);
 
-	bool included = test(col) > threshold;
+	bool included = isChromatic(col);
 
 	float dist_list[max_num_clusters];
 
@@ -248,8 +248,8 @@ void RandomSwap (uint3 id : SV_DispatchThreadID)
     ].rgb;
 
     if (
-        // prevents actual bugs!
-        test(sampleCol) <= threshold
+        // prevents bugs!
+		!isChromatic(sampleCol)
     ) {
         return;
     }
