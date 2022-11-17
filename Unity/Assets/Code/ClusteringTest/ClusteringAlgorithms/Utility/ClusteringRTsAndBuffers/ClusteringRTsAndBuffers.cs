@@ -168,14 +168,18 @@ namespace ClusteringAlgorithms
                     // chromaticity axes
                     kkkColor.y,
                     kkkColor.z,
-                    Mathf.Infinity,
+                    // no valid variance
+                    -1,
+                    // empty cluster
                     0
                 ); // "new" cluster center
                 this.clusterCentersTempData[i + this.numClusters] = new Vector4(
                     // chromaticity axes
                     kkkColor.y,
                     kkkColor.z,
-                    Mathf.Infinity,
+                    // no valid variance
+                    -1,
+                    // empty cluster
                     0
                 ); // "old" cluster center
             }
@@ -194,14 +198,18 @@ namespace ClusteringAlgorithms
                     // chromaticity axes
                     kkkColor.y,
                     kkkColor.z,
-                    Mathf.Infinity,
+                    // no valid variance
+                    -1,
+                    // empty cluster
                     0
                 ); // "new" cluster center
                 this.clusterCentersTempData[i + this.numClusters] = new Vector4(
                     // chromaticity axes
                     kkkColor.y,
                     kkkColor.z,
-                    Mathf.Infinity,
+                    // no valid variance
+                    -1,
+                    // empty cluster
                     0
                 ); // "old" cluster center
             }

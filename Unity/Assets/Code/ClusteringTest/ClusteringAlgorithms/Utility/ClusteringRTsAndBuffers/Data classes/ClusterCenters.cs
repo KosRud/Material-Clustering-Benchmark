@@ -5,11 +5,9 @@ namespace ClusteringAlgorithms
 {
     public class ClusterCenters : System.IDisposable
     {
-        // 2-dimensional values in range [0, 1] => 10 is impossibly large
-        public const int invalidVariance = 10;
-
         public Vector4[] centers;
         public float? variance;
+        public float? oldVariance;
 
         private readonly int numClusters;
 
@@ -46,15 +44,31 @@ namespace ClusteringAlgorithms
             pools[this.numClusters].Release(this);
         }
 
+        private static bool AreAllClusterCentersEmpty(int numClusters, Vector4[] centersBufferData)
+        {
+            for (int i = 0; i < numClusters; i++)
+            {
+                Vector4 center = centersBufferData[i];
+
+                // 1 = not empty
+                // 0 = empty
+                if (center.w > 0.5)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         /// <summary>
         /// Gets a pooled instance of ClusterCenters. The data is copied, making is safe to edit. Don't forget to dispose!
         /// </summary>
         /// <returns></returns>
         public static ClusterCenters Get(int numClusters, Vector4[] centersBufferData)
         {
-            ClusterCenters obj = GetPool(numClusters).Get();
+            ClusterCenters clusterCenters = GetPool(numClusters).Get();
 
-            centersBufferData.CopyTo(obj.centers, 0);
+            centersBufferData.CopyTo(clusterCenters.centers, 0);
 
             for (int i = 0; i < numClusters; i++)
             {
@@ -74,30 +88,47 @@ namespace ClusteringAlgorithms
             }
 
             /*
-              return first valid variance
-              they are all equal
-      
-              each cluster center contains overall variance
-              not just for this cluster center
+                positive number = valid variance
+                -1 = not a single pixel has sufficient chromatic component
+
+                |0              |numClusters
+                |---------------|---------------|
             */
-
-            for (int i = 0; i < numClusters; i++)
+            if (centersBufferData[numClusters].z < -0.5)
             {
-                Vector4 center = centersBufferData[i];
-
-                if (center.z < invalidVariance)
-                {
-                    obj.variance = center.z;
-                    return obj;
-                }
+                // not a single pixel has sufficient chromatic component
+                clusterCenters.oldVariance = null;
+            }
+            else
+            {
+                clusterCenters.oldVariance = centersBufferData[numClusters].z;
             }
 
-            obj.variance = null;
+            /*
+                positive number = valid variance
+                -1 = not a single pixel has sufficient chromatic component
 
-            LogClusterCenters(numClusters, centersBufferData);
-            Debug.Log("[Warning] All clusters are empty");
+                |0              |numClusters
+                |---------------|---------------|
+            */
+            if (centersBufferData[0].z < -0.5)
+            {
+                // not a single pixel has sufficient chromatic component
+                clusterCenters.variance = null;
+                Debug.Log("Not a single pixel has sufficient chromatic component");
+                return clusterCenters;
+            }
+            else
+            {
+                clusterCenters.variance = centersBufferData[0].z;
+            }
 
-            return obj;
+            if (!AreAllClusterCentersEmpty(numClusters, centersBufferData))
+            {
+                LogClusterCenters(numClusters, centersBufferData);
+                Debug.Log("All cluster centers are empty");
+            }
+            return clusterCenters;
         }
 
         private static void LogClusterCenters(int numClusters, Vector4[] centersBufferData)
