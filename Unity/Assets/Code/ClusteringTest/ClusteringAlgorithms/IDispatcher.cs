@@ -23,7 +23,7 @@ namespace ClusteringAlgorithms
         void AttributeClusters(ClusteringTextures textures, bool khm);
 
         /// <summary>
-        /// Computes variance for the current cluster centers. Depending on <see cref="this.useFullResTexRef"/> uses either working resolution (<see cref="this.clusteringRTsAndBuffers.texturesWorkRes"/>), or full resolution (<see cref="this.clusteringRTsAndBuffers.texturesFullRes"/>) input.
+        /// Computes variance for the current cluster centers. Depending on <see cref="this.useFullResTexRef"/> uses either working resolution (<see cref="this.clusteringRTsAndBuffers.texturesWorkRes"/>), or full resolution (<see cref="this.clusteringRTsAndBuffers.texturesFullRes"/>) input.<br/><br/>Sets incorrect attribution. Does not restore to save performance.
         /// </summary>
         float? GetVariance();
     }
