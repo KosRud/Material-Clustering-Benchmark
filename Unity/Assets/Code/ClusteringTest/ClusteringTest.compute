@@ -43,7 +43,7 @@ SamplerState sampler_tex_variance_r;
 RWStructuredBuffer<float4> cbuf_cluster_centers;
 RWStructuredBuffer<int4> cbuf_random_positions;
 
-bool isVarianceValid(x){
+bool isVarianceValid(float x){
 	/*
 		positive number 	|	valid variance
 		-1 					|	not a single pixel has sufficient chromatic component
@@ -311,14 +311,14 @@ void ValidateCandidates (uint3 id : SV_DispatchThreadID)
 		// variance improved
 
 		// save new centers as old
-		for (int i = 0; i < num_clusters; i++) {
+		for (uint i = 0; i < num_clusters; i++) {
 			cbuf_cluster_centers[id.x + num_clusters] = cbuf_cluster_centers[id.x];
 		}
 	} else {
 		// variance did not improve
 
 		// restore old centers as new
-		for (int i = 0; i < num_clusters; i++) {
+		for (uint i = 0; i < num_clusters; i++) {
 			cbuf_cluster_centers[id.x] = cbuf_cluster_centers[id.x + num_clusters];
 		}
 	}
