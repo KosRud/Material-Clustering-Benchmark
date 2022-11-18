@@ -220,7 +220,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 				// prevent division by zero
                 result.w = (k == clusterID);
             } else {
-				float top = pow(abs(min_dist), 1);
+				float top = pow(abs(min_dist), 1.5);
 				float bottom = 1.0;
 
 				if (min_dist == 0) {
@@ -229,7 +229,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 					if (k != clusterID) {
 						top *= pow(
 							abs(min_dist / dist_list[k]), 
-							5
+							5.5
 						);
 					}
 
@@ -240,7 +240,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 						
 						bottom += pow(
 							abs(min_dist / dist_list[n]),
-							3
+							3.5
 						);
 					}
 				}
