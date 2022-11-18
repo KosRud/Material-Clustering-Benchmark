@@ -92,7 +92,6 @@ namespace WorkGeneration
                 )
             );
 
-            /*
             // RS
             if (DispatcherRSfixed.IsNumIterationsValid(iterations: numIterations, iterationsKM: 2))
             {
@@ -118,7 +117,6 @@ namespace WorkGeneration
                     )
                 );
             }
-            */
         }
 
         private static void AddStopCondtion(
