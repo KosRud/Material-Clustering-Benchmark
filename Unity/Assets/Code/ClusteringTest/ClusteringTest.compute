@@ -223,7 +223,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 				float top = pow(abs(min_dist), 1.5);
 				float bottom = 1.0;
 
-				if (min_dist == 0) {
+				if (isNearZero(min_dist)) {
 					top = (k == clusterID);
 				} else {
 					if (k != clusterID) {
