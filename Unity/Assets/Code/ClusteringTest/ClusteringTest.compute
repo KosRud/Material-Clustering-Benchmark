@@ -290,10 +290,6 @@ void RandomSwap (uint3 id : SV_DispatchThreadID)
 [numthreads(1,1,1)]
 void ValidateCandidates (uint3 id : SV_DispatchThreadID)
 {
-	if (id.x >= num_clusters) {
-		return;
-	}
-
 	/*
 			|0              |numClusters	|
 			|---------------|---------------|
@@ -312,14 +308,14 @@ void ValidateCandidates (uint3 id : SV_DispatchThreadID)
 
 		// save new centers as old
 		for (uint i = 0; i < num_clusters; i++) {
-			cbuf_cluster_centers[id.x + num_clusters] = cbuf_cluster_centers[id.x];
+			cbuf_cluster_centers[i + num_clusters] = cbuf_cluster_centers[i];
 		}
 	} else {
 		// variance did not improve
 
 		// restore old centers as new
 		for (uint i = 0; i < num_clusters; i++) {
-			cbuf_cluster_centers[id.x] = cbuf_cluster_centers[id.x + num_clusters];
+			cbuf_cluster_centers[i] = cbuf_cluster_centers[i + num_clusters];
 		}
 	}
 }
