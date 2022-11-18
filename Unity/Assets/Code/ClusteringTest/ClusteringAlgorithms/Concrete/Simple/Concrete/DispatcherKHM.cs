@@ -52,7 +52,9 @@ namespace ClusteringAlgorithms
             for (int i = 0; i < this.numIterations; i++)
             {
                 this.KHMiteration(clusteringTextures);
+                Debug.Log(this.GetVariance());
             }
+            Debug.Log("----------");
         }
 
         /// <summary>

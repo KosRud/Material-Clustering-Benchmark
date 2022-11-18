@@ -220,7 +220,29 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 				// prevent division by zero
                 result.w = (k == clusterID);
             } else {
-				float top = pow(abs(min_dist), 1.5);
+				/*
+					pow(x, p) with integer p
+					is optimized by the compiler
+
+					this code does get optimized
+					(check the compiled output in unity to verify)
+				*/
+				const float p = 3.5;	// KHM_p parameter
+				/*
+					For some reason p=3.5 gives worse results than KM
+					even though in the paper 3.5 is said to work slightly better
+					there must be a bug somewhere...
+					
+					or it could be that floating point precision is not sufficient
+					pow(a,b) is compiled to exp(b * log(a))
+					because there is no hardware pow()
+
+					p=3 works as expected
+
+					Zhang, B., 2000. Generalized k-harmonic means--boosting in unsupervised learning. HP LABORATORIES TECHNICAL REPORT HPL, 137.
+				*/
+
+				float top = pow(abs(min_dist), p-2);
 				float bottom = 1.0;
 
 				if (isNearZero(min_dist)) {
@@ -229,7 +251,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 					if (k != clusterID) {
 						top *= pow(
 							abs(min_dist / dist_list[k]), 
-							5.5
+							p+2
 						);
 					}
 
@@ -240,7 +262,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 						
 						bottom += pow(
 							abs(min_dist / dist_list[n]),
-							3.5
+							p
 						);
 					}
 				}

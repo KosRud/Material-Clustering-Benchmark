@@ -146,7 +146,7 @@ namespace ClusteringAlgorithms
             return clusterCenters;
         }
 
-        private static void LogClusterCenters(int numClusters, Vector4[] centersBufferData)
+        public static void LogClusterCenters(int numClusters, Vector4[] centersBufferData)
         {
             for (int i = 0; i < numClusters; i++)
             {

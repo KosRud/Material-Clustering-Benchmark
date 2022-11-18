@@ -51,7 +51,7 @@ namespace WorkGeneration
         )
         {
             // KM
-            workList.runs.Push(
+            /*workList.runs.Push(
                 new LaunchParameters(
                     staggeredJitter: false,
                     video: video,
@@ -69,7 +69,7 @@ namespace WorkGeneration
                         )
                     )
                 )
-            );
+            );*/
 
             // KHM
             workList.runs.Push(
@@ -93,7 +93,7 @@ namespace WorkGeneration
             );
 
             // RS
-            if (DispatcherRSfixed.IsNumIterationsValid(iterations: numIterations, iterationsKM: 2))
+            /*if (DispatcherRSfixed.IsNumIterationsValid(iterations: numIterations, iterationsKM: 2))
             {
                 workList.runs.Push(
                     new LaunchParameters(
@@ -116,7 +116,7 @@ namespace WorkGeneration
                         )
                     )
                 );
-            }
+            }*/
         }
 
         private static void AddStopCondtion(
