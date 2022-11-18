@@ -106,12 +106,15 @@ namespace ClusteringAlgorithms
             using (ClusterCenters clusterCenters = this.clusteringRTsAndBuffers.GetClusterCenters())
             {
                 /*
-                positive number = valid variance
-                -1 = not a single pixel has sufficient chromatic portion
+                    variance = ...
+                    
+                    positive number 	==	valid variance
+                    -1 					==	not a single pixel has sufficient chromatic component
 
-                |0              |numClusters
-                |---------------|---------------|
-            */
+                    |0              |numClusters	|
+                    |---------------|---------------|
+                    |  new centers	| old centers	|
+                */
                 if (clusterCenters.variance != null)
                 {
                     // In the new frame at least one pixel has sufficient chromatic portion, i.e. new variance is not null.

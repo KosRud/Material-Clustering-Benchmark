@@ -43,6 +43,14 @@ SamplerState sampler_tex_variance_r;
 RWStructuredBuffer<float4> cbuf_cluster_centers;
 RWStructuredBuffer<int4> cbuf_random_positions;
 
+bool isVarianceValid(x){
+	/*
+		positive number 	|	valid variance
+		-1 					|	not a single pixel has sufficient chromatic component
+	*/
+	return x > -0.5;
+}
+
 static const float3x3 kkk2rgb_matrix = {
 	1,	1, -0.6667,
 	1,	0,	1.3333,
@@ -212,15 +220,16 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 				// prevent division by zero
                 result.w = (k == clusterID);
             } else {
-				float top = min_dist;
+				float top = pow(abs(min_dist), 1);
 				float bottom = 1.0;
 
 				if (min_dist == 0) {
 					top = (k == clusterID);
 				} else {
 					if (k != clusterID) {
-						top *= pow5(
-							min_dist / dist_list[k]
+						top *= pow(
+							abs(min_dist / dist_list[k]), 
+							5
 						);
 					}
 
@@ -229,11 +238,14 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 							continue;
 						}
 						
-						bottom += pow3(min_dist / dist_list[n]);
+						bottom += pow(
+							abs(min_dist / dist_list[n]),
+							3
+						);
 					}
 				}
 
-				result.w = top / pow2(bottom);
+				result.w = top / (bottom * bottom);
 			}
         }
 
@@ -275,23 +287,40 @@ void RandomSwap (uint3 id : SV_DispatchThreadID)
 	cbuf_cluster_centers[randomClusterCenter].xy = project(sampleCol);
 }
 
-[numthreads(32,1,1)]
+[numthreads(1,1,1)]
 void ValidateCandidates (uint3 id : SV_DispatchThreadID)
 {
 	if (id.x >= num_clusters) {
 		return;
 	}
 
-	float4 old = cbuf_cluster_centers[id.x + num_clusters];
-	float4 candidate = cbuf_cluster_centers[id.x];
+	/*
+			|0              |numClusters	|
+			|---------------|---------------|
+			|  new centers	| old centers	|
+	*/
+	float oldVariance = cbuf_cluster_centers[num_clusters].z;
+	float newVariance = cbuf_cluster_centers[0].z;
 
-	// z is same on all cluster centers
-	// and contains Variance across ALL clusters
+	if (
+		isVarianceValid(newVariance) && (
+			!isVarianceValid(oldVariance) ||
+			newVariance < oldVariance
+		)
+	){
+		// variance improved
 
-	if (candidate.z < old.z) {
-		cbuf_cluster_centers[id.x + num_clusters] = candidate;
+		// save new centers as old
+		for (int i = 0; i < num_clusters; i++) {
+			cbuf_cluster_centers[id.x + num_clusters] = cbuf_cluster_centers[id.x];
+		}
 	} else {
-		cbuf_cluster_centers[id.x] = old;
+		// variance did not improve
+
+		// restore old centers as new
+		for (int i = 0; i < num_clusters; i++) {
+			cbuf_cluster_centers[id.x] = cbuf_cluster_centers[id.x + num_clusters];
+		}
 	}
 }
 
