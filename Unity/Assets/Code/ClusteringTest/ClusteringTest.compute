@@ -144,6 +144,24 @@ void SubSample (uint3 id : SV_DispatchThreadID)
     }
 }
 
+inline float pow2(float x){
+	return x*x;
+}
+
+inline float pow3(float x){
+	return x*x*x;
+}
+
+inline float pow4(float x){
+	return pow2(
+		pow2(x)
+	);
+}
+
+inline float pow5(float x){
+	return pow4(x)*x;
+}
+
 [numthreads(8,8,1)]
 void AttributeClusters (uint3 id : SV_DispatchThreadID)
 {
@@ -194,29 +212,29 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 				// prevent division by zero
                 result.w = (k == clusterID);
             } else {
-				// abs suppresses compiler warning
-				// it is free in terms of performance
-				// it is passed as a flag to an existing operation
-				// instead of creating a new operation
+				float top = min_dist;
+				float bottom = 1.0;
 
-				float top = pow(abs(min_dist), 1.5);
-           		float bottom = 1.0;
+				if (min_dist == 0) {
+					top = (k == clusterID);
+				} else {
+					if (k != clusterID) {
+						top *= pow5(
+							min_dist / dist_list[k]
+						);
+					}
 
+					for (uint n = 0; n < num_clusters; n++){
+						if (n == clusterID) {
+							continue;
+						}
+						
+						bottom += pow3(min_dist / dist_list[n]);
+					}
+				}
 
-                if (k != clusterID) {
-                    top *= pow(abs(min_dist / dist_list[k]), 5.5);
-                }
-
-                for (uint n = 0; n < num_clusters; n++){
-                    if (n == clusterID) {
-                        continue;
-                    }
-                    
-                    bottom += pow(abs(min_dist / dist_list[n]), 3.5);
-                }
-
-				result.w = top / (bottom * bottom);
-            }
+				result.w = top / pow2(bottom);
+			}
         }
 
 		if (!included) {
