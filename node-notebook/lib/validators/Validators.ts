@@ -22,7 +22,7 @@ export interface FrameTimeMeasurement extends Measurement {
 export interface Report {
     measurement: VarianceMeasurement | FrameTimeMeasurement;
     serializableLaunchParameters: {
-        dispatcherParameters: any;
+        abstractDispatcherParameters: object;
         videoName: string;
         numIterations: number;
         workingTextureSize: number;

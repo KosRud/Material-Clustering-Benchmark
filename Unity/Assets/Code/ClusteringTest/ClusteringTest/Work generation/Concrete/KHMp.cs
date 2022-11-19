@@ -6,8 +6,8 @@ namespace WorkGeneration
     public class KHMp : AWorkGenerator
     {
         private const int textureSize = 64;
-        const int numIterations = 10;
         private const bool doRandomizeEmptyClusters = false;
+        const int numIterations = 10;
 
         public KHMp(
             int kernelSize,
@@ -21,7 +21,7 @@ namespace WorkGeneration
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                for (float p = 2.0f; p <= 4.0f; p += 0.1f)
+                for (float p = 2.0f; p <= 4f; p += 0.1f)
                 {
                     workList.runs.Push(
                         new LaunchParameters(

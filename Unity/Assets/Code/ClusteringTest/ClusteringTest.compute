@@ -14,6 +14,23 @@ bool store_variance;
 bool do_random_sample_empty_clusters;
 bool KHM;
 float p;	// KHM parameter
+/*
+	there is a catch with pow() on GPU:
+		pow(a,b)
+			for integer b
+				is replaced with multiplication
+			for non-integer b
+				there is no hardware pow
+				so compiler replaces it with
+					pow(a,b) = exp2(b * log2(a))
+*/
+/*
+	according to [1] the value p=3.5 should be slightly better than p=3
+	however, benchmarks show much worse results on p=3.5 than p=3
+	need dedicated benchmark for the value of p
+
+	Zhang, B., 2000. Generalized k-harmonic means--boosting in unsupervised learning. HP LABORATORIES TECHNICAL REPORT HPL, 137.
+*/
 
 uint randomClusterCenter;
 uint subsample_mip_level;
@@ -218,25 +235,6 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 				(Equation 7.6)
 
 				Zhang, Bin. "Generalized k-harmonic means--boosting in unsupervised learning." HP LABORATORIES TECHNICAL REPORT HPL 137 (2000).
-			*/
-
-			const float p = 2.6;	// KHM_p parameter
-			/*
-				there is a catch with pow() on GPU:
-					pow(a,b)
-						for integer b
-							is replaced with multiplication
-						for non-integer b
-							there is no hardware pow
-							so compiler replaces it with
-								pow(a,b) = exp2(b * log2(a))
-			*/
-			/*
-				according to [1] the value p=3.5 should be slightly better than p=3
-				however, benchmarks show much worse results on p=3.5 than p=3
-				need dedicated benchmark for the value of p
-
-				Zhang, B., 2000. Generalized k-harmonic means--boosting in unsupervised learning. HP LABORATORIES TECHNICAL REPORT HPL, 137.
 			*/
 			
 			float top = pow(abs(min_dist), p-2);

@@ -109,8 +109,8 @@ namespace ClusteringAlgorithms
         public void AttributeClustersKHM(ClusteringTextures clusteringTextures, float p)
         {
             this.computeShader.SetBool("KHM", true);
-            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
             this.computeShader.SetFloat("p", p);
+            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
 
             this.computeShader.SetTexture(
                 this.kernelHandleAttributeClusters,

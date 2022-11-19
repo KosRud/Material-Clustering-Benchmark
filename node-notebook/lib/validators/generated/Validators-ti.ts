@@ -24,7 +24,7 @@ export const FrameTimeMeasurement = t.iface(["Measurement"], {
 export const Report = t.iface([], {
   "measurement": t.union("VarianceMeasurement", "FrameTimeMeasurement"),
   "serializableLaunchParameters": t.iface([], {
-    "dispatcherParameters": "any",
+    "abstractDispatcherParameters": "object",
     "videoName": "string",
     "numIterations": "number",
     "workingTextureSize": "number",
