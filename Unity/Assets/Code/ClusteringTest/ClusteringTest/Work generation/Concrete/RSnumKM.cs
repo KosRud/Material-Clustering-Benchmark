@@ -65,7 +65,7 @@ namespace WorkGeneration
                             numIterations: numIterations,
                             doRandomizeEmptyClusters: false,
                             useFullResTexRef: false,
-                            numIterationsKM: numIterationsKM,
+                            parameters: new DispatcherRSfixed.Parameters(numIterationsKm: 2),
                             doReadback: false,
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                 numClusters: 6,

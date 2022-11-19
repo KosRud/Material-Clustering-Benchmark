@@ -397,9 +397,8 @@ public class MeasurementRunner : IDisposable
             this final attribution does not create a "bonus" iteration
             because the next frame starts with attribution
         */
-        this.launchParameters.dispatcher.AttributeClusters(
-            this.launchParameters.dispatcher.clusteringRTsAndBuffers.texturesWorkRes,
-            khm: false
+        this.launchParameters.dispatcher.AttributeClustersKM(
+            this.launchParameters.dispatcher.clusteringRTsAndBuffers.texturesWorkRes
         );
     }
 

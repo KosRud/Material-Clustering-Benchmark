@@ -1,11 +1,12 @@
 using UnityEngine;
-using System.Collections.Generic;
 using ClusteringAlgorithms;
 
 namespace WorkGeneration
 {
     public class ScanlineJitter : AWorkGenerator
     {
+        private const float p = 3;
+
         public ScanlineJitter(
             int kernelSize,
             UnityEngine.Video.VideoClip[] videos,
@@ -39,6 +40,7 @@ namespace WorkGeneration
                                     numIterations: 3,
                                     doRandomizeEmptyClusters: false,
                                     useFullResTexRef: true,
+                                    new DispatcherKHM.Parameters(p: p),
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 32,
                                         workingSize: textureSize,
