@@ -86,6 +86,16 @@ public class ClusteringTestGui : MonoBehaviour
 
         this.workOptions.Add(
             new WorkOption(
+                new KHMp(
+                    kernelSize: ClusteringTest.kernelSize,
+                    videos: this.videos,
+                    csHighlightRemoval: this.csHighlightRemoval
+                ).GenerateWork()
+            )
+        );
+
+        this.workOptions.Add(
+            new WorkOption(
                 new ScalingVsSubsampling(
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,

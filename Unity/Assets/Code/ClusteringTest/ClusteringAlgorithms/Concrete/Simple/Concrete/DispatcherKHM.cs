@@ -14,6 +14,11 @@ namespace ClusteringAlgorithms
             {
                 this.p = p;
             }
+
+            public static Parameters Default()
+            {
+                return new Parameters(p: 3);
+            }
         }
 
         public override bool doesReadback => false;

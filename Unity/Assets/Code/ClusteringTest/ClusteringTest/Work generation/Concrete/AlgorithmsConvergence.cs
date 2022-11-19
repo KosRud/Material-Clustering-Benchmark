@@ -7,7 +7,6 @@ namespace WorkGeneration
     {
         private const int textureSize = 64;
         private const bool doRandomizeEmptyClusters = false;
-        private const float p = 3.0f; // KHM parameter
 
         public AlgorithmsConvergence(
             int kernelSize,
@@ -83,7 +82,7 @@ namespace WorkGeneration
                         numIterations: numIterations,
                         doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                         useFullResTexRef: false,
-                        parameters: new DispatcherKHM.Parameters(p),
+                        parameters: DispatcherKHM.Parameters.Default(),
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
                             workingSize: textureSize,
@@ -95,7 +94,7 @@ namespace WorkGeneration
             );
 
             // RS
-            /*if (DispatcherRSfixed.IsNumIterationsValid(iterations: numIterations, iterationsKM: 2))
+            if (DispatcherRSfixed.IsNumIterationsValid(iterations: numIterations, iterationsKM: 2))
             {
                 workList.runs.Push(
                     new LaunchParameters(
@@ -107,7 +106,7 @@ namespace WorkGeneration
                             numIterations: numIterations,
                             doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                             useFullResTexRef: false,
-                            numIterationsKM: 2,
+                            parameters: DispatcherRSfixed.Parameters.Default(),
                             doReadback: false,
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                 numClusters: 6,
@@ -118,7 +117,7 @@ namespace WorkGeneration
                         )
                     )
                 );
-            }*/
+            }
         }
 
         private static void AddStopCondtion(
@@ -157,7 +156,7 @@ namespace WorkGeneration
                         computeShader: csHighlightRemoval,
                         doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                         useFullResTexRef: false,
-                        parameters: new DispatcherRSfixed.Parameters(numIterationsKm: 2),
+                        parameters: DispatcherRSfixed.Parameters.Default(),
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
                             workingSize: textureSize,
@@ -203,7 +202,7 @@ namespace WorkGeneration
                             doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                             useFullResTexRef: false,
                             numIterations: 1,
-                            parameters: new DispatcherKHM.Parameters(p: p),
+                            parameters: DispatcherKHM.Parameters.Default(),
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                 numClusters: 6,
                                 workingSize: textureSize,

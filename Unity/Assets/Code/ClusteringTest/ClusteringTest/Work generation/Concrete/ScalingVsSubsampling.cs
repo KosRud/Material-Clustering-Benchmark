@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 using ClusteringAlgorithms;
 
 namespace WorkGeneration
@@ -27,15 +26,12 @@ namespace WorkGeneration
                                 staggeredJitter: false,
                                 video: video,
                                 doDownscale: doDownscale,
-                                dispatcher: new DispatcherRSfixed(
+                                dispatcher: new DispatcherKHM(
                                     computeShader: this.csHighlightRemoval,
                                     numIterations: 3,
                                     doRandomizeEmptyClusters: false,
                                     useFullResTexRef: true,
-                                    parameters: new DispatcherRSfixed.Parameters(
-                                        numIterationsKm: 2
-                                    ),
-                                    doReadback: false,
+                                    parameters: DispatcherKHM.Parameters.Default(),
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 32,
                                         workingSize: textureSize,

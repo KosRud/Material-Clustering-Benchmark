@@ -14,6 +14,11 @@ namespace ClusteringAlgorithms
             {
                 this.numIterationsKm = numIterationsKm;
             }
+
+            public static Parameters Default()
+            {
+                return new Parameters(numIterationsKm: 2);
+            }
         }
 
         protected readonly Parameters parameters;

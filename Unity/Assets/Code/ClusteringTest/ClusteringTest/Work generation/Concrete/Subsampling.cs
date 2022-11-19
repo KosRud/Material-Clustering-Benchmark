@@ -29,11 +29,12 @@ namespace WorkGeneration
                                 staggeredJitter: false,
                                 video: video,
                                 doDownscale: false,
-                                dispatcher: new DispatcherKM(
+                                dispatcher: new DispatcherKHM(
                                     computeShader: this.csHighlightRemoval,
                                     numIterations: 3,
                                     doRandomizeEmptyClusters: false,
                                     useFullResTexRef: true,
+                                    parameters: DispatcherKHM.Parameters.Default(),
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: numClusters,
                                         workingSize: textureSize,

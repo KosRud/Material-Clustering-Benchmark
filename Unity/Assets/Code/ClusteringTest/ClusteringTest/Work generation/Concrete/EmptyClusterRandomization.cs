@@ -5,8 +5,6 @@ namespace WorkGeneration
 {
     public class EmptyClusterRandomization : AWorkGenerator
     {
-        private const float p = 3.0f; // KHM parameter
-
         public EmptyClusterRandomization(
             int kernelSize,
             UnityEngine.Video.VideoClip[] videos,

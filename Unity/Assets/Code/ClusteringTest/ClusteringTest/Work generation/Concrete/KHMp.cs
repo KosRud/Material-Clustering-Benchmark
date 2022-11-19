@@ -17,35 +17,32 @@ namespace WorkGeneration
 
         public override WorkList GenerateWork()
         {
-            var workList = new WorkList(ClusteringTest.LogType.Variance, "Algorithm convergence");
+            var workList = new WorkList(ClusteringTest.LogType.Variance, "KHM parameter p");
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                for (int numIterations = 1; numIterations < 30; numIterations++)
+                for (float p = 2.0f; p <= 4.0f; p += 0.1f)
                 {
-                    for (float p = 2.0f; p <= 4.0f; p += 0.05f)
-                    {
-                        workList.runs.Push(
-                            new LaunchParameters(
-                                staggeredJitter: false,
-                                video: video,
-                                doDownscale: false,
-                                dispatcher: new DispatcherKHM(
-                                    computeShader: csHighlightRemoval,
-                                    numIterations: numIterations,
-                                    doRandomizeEmptyClusters: doRandomizeEmptyClusters,
-                                    useFullResTexRef: false,
-                                    parameters: new DispatcherKHM.Parameters(p),
-                                    clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
-                                        numClusters: 6,
-                                        workingSize: textureSize,
-                                        fullSize: ClusteringTest.fullTextureSize,
-                                        jitterSize: 1
-                                    )
+                    workList.runs.Push(
+                        new LaunchParameters(
+                            staggeredJitter: false,
+                            video: video,
+                            doDownscale: false,
+                            dispatcher: new DispatcherKHM(
+                                computeShader: csHighlightRemoval,
+                                numIterations: numIterations,
+                                doRandomizeEmptyClusters: doRandomizeEmptyClusters,
+                                useFullResTexRef: false,
+                                parameters: new DispatcherKHM.Parameters(p),
+                                clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
+                                    numClusters: 6,
+                                    workingSize: textureSize,
+                                    fullSize: ClusteringTest.fullTextureSize,
+                                    jitterSize: 1
                                 )
                             )
-                        );
-                    }
+                        )
+                    );
                 }
             }
 
