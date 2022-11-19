@@ -16,8 +16,8 @@ namespace ClusteringAlgorithms
             }
         }
 
-        protected readonly Parameters _parameters;
-        public override DispatcherParameters parameters => this._parameters;
+        protected readonly Parameters parameters;
+        public override DispatcherParameters abstractParameters => this.parameters;
 
         public override abstract bool usesStopCondition { get; }
 
@@ -40,7 +40,7 @@ namespace ClusteringAlgorithms
             int numIterations,
             bool doRandomizeEmptyClusters,
             bool useFullResTexRef,
-            int numIterationsKm,
+            Parameters parameters,
             ClusteringRTsAndBuffers clusteringRTsAndBuffers
         )
             : base(
@@ -51,7 +51,7 @@ namespace ClusteringAlgorithms
                 clusteringRTsAndBuffers: clusteringRTsAndBuffers
             )
         {
-            this._parameters = new Parameters(numIterationsKm: numIterationsKm);
+            this.parameters = parameters;
             this.kernelHandleRandomSwap = this.computeShader.FindKernel("RandomSwap");
             this.kernelHandleValidateCandidates = this.computeShader.FindKernel(
                 "ValidateCandidates"

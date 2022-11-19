@@ -8,24 +8,25 @@ namespace ClusteringAlgorithms
         [Serializable]
         public class Parameters : DispatcherParameters
         {
-            public int p;
+            public float p;
 
-            public Parameters(int p)
+            public Parameters(float p)
             {
                 this.p = p;
             }
         }
 
         public override bool doesReadback => false;
+        public override DispatcherParameters abstractParameters => this.parameters;
 
-        private readonly Parameters _parameters;
-        public override DispatcherParameters parameters => this._parameters;
+        private readonly Parameters parameters;
 
         public DispatcherKHM(
             ComputeShader computeShader,
             int numIterations,
             bool doRandomizeEmptyClusters,
             bool useFullResTexRef,
+            Parameters parameters,
             ClusteringRTsAndBuffers clusteringRTsAndBuffers
         )
             : base(
@@ -36,7 +37,7 @@ namespace ClusteringAlgorithms
                 clusteringRTsAndBuffers: clusteringRTsAndBuffers
             )
         {
-            this._parameters = new Parameters(3); // hard-coded in shader
+            this.parameters = parameters; // hard-coded in shader
         }
 
         public override string name => "KHM";
@@ -65,7 +66,7 @@ namespace ClusteringAlgorithms
         /// </summary>
         protected void KHMiteration(ClusteringTextures textures)
         {
-            this.AttributeClusters(textures, khm: true);
+            this.AttributeClustersKHM(textures, p: this.parameters.p);
             this.UpdateClusterCenters(textures, rejectOld: false);
         }
 

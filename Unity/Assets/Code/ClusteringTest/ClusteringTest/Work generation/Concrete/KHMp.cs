@@ -3,11 +3,13 @@ using ClusteringAlgorithms;
 
 namespace WorkGeneration
 {
-    public class EmptyClusterRandomization : AWorkGenerator
+    public class KHMp : AWorkGenerator
     {
-        private const float p = 3.0f; // KHM parameter
+        private const int textureSize = 64;
+        const int numIterations = 10;
+        private const bool doRandomizeEmptyClusters = false;
 
-        public EmptyClusterRandomization(
+        public KHMp(
             int kernelSize,
             UnityEngine.Video.VideoClip[] videos,
             ComputeShader csHighlightRemoval
@@ -15,32 +17,27 @@ namespace WorkGeneration
 
         public override WorkList GenerateWork()
         {
-            var workList = new WorkList(
-                ClusteringTest.LogType.Variance,
-                "Empty cluster randomization"
-            );
+            var workList = new WorkList(ClusteringTest.LogType.Variance, "Algorithm convergence");
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                /*
-                  ! lowest textureSize must be no less, than kernel size
-                */
-                for (int textureSize = 64; textureSize >= 8; textureSize /= 2)
+                for (int numIterations = 1; numIterations < 30; numIterations++)
                 {
-                    foreach (bool doRandomizeEmptyClusters in new bool[] { true, false })
+                    for (float p = 2.0f; p <= 4.0f; p += 0.05f)
                     {
                         workList.runs.Push(
                             new LaunchParameters(
                                 staggeredJitter: false,
                                 video: video,
                                 doDownscale: false,
-                                dispatcher: new DispatcherKM(
-                                    computeShader: this.csHighlightRemoval,
-                                    numIterations: 3,
+                                dispatcher: new DispatcherKHM(
+                                    computeShader: csHighlightRemoval,
+                                    numIterations: numIterations,
                                     doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                                     useFullResTexRef: false,
+                                    parameters: new DispatcherKHM.Parameters(p),
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
-                                        numClusters: 32,
+                                        numClusters: 6,
                                         workingSize: textureSize,
                                         fullSize: ClusteringTest.fullTextureSize,
                                         jitterSize: 1

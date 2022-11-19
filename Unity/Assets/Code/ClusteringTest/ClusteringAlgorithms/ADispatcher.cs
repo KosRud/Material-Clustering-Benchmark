@@ -10,9 +10,8 @@ namespace ClusteringAlgorithms
         public ClusteringRTsAndBuffers clusteringRTsAndBuffers { get; private set; }
 
         public abstract string name { get; }
-        public virtual DispatcherParameters parameters => this._parameters;
-
-        private readonly DispatcherParameters _parameters;
+        private DispatcherParameters parameters;
+        public virtual DispatcherParameters abstractParameters => this.parameters;
 
         public abstract bool usesStopCondition { get; }
         public abstract bool doesReadback { get; }
@@ -39,7 +38,6 @@ namespace ClusteringAlgorithms
             this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
             this.numIterations = numIterations;
             this.clusteringRTsAndBuffers = clusteringRTsAndBuffers;
-            this._parameters = new DispatcherParameters();
             this.useFullResTexRef = useFullResTexRef;
         }
 
@@ -77,10 +75,42 @@ namespace ClusteringAlgorithms
             this.computeShader.Dispatch(this.kernelUpdateClusterCenters, 1, 1, 1);
         }
 
-        public void AttributeClusters(ClusteringTextures clusteringTextures, bool khm)
+        public void AttributeClustersKM(ClusteringTextures clusteringTextures)
         {
-            this.computeShader.SetBool("KHM", khm);
+            this.computeShader.SetBool("KHM", false);
             this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
+
+            this.computeShader.SetTexture(
+                this.kernelHandleAttributeClusters,
+                "tex_input",
+                clusteringTextures.rtInput
+            );
+            this.computeShader.SetTexture(
+                this.kernelHandleAttributeClusters,
+                "tex_arr_clusters_rw",
+                clusteringTextures.rtArr
+            );
+            this.computeShader.SetBuffer(
+                this.kernelHandleAttributeClusters,
+                "cbuf_cluster_centers",
+                this.clusteringRTsAndBuffers.cbufClusterCenters
+            );
+
+            this.computeShader.Dispatch(
+                this.kernelHandleAttributeClusters,
+                clusteringTextures.size / ClusteringTest.kernelSize,
+                clusteringTextures.size / ClusteringTest.kernelSize,
+                1
+            );
+
+            clusteringTextures.rtArr.GenerateMips();
+        }
+
+        public void AttributeClustersKHM(ClusteringTextures clusteringTextures, float p)
+        {
+            this.computeShader.SetBool("KHM", true);
+            this.computeShader.SetInt("num_clusters", this.clusteringRTsAndBuffers.numClusters);
+            this.computeShader.SetFloat("p", p);
 
             this.computeShader.SetTexture(
                 this.kernelHandleAttributeClusters,
@@ -122,7 +152,7 @@ namespace ClusteringAlgorithms
                 };
 
                 // Attribution to ensure cluster memberships match current cluster centers. It is techinically unnecessary if attribution was ran after the latest update of cluster centers, the algorithm used was KM, and the variance is computed on working resolution texture. For simplicity, we do not make a special case and always perform attribution.
-                this.AttributeClusters(clusteringTextures: refTextures, khm: false);
+                this.AttributeClustersKM(clusteringTextures: refTextures);
 
                 this.UpdateClusterCenters(clusteringTextures: refTextures, rejectOld: false);
 

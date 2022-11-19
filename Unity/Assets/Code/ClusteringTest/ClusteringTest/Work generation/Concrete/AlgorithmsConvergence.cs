@@ -7,6 +7,7 @@ namespace WorkGeneration
     {
         private const int textureSize = 64;
         private const bool doRandomizeEmptyClusters = false;
+        private const float p = 3.0f; // KHM parameter
 
         public AlgorithmsConvergence(
             int kernelSize,
@@ -51,7 +52,7 @@ namespace WorkGeneration
         )
         {
             // KM
-            /*workList.runs.Push(
+            workList.runs.Push(
                 new LaunchParameters(
                     staggeredJitter: false,
                     video: video,
@@ -69,7 +70,7 @@ namespace WorkGeneration
                         )
                     )
                 )
-            );*/
+            );
 
             // KHM
             workList.runs.Push(
@@ -82,6 +83,7 @@ namespace WorkGeneration
                         numIterations: numIterations,
                         doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                         useFullResTexRef: false,
+                        parameters: new DispatcherKHM.Parameters(p),
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
                             workingSize: textureSize,
@@ -155,7 +157,7 @@ namespace WorkGeneration
                         computeShader: csHighlightRemoval,
                         doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                         useFullResTexRef: false,
-                        numIterationsKM: 2,
+                        parameters: new DispatcherRSfixed.Parameters(numIterationsKm: 2),
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
                             workingSize: textureSize,
@@ -201,6 +203,7 @@ namespace WorkGeneration
                             doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                             useFullResTexRef: false,
                             numIterations: 1,
+                            parameters: new DispatcherKHM.Parameters(p: p),
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                 numClusters: 6,
                                 workingSize: textureSize,

@@ -7,6 +7,7 @@ namespace WorkGeneration
     {
         private const int textureSize = 64;
         private const bool doRandomizeEmptyClusters = false;
+        private const float p = 3.0f; // KHM parameter
 
         public FrameTime(
             int kernelSize,
@@ -58,6 +59,7 @@ namespace WorkGeneration
                                     numIterations: numIterations,
                                     doRandomizeEmptyClusters,
                                     useFullResTexRef: false,
+                                    parameters: new DispatcherKHM.Parameters(p),
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,
                                         workingSize: textureSize,
@@ -81,7 +83,9 @@ namespace WorkGeneration
                                         numIterations: numIterations,
                                         doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                                         useFullResTexRef: false,
-                                        numIterationsKM: 2,
+                                        parameters: new DispatcherRSfixed.Parameters(
+                                            numIterationsKm: 2
+                                        ),
                                         doReadback: doReadback,
                                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                             numClusters: 6,
@@ -153,6 +157,7 @@ namespace WorkGeneration
                                     numIterations: numIterations,
                                     doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                                     useFullResTexRef: false,
+                                    parameters: new DispatcherKHM.Parameters(p),
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,
                                         workingSize: textureSize,
@@ -174,6 +179,7 @@ namespace WorkGeneration
                                         numIterations: numIterations,
                                         doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                                         useFullResTexRef: false,
+                                        parameters: new DispatcherKHM.Parameters(p),
                                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                             numClusters: 6,
                                             workingSize: textureSize,
@@ -234,7 +240,7 @@ namespace WorkGeneration
                         computeShader: csHighlightRemoval,
                         doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                         useFullResTexRef: false,
-                        numIterationsKM: 2,
+                        parameters: new DispatcherRSfixed.Parameters(numIterationsKm: 2),
                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                             numClusters: 6,
                             workingSize: textureSize,
@@ -280,6 +286,7 @@ namespace WorkGeneration
                             doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                             useFullResTexRef: false,
                             numIterations: 1,
+                            parameters: new DispatcherKHM.Parameters(p),
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                 numClusters: 6,
                                 workingSize: textureSize,
