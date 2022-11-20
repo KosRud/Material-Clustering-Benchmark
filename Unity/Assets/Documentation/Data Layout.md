@@ -1,14 +1,14 @@
 [TOC]
 
-# ClusteringTextures.rtArr
+# Array Texture
 
 Inside the array texture ClusteringTextures.rtArr the following data layout is used:
 
 $$
 \begin{aligned}
 	\pmb{T}_k(\delta)       & = \begin{bmatrix}
-		\mathit{\tilde{C}}_2(\delta) w(\delta,k) f(\delta) \\\\
-		\mathit{\tilde{C}}_3(\delta) w(\delta,k) f(\delta) \\\\
+		\tilde{C}_2(\delta) w(\delta,k) f(\delta) \\\\
+		\tilde{C}_3(\delta) w(\delta,k) f(\delta) \\\\
 		z_k(\delta) \\\\
 		w(\delta,k) f(\delta)
 	\end{bmatrix}
@@ -19,7 +19,7 @@ $$
 |----|----|
 |\\(\pmb{T}_k\\)|4-component floating point texture corresponding to \\(k\\)-th cluster|
 |\\(\delta\\)|pixel|
-|\\(\pmb{\mathit{\tilde{C}}}(\delta)\\)|[color representation](#color-representation) used for material clustering|
+|\\(\pmb{\tilde{C}}(\delta)\\)|[color representation](#color-representation) used for material clustering|
 |\\(w(\delta,k)\\)|weight of \\(k\\)-th cluster for the pixel \\(\delta\\) (1 or 0 in the case of K-Means)<SUP>&lowast;</SUP>|
 |\\(f(\delta)\\)|[binary flag](#noise-flag) which determines if the pixel is rejected as noise|
 |\\(z_k(\delta)\\)|used for storing MSE ([see below](#third-component))|
@@ -28,7 +28,31 @@ $$
 
 ## Color representation {#color-representation}
 
-Color representation \\(\mathit{\tilde{C}}_2(\delta),\mathit{\tilde{C}}_3(\delta)\\) is generated from the RGB color using the function `project()` in the shader:
+Color representation \\(\pmb{\tilde{C}}(\delta)\\) is generated from the RGB color of pixel \\(\delta\\) as follows:
+
+1. maximize HSI saturation (intensity becomes invalid)
+$$
+\\dot{\pmb{C}} (\delta) = \pmb{C}(\delta) - (1,1,1)^T \cdot \min\limits_{i \in \lbrace\mathrm{R,G,B}\rbrace}C_i(\delta)
+$$
+2. normalize HSI intensity to \\(\frac{1}{3}\\)
+$$
+\ddot{\pmb{C}} (\delta) = \frac{
+	\\dot{\pmb{C}} (\delta)
+}{
+	\Vert \\dot{\pmb{C}} (\delta) \Vert_1
+}
+$$
+3. convert from RGB to I<SUB>1</SUB>,I<SUB>2</SUB>,I<SUB>3</SUB> color space [1,2]
+$$
+\pmb{\tilde{C}} = \begin{bmatrix}
+	\phantom{-}\frac{1}{3}\hspace{10px}\phantom{-} 	& \frac{1}{3}\hspace{10px} 	& \phantom{-}\frac{1}{3} \\\\[4pt]
+	\phantom{-}\frac{1}{2}\hspace{10px}\phantom{-} 	& 0\hspace{10px} 			& -\frac{1}{2} \\\\[4px]
+	-\frac{1}{4}\hspace{10px}\phantom{-} 			& \frac{1}{2}\hspace{10px} 	& -\frac{1}{4}
+\end{bmatrix} \cdot \ddot{\pmb{C}} (\delta)
+$$
+
+
+### Code
 
 ~~~~~~~~~~~~~{cpp}
 float2 project(float3 col)
@@ -61,19 +85,9 @@ float2 project(float3 col)
 }
 ~~~~~~~~~~~~~
 
-Matrix for \\(\mathrm{RGB} \Rightarrow \mathrm{I}_1\mathrm{I}_2\mathrm{I}_3\\) conversion [1]:
-
-$$
-\text{rgb_2_iii_matrix} = \begin{bmatrix}
-	\phantom{-}\frac{1}{3}\hspace{10px}\phantom{-} 	& \frac{1}{3}\hspace{10px} 	& \phantom{-}\frac{1}{3} \\\\[4pt]
-	\phantom{-}\frac{1}{2}\hspace{10px}\phantom{-} 	& 0\hspace{10px} 			& -\frac{1}{2} \\\\[4px]
-	-\frac{1}{4}\hspace{10px}\phantom{-} 			& \frac{1}{2}\hspace{10px} 	& -\frac{1}{4}
-\end{bmatrix}
-$$
-
 ## Noisy pixels {#noise-flag}
 
-When HSI intensity and/or saturation is low, the hue becomes unstable. Such pixels will be ignored during clustering by setting \\(f(\delta)=0\\). The value of \\(f(\delta)\\) for the given RGB color is determined by the function `is_color_valid()` in the shader.
+When HSI intensity and/or saturation is low, the hue becomes unstable. Such pixels will be ignored during clustering by setting \\(f(\delta)=0\\). The value of \\(f(\delta)\\) for the given RGB color is determined as follows:
 
 $$
 f(\delta) = \begin{cases}
@@ -87,7 +101,7 @@ $$
 |\\(\pmb{C}(\delta)\\)|RGB color of pixel \\(\delta\\)|
 |\\(t\\)|threshold for determining noisy pixels (we used \\(t=0.05\\))
 
-### Corresponding Code:
+### Code
 
 ~~~~~~~~~~~~~{cpp}
 #define valid_threshold 0.05
@@ -124,11 +138,11 @@ $$
 
 |Variable|Explanation|
 |----|----|
-|\\(d_\mathrm{min}(\delta)\\)|Euclidean distance between the color \\(\mathit{\tilde{C}}_2(\delta),\mathit{\tilde{C}}_3(\delta)\\) and the nearest cluster center|
+|\\(d_\mathrm{min}(\delta)\\)|Euclidean distance between the color \\(\tilde{C}_2(\delta),\tilde{C}_3(\delta)\\) and the nearest cluster center|
 
 # Compute Buffer
 
-Inside the [compute buffer](#ClusteringAlgorithms.ClusteringRTsAndBuffers.cbufClusterCenters) the following data layout is used:
+Inside the [compute buffer](#ClusteringAlgorithms.ClusteringRTsAndBuffers.cbufClusterCenters), the following data layout is used:
 
 |Component|Value|
 |----|----|

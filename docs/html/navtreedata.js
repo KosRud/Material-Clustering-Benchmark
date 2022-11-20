@@ -25,18 +25,20 @@
 var NAVTREE =
 [
   [ "Material Clustering Benchmark", "index.html", [
-    [ "Top Level Classes", "index.html#autotoc_md4", null ],
-    [ "Assorted Highlights", "index.html#autotoc_md5", null ],
+    [ "Top Level Classes", "index.html#autotoc_md5", null ],
+    [ "Assorted Highlights", "index.html#autotoc_md6", null ],
     [ "Data Layout", "md__assets__documentation__data__layout.html", [
-      [ "ClusteringTextures.rtArr", "md__assets__documentation__data__layout.html#autotoc_md0", [
-        [ "Color representation", "md__assets__documentation__data__layout.html#color-representation", null ],
+      [ "Array Texture", "md__assets__documentation__data__layout.html#autotoc_md0", [
+        [ "Color representation", "md__assets__documentation__data__layout.html#color-representation", [
+          [ "Code", "md__assets__documentation__data__layout.html#autotoc_md1", null ]
+        ] ],
         [ "Noisy pixels", "md__assets__documentation__data__layout.html#noise-flag", [
-          [ "Corresponding Code:", "md__assets__documentation__data__layout.html#autotoc_md1", null ]
+          [ "Code", "md__assets__documentation__data__layout.html#autotoc_md2", null ]
         ] ],
         [ "Third component", "md__assets__documentation__data__layout.html#third-component", null ]
       ] ],
-      [ "Compute Buffer", "md__assets__documentation__data__layout.html#autotoc_md2", null ],
-      [ "References", "md__assets__documentation__data__layout.html#autotoc_md3", null ]
+      [ "Compute Buffer", "md__assets__documentation__data__layout.html#autotoc_md3", null ],
+      [ "References", "md__assets__documentation__data__layout.html#autotoc_md4", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],

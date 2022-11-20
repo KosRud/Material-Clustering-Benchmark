@@ -94,21 +94,23 @@ $(document).ready(function(){initNavTree('md__assets__documentation__data__layou
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md0">ClusteringTextures.rtArr</a><ul><li class="level2"><a href="#color-representation">Color representation</a></li>
-<li class="level2"><a href="#noise-flag">Noisy pixels</a><ul><li class="level3"><a href="#autotoc_md1">Corresponding Code:</a></li>
+<ul><li class="level1"><a href="#autotoc_md0">Array Texture</a><ul><li class="level2"><a href="#color-representation">Color representation</a><ul><li class="level3"><a href="#autotoc_md1">Code</a></li>
+</ul>
+</li>
+<li class="level2"><a href="#noise-flag">Noisy pixels</a><ul><li class="level3"><a href="#autotoc_md2">Code</a></li>
 </ul>
 </li>
 <li class="level2"><a href="#third-component">Third component</a></li>
 </ul>
 </li>
-<li class="level1"><a href="#autotoc_md2">Compute Buffer</a></li>
-<li class="level1"><a href="#autotoc_md3">References</a></li>
+<li class="level1"><a href="#autotoc_md3">Compute Buffer</a></li>
+<li class="level1"><a href="#autotoc_md4">References</a></li>
 </ul>
 </div>
 <div class="textblock"><h1><a class="anchor" id="autotoc_md0"></a>
-ClusteringTextures.rtArr</h1>
+Array Texture</h1>
 <p >Inside the array texture <a class="el" href="class_clustering_textures.html#abc318fc164bf513d67908878f4b2701f">ClusteringTextures.rtArr</a> the following data layout is used:</p>
-<p >$$ \begin{aligned} \pmb{T}_k(\delta) &amp; = \begin{bmatrix} \mathit{\tilde{C}}_2(\delta) w(\delta,k) f(\delta) \\ \mathit{\tilde{C}}_3(\delta) w(\delta,k) f(\delta) \\ z_k(\delta) \\ w(\delta,k) f(\delta) \end{bmatrix} \end{aligned} $$</p>
+<p >$$ \begin{aligned} \pmb{T}_k(\delta) &amp; = \begin{bmatrix} \tilde{C}_2(\delta) w(\delta,k) f(\delta) \\ \tilde{C}_3(\delta) w(\delta,k) f(\delta) \\ z_k(\delta) \\ w(\delta,k) f(\delta) \end{bmatrix} \end{aligned} $$</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Variable   </th><th class="markdownTableHeadNone">Explanation    </th></tr>
@@ -117,7 +119,7 @@ ClusteringTextures.rtArr</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">\(\delta\)   </td><td class="markdownTableBodyNone">pixel    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">\(\pmb{\mathit{\tilde{C}}}(\delta)\)   </td><td class="markdownTableBodyNone"><a class="el" href="md__assets__documentation__data__layout.html#color-representation">color representation</a> used for material clustering    </td></tr>
+<td class="markdownTableBodyNone">\(\pmb{\tilde{C}}(\delta)\)   </td><td class="markdownTableBodyNone"><a class="el" href="md__assets__documentation__data__layout.html#color-representation">color representation</a> used for material clustering    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">\(w(\delta,k)\)   </td><td class="markdownTableBodyNone">weight of \(k\)-th cluster for the pixel \(\delta\) (1 or 0 in the case of K-Means)<sup>&lowast;</sup>    </td></tr>
 <tr class="markdownTableRowOdd">
@@ -128,7 +130,14 @@ ClusteringTextures.rtArr</h1>
 <p ><sup>&lowast;</sup> For <a class="el" href="class_clustering_algorithms_1_1_dispatcher_k_h_mp.html">KHMp</a> algorithm, weights \(w(\delta,k)\) for the given pixel do not add up to 1.</p>
 <h2><a class="anchor" id="color-representation"></a>
 Color representation</h2>
-<p >Color representation \(\mathit{\tilde{C}}_2(\delta),\mathit{\tilde{C}}_3(\delta)\) is generated from the RGB color using the function <code>project()</code> in the shader:</p>
+<p >Color representation \(\pmb{\tilde{C}}(\delta)\) is generated from the RGB color of pixel \(\delta\) as follows:</p>
+<ol type="1">
+<li>maximize HSI saturation (intensity becomes invalid) $$ \dot{\pmb{C}} (\delta) = \pmb{C}(\delta) - (1,1,1)^T \cdot \min\limits_{i \in \lbrace\mathrm{R,G,B}\rbrace}C_i(\delta) $$</li>
+<li>normalize HSI intensity to \(\frac{1}{3}\) $$ \ddot{\pmb{C}} (\delta) = \frac{ \dot{\pmb{C}} (\delta) }{ \Vert \dot{\pmb{C}} (\delta) \Vert_1 } $$</li>
+<li>convert from RGB to I<sub>1</sub>,I<sub>2</sub>,I<sub>3</sub> color space [1,2] $$ \pmb{\tilde{C}} = \begin{bmatrix} \phantom{-}\frac{1}{3}\hspace{10px}\phantom{-} &amp; \frac{1}{3}\hspace{10px} &amp; \phantom{-}\frac{1}{3} \\[4pt] \phantom{-}\frac{1}{2}\hspace{10px}\phantom{-} &amp; 0\hspace{10px} &amp; -\frac{1}{2} \\[4px] -\frac{1}{4}\hspace{10px}\phantom{-} &amp; \frac{1}{2}\hspace{10px} &amp; -\frac{1}{4} \end{bmatrix} \cdot \ddot{\pmb{C}} (\delta) $$</li>
+</ol>
+<h3><a class="anchor" id="autotoc_md1"></a>
+Code</h3>
 <div class="fragment"><div class="line">float2 project(float3 col)</div>
 <div class="line">{</div>
 <div class="line">    <span class="comment">/* </span></div>
@@ -157,11 +166,9 @@ Color representation</h2>
 <div class="line">    <span class="comment">// return chromaticity axes, ignore intensity</span></div>
 <div class="line">    <span class="keywordflow">return</span> col.gb;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p >Matrix for \(\mathrm{RGB} \Rightarrow \mathrm{I}_1\mathrm{I}_2\mathrm{I}_3\) conversion [1]:</p>
-<p >$$ \text{rgb_2_iii_matrix} = \begin{bmatrix} \phantom{-}\frac{1}{3}\hspace{10px}\phantom{-} &amp; \frac{1}{3}\hspace{10px} &amp; \phantom{-}\frac{1}{3} \\[4pt] \phantom{-}\frac{1}{2}\hspace{10px}\phantom{-} &amp; 0\hspace{10px} &amp; -\frac{1}{2} \\[4px] -\frac{1}{4}\hspace{10px}\phantom{-} &amp; \frac{1}{2}\hspace{10px} &amp; -\frac{1}{4} \end{bmatrix} $$</p>
-<h2><a class="anchor" id="noise-flag"></a>
+</div><!-- fragment --><h2><a class="anchor" id="noise-flag"></a>
 Noisy pixels</h2>
-<p >When HSI intensity and/or saturation is low, the hue becomes unstable. Such pixels will be ignored during clustering by setting \(f(\delta)=0\). The value of \(f(\delta)\) for the given RGB color is determined by the function <code>is_color_valid()</code> in the shader.</p>
+<p >When HSI intensity and/or saturation is low, the hue becomes unstable. Such pixels will be ignored during clustering by setting \(f(\delta)=0\). The value of \(f(\delta)\) for the given RGB color is determined as follows:</p>
 <p >$$ f(\delta) = \begin{cases} 1, &amp; \text{if} \quad \left\Vert \pmb{C}(\delta) - (1,1,1)^T \cdot \min\limits_{i \in \lbrace\mathrm{R,G,B}\rbrace}C_i(\delta) \right\Vert_1 \geq t \\ 0 &amp; \text{otherwise} \end{cases} $$</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -171,8 +178,8 @@ Noisy pixels</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">\(t\)   </td><td class="markdownTableBodyNone">threshold for determining noisy pixels (we used \(t=0.05\))   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md1"></a>
-Corresponding Code:</h3>
+<h3><a class="anchor" id="autotoc_md2"></a>
+Code</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#define valid_threshold 0.05</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">bool</span> is_color_valid(float3 col) {</div>
@@ -197,11 +204,11 @@ Third component</h2>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Variable   </th><th class="markdownTableHeadNone">Explanation    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">\(d_\mathrm{min}(\delta)\)   </td><td class="markdownTableBodyNone">Euclidean distance between the color \(\mathit{\tilde{C}}_2(\delta),\mathit{\tilde{C}}_3(\delta)\) and the nearest cluster center   </td></tr>
+<td class="markdownTableBodyNone">\(d_\mathrm{min}(\delta)\)   </td><td class="markdownTableBodyNone">Euclidean distance between the color \(\tilde{C}_2(\delta),\tilde{C}_3(\delta)\) and the nearest cluster center   </td></tr>
 </table>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md3"></a>
 Compute Buffer</h1>
-<p >Inside the <a class="el" href="class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html#a76221a02ff6d0e0d6146ccc3ec9188be">compute buffer</a> the following data layout is used:</p>
+<p >Inside the <a class="el" href="class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html#a76221a02ff6d0e0d6146ccc3ec9188be">compute buffer</a>, the following data layout is used:</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Component   </th><th class="markdownTableHeadNone">Value    </th></tr>
@@ -213,7 +220,7 @@ Compute Buffer</h1>
 <td class="markdownTableBodyNone">w   </td><td class="markdownTableBodyNone">1 if cluster is not empty, 0 otherwise   </td></tr>
 </table>
 <p ><sup>&lowast;</sup>If all pixels in the frame are <a class="el" href="md__assets__documentation__data__layout.html#noise-flag">rejected as noise</a> (i.e. \(f(\delta)=0\) for every \(\delta\)), MSE can not be computed.</p>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<h1><a class="anchor" id="autotoc_md4"></a>
 References</h1>
 <ol type="1">
 <li>Kahu, S.Y., Raut, R.B., Bhurchandi, K.M.: Review and evaluation of color spaces for image/video compression. Color Research &amp; Application 44(1), 8–33 (2019)</li>
