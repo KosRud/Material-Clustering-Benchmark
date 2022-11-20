@@ -53,12 +53,12 @@ namespace WorkGeneration
                                 staggeredJitter: false,
                                 video: video,
                                 doDownscale: false,
-                                dispatcher: new DispatcherKHM(
+                                dispatcher: new DispatcherKHMp(
                                     computeShader: this.csHighlightRemoval,
                                     numIterations: numIterations,
                                     doRandomizeEmptyClusters,
                                     useFullResTexRef: false,
-                                    parameters: DispatcherKHM.Parameters.Default(),
+                                    parameters: DispatcherKHMp.Parameters.Default(),
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,
                                         workingSize: textureSize,
@@ -149,12 +149,12 @@ namespace WorkGeneration
                                 staggeredJitter: false,
                                 video: video,
                                 doDownscale: false,
-                                dispatcher: new DispatcherKHM(
+                                dispatcher: new DispatcherKHMp(
                                     computeShader: this.csHighlightRemoval,
                                     numIterations: numIterations,
                                     doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                                     useFullResTexRef: false,
-                                    parameters: DispatcherKHM.Parameters.Default(),
+                                    parameters: DispatcherKHMp.Parameters.Default(),
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 6,
                                         workingSize: textureSize,
@@ -171,12 +171,12 @@ namespace WorkGeneration
                                 video: video,
                                 doDownscale: false,
                                 dispatcher: new WrapperArtificialReadback(
-                                    new DispatcherKHM(
+                                    new DispatcherKHMp(
                                         computeShader: this.csHighlightRemoval,
                                         numIterations: numIterations,
                                         doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                                         useFullResTexRef: false,
-                                        parameters: DispatcherKHM.Parameters.Default(),
+                                        parameters: DispatcherKHMp.Parameters.Default(),
                                         clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                             numClusters: 6,
                                             workingSize: textureSize,
@@ -278,12 +278,12 @@ namespace WorkGeneration
                     video: video,
                     doDownscale: false,
                     dispatcher: new WrapperStopCondition(
-                        new DispatcherKHM(
+                        new DispatcherKHMp(
                             computeShader: csHighlightRemoval,
                             doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                             useFullResTexRef: false,
                             numIterations: 1,
-                            parameters: DispatcherKHM.Parameters.Default(),
+                            parameters: DispatcherKHMp.Parameters.Default(),
                             clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                 numClusters: 6,
                                 workingSize: textureSize,
