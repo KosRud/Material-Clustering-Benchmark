@@ -2,7 +2,7 @@ using ClusteringAlgorithms;
 using System;
 using UnityEngine;
 
-namespace WorkGeneration
+namespace BenchmarkGeneration
 {
     /// <summary>
     /// Call <see cref="Dispose" /> after using.

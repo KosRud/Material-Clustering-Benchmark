@@ -1,6 +1,6 @@
 var class_measurement_runner =
 [
-    [ "MeasurementRunner", "class_measurement_runner.html#a0cac0463d23fbf861b13f32f09a00718", null ],
+    [ "MeasurementRunner", "class_measurement_runner.html#a331d547311bbba495da3f0d1dbf9cd23", null ],
     [ "Dispose", "class_measurement_runner.html#a631f987c4c0d331306229da767978a11", null ],
     [ "GetReport", "class_measurement_runner.html#a08da066ffa4c6bd78443c068ad6f917f", null ],
     [ "ProcessNextFrame", "class_measurement_runner.html#a8543e5cbaa36ed226914f7fea7470ded", null ],

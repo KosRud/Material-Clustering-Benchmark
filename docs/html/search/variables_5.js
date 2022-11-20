@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['kernelhandlerandomswap_0',['kernelHandleRandomSwap',['../class_clustering_algorithms_1_1_a_dispatcher_r_s.html#a1db11bd777e6ba30e78273ed50f87878',1,'ClusteringAlgorithms::ADispatcherRS']]],
-  ['kernelhandlevalidatecandidates_1',['kernelHandleValidateCandidates',['../class_clustering_algorithms_1_1_a_dispatcher_r_s.html#aa81689da33929bce5cac2dcbd119b827',1,'ClusteringAlgorithms::ADispatcherRS']]],
-  ['kernelsize_2',['kernelSize',['../class_clustering_test.html#a97f9c4b0c2db208c316cf9153345af1e',1,'ClusteringTest.kernelSize()'],['../class_work_generation_1_1_a_work_generator.html#aae565dbcb4eaf99e2bada83130290173',1,'WorkGeneration.AWorkGenerator.kernelSize()']]]
+  ['jittersize_0',['jitterSize',['../class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html#acf5f1c8acb46da809e961e0121f2048d',1,'ClusteringAlgorithms.ClusteringRTsAndBuffers.jitterSize()'],['../class_benchmark_generation_1_1_launch_parameters_1_1_serializable_launch_parameters.html#aec6a376cf70aa6afac3974fbed010d5b',1,'BenchmarkGeneration.LaunchParameters.SerializableLaunchParameters.jitterSize()']]]
 ];

@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['logtype_0',['logType',['../class_benchmark_report.html#a933a5dfd1195c68c55a7848636140372',1,'BenchmarkReport.logType()'],['../class_work_generation_1_1_work_list.html#ad5eeced0f16bc5eeedee2af807402e3c',1,'WorkGeneration.WorkList.logType()']]]
+  ['kernelhandlerandomswap_0',['kernelHandleRandomSwap',['../class_clustering_algorithms_1_1_a_dispatcher_r_s.html#a1db11bd777e6ba30e78273ed50f87878',1,'ClusteringAlgorithms::ADispatcherRS']]],
+  ['kernelhandlevalidatecandidates_1',['kernelHandleValidateCandidates',['../class_clustering_algorithms_1_1_a_dispatcher_r_s.html#aa81689da33929bce5cac2dcbd119b827',1,'ClusteringAlgorithms::ADispatcherRS']]],
+  ['kernelsize_2',['kernelSize',['../class_benchmark_generation_1_1_a_benchmark_generator.html#af2ffdc50aee357eefefd4f5cd5b4a159',1,'BenchmarkGeneration.ABenchmarkGenerator.kernelSize()'],['../class_clustering_test.html#a97f9c4b0c2db208c316cf9153345af1e',1,'ClusteringTest.kernelSize()']]]
 ];

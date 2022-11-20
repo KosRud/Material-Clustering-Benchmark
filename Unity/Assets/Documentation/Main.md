@@ -7,7 +7,8 @@
 |----|-----|
 |ClusteringTest|Top-level class responsible for running the benchmarks.|
 |ClusteringTestGui|Provides a GUI for selecting and running benchmarks.|
-|WorkGeneration.AWorkGenerator|Abstract class for benchmark definitions.|
+|BenchmarkGeneration.ABenchmarkGenerator|Abstract class for benchmark generators. Each benchmark contains a list of measurements (dispatches) to perform.|
+|BenchmarkGeneration.BenchmarkDescription|Represents a single benchmark.|
 
 # Assorted Highlights
 

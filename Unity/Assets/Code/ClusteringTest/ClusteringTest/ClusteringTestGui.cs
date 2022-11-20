@@ -1,5 +1,5 @@
 using UnityEngine;
-using WorkGeneration;
+using BenchmarkGeneration;
 using System.Collections.Generic;
 using static Diagnostics;
 
@@ -16,9 +16,9 @@ public class ClusteringTestGui : MonoBehaviour
     private class WorkOption
     {
         public bool enabled;
-        public WorkList workList;
+        public BenchmarkDescription workList;
 
-        public WorkOption(WorkList workList)
+        public WorkOption(BenchmarkDescription workList)
         {
             this.enabled = false;
             this.workList = workList;
@@ -71,7 +71,7 @@ public class ClusteringTestGui : MonoBehaviour
                 kernelSize: ClusteringTest.kernelSize,
                 videos: this.videos,
                 csHighlightRemoval: this.csHighlightRemoval
-            ).GenerateWork()
+            ).GenerateBenchmark()
         );
 
         this.workOptions.Add(this.frameTimeWorkOption);
@@ -82,7 +82,7 @@ public class ClusteringTestGui : MonoBehaviour
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
-                ).GenerateWork()
+                ).GenerateBenchmark()
             )
         );
 
@@ -92,7 +92,7 @@ public class ClusteringTestGui : MonoBehaviour
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
-                ).GenerateWork()
+                ).GenerateBenchmark()
             )
         );
 
@@ -102,7 +102,7 @@ public class ClusteringTestGui : MonoBehaviour
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
-                ).GenerateWork()
+                ).GenerateBenchmark()
             )
         );
 
@@ -112,7 +112,7 @@ public class ClusteringTestGui : MonoBehaviour
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
-                ).GenerateWork()
+                ).GenerateBenchmark()
             )
         );
 
@@ -122,7 +122,7 @@ public class ClusteringTestGui : MonoBehaviour
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
-                ).GenerateWork()
+                ).GenerateBenchmark()
             )
         );
 
@@ -132,7 +132,7 @@ public class ClusteringTestGui : MonoBehaviour
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
-                ).GenerateWork()
+                ).GenerateBenchmark()
             )
         );
 
@@ -142,7 +142,7 @@ public class ClusteringTestGui : MonoBehaviour
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
-                ).GenerateWork()
+                ).GenerateBenchmark()
             )
         );
 
@@ -152,7 +152,7 @@ public class ClusteringTestGui : MonoBehaviour
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
-                ).GenerateWork()
+                ).GenerateBenchmark()
             )
         );
     }
@@ -182,10 +182,10 @@ public class ClusteringTestGui : MonoBehaviour
                 GuiLine();
 
                 GUILayout.Label(
-                    $"Total: {this.clusteringTest.numTotalFinishedRuns} / {this.clusteringTest.numTotalRuns}"
+                    $"Total: {this.clusteringTest.numTotalFinishedDispatches} / {this.clusteringTest.numTotalDispatches}"
                 );
                 GUILayout.Label(
-                    $"{this.clusteringTest.currentWorkList.name}: {this.clusteringTest.numCurWorkListFinishedRuns} / {this.clusteringTest.numCurWorkListRuns}"
+                    $"{this.clusteringTest.currentBenchmark.name}: {this.clusteringTest.numCurBenchmarkFinishedDispatches} / {this.clusteringTest.numCurBenchmarkDispatches}"
                 );
                 GUILayout.Label($"warnings: {this.clusteringTest.warningCounter}");
                 ;
@@ -208,7 +208,7 @@ public class ClusteringTestGui : MonoBehaviour
                     {
                         if (option.enabled)
                         {
-                            this.clusteringTest.workLists.Push(option.workList);
+                            this.clusteringTest.benchmarkStack.Push(option.workList);
                         }
                     }
                     this.clusteringTest.enabled = true;

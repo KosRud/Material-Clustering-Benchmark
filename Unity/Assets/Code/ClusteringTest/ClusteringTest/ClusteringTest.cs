@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using WorkGeneration;
+using BenchmarkGeneration;
 
 public class ClusteringTest : MonoBehaviour
 {
@@ -15,15 +15,17 @@ public class ClusteringTest : MonoBehaviour
     public const int kernelSize = 16;
     public const int fullTextureSize = 512;
 
-    public Stack<WorkList> workLists;
-    public WorkList currentWorkList;
+    public Stack<BenchmarkDescription> benchmarkStack;
+    public BenchmarkDescription currentBenchmark;
     public ComputeShader csHighlightRemoval;
     public const string varianceLogPath = "Variance logs";
 
-    public int numTotalRuns;
-    public int numTotalFinishedRuns;
-    public int numCurWorkListFinishedRuns;
-    public int numCurWorkListRuns;
+    public int numTotalDispatches;
+    public int numTotalFinishedDispatches;
+
+    public int numCurBenchmarkDispatches;
+    public int numCurBenchmarkFinishedDispatches;
+
     public int warningCounter => this.measurementRunner.warningCounter;
 
     public enum LogType
@@ -42,30 +44,30 @@ public class ClusteringTest : MonoBehaviour
 
     private void Awake()
     {
-        this.workLists = new Stack<WorkList>();
+        this.benchmarkStack = new Stack<BenchmarkDescription>();
     }
 
     private void OnEnable()
     {
         this.reportCollection = new BenchmarkReportCollection();
 
-        this.numTotalRuns = 0;
-        foreach (WorkList workList in this.workLists)
+        this.numTotalDispatches = 0;
+        foreach (BenchmarkDescription workList in this.benchmarkStack)
         {
-            this.numTotalRuns += workList.runs.Count;
+            this.numTotalDispatches += workList.dispatches.Count;
         }
-        this.numTotalFinishedRuns = 0;
+        this.numTotalFinishedDispatches = 0;
 
-        this.currentWorkList = this.workLists.Pop();
-        this.numCurWorkListFinishedRuns = 0;
-        this.numCurWorkListRuns = this.currentWorkList.runs.Count;
+        this.currentBenchmark = this.benchmarkStack.Pop();
+        this.numCurBenchmarkFinishedDispatches = 0;
+        this.numCurBenchmarkDispatches = this.currentBenchmark.dispatches.Count;
 
         this.measurementRunner = new MeasurementRunner(
-            launchParameters: this.currentWorkList.runs.Pop(),
+            launchParameters: this.currentBenchmark.dispatches.Pop(),
             videoPlayer: this.GetComponent<UnityEngine.Video.VideoPlayer>(),
             frameStart: this.frameStart,
             frameEnd: this.frameEnd,
-            logType: this.currentWorkList.logType,
+            logType: this.currentBenchmark.logType,
             csHighlightRemoval: this.csHighlightRemoval
         );
 
@@ -76,32 +78,32 @@ public class ClusteringTest : MonoBehaviour
     {
         this.measurementRunner.Dispose();
 
-        if (this.currentWorkList.runs.Count == 0)
+        if (this.currentBenchmark.dispatches.Count == 0)
         {
             System.IO.File.WriteAllText(
-                $"Reports/{this.currentWorkList.name}.json",
+                $"Reports/{this.currentBenchmark.name}.json",
                 JsonUtility.ToJson(this.reportCollection)
             );
 
-            if (this.workLists.Count == 0)
+            if (this.benchmarkStack.Count == 0)
             {
                 this.enabled = false;
                 return;
             }
 
-            this.currentWorkList = this.workLists.Pop();
-            this.numCurWorkListFinishedRuns = 0;
-            this.numCurWorkListRuns = this.currentWorkList.runs.Count;
+            this.currentBenchmark = this.benchmarkStack.Pop();
+            this.numCurBenchmarkFinishedDispatches = 0;
+            this.numCurBenchmarkDispatches = this.currentBenchmark.dispatches.Count;
 
             this.reportCollection = new BenchmarkReportCollection();
         }
 
         this.measurementRunner = new MeasurementRunner(
-            launchParameters: this.currentWorkList.runs.Pop(),
+            launchParameters: this.currentBenchmark.dispatches.Pop(),
             videoPlayer: this.GetComponent<UnityEngine.Video.VideoPlayer>(),
             frameStart: this.frameStart,
             frameEnd: this.frameEnd,
-            logType: this.currentWorkList.logType,
+            logType: this.currentBenchmark.logType,
             csHighlightRemoval: this.csHighlightRemoval
         );
 
@@ -133,8 +135,8 @@ public class ClusteringTest : MonoBehaviour
         {
             this.reportCollection.reports.Add(this.measurementRunner.GetReport());
             this.OnFinishedRunner();
-            this.numCurWorkListFinishedRuns++;
-            this.numTotalFinishedRuns++;
+            this.numCurBenchmarkFinishedDispatches++;
+            this.numTotalFinishedDispatches++;
         }
     }
 }

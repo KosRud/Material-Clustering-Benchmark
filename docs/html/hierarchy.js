@@ -1,20 +1,21 @@
 var hierarchy =
 [
+    [ "BenchmarkGeneration.ABenchmarkGenerator", "class_benchmark_generation_1_1_a_benchmark_generator.html", [
+      [ "BenchmarkGeneration.AlgorithmsConvergence", "class_benchmark_generation_1_1_algorithms_convergence.html", null ],
+      [ "BenchmarkGeneration.EmptyClusterRandomization", "class_benchmark_generation_1_1_empty_cluster_randomization.html", null ],
+      [ "BenchmarkGeneration.FrameTime", "class_benchmark_generation_1_1_frame_time.html", null ],
+      [ "BenchmarkGeneration.KHMp", "class_benchmark_generation_1_1_k_h_mp.html", null ],
+      [ "BenchmarkGeneration.RSnumKM", "class_benchmark_generation_1_1_r_snum_k_m.html", null ],
+      [ "BenchmarkGeneration.ScalingVsSubsampling", "class_benchmark_generation_1_1_scaling_vs_subsampling.html", null ],
+      [ "BenchmarkGeneration.ScanlineJitter", "class_benchmark_generation_1_1_scanline_jitter.html", null ],
+      [ "BenchmarkGeneration.StaggeredJitter", "class_benchmark_generation_1_1_staggered_jitter.html", null ],
+      [ "BenchmarkGeneration.Subsampling", "class_benchmark_generation_1_1_subsampling.html", null ]
+    ] ],
     [ "ABenchmarkMeasurement", "class_a_benchmark_measurement.html", [
       [ "BenchmarkMeasurementFrameTime", "class_benchmark_measurement_frame_time.html", null ],
       [ "BenchmarkMeasurementVariance", "class_benchmark_measurement_variance.html", null ]
     ] ],
-    [ "WorkGeneration.AWorkGenerator", "class_work_generation_1_1_a_work_generator.html", [
-      [ "WorkGeneration.AlgorithmsConvergence", "class_work_generation_1_1_algorithms_convergence.html", null ],
-      [ "WorkGeneration.EmptyClusterRandomization", "class_work_generation_1_1_empty_cluster_randomization.html", null ],
-      [ "WorkGeneration.FrameTime", "class_work_generation_1_1_frame_time.html", null ],
-      [ "WorkGeneration.KHMp", "class_work_generation_1_1_k_h_mp.html", null ],
-      [ "WorkGeneration.RSnumKM", "class_work_generation_1_1_r_snum_k_m.html", null ],
-      [ "WorkGeneration.ScalingVsSubsampling", "class_work_generation_1_1_scaling_vs_subsampling.html", null ],
-      [ "WorkGeneration.ScanlineJitter", "class_work_generation_1_1_scanline_jitter.html", null ],
-      [ "WorkGeneration.StaggeredJitter", "class_work_generation_1_1_staggered_jitter.html", null ],
-      [ "WorkGeneration.Subsampling", "class_work_generation_1_1_subsampling.html", null ]
-    ] ],
+    [ "BenchmarkGeneration.BenchmarkDescription", "class_benchmark_generation_1_1_benchmark_description.html", null ],
     [ "BenchmarkHelper", "class_benchmark_helper.html", null ],
     [ "BenchmarkReport", "class_benchmark_report.html", null ],
     [ "BenchmarkReportCollection", "class_benchmark_report_collection.html", null ],
@@ -28,6 +29,9 @@ var hierarchy =
     ] ],
     [ "BenchmarkMeasurementFrameTime.FrameTimeRecord", "class_benchmark_measurement_frame_time_1_1_frame_time_record.html", null ],
     [ "BenchmarkMeasurementVariance.FrameVarianceRecord", "class_benchmark_measurement_variance_1_1_frame_variance_record.html", null ],
+    [ "IDisposable", null, [
+      [ "BenchmarkGeneration.LaunchParameters", "class_benchmark_generation_1_1_launch_parameters.html", null ]
+    ] ],
     [ "System.IDisposable", null, [
       [ "ClusteringAlgorithms.ADispatcherRS.RandomSwapResult", "class_clustering_algorithms_1_1_a_dispatcher_r_s_1_1_random_swap_result.html", null ],
       [ "ClusteringAlgorithms.ClusterCenters", "class_clustering_algorithms_1_1_cluster_centers.html", null ],
@@ -51,8 +55,7 @@ var hierarchy =
       ] ],
       [ "ClusteringAlgorithms.WrapperStopCondition.RunUntilConvergesResult", "class_clustering_algorithms_1_1_wrapper_stop_condition_1_1_run_until_converges_result.html", null ],
       [ "ClusteringTextures", "class_clustering_textures.html", null ],
-      [ "MeasurementRunner", "class_measurement_runner.html", null ],
-      [ "WorkGeneration.LaunchParameters", "class_work_generation_1_1_launch_parameters.html", null ]
+      [ "MeasurementRunner", "class_measurement_runner.html", null ]
     ] ],
     [ "UnityEngine.Pool.IObjectPool", null, [
       [ "ObjectPoolMaxAssert< T >", "class_object_pool_max_assert.html", null ]
@@ -62,7 +65,6 @@ var hierarchy =
       [ "ClusteringTest", "class_clustering_test.html", null ],
       [ "ClusteringTestGui", "class_clustering_test_gui.html", null ]
     ] ],
-    [ "WorkGeneration.LaunchParameters.SerializableLaunchParameters", "class_work_generation_1_1_launch_parameters_1_1_serializable_launch_parameters.html", null ],
-    [ "ClusteringAlgorithms.StopCondition", "class_clustering_algorithms_1_1_stop_condition.html", null ],
-    [ "WorkGeneration.WorkList", "class_work_generation_1_1_work_list.html", null ]
+    [ "BenchmarkGeneration.LaunchParameters.SerializableLaunchParameters", "class_benchmark_generation_1_1_launch_parameters_1_1_serializable_launch_parameters.html", null ],
+    [ "ClusteringAlgorithms.StopCondition", "class_clustering_algorithms_1_1_stop_condition.html", null ]
 ];

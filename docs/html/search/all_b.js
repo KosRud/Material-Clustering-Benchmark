@@ -9,7 +9,7 @@ var searchData=
   ['maxiterations_6',['maxIterations',['../class_clustering_algorithms_1_1_stop_condition.html#a8a9574d13cbca76bccd5858548050d98',1,'ClusteringAlgorithms::StopCondition']]],
   ['maxnumclusters_7',['maxNumClusters',['../class_clustering_test.html#a1f6f3e9beac69887592793731d161381',1,'ClusteringTest']]],
   ['measurement_8',['measurement',['../class_benchmark_report.html#a4132ef331491d6e00b5a49a8e9df78ef',1,'BenchmarkReport']]],
-  ['measurementrunner_9',['MeasurementRunner',['../class_measurement_runner.html',1,'MeasurementRunner'],['../class_measurement_runner.html#a0cac0463d23fbf861b13f32f09a00718',1,'MeasurementRunner.MeasurementRunner()']]],
+  ['measurementrunner_9',['MeasurementRunner',['../class_measurement_runner.html',1,'MeasurementRunner'],['../class_measurement_runner.html#a331d547311bbba495da3f0d1dbf9cd23',1,'MeasurementRunner.MeasurementRunner()']]],
   ['measurementrunner_2ecs_10',['MeasurementRunner.cs',['../_measurement_runner_8cs.html',1,'']]],
   ['measuretime_11',['MeasureTime',['../class_benchmark_helper.html#ab64ef0b9dfe4c2a2dd0ed9347a21f400',1,'BenchmarkHelper']]],
   ['miplevel_12',['mipLevel',['../class_clustering_textures.html#a845625f73def62cbbcaf398cbcf7d99a',1,'ClusteringTextures']]]

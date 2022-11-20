@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['workgeneration_0',['WorkGeneration',['../namespace_work_generation.html',1,'']]]
+  ['samples_0',['samples',['../namespacesamples.html',1,'']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['samples_0',['samples',['../namespacesamples.html',1,'']]]
+  ['clusteringalgorithms_0',['ClusteringAlgorithms',['../namespace_clustering_algorithms.html',1,'']]]
 ];

@@ -1,11 +1,7 @@
 var searchData=
 [
-  ['finished_0',['finished',['../class_measurement_runner.html#ac77ecea908043b17b833a8ded2442d40',1,'MeasurementRunner']]],
-  ['frameend_1',['frameEnd',['../class_clustering_test.html#aa78d17a3a185a98f1113ac371b569405',1,'ClusteringTest']]],
-  ['frameindex_2',['frameIndex',['../class_benchmark_measurement_variance_1_1_frame_variance_record.html#aaee04e5ea6233debf3d2ff3931d9b922',1,'BenchmarkMeasurementVariance.FrameVarianceRecord.frameIndex()'],['../class_benchmark_measurement_frame_time_1_1_frame_time_record.html#ae89ed093bcd77a21d94a222343fe0da1',1,'BenchmarkMeasurementFrameTime.FrameTimeRecord.frameIndex()']]],
-  ['framestart_3',['frameStart',['../class_clustering_test.html#a8e926c078f211eed19bb671e49186850',1,'ClusteringTest']]],
-  ['frametimerecords_4',['frameTimeRecords',['../class_benchmark_measurement_frame_time.html#a2f5b75c8dd2afeb48e871ac6d7114ecd',1,'BenchmarkMeasurementFrameTime']]],
-  ['framevariancerecords_5',['frameVarianceRecords',['../class_benchmark_measurement_variance.html#afd71419a94625072c2d1f6a439823018',1,'BenchmarkMeasurementVariance']]],
-  ['fullsize_6',['fullSize',['../class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html#a74774e174c3f6c4dcf59fa9c4a34ee47',1,'ClusteringAlgorithms::ClusteringRTsAndBuffers']]],
-  ['fulltexturesize_7',['fullTextureSize',['../class_clustering_test.html#a6fcb0a8020f273945e1450855352473f',1,'ClusteringTest']]]
+  ['dispatcher_0',['dispatcher',['../class_benchmark_generation_1_1_launch_parameters.html#af2b6ba4b58082696f608cf572be310d7',1,'BenchmarkGeneration::LaunchParameters']]],
+  ['dispatches_1',['dispatches',['../class_benchmark_generation_1_1_benchmark_description.html#ab98ede38620e98ddfbaffcefa3e93f64',1,'BenchmarkGeneration::BenchmarkDescription']]],
+  ['dodownscale_2',['doDownscale',['../class_benchmark_generation_1_1_launch_parameters_1_1_serializable_launch_parameters.html#aacdd3cf004e3b0391145660c44e89531',1,'BenchmarkGeneration.LaunchParameters.SerializableLaunchParameters.doDownscale()'],['../class_benchmark_generation_1_1_launch_parameters.html#ae30183342f30226169634e028ac047bb',1,'BenchmarkGeneration.LaunchParameters.doDownscale()']]],
+  ['dorandomizeemptyclusters_3',['doRandomizeEmptyClusters',['../class_benchmark_generation_1_1_launch_parameters_1_1_serializable_launch_parameters.html#a59072772c791eb77238f0193c27569aa',1,'BenchmarkGeneration::LaunchParameters::SerializableLaunchParameters']]]
 ];

@@ -22,6 +22,6 @@ var searchData=
   ['computeshader_19',['computeShader',['../class_clustering_algorithms_1_1_a_dispatcher.html#af5b4bed859bc8eb2fb7ef58a1f547632',1,'ClusteringAlgorithms::ADispatcher']]],
   ['converged_20',['converged',['../class_clustering_algorithms_1_1_wrapper_stop_condition_1_1_run_until_converges_result.html#a9dd8d7b880bbcfb8a7310aaa24a0ebfc',1,'ClusteringAlgorithms::WrapperStopCondition::RunUntilConvergesResult']]],
   ['countinactive_21',['CountInactive',['../class_object_pool_max_assert.html#ab7c28ddeb542c3fea50e5d91d2fdeef5',1,'ObjectPoolMaxAssert']]],
-  ['cshighlightremoval_22',['csHighlightRemoval',['../class_clustering_test.html#af4c4ad33d733f276a939ebdf4e99a198',1,'ClusteringTest.csHighlightRemoval()'],['../class_clustering_test_gui.html#af7c8abfadb3ba0106d6a0cff20275c31',1,'ClusteringTestGui.csHighlightRemoval()'],['../class_work_generation_1_1_a_work_generator.html#a916cd68595772954ce970adcbb7f787c',1,'WorkGeneration.AWorkGenerator.csHighlightRemoval()']]],
-  ['currentworklist_23',['currentWorkList',['../class_clustering_test.html#a09064eddbcaeb1c77d0424975fb1d9e6',1,'ClusteringTest']]]
+  ['cshighlightremoval_22',['csHighlightRemoval',['../class_benchmark_generation_1_1_a_benchmark_generator.html#a9ed92a7d6577b432188ea25bf346e0cd',1,'BenchmarkGeneration.ABenchmarkGenerator.csHighlightRemoval()'],['../class_clustering_test.html#af4c4ad33d733f276a939ebdf4e99a198',1,'ClusteringTest.csHighlightRemoval()'],['../class_clustering_test_gui.html#af7c8abfadb3ba0106d6a0cff20275c31',1,'ClusteringTestGui.csHighlightRemoval()']]],
+  ['currentbenchmark_23',['currentBenchmark',['../class_clustering_test.html#a3ce5d92b31af34c7b6a8a4283bd8a74e',1,'ClusteringTest']]]
 ];

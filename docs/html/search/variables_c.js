@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['serializablelaunchparameters_0',['serializableLaunchParameters',['../class_benchmark_report.html#aa223b57b2b446b283755e9c545315ccf',1,'BenchmarkReport']]],
-  ['staggeredjitter_1',['staggeredJitter',['../class_work_generation_1_1_launch_parameters_1_1_serializable_launch_parameters.html#a1cf5178dcc9091e17650ebd7fd6fc1cd',1,'WorkGeneration.LaunchParameters.SerializableLaunchParameters.staggeredJitter()'],['../class_work_generation_1_1_launch_parameters.html#ad911ed5fcbd2004039906683d2741e22',1,'WorkGeneration.LaunchParameters.staggeredJitter()']]],
-  ['stopcondition_2',['stopCondition',['../class_work_generation_1_1_launch_parameters_1_1_serializable_launch_parameters.html#ab4ff80e34cb8d5f39fc9eb231226d1ff',1,'WorkGeneration::LaunchParameters::SerializableLaunchParameters']]],
-  ['stopconditionoverride_3',['stopConditionOverride',['../class_clustering_algorithms_1_1_a_dispatcher_r_s_1_1_random_swap_result.html#aa4944b55bf866284d317c8534abdf0ea',1,'ClusteringAlgorithms::ADispatcherRS::RandomSwapResult']]],
-  ['swapfailed_4',['swapFailed',['../class_clustering_algorithms_1_1_a_dispatcher_r_s_1_1_random_swap_result.html#a91d8439c5171a76b6b57f2a40340ac10',1,'ClusteringAlgorithms::ADispatcherRS::RandomSwapResult']]]
+  ['randominit_0',['randomInit',['../class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html#abff3596f2c0af8bdfc056b581e6559e2',1,'ClusteringAlgorithms::ClusteringRTsAndBuffers']]],
+  ['readback_1',['readback',['../class_benchmark_generation_1_1_launch_parameters_1_1_serializable_launch_parameters.html#a685544050cdd3f102bf327c2d5fcbda8',1,'BenchmarkGeneration::LaunchParameters::SerializableLaunchParameters']]],
+  ['reports_2',['reports',['../class_benchmark_report_collection.html#a68b3109af29cb5caafb4b43a55a92787',1,'BenchmarkReportCollection']]],
+  ['rtarr_3',['rtArr',['../class_clustering_textures.html#abc318fc164bf513d67908878f4b2701f',1,'ClusteringTextures']]],
+  ['rtinput_4',['rtInput',['../class_clustering_textures.html#afd7f3e8b69cf3795e01e9b9897bbe4fb',1,'ClusteringTextures']]],
+  ['rtresult_5',['rtResult',['../class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html#aaa3cc13fd54ec91138d6a0df9f8daf32',1,'ClusteringAlgorithms::ClusteringRTsAndBuffers']]]
 ];

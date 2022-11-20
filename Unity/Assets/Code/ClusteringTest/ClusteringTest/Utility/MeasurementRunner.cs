@@ -51,7 +51,7 @@ public class MeasurementRunner : IDisposable
     private readonly ComputeShader csHighlightRemoval;
     private readonly int kernelShowResult;
 
-    private readonly WorkGeneration.LaunchParameters launchParameters;
+    private readonly BenchmarkGeneration.LaunchParameters launchParameters;
 
     private UnityEngine.Video.VideoPlayer videoPlayer;
     private readonly long frameStart;
@@ -72,7 +72,7 @@ public class MeasurementRunner : IDisposable
     /// Takes ownership of launchParameters
     /// </summary>
     public MeasurementRunner(
-        WorkGeneration.LaunchParameters launchParameters,
+        BenchmarkGeneration.LaunchParameters launchParameters,
         UnityEngine.Video.VideoPlayer videoPlayer,
         long? frameStart,
         long? frameEnd,

@@ -1,5 +1,19 @@
 var annotated_dup =
 [
+    [ "BenchmarkGeneration", "namespace_benchmark_generation.html", [
+      [ "ABenchmarkGenerator", "class_benchmark_generation_1_1_a_benchmark_generator.html", "class_benchmark_generation_1_1_a_benchmark_generator" ],
+      [ "AlgorithmsConvergence", "class_benchmark_generation_1_1_algorithms_convergence.html", "class_benchmark_generation_1_1_algorithms_convergence" ],
+      [ "BenchmarkDescription", "class_benchmark_generation_1_1_benchmark_description.html", "class_benchmark_generation_1_1_benchmark_description" ],
+      [ "EmptyClusterRandomization", "class_benchmark_generation_1_1_empty_cluster_randomization.html", "class_benchmark_generation_1_1_empty_cluster_randomization" ],
+      [ "FrameTime", "class_benchmark_generation_1_1_frame_time.html", "class_benchmark_generation_1_1_frame_time" ],
+      [ "KHMp", "class_benchmark_generation_1_1_k_h_mp.html", "class_benchmark_generation_1_1_k_h_mp" ],
+      [ "LaunchParameters", "class_benchmark_generation_1_1_launch_parameters.html", "class_benchmark_generation_1_1_launch_parameters" ],
+      [ "RSnumKM", "class_benchmark_generation_1_1_r_snum_k_m.html", "class_benchmark_generation_1_1_r_snum_k_m" ],
+      [ "ScalingVsSubsampling", "class_benchmark_generation_1_1_scaling_vs_subsampling.html", "class_benchmark_generation_1_1_scaling_vs_subsampling" ],
+      [ "ScanlineJitter", "class_benchmark_generation_1_1_scanline_jitter.html", "class_benchmark_generation_1_1_scanline_jitter" ],
+      [ "StaggeredJitter", "class_benchmark_generation_1_1_staggered_jitter.html", "class_benchmark_generation_1_1_staggered_jitter" ],
+      [ "Subsampling", "class_benchmark_generation_1_1_subsampling.html", "class_benchmark_generation_1_1_subsampling" ]
+    ] ],
     [ "ClusteringAlgorithms", "namespace_clustering_algorithms.html", [
       [ "ADispatcher", "class_clustering_algorithms_1_1_a_dispatcher.html", "class_clustering_algorithms_1_1_a_dispatcher" ],
       [ "ADispatcherRS", "class_clustering_algorithms_1_1_a_dispatcher_r_s.html", "class_clustering_algorithms_1_1_a_dispatcher_r_s" ],
@@ -16,20 +30,6 @@ var annotated_dup =
       [ "StopCondition", "class_clustering_algorithms_1_1_stop_condition.html", "class_clustering_algorithms_1_1_stop_condition" ],
       [ "WrapperArtificialReadback", "class_clustering_algorithms_1_1_wrapper_artificial_readback.html", "class_clustering_algorithms_1_1_wrapper_artificial_readback" ],
       [ "WrapperStopCondition", "class_clustering_algorithms_1_1_wrapper_stop_condition.html", "class_clustering_algorithms_1_1_wrapper_stop_condition" ]
-    ] ],
-    [ "WorkGeneration", "namespace_work_generation.html", [
-      [ "AlgorithmsConvergence", "class_work_generation_1_1_algorithms_convergence.html", "class_work_generation_1_1_algorithms_convergence" ],
-      [ "AWorkGenerator", "class_work_generation_1_1_a_work_generator.html", "class_work_generation_1_1_a_work_generator" ],
-      [ "EmptyClusterRandomization", "class_work_generation_1_1_empty_cluster_randomization.html", "class_work_generation_1_1_empty_cluster_randomization" ],
-      [ "FrameTime", "class_work_generation_1_1_frame_time.html", "class_work_generation_1_1_frame_time" ],
-      [ "KHMp", "class_work_generation_1_1_k_h_mp.html", "class_work_generation_1_1_k_h_mp" ],
-      [ "LaunchParameters", "class_work_generation_1_1_launch_parameters.html", "class_work_generation_1_1_launch_parameters" ],
-      [ "RSnumKM", "class_work_generation_1_1_r_snum_k_m.html", "class_work_generation_1_1_r_snum_k_m" ],
-      [ "ScalingVsSubsampling", "class_work_generation_1_1_scaling_vs_subsampling.html", "class_work_generation_1_1_scaling_vs_subsampling" ],
-      [ "ScanlineJitter", "class_work_generation_1_1_scanline_jitter.html", "class_work_generation_1_1_scanline_jitter" ],
-      [ "StaggeredJitter", "class_work_generation_1_1_staggered_jitter.html", "class_work_generation_1_1_staggered_jitter" ],
-      [ "Subsampling", "class_work_generation_1_1_subsampling.html", "class_work_generation_1_1_subsampling" ],
-      [ "WorkList", "class_work_generation_1_1_work_list.html", "class_work_generation_1_1_work_list" ]
     ] ],
     [ "ABenchmarkMeasurement", "class_a_benchmark_measurement.html", null ],
     [ "BenchmarkHelper", "class_benchmark_helper.html", "class_benchmark_helper" ],
