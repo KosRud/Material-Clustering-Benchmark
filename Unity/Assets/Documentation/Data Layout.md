@@ -18,24 +18,24 @@ Inside the array texture ClusteringTextures.rtArr the following data layout is u
 
 |Variable|Explanation|
 |----|----|
-|\\(\boldsymbol{T}_k\\)|4-component floating point texture corresponding to \\(k\\)-th cluster|
-|\\(\delta\\)|pixel|
-|\\(\boldsymbol{\tilde{C}}(\delta)\\)|[color representation](#color-representation) used for material clustering|
-|\\(w(\delta,k)\\)|weight of \\(k\\)-th cluster for the pixel \\(\delta\\) (1 or 0 in the case of K-Means)<SUP>&lowast;</SUP>|
-|\\(f(\delta)\\)|[binary flag](#noise-flag) which determines if the pixel is rejected as noise|
-|\\(z_k(\delta)\\)|used for calculating MSE ([see below](#third-component))|
+|\f$ \boldsymbol{T}_k \f$|4-component floating point texture corresponding to \f$ k \f$-th cluster|
+|\f$ \delta \f$|pixel|
+|\f$ \boldsymbol{\tilde{C}}(\delta) \f$|[color representation](#color-representation) used for material clustering|
+|\f$ w(\delta,k) \f$|weight of \f$ k \f$-th cluster for the pixel \f$ \delta \f$ (1 or 0 in the case of K-Means)<SUP>&lowast;</SUP>|
+|\f$ f(\delta) \f$|[binary flag](#noise-flag) which determines if the pixel is rejected as noise|
+|\f$ z_k(\delta) \f$|used for calculating MSE ([see below](#third-component))|
 
-<SUP>&lowast;</SUP> For [KHMp](#ClusteringAlgorithms.DispatcherKHMp) algorithm, weights \\(w(\delta,k)\\) for the given pixel do not add up to 1.
+<SUP>&lowast;</SUP> For [KHMp](#ClusteringAlgorithms.DispatcherKHMp) algorithm, weights \f$ w(\delta,k) \f$ for the given pixel do not add up to 1.
 
 ## Color representation {#color-representation}
 
-Color representation \\(\boldsymbol{\tilde{C}}(\delta)\\) is generated from the RGB color of pixel \\(\delta\\) as follows:
+Color representation \f$ \boldsymbol{\tilde{C}}(\delta) \f$ is generated from the RGB color of pixel \f$ \delta \f$ as follows:
 
 1. maximize HSI saturation (intensity becomes invalid)
 \f{equation}{
 	\dot{\boldsymbol{C}} (\delta) = \boldsymbol{C}(\delta) - (1,1,1)^T \cdot \min\limits_{i \in \lbrace\mathrm{R,G,B}\rbrace}C_i(\delta)
 \f}
-2. normalize HSI intensity to \\(\frac{1}{3}\\)
+2. normalize HSI intensity to \f$ \frac{1}{3} \f$
 \f{equation}{
 \ddot{\boldsymbol{C}} (\delta) = \frac{
 	\dot{\boldsymbol{C}} (\delta)
@@ -52,6 +52,7 @@ Color representation \\(\boldsymbol{\tilde{C}}(\delta)\\) is generated from the 
 \end{bmatrix} \cdot \ddot{\boldsymbol{C}} (\delta)
 \f}
 
+Only 2nd and 3rd components of \f$ \boldsymbol{\tilde{C}}(\delta) \f$ are used for clustering. We can not cluster by hue directly, because it is circular. Instead, we use a two-dimensional representation \f$I_2I_3\f$. Axis \f$I_1\f$ is identical to HSI intensity; the plane \f$ I_2I_3 \f$ corresponds to variations HSI chromaticity (hue/saturation).
 
 ### Code
 
@@ -88,7 +89,7 @@ float2 project(float3 col)
 
 ## Noisy pixels {#noise-flag}
 
-When HSI intensity and/or saturation is low, the hue becomes unstable. Such pixels will be ignored during clustering by setting \\(f(\delta)=0\\). The value of \\(f(\delta)\\) for the given RGB color is determined as follows:
+When HSI intensity and/or saturation is low, the hue becomes unstable. Such pixels will be ignored during clustering by setting \f$ f(\delta)=0 \f$. The value of \f$ f(\delta) \f$ for the given RGB color is determined as follows:
 
 \f{equation}{
 f(\delta) = \begin{cases}
@@ -99,8 +100,8 @@ f(\delta) = \begin{cases}
 
 |Variable|Explanation|
 |----|----|
-|\\(\boldsymbol{C}(\delta)\\)|RGB color of pixel \\(\delta\\)|
-|\\(t\\)|threshold for determining noisy pixels (we used \\(t=0.05\\))
+|\f$ \boldsymbol{C}(\delta) \f$|RGB color of pixel \f$ \delta \f$|
+|\f$ t \f$|threshold for determining noisy pixels (we used \f$ t=0.05 \f$)
 
 ### Code
 
@@ -126,7 +127,7 @@ After the clustering is completed, noisy pixels are assigned to the nearest clus
 
 ## Third component {#third-component}
 
-The third component \\(z_k(\delta)\\) has different values in different \\(\boldsymbol{T}_k\\) textures:
+The third component \f$ z_k(\delta) \f$ has different values in different \f$ \boldsymbol{T}_k \f$ textures:
 
 \f{equation}{
 z_k(\delta) =
@@ -139,8 +140,8 @@ z_k(\delta) =
 
 |Variable|Explanation|
 |----|----|
-|\\(d_\mathrm{min}(\delta)\\)|Euclidean distance between the [color](#color-representation) \\(\tilde{C}_2(\delta),\tilde{C}_3(\delta)\\) and the nearest cluster center|
-|\\(f(\delta)\\)|[binary flag](#noise-flag) which determines if the pixel is rejected as noise|
+|\f$ d_\mathrm{min}(\delta) \f$|Euclidean distance between the [color](#color-representation) \f$ \tilde{C}_2(\delta),\tilde{C}_3(\delta) \f$ and the nearest cluster center|
+|\f$ f(\delta) \f$|[binary flag](#noise-flag) which determines if the pixel is rejected as noise|
 
 # Compute Buffer
 
@@ -152,7 +153,7 @@ Inside the [compute buffer](#ClusteringAlgorithms.ClusteringRTsAndBuffers.cbufCl
 |`z`|MSE (or -1, if MSE can not be computed)<SUP>&lowast;</SUP>|
 |`w`|1 if cluster is not empty, 0 otherwise|
 
-<SUP>&lowast;</SUP>If all pixels in the frame are [rejected as noise](#noise-flag) (i.e. \\(f(\delta)=0\\) for every \\(\delta\\)), MSE can not be computed.
+<SUP>&lowast;</SUP>If all pixels in the frame are [rejected as noise](#noise-flag) (i.e. \f$ f(\delta)=0 \f$ for every \f$ \delta \f$), MSE can not be computed.
 
 # References
 

@@ -129,22 +129,22 @@ Array Texture</h1>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Variable   </th><th class="markdownTableHeadNone">Explanation    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">\(\boldsymbol{T}_k\)   </td><td class="markdownTableBodyNone">4-component floating point texture corresponding to \(k\)-th cluster    </td></tr>
+<td class="markdownTableBodyNone">\( \boldsymbol{T}_k \)   </td><td class="markdownTableBodyNone">4-component floating point texture corresponding to \( k \)-th cluster    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">\(\delta\)   </td><td class="markdownTableBodyNone">pixel    </td></tr>
+<td class="markdownTableBodyNone">\( \delta \)   </td><td class="markdownTableBodyNone">pixel    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">\(\boldsymbol{\tilde{C}}(\delta)\)   </td><td class="markdownTableBodyNone"><a class="el" href="md__assets__documentation__data__layout.html#color-representation">color representation</a> used for material clustering    </td></tr>
+<td class="markdownTableBodyNone">\( \boldsymbol{\tilde{C}}(\delta) \)   </td><td class="markdownTableBodyNone"><a class="el" href="md__assets__documentation__data__layout.html#color-representation">color representation</a> used for material clustering    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">\(w(\delta,k)\)   </td><td class="markdownTableBodyNone">weight of \(k\)-th cluster for the pixel \(\delta\) (1 or 0 in the case of K-Means)<sup>&lowast;</sup>    </td></tr>
+<td class="markdownTableBodyNone">\( w(\delta,k) \)   </td><td class="markdownTableBodyNone">weight of \( k \)-th cluster for the pixel \( \delta \) (1 or 0 in the case of K-Means)<sup>&lowast;</sup>    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">\(f(\delta)\)   </td><td class="markdownTableBodyNone"><a class="el" href="md__assets__documentation__data__layout.html#noise-flag">binary flag</a> which determines if the pixel is rejected as noise    </td></tr>
+<td class="markdownTableBodyNone">\( f(\delta) \)   </td><td class="markdownTableBodyNone"><a class="el" href="md__assets__documentation__data__layout.html#noise-flag">binary flag</a> which determines if the pixel is rejected as noise    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">\(z_k(\delta)\)   </td><td class="markdownTableBodyNone">used for calculating MSE (<a class="el" href="md__assets__documentation__data__layout.html#third-component">see below</a>)   </td></tr>
+<td class="markdownTableBodyNone">\( z_k(\delta) \)   </td><td class="markdownTableBodyNone">used for calculating MSE (<a class="el" href="md__assets__documentation__data__layout.html#third-component">see below</a>)   </td></tr>
 </table>
-<p ><sup>&lowast;</sup> For <a class="el" href="class_clustering_algorithms_1_1_dispatcher_k_h_mp.html">KHMp</a> algorithm, weights \(w(\delta,k)\) for the given pixel do not add up to 1.</p>
+<p ><sup>&lowast;</sup> For <a class="el" href="class_clustering_algorithms_1_1_dispatcher_k_h_mp.html">KHMp</a> algorithm, weights \( w(\delta,k) \) for the given pixel do not add up to 1.</p>
 <h2><a class="anchor" id="color-representation"></a>
 Color representation</h2>
-<p >Color representation \(\boldsymbol{\tilde{C}}(\delta)\) is generated from the RGB color of pixel \(\delta\) as follows:</p>
+<p >Color representation \( \boldsymbol{\tilde{C}}(\delta) \) is generated from the RGB color of pixel \( \delta \) as follows:</p>
 <ol type="1">
 <li>maximize HSI saturation (intensity becomes invalid) <p class="formulaDsp">
 \begin{equation}
@@ -152,7 +152,7 @@ Color representation</h2>
 \end{equation}
 </p>
 </li>
-<li>normalize HSI intensity to \(\frac{1}{3}\) <p class="formulaDsp">
+<li>normalize HSI intensity to \( \frac{1}{3} \) <p class="formulaDsp">
 \begin{equation}
 \ddot{\boldsymbol{C}} (\delta) = \frac{
     \dot{\boldsymbol{C}} (\delta)
@@ -173,6 +173,7 @@ Color representation</h2>
 </p>
 </li>
 </ol>
+<p >Only 2nd and 3rd components of \( \boldsymbol{\tilde{C}}(\delta) \) are used for clustering. We can not cluster by hue directly, because it is circular. Instead, we use a two-dimensional representation \(I_2I_3\). Axis \(I_1\) is identical to HSI intensity; the plane \( I_2I_3 \) corresponds to variations HSI chromaticity (hue/saturation).</p>
 <h3><a class="anchor" id="autotoc_md1"></a>
 Code</h3>
 <div class="fragment"><div class="line">float2 project(float3 col)</div>
@@ -205,7 +206,7 @@ Code</h3>
 <div class="line">}</div>
 </div><!-- fragment --><h2><a class="anchor" id="noise-flag"></a>
 Noisy pixels</h2>
-<p >When HSI intensity and/or saturation is low, the hue becomes unstable. Such pixels will be ignored during clustering by setting \(f(\delta)=0\). The value of \(f(\delta)\) for the given RGB color is determined as follows:</p>
+<p >When HSI intensity and/or saturation is low, the hue becomes unstable. Such pixels will be ignored during clustering by setting \( f(\delta)=0 \). The value of \( f(\delta) \) for the given RGB color is determined as follows:</p>
 <p class="formulaDsp">
 \begin{equation}
 f(\delta) = \begin{cases}
@@ -218,9 +219,9 @@ f(\delta) = \begin{cases}
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Variable   </th><th class="markdownTableHeadNone">Explanation    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">\(\boldsymbol{C}(\delta)\)   </td><td class="markdownTableBodyNone">RGB color of pixel \(\delta\)    </td></tr>
+<td class="markdownTableBodyNone">\( \boldsymbol{C}(\delta) \)   </td><td class="markdownTableBodyNone">RGB color of pixel \( \delta \)    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">\(t\)   </td><td class="markdownTableBodyNone">threshold for determining noisy pixels (we used \(t=0.05\))   </td></tr>
+<td class="markdownTableBodyNone">\( t \)   </td><td class="markdownTableBodyNone">threshold for determining noisy pixels (we used \( t=0.05 \))   </td></tr>
 </table>
 <h3><a class="anchor" id="autotoc_md2"></a>
 Code</h3>
@@ -242,7 +243,7 @@ Code</h3>
 </div><!-- fragment --><p >After the clustering is completed, noisy pixels are assigned to the nearest cluster. Reported MSE measurements ignore the noisy pixels.</p>
 <h2><a class="anchor" id="third-component"></a>
 Third component</h2>
-<p >The third component \(z_k(\delta)\) has different values in different \(\boldsymbol{T}_k\) textures:</p>
+<p >The third component \( z_k(\delta) \) has different values in different \( \boldsymbol{T}_k \) textures:</p>
 <p class="formulaDsp">
 \begin{equation}
 z_k(\delta) =
@@ -257,9 +258,9 @@ z_k(\delta) =
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Variable   </th><th class="markdownTableHeadNone">Explanation    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">\(d_\mathrm{min}(\delta)\)   </td><td class="markdownTableBodyNone">Euclidean distance between the <a class="el" href="md__assets__documentation__data__layout.html#color-representation">color</a> \(\tilde{C}_2(\delta),\tilde{C}_3(\delta)\) and the nearest cluster center    </td></tr>
+<td class="markdownTableBodyNone">\( d_\mathrm{min}(\delta) \)   </td><td class="markdownTableBodyNone">Euclidean distance between the <a class="el" href="md__assets__documentation__data__layout.html#color-representation">color</a> \( \tilde{C}_2(\delta),\tilde{C}_3(\delta) \) and the nearest cluster center    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">\(f(\delta)\)   </td><td class="markdownTableBodyNone"><a class="el" href="md__assets__documentation__data__layout.html#noise-flag">binary flag</a> which determines if the pixel is rejected as noise   </td></tr>
+<td class="markdownTableBodyNone">\( f(\delta) \)   </td><td class="markdownTableBodyNone"><a class="el" href="md__assets__documentation__data__layout.html#noise-flag">binary flag</a> which determines if the pixel is rejected as noise   </td></tr>
 </table>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Compute Buffer</h1>
@@ -274,7 +275,7 @@ Compute Buffer</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>w</code>   </td><td class="markdownTableBodyNone">1 if cluster is not empty, 0 otherwise   </td></tr>
 </table>
-<p ><sup>&lowast;</sup>If all pixels in the frame are <a class="el" href="md__assets__documentation__data__layout.html#noise-flag">rejected as noise</a> (i.e. \(f(\delta)=0\) for every \(\delta\)), MSE can not be computed.</p>
+<p ><sup>&lowast;</sup>If all pixels in the frame are <a class="el" href="md__assets__documentation__data__layout.html#noise-flag">rejected as noise</a> (i.e. \( f(\delta)=0 \) for every \( \delta \)), MSE can not be computed.</p>
 <h1><a class="anchor" id="autotoc_md4"></a>
 References</h1>
 <ol type="1">
