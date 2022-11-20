@@ -1,9 +1,29 @@
 var class_clustering_algorithms_1_1_dispatcher_r_sfixed =
 [
     [ "DispatcherRSfixed", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a9c94e930ab693ff7f5cd1b765487c271", null ],
+    [ "AttributeClustersKHM", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a6008815e09628615da8d3925e5ad8db5", null ],
+    [ "AttributeClustersKM", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#aa57af74a51f80921fb7671634b0a4f85", null ],
+    [ "Dispose", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#ab5bd1055398e4bc5accd66322fe4194e", null ],
+    [ "GetVariance", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a4d06af1cc2b16c56ccc75a40597fe867", null ],
     [ "IsNumIterationsValid", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a334f3bb7676def7b5141ccf324e1c460", null ],
+    [ "KMiteration", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a797c0308592a539e22ef860ae9fc5c37", null ],
+    [ "RandomSwap", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a307b4cf46aba3a3c41d03a25bdb9c9f8", null ],
     [ "RunClustering", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#ae999aaeb058f99d89c5f348bb7365e75", null ],
+    [ "SingleIteration", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a63cdb11f009c6fa70a8032bf9e3eb520", null ],
+    [ "UpdateClusterCenters", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#af4363c2e9ecbcfa5050f70475b016f61", null ],
+    [ "ValidateCandidatesGPU", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a75c038904f0bb5beda1b49f8e61c5489", null ],
+    [ "ValidateCandidatesReadback", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a1815bd69c04e6fa1703f26a7a3438742", null ],
+    [ "computeShader", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#af5b4bed859bc8eb2fb7ef58a1f547632", null ],
+    [ "kernelHandleRandomSwap", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a1db11bd777e6ba30e78273ed50f87878", null ],
+    [ "kernelHandleValidateCandidates", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#aa81689da33929bce5cac2dcbd119b827", null ],
+    [ "parameters", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a875415fca4663edf0f92b6d9f732cccd", null ],
+    [ "abstractParameters", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a0b54fa6bafb37bc5e5c3a566d177e1da", null ],
+    [ "clusteringRTsAndBuffers", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a82b5e4537ce1042dd3422a747503ca53", null ],
     [ "doesReadback", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a2c34eeb117fc8e81e0455f61c7651d8e", null ],
+    [ "doRandomizeEmptyClusters", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#aea9700b5db672930b7ffe556179a5ab3", null ],
     [ "name", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a2bd802b375226f23ddef3962ca8c268f", null ],
-    [ "usesStopCondition", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a68dfc1aabc514bb927a14a988a1e17fe", null ]
+    [ "numIterations", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a3f00ee542324661bac14f334767da0f3", null ],
+    [ "useFullResTexRef", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a570a8881698c87426204da3618245b71", null ],
+    [ "usesStopCondition", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a68dfc1aabc514bb927a14a988a1e17fe", null ],
+    [ "warningCounter", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#ae593e67092c1edb24ff3bf0c703353a3", null ]
 ];

@@ -96,6 +96,7 @@ $(document).ready(function(){initNavTree('class_clustering_algorithms_1_1_dispat
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#properties">Properties</a> &#124;
 <a href="class_clustering_algorithms_1_1_dispatcher_k_h_mp-members.html">List of all members</a>  </div>
@@ -121,111 +122,58 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a6008815e09628615da8d3925e5ad8db5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a6008815e09628615da8d3925e5ad8db5">AttributeClustersKHM</a> (<a class="el" href="class_clustering_textures.html">ClusteringTextures</a> clusteringTextures, float p)</td></tr>
+<tr class="separator:a6008815e09628615da8d3925e5ad8db5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa57af74a51f80921fb7671634b0a4f85"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#aa57af74a51f80921fb7671634b0a4f85">AttributeClustersKM</a> (<a class="el" href="class_clustering_textures.html">ClusteringTextures</a> clusteringTextures)</td></tr>
+<tr class="separator:aa57af74a51f80921fb7671634b0a4f85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb59a28b225b86189e44d2a77dfa6b25"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_dispatcher_k_h_mp.html#abb59a28b225b86189e44d2a77dfa6b25">DispatcherKHMp</a> (ComputeShader <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#af5b4bed859bc8eb2fb7ef58a1f547632">computeShader</a>, int <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a3f00ee542324661bac14f334767da0f3">numIterations</a>, bool <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#aea9700b5db672930b7ffe556179a5ab3">doRandomizeEmptyClusters</a>, bool <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a570a8881698c87426204da3618245b71">useFullResTexRef</a>, <a class="el" href="class_clustering_algorithms_1_1_dispatcher_k_h_mp_1_1_parameters.html">Parameters</a> parameters, <a class="el" href="class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html">ClusteringRTsAndBuffers</a> <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a82b5e4537ce1042dd3422a747503ca53">clusteringRTsAndBuffers</a>)</td></tr>
 <tr class="separator:abb59a28b225b86189e44d2a77dfa6b25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5bd1055398e4bc5accd66322fe4194e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#ab5bd1055398e4bc5accd66322fe4194e">Dispose</a> ()</td></tr>
+<tr class="separator:ab5bd1055398e4bc5accd66322fe4194e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d06af1cc2b16c56ccc75a40597fe867"><td class="memItemLeft" align="right" valign="top">float?&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a4d06af1cc2b16c56ccc75a40597fe867">GetVariance</a> ()</td></tr>
+<tr class="memdesc:a4d06af1cc2b16c56ccc75a40597fe867"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes variance for the current cluster centers. Depending on this.useFullResTexRef uses either working resolution (this.clusteringRTsAndBuffers.texturesWorkRes), or full resolution (this.clusteringRTsAndBuffers.texturesFullRes) input.<br  />
+<br  />
+Sets incorrect attribution. Does not restore to save performance.  <a href="class_clustering_algorithms_1_1_a_dispatcher.html#a4d06af1cc2b16c56ccc75a40597fe867">More...</a><br /></td></tr>
+<tr class="separator:a4d06af1cc2b16c56ccc75a40597fe867"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2bafe107997a75def331bc9bb4a74df"><td class="memItemLeft" align="right" valign="top">override void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_dispatcher_k_h_mp.html#ad2bafe107997a75def331bc9bb4a74df">RunClustering</a> (<a class="el" href="class_clustering_textures.html">ClusteringTextures</a> clusteringTextures)</td></tr>
 <tr class="memdesc:ad2bafe107997a75def331bc9bb4a74df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Each iteration first attributes pixels to clusters, then updates cluster centers. In order to use the resulting cluster centers, one final cluster attribution is required!  <a href="class_clustering_algorithms_1_1_dispatcher_k_h_mp.html#ad2bafe107997a75def331bc9bb4a74df">More...</a><br /></td></tr>
 <tr class="separator:ad2bafe107997a75def331bc9bb4a74df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa82f395399bf2ba0d77948eb47b6bb7"><td class="memItemLeft" align="right" valign="top">override void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_dispatcher_k_h_mp.html#aaa82f395399bf2ba0d77948eb47b6bb7">SingleIteration</a> (<a class="el" href="class_clustering_textures.html">ClusteringTextures</a> textures)</td></tr>
 <tr class="separator:aaa82f395399bf2ba0d77948eb47b6bb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_class_clustering_algorithms_1_1_a_simple_dispatcer"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_clustering_algorithms_1_1_a_simple_dispatcer')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_clustering_algorithms_1_1_a_simple_dispatcer.html">ClusteringAlgorithms.ASimpleDispatcer</a></td></tr>
-<tr class="memitem:ac0f6e5762c1f45c87b6cd6dbe25b44b0 inherit pub_methods_class_clustering_algorithms_1_1_a_simple_dispatcer"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_simple_dispatcer.html#ac0f6e5762c1f45c87b6cd6dbe25b44b0">ASimpleDispatcer</a> (ComputeShader <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#af5b4bed859bc8eb2fb7ef58a1f547632">computeShader</a>, int <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a3f00ee542324661bac14f334767da0f3">numIterations</a>, bool <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#aea9700b5db672930b7ffe556179a5ab3">doRandomizeEmptyClusters</a>, bool <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a570a8881698c87426204da3618245b71">useFullResTexRef</a>, <a class="el" href="class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html">ClusteringRTsAndBuffers</a> <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a82b5e4537ce1042dd3422a747503ca53">clusteringRTsAndBuffers</a>)</td></tr>
-<tr class="separator:ac0f6e5762c1f45c87b6cd6dbe25b44b0 inherit pub_methods_class_clustering_algorithms_1_1_a_simple_dispatcer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19891b502d31497156a04f1f939d7edd inherit pub_methods_class_clustering_algorithms_1_1_a_simple_dispatcer"><td class="memItemLeft" align="right" valign="top">abstract void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_simple_dispatcer.html#a19891b502d31497156a04f1f939d7edd">SingleIteration</a> (<a class="el" href="class_clustering_textures.html">ClusteringTextures</a> textures)</td></tr>
-<tr class="separator:a19891b502d31497156a04f1f939d7edd inherit pub_methods_class_clustering_algorithms_1_1_a_simple_dispatcer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_class_clustering_algorithms_1_1_a_dispatcher"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_clustering_algorithms_1_1_a_dispatcher')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html">ClusteringAlgorithms.ADispatcher</a></td></tr>
-<tr class="memitem:a6008815e09628615da8d3925e5ad8db5 inherit pub_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a6008815e09628615da8d3925e5ad8db5">AttributeClustersKHM</a> (<a class="el" href="class_clustering_textures.html">ClusteringTextures</a> clusteringTextures, float p)</td></tr>
-<tr class="separator:a6008815e09628615da8d3925e5ad8db5 inherit pub_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa57af74a51f80921fb7671634b0a4f85 inherit pub_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#aa57af74a51f80921fb7671634b0a4f85">AttributeClustersKM</a> (<a class="el" href="class_clustering_textures.html">ClusteringTextures</a> clusteringTextures)</td></tr>
-<tr class="separator:aa57af74a51f80921fb7671634b0a4f85 inherit pub_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5bd1055398e4bc5accd66322fe4194e inherit pub_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#ab5bd1055398e4bc5accd66322fe4194e">Dispose</a> ()</td></tr>
-<tr class="separator:ab5bd1055398e4bc5accd66322fe4194e inherit pub_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d06af1cc2b16c56ccc75a40597fe867 inherit pub_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">float?&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a4d06af1cc2b16c56ccc75a40597fe867">GetVariance</a> ()</td></tr>
-<tr class="memdesc:a4d06af1cc2b16c56ccc75a40597fe867 inherit pub_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes variance for the current cluster centers. Depending on this.useFullResTexRef uses either working resolution (this.clusteringRTsAndBuffers.texturesWorkRes), or full resolution (this.clusteringRTsAndBuffers.texturesFullRes) input.<br  />
-<br  />
-Sets incorrect attribution. Does not restore to save performance.  <a href="class_clustering_algorithms_1_1_a_dispatcher.html#a4d06af1cc2b16c56ccc75a40597fe867">More...</a><br /></td></tr>
-<tr class="separator:a4d06af1cc2b16c56ccc75a40597fe867 inherit pub_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af01b4bfa55a5a0898ae4fff425196a6f inherit pub_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">abstract void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#af01b4bfa55a5a0898ae4fff425196a6f">RunClustering</a> (<a class="el" href="class_clustering_textures.html">ClusteringTextures</a> clusteringTextures)</td></tr>
-<tr class="separator:af01b4bfa55a5a0898ae4fff425196a6f inherit pub_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4363c2e9ecbcfa5050f70475b016f61 inherit pub_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#af4363c2e9ecbcfa5050f70475b016f61">UpdateClusterCenters</a> (<a class="el" href="class_clustering_textures.html">ClusteringTextures</a> clusteringTextures, bool rejectOld)</td></tr>
-<tr class="separator:af4363c2e9ecbcfa5050f70475b016f61 inherit pub_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd22c4cedad389cfe6d43b907018dbb9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#afd22c4cedad389cfe6d43b907018dbb9">AttributeClustersKM</a> (<a class="el" href="class_clustering_textures.html">ClusteringTextures</a> textures)</td></tr>
-<tr class="separator:afd22c4cedad389cfe6d43b907018dbb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2a51835d38c550ad8cf6ca282bd2158"><td class="memItemLeft" align="right" valign="top">float?&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#ae2a51835d38c550ad8cf6ca282bd2158">GetVariance</a> ()</td></tr>
-<tr class="memdesc:ae2a51835d38c550ad8cf6ca282bd2158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes variance for the current cluster centers. Depending on this.useFullResTexRef uses either working resolution (this.clusteringRTsAndBuffers.texturesWorkRes), or full resolution (this.clusteringRTsAndBuffers.texturesFullRes) input.<br  />
-<br  />
-Sets incorrect attribution. Does not restore to save performance.  <a href="interface_clustering_algorithms_1_1_i_dispatcher.html#ae2a51835d38c550ad8cf6ca282bd2158">More...</a><br /></td></tr>
-<tr class="separator:ae2a51835d38c550ad8cf6ca282bd2158"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f9e14e99f996d0d6eb959807118a677"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#a6f9e14e99f996d0d6eb959807118a677">RunClustering</a> (<a class="el" href="class_clustering_textures.html">ClusteringTextures</a> clusteringTextures)</td></tr>
-<tr class="separator:a6f9e14e99f996d0d6eb959807118a677"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3b0f9a152d3c161de8af37888761482"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#aa3b0f9a152d3c161de8af37888761482">UpdateClusterCenters</a> (<a class="el" href="class_clustering_textures.html">ClusteringTextures</a> textures, bool rejectOld)</td></tr>
-<tr class="separator:aa3b0f9a152d3c161de8af37888761482"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4363c2e9ecbcfa5050f70475b016f61"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#af4363c2e9ecbcfa5050f70475b016f61">UpdateClusterCenters</a> (<a class="el" href="class_clustering_textures.html">ClusteringTextures</a> clusteringTextures, bool rejectOld)</td></tr>
+<tr class="separator:af4363c2e9ecbcfa5050f70475b016f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:af5b4bed859bc8eb2fb7ef58a1f547632"><td class="memItemLeft" align="right" valign="top">readonly ComputeShader&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#af5b4bed859bc8eb2fb7ef58a1f547632">computeShader</a></td></tr>
+<tr class="separator:af5b4bed859bc8eb2fb7ef58a1f547632"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a322d8fcdf28f924458da257a70ad6e65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_dispatcher_k_h_mp.html#a322d8fcdf28f924458da257a70ad6e65">KHMiteration</a> (<a class="el" href="class_clustering_textures.html">ClusteringTextures</a> textures)</td></tr>
 <tr class="memdesc:a322d8fcdf28f924458da257a70ad6e65"><td class="mdescLeft">&#160;</td><td class="mdescRight">First attributes pixels to clusters. Then updates cluster centers. In order to use the resulting cluster centers, one final cluster attribution is required!  <a href="class_clustering_algorithms_1_1_dispatcher_k_h_mp.html#a322d8fcdf28f924458da257a70ad6e65">More...</a><br /></td></tr>
 <tr class="separator:a322d8fcdf28f924458da257a70ad6e65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_methods_class_clustering_algorithms_1_1_a_dispatcher"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_clustering_algorithms_1_1_a_dispatcher')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html">ClusteringAlgorithms.ADispatcher</a></td></tr>
-<tr class="memitem:ae0cfe8cd5136f571c00563c738587afd inherit pro_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#ae0cfe8cd5136f571c00563c738587afd">ADispatcher</a> (ComputeShader <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#af5b4bed859bc8eb2fb7ef58a1f547632">computeShader</a>, int <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a3f00ee542324661bac14f334767da0f3">numIterations</a>, bool <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#aea9700b5db672930b7ffe556179a5ab3">doRandomizeEmptyClusters</a>, bool <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a570a8881698c87426204da3618245b71">useFullResTexRef</a>, <a class="el" href="class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html">ClusteringRTsAndBuffers</a> <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a82b5e4537ce1042dd3422a747503ca53">clusteringRTsAndBuffers</a>)</td></tr>
-<tr class="memdesc:ae0cfe8cd5136f571c00563c738587afd inherit pro_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes ownership of the clusteringRTsAndBuffers  <a href="class_clustering_algorithms_1_1_a_dispatcher.html#ae0cfe8cd5136f571c00563c738587afd">More...</a><br /></td></tr>
-<tr class="separator:ae0cfe8cd5136f571c00563c738587afd inherit pro_methods_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
 <tr class="memitem:a5286e8a6860e57ae9018e969a9c0caad"><td class="memItemLeft" align="right" valign="top">override <a class="el" href="class_clustering_algorithms_1_1_dispatcher_parameters.html">DispatcherParameters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_dispatcher_k_h_mp.html#a5286e8a6860e57ae9018e969a9c0caad">abstractParameters</a><code> [get]</code></td></tr>
 <tr class="separator:a5286e8a6860e57ae9018e969a9c0caad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82b5e4537ce1042dd3422a747503ca53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html">ClusteringRTsAndBuffers</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a82b5e4537ce1042dd3422a747503ca53">clusteringRTsAndBuffers</a><code> [get]</code></td></tr>
+<tr class="separator:a82b5e4537ce1042dd3422a747503ca53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabd59e89e337e2b569e93e47edb9ca4d"><td class="memItemLeft" align="right" valign="top">override bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_dispatcher_k_h_mp.html#aabd59e89e337e2b569e93e47edb9ca4d">doesReadback</a><code> [get]</code></td></tr>
 <tr class="separator:aabd59e89e337e2b569e93e47edb9ca4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea9700b5db672930b7ffe556179a5ab3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#aea9700b5db672930b7ffe556179a5ab3">doRandomizeEmptyClusters</a><code> [get]</code></td></tr>
+<tr class="separator:aea9700b5db672930b7ffe556179a5ab3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a147969453df587df14d100f082e7b6a9"><td class="memItemLeft" align="right" valign="top">override string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_dispatcher_k_h_mp.html#a147969453df587df14d100f082e7b6a9">name</a><code> [get]</code></td></tr>
 <tr class="separator:a147969453df587df14d100f082e7b6a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header properties_class_clustering_algorithms_1_1_a_simple_dispatcer"><td colspan="2" onclick="javascript:toggleInherit('properties_class_clustering_algorithms_1_1_a_simple_dispatcer')"><img src="closed.png" alt="-"/>&#160;Properties inherited from <a class="el" href="class_clustering_algorithms_1_1_a_simple_dispatcer.html">ClusteringAlgorithms.ASimpleDispatcer</a></td></tr>
-<tr class="memitem:a8ce4e9b6e161cc55c5315552addb7c66 inherit properties_class_clustering_algorithms_1_1_a_simple_dispatcer"><td class="memItemLeft" align="right" valign="top">override bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_simple_dispatcer.html#a8ce4e9b6e161cc55c5315552addb7c66">usesStopCondition</a><code> [get]</code></td></tr>
-<tr class="separator:a8ce4e9b6e161cc55c5315552addb7c66 inherit properties_class_clustering_algorithms_1_1_a_simple_dispatcer"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header properties_class_clustering_algorithms_1_1_a_dispatcher"><td colspan="2" onclick="javascript:toggleInherit('properties_class_clustering_algorithms_1_1_a_dispatcher')"><img src="closed.png" alt="-"/>&#160;Properties inherited from <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html">ClusteringAlgorithms.ADispatcher</a></td></tr>
-<tr class="memitem:a2df0f2f226017eefef26d8466b9ee3dd inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_clustering_algorithms_1_1_dispatcher_parameters.html">DispatcherParameters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a2df0f2f226017eefef26d8466b9ee3dd">abstractParameters</a><code> [get]</code></td></tr>
-<tr class="separator:a2df0f2f226017eefef26d8466b9ee3dd inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82b5e4537ce1042dd3422a747503ca53 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html">ClusteringRTsAndBuffers</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a82b5e4537ce1042dd3422a747503ca53">clusteringRTsAndBuffers</a><code> [get]</code></td></tr>
-<tr class="separator:a82b5e4537ce1042dd3422a747503ca53 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d905576d7f52fee772267ec477434f4 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">abstract bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a6d905576d7f52fee772267ec477434f4">doesReadback</a><code> [get]</code></td></tr>
-<tr class="separator:a6d905576d7f52fee772267ec477434f4 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea9700b5db672930b7ffe556179a5ab3 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#aea9700b5db672930b7ffe556179a5ab3">doRandomizeEmptyClusters</a><code> [get]</code></td></tr>
-<tr class="separator:aea9700b5db672930b7ffe556179a5ab3 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f51ff70994640f60e8954bc568f99c7 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">abstract string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a4f51ff70994640f60e8954bc568f99c7">name</a><code> [get]</code></td></tr>
-<tr class="separator:a4f51ff70994640f60e8954bc568f99c7 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f00ee542324661bac14f334767da0f3 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a3f00ee542324661bac14f334767da0f3">numIterations</a><code> [get]</code></td></tr>
-<tr class="separator:a3f00ee542324661bac14f334767da0f3 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a570a8881698c87426204da3618245b71 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a570a8881698c87426204da3618245b71">useFullResTexRef</a><code> [get]</code></td></tr>
-<tr class="separator:a570a8881698c87426204da3618245b71 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70add90d98924ecb1af53cb5e892b083 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">abstract bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a70add90d98924ecb1af53cb5e892b083">usesStopCondition</a><code> [get]</code></td></tr>
-<tr class="separator:a70add90d98924ecb1af53cb5e892b083 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae593e67092c1edb24ff3bf0c703353a3 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#ae593e67092c1edb24ff3bf0c703353a3">warningCounter</a><code> [get]</code></td></tr>
-<tr class="separator:ae593e67092c1edb24ff3bf0c703353a3 inherit properties_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header properties_interface_clustering_algorithms_1_1_i_dispatcher"><td colspan="2" onclick="javascript:toggleInherit('properties_interface_clustering_algorithms_1_1_i_dispatcher')"><img src="closed.png" alt="-"/>&#160;Properties inherited from <a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html">ClusteringAlgorithms.IDispatcher</a></td></tr>
-<tr class="memitem:ac1cf07e3461dff749eb39b6b38a3b2ab inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_clustering_algorithms_1_1_dispatcher_parameters.html">DispatcherParameters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#ac1cf07e3461dff749eb39b6b38a3b2ab">abstractParameters</a><code> [get]</code></td></tr>
-<tr class="separator:ac1cf07e3461dff749eb39b6b38a3b2ab inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd35d208cfe8def3797e2c7a539d63a7 inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html">ClusteringRTsAndBuffers</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#abd35d208cfe8def3797e2c7a539d63a7">clusteringRTsAndBuffers</a><code> [get]</code></td></tr>
-<tr class="separator:abd35d208cfe8def3797e2c7a539d63a7 inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab617b01640797288370b4d7c7fd6989b inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#ab617b01640797288370b4d7c7fd6989b">doesReadback</a><code> [get]</code></td></tr>
-<tr class="separator:ab617b01640797288370b4d7c7fd6989b inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab22278ee8a5bd5aabe0954d93d76232a inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#ab22278ee8a5bd5aabe0954d93d76232a">doRandomizeEmptyClusters</a><code> [get]</code></td></tr>
-<tr class="separator:ab22278ee8a5bd5aabe0954d93d76232a inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1300bf462fb922ad87dcc561a9212485 inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#a1300bf462fb922ad87dcc561a9212485">name</a><code> [get]</code></td></tr>
-<tr class="separator:a1300bf462fb922ad87dcc561a9212485 inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a722b1b2dd9221162898d5c95c6490136 inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#a722b1b2dd9221162898d5c95c6490136">numIterations</a><code> [get]</code></td></tr>
-<tr class="separator:a722b1b2dd9221162898d5c95c6490136 inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8bbebc6bec2403b4061da300a747458 inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#ad8bbebc6bec2403b4061da300a747458">useFullResTexRef</a><code> [get]</code></td></tr>
-<tr class="separator:ad8bbebc6bec2403b4061da300a747458 inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6cccf71b18a7034cdf989867ed384e10 inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#a6cccf71b18a7034cdf989867ed384e10">usesStopCondition</a><code> [get]</code></td></tr>
-<tr class="separator:a6cccf71b18a7034cdf989867ed384e10 inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98f957ad02bbbf4c054916357ebcbea0 inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#a98f957ad02bbbf4c054916357ebcbea0">warningCounter</a><code> [get]</code></td></tr>
-<tr class="separator:a98f957ad02bbbf4c054916357ebcbea0 inherit properties_interface_clustering_algorithms_1_1_i_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_attribs_class_clustering_algorithms_1_1_a_dispatcher"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_class_clustering_algorithms_1_1_a_dispatcher')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html">ClusteringAlgorithms.ADispatcher</a></td></tr>
-<tr class="memitem:af5b4bed859bc8eb2fb7ef58a1f547632 inherit pub_attribs_class_clustering_algorithms_1_1_a_dispatcher"><td class="memItemLeft" align="right" valign="top">readonly ComputeShader&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#af5b4bed859bc8eb2fb7ef58a1f547632">computeShader</a></td></tr>
-<tr class="separator:af5b4bed859bc8eb2fb7ef58a1f547632 inherit pub_attribs_class_clustering_algorithms_1_1_a_dispatcher"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f00ee542324661bac14f334767da0f3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a3f00ee542324661bac14f334767da0f3">numIterations</a><code> [get]</code></td></tr>
+<tr class="separator:a3f00ee542324661bac14f334767da0f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a570a8881698c87426204da3618245b71"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#a570a8881698c87426204da3618245b71">useFullResTexRef</a><code> [get]</code></td></tr>
+<tr class="separator:a570a8881698c87426204da3618245b71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ce4e9b6e161cc55c5315552addb7c66"><td class="memItemLeft" align="right" valign="top">override bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_simple_dispatcer.html#a8ce4e9b6e161cc55c5315552addb7c66">usesStopCondition</a><code> [get]</code></td></tr>
+<tr class="separator:a8ce4e9b6e161cc55c5315552addb7c66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae593e67092c1edb24ff3bf0c703353a3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_clustering_algorithms_1_1_a_dispatcher.html#ae593e67092c1edb24ff3bf0c703353a3">warningCounter</a><code> [get]</code></td></tr>
+<tr class="separator:ae593e67092c1edb24ff3bf0c703353a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
@@ -294,6 +242,134 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a6008815e09628615da8d3925e5ad8db5" name="a6008815e09628615da8d3925e5ad8db5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6008815e09628615da8d3925e5ad8db5">&#9670;&nbsp;</a></span>AttributeClustersKHM()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ClusteringAlgorithms.ADispatcher.AttributeClustersKHM </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_clustering_textures.html">ClusteringTextures</a>&#160;</td>
+          <td class="paramname"><em>clusteringTextures</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>p</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_a_dispatcher_8cs_source.html#l00118">118</a> of file <a class="el" href="_a_dispatcher_8cs_source.html">ADispatcher.cs</a>.</p>
+
+</div>
+</div>
+<a id="aa57af74a51f80921fb7671634b0a4f85" name="aa57af74a51f80921fb7671634b0a4f85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa57af74a51f80921fb7671634b0a4f85">&#9670;&nbsp;</a></span>AttributeClustersKM()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ClusteringAlgorithms.ADispatcher.AttributeClustersKM </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_clustering_textures.html">ClusteringTextures</a>&#160;</td>
+          <td class="paramname"><em>clusteringTextures</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#afd22c4cedad389cfe6d43b907018dbb9">ClusteringAlgorithms.IDispatcher</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_a_dispatcher_8cs_source.html#l00087">87</a> of file <a class="el" href="_a_dispatcher_8cs_source.html">ADispatcher.cs</a>.</p>
+
+</div>
+</div>
+<a id="ab5bd1055398e4bc5accd66322fe4194e" name="ab5bd1055398e4bc5accd66322fe4194e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5bd1055398e4bc5accd66322fe4194e">&#9670;&nbsp;</a></span>Dispose()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void ClusteringAlgorithms.ADispatcher.Dispose </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_a_dispatcher_8cs_source.html#l00183">183</a> of file <a class="el" href="_a_dispatcher_8cs_source.html">ADispatcher.cs</a>.</p>
+
+</div>
+</div>
+<a id="a4d06af1cc2b16c56ccc75a40597fe867" name="a4d06af1cc2b16c56ccc75a40597fe867"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d06af1cc2b16c56ccc75a40597fe867">&#9670;&nbsp;</a></span>GetVariance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float? ClusteringAlgorithms.ADispatcher.GetVariance </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Computes variance for the current cluster centers. Depending on this.useFullResTexRef uses either working resolution (this.clusteringRTsAndBuffers.texturesWorkRes), or full resolution (this.clusteringRTsAndBuffers.texturesFullRes) input.<br  />
+<br  />
+Sets incorrect attribution. Does not restore to save performance. </p>
+
+<p>Implements <a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#ae2a51835d38c550ad8cf6ca282bd2158">ClusteringAlgorithms.IDispatcher</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_a_dispatcher_8cs_source.html#l00152">152</a> of file <a class="el" href="_a_dispatcher_8cs_source.html">ADispatcher.cs</a>.</p>
+
+</div>
+</div>
 <a id="a322d8fcdf28f924458da257a70ad6e65" name="a322d8fcdf28f924458da257a70ad6e65"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a322d8fcdf28f924458da257a70ad6e65">&#9670;&nbsp;</a></span>KHMiteration()</h2>
 
@@ -386,6 +462,71 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="af4363c2e9ecbcfa5050f70475b016f61" name="af4363c2e9ecbcfa5050f70475b016f61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4363c2e9ecbcfa5050f70475b016f61">&#9670;&nbsp;</a></span>UpdateClusterCenters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ClusteringAlgorithms.ADispatcher.UpdateClusterCenters </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_clustering_textures.html">ClusteringTextures</a>&#160;</td>
+          <td class="paramname"><em>clusteringTextures</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>rejectOld</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#aa3b0f9a152d3c161de8af37888761482">ClusteringAlgorithms.IDispatcher</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_a_dispatcher_8cs_source.html#l00055">55</a> of file <a class="el" href="_a_dispatcher_8cs_source.html">ADispatcher.cs</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="af5b4bed859bc8eb2fb7ef58a1f547632" name="af5b4bed859bc8eb2fb7ef58a1f547632"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5b4bed859bc8eb2fb7ef58a1f547632">&#9670;&nbsp;</a></span>computeShader</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">readonly ComputeShader ClusteringAlgorithms.ADispatcher.computeShader</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_a_dispatcher_8cs_source.html#l00028">28</a> of file <a class="el" href="_a_dispatcher_8cs_source.html">ADispatcher.cs</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Property Documentation</h2>
 <a id="a5286e8a6860e57ae9018e969a9c0caad" name="a5286e8a6860e57ae9018e969a9c0caad"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5286e8a6860e57ae9018e969a9c0caad">&#9670;&nbsp;</a></span>abstractParameters</h2>
@@ -410,6 +551,32 @@ Additional Inherited Members</h2></td></tr>
 <p>Implements <a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#ac1cf07e3461dff749eb39b6b38a3b2ab">ClusteringAlgorithms.IDispatcher</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_dispatcher_k_h_mp_8cs_source.html#l00033">33</a> of file <a class="el" href="_dispatcher_k_h_mp_8cs_source.html">DispatcherKHMp.cs</a>.</p>
+
+</div>
+</div>
+<a id="a82b5e4537ce1042dd3422a747503ca53" name="a82b5e4537ce1042dd3422a747503ca53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82b5e4537ce1042dd3422a747503ca53">&#9670;&nbsp;</a></span>clusteringRTsAndBuffers</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html">ClusteringRTsAndBuffers</a> ClusteringAlgorithms.ADispatcher.clusteringRTsAndBuffers</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#abd35d208cfe8def3797e2c7a539d63a7">ClusteringAlgorithms.IDispatcher</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_a_dispatcher_8cs_source.html#l00011">11</a> of file <a class="el" href="_a_dispatcher_8cs_source.html">ADispatcher.cs</a>.</p>
 
 </div>
 </div>
@@ -439,6 +606,32 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="aea9700b5db672930b7ffe556179a5ab3" name="aea9700b5db672930b7ffe556179a5ab3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea9700b5db672930b7ffe556179a5ab3">&#9670;&nbsp;</a></span>doRandomizeEmptyClusters</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ClusteringAlgorithms.ADispatcher.doRandomizeEmptyClusters</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#ab22278ee8a5bd5aabe0954d93d76232a">ClusteringAlgorithms.IDispatcher</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_a_dispatcher_8cs_source.html#l00009">9</a> of file <a class="el" href="_a_dispatcher_8cs_source.html">ADispatcher.cs</a>.</p>
+
+</div>
+</div>
 <a id="a147969453df587df14d100f082e7b6a9" name="a147969453df587df14d100f082e7b6a9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a147969453df587df14d100f082e7b6a9">&#9670;&nbsp;</a></span>name</h2>
 
@@ -462,6 +655,110 @@ Additional Inherited Members</h2></td></tr>
 <p>Implements <a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#a1300bf462fb922ad87dcc561a9212485">ClusteringAlgorithms.IDispatcher</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="_dispatcher_k_h_mp_8cs_source.html#l00056">56</a> of file <a class="el" href="_dispatcher_k_h_mp_8cs_source.html">DispatcherKHMp.cs</a>.</p>
+
+</div>
+</div>
+<a id="a3f00ee542324661bac14f334767da0f3" name="a3f00ee542324661bac14f334767da0f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f00ee542324661bac14f334767da0f3">&#9670;&nbsp;</a></span>numIterations</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int ClusteringAlgorithms.ADispatcher.numIterations</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#a722b1b2dd9221162898d5c95c6490136">ClusteringAlgorithms.IDispatcher</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_a_dispatcher_8cs_source.html#l00010">10</a> of file <a class="el" href="_a_dispatcher_8cs_source.html">ADispatcher.cs</a>.</p>
+
+</div>
+</div>
+<a id="a570a8881698c87426204da3618245b71" name="a570a8881698c87426204da3618245b71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a570a8881698c87426204da3618245b71">&#9670;&nbsp;</a></span>useFullResTexRef</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ClusteringAlgorithms.ADispatcher.useFullResTexRef</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#ad8bbebc6bec2403b4061da300a747458">ClusteringAlgorithms.IDispatcher</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_a_dispatcher_8cs_source.html#l00150">150</a> of file <a class="el" href="_a_dispatcher_8cs_source.html">ADispatcher.cs</a>.</p>
+
+</div>
+</div>
+<a id="a8ce4e9b6e161cc55c5315552addb7c66" name="a8ce4e9b6e161cc55c5315552addb7c66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ce4e9b6e161cc55c5315552addb7c66">&#9670;&nbsp;</a></span>usesStopCondition</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">override bool ClusteringAlgorithms.ASimpleDispatcer.usesStopCondition</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#a6cccf71b18a7034cdf989867ed384e10">ClusteringAlgorithms.IDispatcher</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_a_simple_dispatcher_8cs_source.html#l00024">24</a> of file <a class="el" href="_a_simple_dispatcher_8cs_source.html">ASimpleDispatcher.cs</a>.</p>
+
+</div>
+</div>
+<a id="ae593e67092c1edb24ff3bf0c703353a3" name="ae593e67092c1edb24ff3bf0c703353a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae593e67092c1edb24ff3bf0c703353a3">&#9670;&nbsp;</a></span>warningCounter</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int ClusteringAlgorithms.ADispatcher.warningCounter</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html#a98f957ad02bbbf4c054916357ebcbea0">ClusteringAlgorithms.IDispatcher</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="_a_dispatcher_8cs_source.html#l00021">21</a> of file <a class="el" href="_a_dispatcher_8cs_source.html">ADispatcher.cs</a>.</p>
 
 </div>
 </div>
