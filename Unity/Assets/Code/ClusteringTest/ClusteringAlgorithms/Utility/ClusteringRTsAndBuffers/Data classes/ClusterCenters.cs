@@ -4,6 +4,9 @@ using static Diagnostics;
 
 namespace ClusteringAlgorithms
 {
+    /// <summary>
+    /// Call <see cref="Dispose" /> after using.
+    /// </summary>
     public class ClusterCenters : System.IDisposable
     {
         public Vector4[] centers;

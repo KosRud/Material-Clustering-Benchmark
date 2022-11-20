@@ -65,6 +65,9 @@ namespace ClusteringAlgorithms
 
         public override string name => "RS";
 
+        /// <summary>
+        /// Call <see cref="Dispose" /> after using.
+        /// </summary>
         public class RandomSwapResult : System.IDisposable
         {
             public enum StopConditionOverride
@@ -222,7 +225,7 @@ namespace ClusteringAlgorithms
                 clusteringTextures.rtInput
             );
             this.computeShader.SetInt(
-                "randomClusterCenter",
+                "random_cluster_center",
                 this.clusteringRTsAndBuffers.PickRandomCluster(
                     this.clusteringRTsAndBuffers.numClusters
                 )

@@ -3,7 +3,7 @@ using static Diagnostics;
 namespace ClusteringAlgorithms
 {
     /// <summary>
-    /// Runs the clustering function from the wrapped dispatcher and performs one (useless) readback after every iteration.
+    /// Runs the clustering function from the wrapped dispatcher and performs one (useless) readback after every iteration. Used to measure the impact of readback on frame times.
     /// </summary>
     public class WrapperArtificialReadback : IDispatcher
     {

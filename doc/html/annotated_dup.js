@@ -1,0 +1,47 @@
+var annotated_dup =
+[
+    [ "ClusteringAlgorithms", "namespace_clustering_algorithms.html", [
+      [ "ADispatcher", "class_clustering_algorithms_1_1_a_dispatcher.html", "class_clustering_algorithms_1_1_a_dispatcher" ],
+      [ "ADispatcherRS", "class_clustering_algorithms_1_1_a_dispatcher_r_s.html", "class_clustering_algorithms_1_1_a_dispatcher_r_s" ],
+      [ "ASimpleDispatcer", "class_clustering_algorithms_1_1_a_simple_dispatcer.html", "class_clustering_algorithms_1_1_a_simple_dispatcer" ],
+      [ "ClusterCenters", "class_clustering_algorithms_1_1_cluster_centers.html", "class_clustering_algorithms_1_1_cluster_centers" ],
+      [ "ClusteringRTsAndBuffers", "class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html", "class_clustering_algorithms_1_1_clustering_r_ts_and_buffers" ],
+      [ "DispatcherKHM", "class_clustering_algorithms_1_1_dispatcher_k_h_m.html", "class_clustering_algorithms_1_1_dispatcher_k_h_m" ],
+      [ "DispatcherKM", "class_clustering_algorithms_1_1_dispatcher_k_m.html", "class_clustering_algorithms_1_1_dispatcher_k_m" ],
+      [ "DispatcherKnecht", "class_clustering_algorithms_1_1_dispatcher_knecht.html", "class_clustering_algorithms_1_1_dispatcher_knecht" ],
+      [ "DispatcherParameters", "class_clustering_algorithms_1_1_dispatcher_parameters.html", null ],
+      [ "DispatcherRSfixed", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html", "class_clustering_algorithms_1_1_dispatcher_r_sfixed" ],
+      [ "DispatcherRSstopCondition", "class_clustering_algorithms_1_1_dispatcher_r_sstop_condition.html", "class_clustering_algorithms_1_1_dispatcher_r_sstop_condition" ],
+      [ "IDispatcher", "interface_clustering_algorithms_1_1_i_dispatcher.html", "interface_clustering_algorithms_1_1_i_dispatcher" ],
+      [ "StopCondition", "class_clustering_algorithms_1_1_stop_condition.html", "class_clustering_algorithms_1_1_stop_condition" ],
+      [ "WrapperArtificialReadback", "class_clustering_algorithms_1_1_wrapper_artificial_readback.html", "class_clustering_algorithms_1_1_wrapper_artificial_readback" ],
+      [ "WrapperStopCondition", "class_clustering_algorithms_1_1_wrapper_stop_condition.html", "class_clustering_algorithms_1_1_wrapper_stop_condition" ]
+    ] ],
+    [ "WorkGeneration", "namespace_work_generation.html", [
+      [ "AlgorithmsConvergence", "class_work_generation_1_1_algorithms_convergence.html", "class_work_generation_1_1_algorithms_convergence" ],
+      [ "AWorkGenerator", "class_work_generation_1_1_a_work_generator.html", "class_work_generation_1_1_a_work_generator" ],
+      [ "EmptyClusterRandomization", "class_work_generation_1_1_empty_cluster_randomization.html", "class_work_generation_1_1_empty_cluster_randomization" ],
+      [ "FrameTime", "class_work_generation_1_1_frame_time.html", "class_work_generation_1_1_frame_time" ],
+      [ "KHMp", "class_work_generation_1_1_k_h_mp.html", "class_work_generation_1_1_k_h_mp" ],
+      [ "LaunchParameters", "class_work_generation_1_1_launch_parameters.html", "class_work_generation_1_1_launch_parameters" ],
+      [ "RSnumKM", "class_work_generation_1_1_r_snum_k_m.html", "class_work_generation_1_1_r_snum_k_m" ],
+      [ "ScalingVsSubsampling", "class_work_generation_1_1_scaling_vs_subsampling.html", "class_work_generation_1_1_scaling_vs_subsampling" ],
+      [ "ScanlineJitter", "class_work_generation_1_1_scanline_jitter.html", "class_work_generation_1_1_scanline_jitter" ],
+      [ "StaggeredJitter", "class_work_generation_1_1_staggered_jitter.html", "class_work_generation_1_1_staggered_jitter" ],
+      [ "Subsampling", "class_work_generation_1_1_subsampling.html", "class_work_generation_1_1_subsampling" ],
+      [ "WorkList", "class_work_generation_1_1_work_list.html", "class_work_generation_1_1_work_list" ]
+    ] ],
+    [ "ABenchmarkMeasurement", "class_a_benchmark_measurement.html", null ],
+    [ "BenchmarkHelper", "class_benchmark_helper.html", "class_benchmark_helper" ],
+    [ "BenchmarkMeasurementFrameTime", "class_benchmark_measurement_frame_time.html", "class_benchmark_measurement_frame_time" ],
+    [ "BenchmarkMeasurementVariance", "class_benchmark_measurement_variance.html", "class_benchmark_measurement_variance" ],
+    [ "BenchmarkReport", "class_benchmark_report.html", "class_benchmark_report" ],
+    [ "BenchmarkReportCollection", "class_benchmark_report_collection.html", "class_benchmark_report_collection" ],
+    [ "ClusteringTest", "class_clustering_test.html", "class_clustering_test" ],
+    [ "ClusteringTestGui", "class_clustering_test_gui.html", "class_clustering_test_gui" ],
+    [ "ClusteringTextures", "class_clustering_textures.html", "class_clustering_textures" ],
+    [ "Diagnostics", "class_diagnostics.html", "class_diagnostics" ],
+    [ "JitterPattern", "class_jitter_pattern.html", "class_jitter_pattern" ],
+    [ "MeasurementRunner", "class_measurement_runner.html", "class_measurement_runner" ],
+    [ "ObjectPoolMaxAssert", "class_object_pool_max_assert.html", "class_object_pool_max_assert" ]
+];

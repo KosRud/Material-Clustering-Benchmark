@@ -1,3 +1,9 @@
+"""
+This script generates csharp code with jittered sampling offsets.
+
+usage: samples.py [grid size]
+"""
+
 import sys
 
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 namespace ClusteringAlgorithms
 {
@@ -106,8 +107,8 @@ namespace ClusteringAlgorithms
 
             this.computeShader.Dispatch(
                 this.kernelHandleAttributeClusters,
-                clusteringTextures.size / ClusteringTest.kernelSize,
-                clusteringTextures.size / ClusteringTest.kernelSize,
+                Math.Max(clusteringTextures.size / ClusteringTest.kernelSize, 1),
+                Math.Max(clusteringTextures.size / ClusteringTest.kernelSize, 1),
                 1
             );
 
@@ -138,8 +139,8 @@ namespace ClusteringAlgorithms
 
             this.computeShader.Dispatch(
                 this.kernelHandleAttributeClusters,
-                clusteringTextures.size / ClusteringTest.kernelSize,
-                clusteringTextures.size / ClusteringTest.kernelSize,
+                Math.Max(clusteringTextures.size / ClusteringTest.kernelSize, 1),
+                Math.Max(clusteringTextures.size / ClusteringTest.kernelSize, 1),
                 1
             );
 

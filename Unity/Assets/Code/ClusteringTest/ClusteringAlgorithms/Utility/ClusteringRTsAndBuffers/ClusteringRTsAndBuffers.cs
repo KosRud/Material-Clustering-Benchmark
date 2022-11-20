@@ -1,8 +1,12 @@
 using UnityEngine;
+using System;
 using static Diagnostics;
 
 namespace ClusteringAlgorithms
 {
+    /// <summary>
+    /// Call <see cref="Allocate" /> before using and <see cref="Dispose" /> after using.
+    /// </summary>
     public class ClusteringRTsAndBuffers : System.IDisposable
     {
         public const int max_num_clusters = 32;
@@ -20,7 +24,8 @@ namespace ClusteringAlgorithms
         private int[][] jitterOffsets;
 
         /// <summary>
-        /// Get a pooled instance of ClusterCenters with a copy of the data from ComputeBuffer. Safe to modify. Don't forget to dispose!
+        /// Get a pooled instance of ClusterCenters with a copy of the data from ComputeBuffer. Safe to modify.<para />
+        /// Don't forget to dispose.
         /// </summary>
         /// <returns></returns>
         public ClusterCenters GetClusterCenters()
@@ -41,7 +46,8 @@ namespace ClusteringAlgorithms
         private Vector4[] clusterCentersTempData;
 
         /// <summary>
-        /// For working resolution
+        /// Integer coordinates for working resolution texture.<para />
+        /// These positions are used for <see cref="ADispatcherRS" /> (random swap) and for randomizing empty clusters <see cref="ADispatcher.doRandomizeEmptyClusters" />.
         /// </summary>
         private Position[] randomPositions;
         private System.Random random;
@@ -272,8 +278,8 @@ namespace ClusteringAlgorithms
 
             csHighlightRemoval.Dispatch(
                 kernelSubsample,
-                this.texturesWorkRes.size / ClusteringTest.kernelSize,
-                this.texturesWorkRes.size / ClusteringTest.kernelSize,
+                Math.Max(this.texturesWorkRes.size / ClusteringTest.kernelSize, 1),
+                Math.Max(this.texturesWorkRes.size / ClusteringTest.kernelSize, 1),
                 1
             );
         }

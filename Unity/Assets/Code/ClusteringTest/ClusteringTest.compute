@@ -6,7 +6,7 @@
 #pragma kernel ValidateCandidates
 #pragma kernel SubSample
 
-#define chromaticThreshold 0.05
+#define valid_threshold 0.05
 #define max_num_clusters 32
 
 bool reject_old;
@@ -15,7 +15,7 @@ bool do_random_sample_empty_clusters;
 bool KHM;
 float p;	// KHM parameter
 
-uint randomClusterCenter;
+uint random_cluster_center;
 uint subsample_mip_level;
 uint mip_level;
 uint texture_size;
@@ -44,7 +44,7 @@ SamplerState sampler_tex_variance_r;
 RWStructuredBuffer<float4> cbuf_cluster_centers;
 RWStructuredBuffer<int4> cbuf_random_positions;
 
-bool isVarianceValid(float x){
+bool is_variance_valid(float x){
 	/*
 		positive number 	|	valid variance
 		-1 					|	not a single pixel has sufficient chromatic component
@@ -52,28 +52,38 @@ bool isVarianceValid(float x){
 	return x > -0.5;
 }
 
-static const float3x3 kkk2rgb_matrix = {
+static const float3x3 iii_2_rgb_matrix = {
 	1,	1, -0.6667,
 	1,	0,	1.3333,
 	1,	-1,	-0.6667
 };
 
-static const float3x3 rgb2kkk_matrix = {
+static const float3x3 rgb_2_iii_matrix = {
 	0.3333,	0.3333,	0.3333,
 	0.5,	0,		-0.5,
 	-0.25,	0.5,	-0.25
 };
 
-inline float isNearZero(float x){
+inline float is_near_zero(float x){
 	// 32 bit float = 6 digits precision
 	return abs(x) < 0.00001;
 }
 
+/*
+	color representation used for material clustering
+
+	maximize HSI intensity and saturation =>
+		hue is unaffected by diffuse and specular shading
+	
+	can't cluster by hue directly with K-Means, because it is circular
+	instead, use I2,I3 plane from I1,I2,I3 color space
+	I2,I3 plane corresponds to HSI chromaticity (hue / saturation)
+*/
 float2 project(float3 col)
 {
 	/* 
-		specular-free
-		i.e., maximize saturation
+		maximize HSI saturation
+		intensity becomes invalid
 	*/
 	col -= min(
 		col.r,
@@ -83,19 +93,24 @@ float2 project(float3 col)
 		)
 	);
 
-    // normalize
-    col /= (dot(col, 1) + 0.00001);
+    /*
+		normalize intensity
+		
+		this creates potential division by zero
+		erroneous pixels will be rejected due to is_color_valid() check
+	*/
+    col /= dot(col, 1);
 
-	// transform to kkk color space
-	col = mul(rgb2kkk_matrix,col);
+	// transform to I1,I2,I3 color space
+	col = mul(rgb_2_iii_matrix,col);
 
 	// return chromaticity axes, ignore intensity
 	return col.gb;
 }
 
-bool isChromatic(float3 col) {
+bool is_color_valid(float3 col) {
 
-	// specular-free
+	// subtract achromatic portion
 	col -= min(
 		col.r,
 		min(
@@ -104,10 +119,10 @@ bool isChromatic(float3 col) {
 		)
 	);
 
-	return dot(col, 1) > chromaticThreshold;
+	return dot(col, 1) > valid_threshold;
 }
 
-[numthreads(8,8,1)]
+[numthreads(16,16,1)]
 void ShowResult (uint3 id : SV_DispatchThreadID)
 {
 	float4 color = float4(0,0,0,1);
@@ -118,24 +133,24 @@ void ShowResult (uint3 id : SV_DispatchThreadID)
 			color.rg = cbuf_cluster_centers[i].rg;
 			
 			/*
-				convert from kkk chromaticity to RGB
+				convert from I1,I2,I3 chromaticity to RGB
 				assume maximum intensity
 			*/
 			color.rgb = mul(
-				kkk2rgb_matrix,
+				iii_2_rgb_matrix,
 				float3(0.3333, color.rg)
 			);
 		}
 	}
 
-	if (!isChromatic(tex_input[id.xy].rgb)){
+	if (!is_color_valid(tex_input[id.xy].rgb)){
 		color.rgb /= 16.0;
 	}
 
 	tex_output[id.xy] = color;
 }
 
-[numthreads(8,8,1)]
+[numthreads(16,16,1)]
 void SubSample (uint3 id : SV_DispatchThreadID)
 {
     if (downscale == false){
@@ -153,25 +168,7 @@ void SubSample (uint3 id : SV_DispatchThreadID)
     }
 }
 
-inline float pow2(float x){
-	return x*x;
-}
-
-inline float pow3(float x){
-	return x*x*x;
-}
-
-inline float pow4(float x){
-	return pow2(
-		pow2(x)
-	);
-}
-
-inline float pow5(float x){
-	return pow4(x)*x;
-}
-
-[numthreads(8,8,1)]
+[numthreads(16,16,1)]
 void AttributeClusters (uint3 id : SV_DispatchThreadID)
 {
 	float min_dist = 1000;
@@ -183,7 +180,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 	float3 col = tex_input[id.xy].rgb;
     float2 projCol = project(col);
 
-	bool included = isChromatic(col);
+	bool valid = is_color_valid(col);
 
 	float dist_list[max_num_clusters];
 
@@ -206,7 +203,7 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 
 		if (
 			!KHM ||
-			isNearZero(min_dist) // prevent division by zero in KHM
+			is_near_zero(min_dist) // prevent division by zero in KHM
 		){
 			// K-Means weights
 			result.w = (k == clusterID);
@@ -244,17 +241,18 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 			result.w = top / (bottom * bottom);
         }
 
-		if (!included) {
-			result.w = 0;
+		if (!valid) {
+			result.xyw = 0;
+		} else {
+			result.xy = projCol * result.w;
 		}
-		result.xy = projCol * result.w;
 
 		switch(k) {
 			case 0:
-				result.z = included ? (min_dist * min_dist) : 0;
+				result.z = valid ? (min_dist * min_dist) : 0;
 				break;
 			case 1:
-				result.z = included;
+				result.z = valid;
 				break;
 			default:
 				result.z = 0;
@@ -269,17 +267,17 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 void RandomSwap (uint3 id : SV_DispatchThreadID)
 {
     float3 sampleCol = tex_input[
-        cbuf_random_positions[randomClusterCenter].xy
+        cbuf_random_positions[random_cluster_center].xy
     ].rgb;
 
     if (
         // prevents bugs!
-		!isChromatic(sampleCol)
+		!is_color_valid(sampleCol)
     ) {
         return;
     }
 
-	cbuf_cluster_centers[randomClusterCenter].xy = project(sampleCol);
+	cbuf_cluster_centers[random_cluster_center].xy = project(sampleCol);
 }
 
 [numthreads(1,1,1)]
@@ -294,8 +292,8 @@ void ValidateCandidates (uint3 id : SV_DispatchThreadID)
 	float newVariance = cbuf_cluster_centers[0].z;
 
 	if (
-		isVarianceValid(newVariance) && (
-			!isVarianceValid(oldVariance) ||
+		is_variance_valid(newVariance) && (
+			!is_variance_valid(oldVariance) ||
 			newVariance < oldVariance
 		)
 	){
@@ -338,15 +336,15 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 
 		float aggregatedVariance = aggregatedColor.z;
 
-		float aggregatedIncluded = tex_arr_clusters_r.SampleLevel(
+		float aggregatedvalid = tex_arr_clusters_r.SampleLevel(
 			sampler_tex_arr_clusters_r,
 			float3(0.5, 0.5, 1),
 			mip_level
 		).z;
 
 		// clusterCenter.z = variance
-		if (!isNearZero(aggregatedIncluded)){
-			clusterCenter.z = aggregatedVariance / aggregatedIncluded;
+		if (!is_near_zero(aggregatedvalid)){
+			clusterCenter.z = aggregatedVariance / aggregatedvalid;
 		} else {
 			clusterCenter.z = -1;
 		}
@@ -356,7 +354,7 @@ void UpdateClusterCenters (uint3 id : SV_DispatchThreadID)
 	clusterCenter.w = 0;
 
 	// clusterCenter.xy = cluster center
-	if (!isNearZero(aggregatedColor.w)) {
+	if (!is_near_zero(aggregatedColor.w)) {
 		// cluster is not empty
 
 		// clusterCenter.w = not empty (flag)

@@ -34,7 +34,7 @@ public class ClusteringTestGui : MonoBehaviour
         Color[] colors = new Color[size * size];
         for (int i = 0; i < size * size; i++)
         {
-            colors[i] = Camera.main.backgroundColor;
+            colors[i] = Color.black;
         }
         guiBackgroundTex.SetPixels(colors);
         guiBackgroundTex.Apply();
@@ -46,6 +46,17 @@ public class ClusteringTestGui : MonoBehaviour
     private void Awake()
     {
         Assert(this.videos.Length != 0, "No video files provided.");
+        foreach (UnityEngine.Video.VideoClip video in this.videos)
+        {
+            Assert(
+                video.width == video.height,
+                $"Video file {video.name} does not have height equal to width. This is unsuppoted to simplify implementation."
+            );
+            Assert(
+                video.width >= ClusteringTest.fullTextureSize,
+                $"Video file {video.name} has smaller resolution than required. File resolution: {video.width}; required: {ClusteringTest.fullTextureSize}."
+            );
+        }
         Assert(
             System.Diagnostics.Stopwatch.IsHighResolution,
             "High resolution timer not available."

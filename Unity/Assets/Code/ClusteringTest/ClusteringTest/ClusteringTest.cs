@@ -4,8 +4,15 @@ using WorkGeneration;
 
 public class ClusteringTest : MonoBehaviour
 {
-    public const int maxNumClusters = 16; // ! do not change
-    public const int kernelSize = 8; // ! must match shader
+    /// <summary>
+    /// Must match the shader.
+    /// </summary>
+    public const int maxNumClusters = 32;
+
+    /// <summary>
+    /// Must match the shader.
+    /// </summary>
+    public const int kernelSize = 16;
     public const int fullTextureSize = 512;
 
     public Stack<WorkList> workLists;

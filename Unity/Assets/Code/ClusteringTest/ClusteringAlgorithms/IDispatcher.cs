@@ -2,6 +2,9 @@ using System;
 
 namespace ClusteringAlgorithms
 {
+    /// <summary>
+    /// Call <see cref="Dispose" /> after using.
+    /// </summary>
     public interface IDispatcher : IDisposable
     {
         bool doRandomizeEmptyClusters { get; }

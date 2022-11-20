@@ -4,10 +4,13 @@ using System;
 using System.Collections.Generic;
 using static Diagnostics;
 
+/// <summary>
+/// Call <see cref="Dispose" /> after using.
+/// </summary>
 public class MeasurementRunner : IDisposable
 {
     private const int sectionLength = 1000;
-    private const int totalSections = 100; // counting repeats as unique sections
+    private const int totalSections = 10; // counting repeats as unique sections
 
     private class VideoSection
     {
@@ -437,10 +440,16 @@ public class MeasurementRunner : IDisposable
 
         this.csHighlightRemoval.Dispatch(
             this.kernelShowResult,
-            this.launchParameters.dispatcher.clusteringRTsAndBuffers.rtResult.width
-                / ClusteringTest.kernelSize,
-            this.launchParameters.dispatcher.clusteringRTsAndBuffers.rtResult.height
-                / ClusteringTest.kernelSize,
+            Math.Max(
+                this.launchParameters.dispatcher.clusteringRTsAndBuffers.rtResult.width
+                    / ClusteringTest.kernelSize,
+                1
+            ),
+            Math.Max(
+                this.launchParameters.dispatcher.clusteringRTsAndBuffers.rtResult.height
+                    / ClusteringTest.kernelSize,
+                1
+            ),
             1
         );
 

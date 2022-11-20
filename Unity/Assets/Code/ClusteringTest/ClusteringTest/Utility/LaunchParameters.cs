@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace WorkGeneration
 {
+    /// <summary>
+    /// Call <see cref="Dispose" /> after using.
+    /// </summary>
     public class LaunchParameters : IDisposable
     {
         [Serializable]
