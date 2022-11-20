@@ -1,3 +1,5 @@
+using static Diagnostics;
+
 namespace ClusteringAlgorithms
 {
     /// <summary>
@@ -12,14 +14,18 @@ namespace ClusteringAlgorithms
             this.wrappedDispatcher = wrappedDispatcher;
             if (wrappedDispatcher.usesStopCondition)
             {
-                throw new System.InvalidOperationException(
-                    "WrapperArtificialReadback must be given a dispatcher, which does not use stop condition."
+                Throw(
+                    new System.InvalidOperationException(
+                        "WrapperArtificialReadback must be given a dispatcher, which does not use stop condition."
+                    )
                 );
             }
             if (wrappedDispatcher.doesReadback)
             {
-                throw new System.InvalidOperationException(
-                    "WrapperArtificialReadback must be given a dispatcher, which does not use readback."
+                Throw(
+                    new System.InvalidOperationException(
+                        "WrapperArtificialReadback must be given a dispatcher, which does not use readback."
+                    )
                 );
             }
         }

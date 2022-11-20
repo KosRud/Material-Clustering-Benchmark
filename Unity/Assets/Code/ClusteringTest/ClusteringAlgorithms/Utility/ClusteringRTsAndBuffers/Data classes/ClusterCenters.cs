@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using static Diagnostics;
 
 namespace ClusteringAlgorithms
 {
@@ -82,13 +83,13 @@ namespace ClusteringAlgorithms
                 if (float.IsNaN(center.x) || float.IsNaN(center.y))
                 {
                     LogClusterCenters(numClusters, centersBufferData);
-                    throw new System.Exception("NaN in shader");
+                    Throw("NaN in shader");
                 }
 
                 if (center.x < -0.5 || center.x > 0.5 || center.y < -0.5 || center.y > 0.5)
                 {
                     LogClusterCenters(numClusters, centersBufferData);
-                    throw new System.Exception($"invalid cluster center record: {center}");
+                    Throw($"invalid cluster center record: {center}");
                 }
             }
 

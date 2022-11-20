@@ -144,13 +144,24 @@ public class MeasurementRunner : IDisposable
 
     public BenchmarkReport GetReport()
     {
+        ABenchmarkMeasurement measurement = null;
+        switch (this.logType)
+        {
+            case ClusteringTest.LogType.Variance:
+                measurement = this.benchmarkMeasurementVariance;
+                break;
+            case ClusteringTest.LogType.FrameTime:
+                measurement = this.benchmarkMeasurementFrameTime;
+                break;
+            default:
+                Throw(
+                    new System.NotImplementedException($"Log type not implemented: {this.logType}")
+                );
+                break;
+        }
+
         return new BenchmarkReport(
-            measurement: this.logType switch
-            {
-                ClusteringTest.LogType.Variance => this.benchmarkMeasurementVariance,
-                ClusteringTest.LogType.FrameTime => this.benchmarkMeasurementFrameTime,
-                _ => throw new System.NotImplementedException()
-            },
+            measurement: measurement,
             serializableLaunchParameters: this.launchParameters.GetSerializable(),
             logType: this.logType
         );
@@ -309,7 +320,8 @@ public class MeasurementRunner : IDisposable
                 ProcessFrame_FrameTimeMode();
                 break;
             default:
-                throw new System.NotImplementedException();
+                new System.NotImplementedException($"Log type not implemented: {this.logType}");
+                break;
         }
 
         this.AdvanceFrame();

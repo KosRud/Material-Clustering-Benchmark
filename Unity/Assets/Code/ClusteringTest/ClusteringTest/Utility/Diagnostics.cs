@@ -9,7 +9,7 @@ public static class Diagnostics
     {
         if (!val)
         {
-            ThrowOrLog(new System.Exception(message));
+            Throw(message);
         }
     }
 
@@ -22,11 +22,11 @@ public static class Diagnostics
     {
         if (!val)
         {
-            ThrowOrLog(exception);
+            Throw(exception);
         }
     }
 
-    private static void ThrowOrLog(System.Exception exception)
+    public static void Throw(System.Exception exception)
     {
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
@@ -35,5 +35,10 @@ public static class Diagnostics
         System.IO.File.WriteAllText("Error.txt", exception.ToString());
         UnityEngine.Application.Quit();
 #endif
+    }
+
+    public static void Throw(string message)
+    {
+        Throw(new System.Exception(message));
     }
 }

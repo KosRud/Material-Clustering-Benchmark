@@ -1,5 +1,5 @@
 using UnityEngine.Pool;
-using UnityEngine;
+using static Diagnostics;
 
 namespace ClusteringAlgorithms
 {
@@ -12,8 +12,10 @@ namespace ClusteringAlgorithms
             this.wrappedDispatcher = wrappedDispatcher;
             if (wrappedDispatcher.usesStopCondition)
             {
-                throw new System.InvalidOperationException(
-                    "WrapperStopCondition must be given a dispatcher, which does not use stop condition."
+                Throw(
+                    new System.InvalidOperationException(
+                        "WrapperStopCondition must be given a dispatcher, which does not use stop condition."
+                    )
                 );
             }
         }

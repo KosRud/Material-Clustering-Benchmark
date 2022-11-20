@@ -1,8 +1,10 @@
+using static Diagnostics;
+
 public static class JitterPattern
 {
     public static int[][] Get(int size)
     {
-        return size switch
+        int[][] pattern = size switch
         {
             32
               => new int[][]
@@ -1393,7 +1395,14 @@ public static class JitterPattern
               },
 
             1 => new int[][] { new int[] { 0, 0 }, },
-            _ => throw new System.NotImplementedException()
+            _ => null
         };
+
+        Assert(
+            pattern != null,
+            new System.NotImplementedException($"Jitter pattern not implemented for size={size}")
+        );
+
+        return pattern;
     }
 }
