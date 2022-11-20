@@ -1,5 +1,5 @@
 using UnityEngine.Pool;
-using UnityEngine;
+using static Diagnostics;
 
 namespace ClusteringAlgorithms
 {
@@ -12,8 +12,10 @@ namespace ClusteringAlgorithms
             this.wrappedDispatcher = wrappedDispatcher;
             if (wrappedDispatcher.usesStopCondition)
             {
-                throw new System.InvalidOperationException(
-                    "WrapperStopCondition must be given a dispatcher, which does not use stop condition."
+                Throw(
+                    new System.InvalidOperationException(
+                        "WrapperStopCondition must be given a dispatcher, which does not use stop condition."
+                    )
                 );
             }
         }
@@ -28,13 +30,14 @@ namespace ClusteringAlgorithms
         */
         public bool doesReadback => true;
         public bool usesStopCondition => true;
+        public int warningCounter => this.wrappedDispatcher.warningCounter;
 
         public virtual string name => this.wrappedDispatcher.name;
         public bool doRandomizeEmptyClusters => this.wrappedDispatcher.doRandomizeEmptyClusters;
         public int numIterations => this.wrappedDispatcher.numIterations;
         public ClusteringRTsAndBuffers clusteringRTsAndBuffers =>
             this.wrappedDispatcher.clusteringRTsAndBuffers;
-        public DispatcherParameters parameters => this.wrappedDispatcher.parameters;
+        public DispatcherParameters abstractParameters => this.wrappedDispatcher.abstractParameters;
 
         public void UpdateClusterCenters(ClusteringTextures clusteringTextures, bool rejectOld)
         {
@@ -44,12 +47,9 @@ namespace ClusteringAlgorithms
             );
         }
 
-        public void AttributeClusters(ClusteringTextures clusteringTextures, bool khm)
+        public void AttributeClustersKM(ClusteringTextures clusteringTextures)
         {
-            this.wrappedDispatcher.AttributeClusters(
-                clusteringTextures: clusteringTextures,
-                khm: khm
-            );
+            this.wrappedDispatcher.AttributeClustersKM(clusteringTextures: clusteringTextures);
         }
 
         public bool useFullResTexRef => this.wrappedDispatcher.useFullResTexRef;

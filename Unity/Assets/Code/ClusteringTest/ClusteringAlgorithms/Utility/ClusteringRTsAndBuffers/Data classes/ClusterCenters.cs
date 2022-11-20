@@ -1,17 +1,22 @@
 using UnityEngine;
 using System.Collections.Generic;
+using static Diagnostics;
 
 namespace ClusteringAlgorithms
 {
+    /// <summary>
+    /// Call <see cref="Dispose" /> after using.
+    /// </summary>
     public class ClusterCenters : System.IDisposable
     {
-        // 2-dimensional values in range [0, 1] => 10 is impossibly large
-        public const int invalidVariance = 10;
-
         public Vector4[] centers;
         public float? variance;
+        public float? oldVariance;
+        public bool warning;
 
         private readonly int numClusters;
+
+        private static System.Text.StringBuilder sb = new System.Text.StringBuilder("", 4096);
 
         private static readonly Dictionary<
             int,
@@ -22,11 +27,11 @@ namespace ClusteringAlgorithms
         {
             if (pools.ContainsKey(numClusters) == false)
             {
-                int localNumClusters = numClusters; // local copy prevent variable capture in lambda
+                int localNumClusters = numClusters; // local copy to prevent variable capture in lambda
                 pools.Add(
                     numClusters,
                     new ObjectPoolMaxAssert<ClusterCenters>(
-                        createFunc: () => new ClusterCenters(localNumClusters),
+                        createFunc: () => new ClusterCenters(localNumClusters), // lambda
                         maxActive: 4
                     )
                 );
@@ -39,11 +44,28 @@ namespace ClusteringAlgorithms
         {
             this.numClusters = numClusters;
             this.centers = new Vector4[this.numClusters * 2];
+            this.warning = false;
         }
 
         public void Dispose()
         {
             pools[this.numClusters].Release(this);
+        }
+
+        private static bool AreAllClusterCentersEmpty(int numClusters, Vector4[] centersBufferData)
+        {
+            for (int i = 0; i < numClusters; i++)
+            {
+                Vector4 center = centersBufferData[i];
+
+                // 1 = not empty
+                // 0 = empty
+                if (center.w > 0.5)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>
@@ -52,9 +74,10 @@ namespace ClusteringAlgorithms
         /// <returns></returns>
         public static ClusterCenters Get(int numClusters, Vector4[] centersBufferData)
         {
-            ClusterCenters obj = GetPool(numClusters).Get();
+            ClusterCenters clusterCenters = GetPool(numClusters).Get();
+            clusterCenters.warning = false;
 
-            centersBufferData.CopyTo(obj.centers, 0);
+            centersBufferData.CopyTo(clusterCenters.centers, 0);
 
             for (int i = 0; i < numClusters; i++)
             {
@@ -63,51 +86,85 @@ namespace ClusteringAlgorithms
                 if (float.IsNaN(center.x) || float.IsNaN(center.y))
                 {
                     LogClusterCenters(numClusters, centersBufferData);
-                    throw new System.Exception("NaN in shader");
+                    Throw("NaN in shader");
                 }
 
                 if (center.x < -0.5 || center.x > 0.5 || center.y < -0.5 || center.y > 0.5)
                 {
                     LogClusterCenters(numClusters, centersBufferData);
-                    throw new System.Exception($"invalid cluster center record: {center}");
+                    Throw($"invalid cluster center record: {center}");
                 }
             }
 
             /*
-              return first valid variance
-              they are all equal
-      
-              each cluster center contains overall variance
-              not just for this cluster center
+                z = ...
+
+                positive number 	==	valid variance
+                -1 					==	not a single pixel has sufficient chromatic component
+
+                |0              |numClusters	|
+                |---------------|---------------|
+                |  new centers	| old centers	|
             */
-
-            for (int i = 0; i < numClusters; i++)
+            if (centersBufferData[numClusters].z < -0.5)
             {
-                Vector4 center = centersBufferData[i];
-
-                if (center.z < invalidVariance)
-                {
-                    obj.variance = center.z;
-                    return obj;
-                }
+                // not a single pixel has sufficient chromatic component
+                clusterCenters.oldVariance = null;
+            }
+            else
+            {
+                clusterCenters.oldVariance = centersBufferData[numClusters].z;
             }
 
-            obj.variance = null;
+            /*
+                z = ...
+                
+                positive number = valid variance
+                -1 = not a single pixel has sufficient chromatic component
 
-            LogClusterCenters(numClusters, centersBufferData);
-            Debug.Log("[Warning] All clusters are empty");
+                |0              |numClusters	|
+                |---------------|---------------|
+                |  new centers	| old centers	|
+            */
+            if (centersBufferData[0].z < -0.5)
+            {
+                // not a single pixel has sufficient chromatic component
+                clusterCenters.variance = null;
+                clusterCenters.warning = true;
+                Debug.LogWarning("Not a single pixel has sufficient chromatic component");
+                return clusterCenters;
+            }
+            else
+            {
+                clusterCenters.variance = centersBufferData[0].z;
+            }
 
-            return obj;
+            if (AreAllClusterCentersEmpty(numClusters, centersBufferData))
+            {
+                clusterCenters.warning = true;
+                Debug.LogWarning("All cluster centers are empty!");
+                LogClusterCenters(numClusters, centersBufferData);
+            }
+
+            return clusterCenters;
         }
 
-        private static void LogClusterCenters(int numClusters, Vector4[] centersBufferData)
+        public static void LogClusterCenters(int numClusters, Vector4[] centersBufferData)
         {
+            sb.Clear();
+            sb.AppendLine("New cluster records: \n");
             for (int i = 0; i < numClusters; i++)
             {
-                Vector4 center = centersBufferData[i];
-
-                Debug.Log(center);
+                sb.Append($"{i, 4}  |  ");
+                sb.AppendLine(centersBufferData[i].ToString());
             }
+            sb.AppendLine("\nOld cluster records: \n");
+            for (int i = numClusters; i < numClusters * 2; i++)
+            {
+                sb.Append($"{i, 4}  |  ");
+                sb.AppendLine(centersBufferData[i].ToString());
+            }
+            Debug.Log(sb);
         }
 
         public class InvalidClustersException : System.Exception

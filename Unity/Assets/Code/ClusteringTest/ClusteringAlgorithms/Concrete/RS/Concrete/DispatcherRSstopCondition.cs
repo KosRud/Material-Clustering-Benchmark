@@ -8,7 +8,7 @@ namespace ClusteringAlgorithms
             ComputeShader computeShader,
             bool doRandomizeEmptyClusters,
             bool useFullResTexRef,
-            int numIterationsKM,
+            ADispatcherRS.Parameters parameters,
             ClusteringRTsAndBuffers clusteringRTsAndBuffers
         )
             : base(
@@ -16,7 +16,7 @@ namespace ClusteringAlgorithms
                 numIterations: 1,
                 doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                 useFullResTexRef: useFullResTexRef,
-                numIterationsKm: numIterationsKM,
+                parameters: parameters,
                 clusteringRTsAndBuffers: clusteringRTsAndBuffers
             ) { }
 
@@ -31,31 +31,54 @@ namespace ClusteringAlgorithms
         {
             this.KMiteration(clusteringTextures, rejectOld: true);
 
-            int failedSwaps = 0;
+            int numFailedSwaps = 0;
 
-            for (int i = 1; ; i += this._parameters.numIterationsKm)
+            for (int i = 1; ; i += this.parameters.numIterationsKm)
             {
                 this.RandomSwap(clusteringTextures);
 
-                for (int k = 0; k < this._parameters.numIterationsKm; k++)
+                for (int k = 0; k < this.parameters.numIterationsKm; k++)
                 {
                     this.KMiteration(clusteringTextures, rejectOld: false);
                 }
 
-                float varianceChange = this.ValidateCandidatesReadback();
-
-                if (varianceChange > 0)
+                using (
+                    ADispatcherRS.RandomSwapResult randomSwapResult =
+                        this.ValidateCandidatesReadback()
+                )
                 {
-                    failedSwaps++;
-
-                    if (failedSwaps > StopCondition.maxFailedSwaps)
+                    switch (randomSwapResult.stopConditionOverride)
                     {
-                        return;
+                        case RandomSwapResult.StopConditionOverride.Stop:
+                            return;
+                        case RandomSwapResult.StopConditionOverride.KeepRunning:
+                            continue;
+                        case RandomSwapResult.StopConditionOverride.Default:
+                            if (randomSwapResult.swapFailed)
+                            {
+                                // failed swap
+
+                                numFailedSwaps++;
+                                if (numFailedSwaps > StopCondition.maxFailedSwaps)
+                                {
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                // successful swap
+
+                                if (
+                                    randomSwapResult.varianceReduction
+                                    < StopCondition.varianceChangeThreshold
+                                )
+                                {
+                                    return;
+                                }
+                            }
+
+                            continue;
                     }
-                }
-                else if (-varianceChange < StopCondition.varianceChangeThreshold)
-                {
-                    return;
                 }
             }
         }

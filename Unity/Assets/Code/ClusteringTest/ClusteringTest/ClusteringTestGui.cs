@@ -1,6 +1,7 @@
 using UnityEngine;
 using WorkGeneration;
 using System.Collections.Generic;
+using static Diagnostics;
 
 public class ClusteringTestGui : MonoBehaviour
 {
@@ -24,23 +25,44 @@ public class ClusteringTestGui : MonoBehaviour
         }
     }
 
-    private bool noGcAvailable;
+    private GUIStyle guiStyle;
+
+    private void InitGuiStyle()
+    {
+        const int size = 16;
+        Texture2D guiBackgroundTex = new Texture2D(size, size);
+        Color[] colors = new Color[size * size];
+        for (int i = 0; i < size * size; i++)
+        {
+            colors[i] = Color.black;
+        }
+        guiBackgroundTex.SetPixels(colors);
+        guiBackgroundTex.Apply();
+
+        this.guiStyle = new GUIStyle();
+        guiStyle.normal.background = guiBackgroundTex;
+    }
 
     private void Awake()
     {
-        Debug.Assert(this.videos.Length != 0);
+        Assert(this.videos.Length != 0, "No video files provided.");
+        foreach (UnityEngine.Video.VideoClip video in this.videos)
+        {
+            Assert(
+                video.width == video.height,
+                $"Video file {video.name} does not have height equal to width. This is unsuppoted to simplify implementation."
+            );
+            Assert(
+                video.width >= ClusteringTest.fullTextureSize,
+                $"Video file {video.name} has smaller resolution than required. File resolution: {video.width}; required: {ClusteringTest.fullTextureSize}."
+            );
+        }
+        Assert(
+            System.Diagnostics.Stopwatch.IsHighResolution,
+            "High resolution timer not available."
+        );
 
-        this.noGcAvailable = false;
-        try
-        {
-            System.GC.TryStartNoGCRegion(0);
-            this.noGcAvailable = true;
-            System.GC.EndNoGCRegion();
-        }
-        catch (System.NotImplementedException)
-        {
-            Debug.Log("No GC region not implemented!");
-        }
+        InitGuiStyle();
 
         this.workOptions = new List<WorkOption>();
 
@@ -77,6 +99,16 @@ public class ClusteringTestGui : MonoBehaviour
         this.workOptions.Add(
             new WorkOption(
                 new RSnumKM(
+                    kernelSize: ClusteringTest.kernelSize,
+                    videos: this.videos,
+                    csHighlightRemoval: this.csHighlightRemoval
+                ).GenerateWork()
+            )
+        );
+
+        this.workOptions.Add(
+            new WorkOption(
+                new KHMp(
                     kernelSize: ClusteringTest.kernelSize,
                     videos: this.videos,
                     csHighlightRemoval: this.csHighlightRemoval
@@ -125,56 +157,63 @@ public class ClusteringTestGui : MonoBehaviour
         );
     }
 
+    private static void GuiLine()
+    {
+        GUILayout.Label("-----------------------------------------");
+    }
+
+    /// <summary>
+    /// Warning: even empty <see cref="OnGUI" /> function creates GC allocations! For frame time measurements to be accurate there should be no GC allocations.
+    /// </summary>
     private void OnGUI()
     {
-        GUILayout.BeginVertical();
+        GUILayout.BeginVertical(guiStyle);
         {
-            foreach (WorkOption option in this.workOptions)
+            if (this.clusteringTest.enabled)
             {
-                option.enabled = GUILayout.Toggle(option.enabled, option.workList.name);
-            }
-            if (GUILayout.Button("Start"))
-            {
-                if (System.IO.Directory.Exists("Reports") == false)
-                {
-                    System.IO.Directory.CreateDirectory("Reports");
-                }
-
                 foreach (WorkOption option in this.workOptions)
                 {
                     if (option.enabled)
                     {
-                        this.clusteringTest.workLists.Push(option.workList);
+                        GUILayout.Label("- " + option.workList.name);
                     }
                 }
-                this.clusteringTest.enabled = true;
 
-                if (this.frameTimeWorkOption.enabled)
-                {
-                    /*
-                        make sure no GC allocations happen,
-                        when measuring frame times
-                        
-                        ! even an empty OnGUI function GC allocates
-                    */
-                    this.enabled = false;
-                }
-            }
-            if (this.clusteringTest.enabled)
-            {
+                GuiLine();
+
                 GUILayout.Label(
                     $"Total: {this.clusteringTest.numTotalFinishedRuns} / {this.clusteringTest.numTotalRuns}"
                 );
                 GUILayout.Label(
                     $"{this.clusteringTest.currentWorkList.name}: {this.clusteringTest.numCurWorkListFinishedRuns} / {this.clusteringTest.numCurWorkListRuns}"
                 );
+                GUILayout.Label($"warnings: {this.clusteringTest.warningCounter}");
+                ;
             }
-        }
-        if (this.noGcAvailable == false)
-        {
-            GUILayout.Label(
-                "No-GC region functionality not available - frame time measurements will be inaccurate!"
-            );
+            else
+            {
+                foreach (WorkOption option in this.workOptions)
+                {
+                    option.enabled = GUILayout.Toggle(option.enabled, option.workList.name);
+                }
+
+                if (GUILayout.Button("Start"))
+                {
+                    if (System.IO.Directory.Exists("Reports") == false)
+                    {
+                        System.IO.Directory.CreateDirectory("Reports");
+                    }
+
+                    foreach (WorkOption option in this.workOptions)
+                    {
+                        if (option.enabled)
+                        {
+                            this.clusteringTest.workLists.Push(option.workList);
+                        }
+                    }
+                    this.clusteringTest.enabled = true;
+                }
+            }
         }
         GUILayout.EndVertical();
     }

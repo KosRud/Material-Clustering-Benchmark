@@ -15,7 +15,7 @@ namespace WorkGeneration
         {
             var workList = new WorkList(
                 ClusteringTest.LogType.Variance,
-                "Empty cluster randomization"
+                "Empty cluster randomization (KM)"
             );
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)

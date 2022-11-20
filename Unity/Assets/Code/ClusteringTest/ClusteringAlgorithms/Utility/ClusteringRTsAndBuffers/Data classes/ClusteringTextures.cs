@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Call <see cref="Dispose" /> after using.
+/// </summary>
 public class ClusteringTextures : System.IDisposable
 {
     public readonly RenderTexture rtInput;

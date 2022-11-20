@@ -4,8 +4,15 @@ using WorkGeneration;
 
 public class ClusteringTest : MonoBehaviour
 {
-    public const int maxNumClusters = 16; // ! do not change
-    public const int kernelSize = 8; // ! must match shader
+    /// <summary>
+    /// Must match the shader.
+    /// </summary>
+    public const int maxNumClusters = 32;
+
+    /// <summary>
+    /// Must match the shader.
+    /// </summary>
+    public const int kernelSize = 16;
     public const int fullTextureSize = 512;
 
     public Stack<WorkList> workLists;
@@ -13,12 +20,11 @@ public class ClusteringTest : MonoBehaviour
     public ComputeShader csHighlightRemoval;
     public const string varianceLogPath = "Variance logs";
 
-    private bool noGcAvailable;
-
     public int numTotalRuns;
     public int numTotalFinishedRuns;
     public int numCurWorkListFinishedRuns;
     public int numCurWorkListRuns;
+    public int warningCounter => this.measurementRunner.warningCounter;
 
     public enum LogType
     {
@@ -50,18 +56,6 @@ public class ClusteringTest : MonoBehaviour
         }
         this.numTotalFinishedRuns = 0;
 
-        this.noGcAvailable = false;
-        try
-        {
-            System.GC.TryStartNoGCRegion(0);
-            this.noGcAvailable = true;
-            System.GC.EndNoGCRegion();
-        }
-        catch (System.NotImplementedException)
-        {
-            Debug.Log("No GC region not implemented!");
-        }
-
         this.currentWorkList = this.workLists.Pop();
         this.numCurWorkListFinishedRuns = 0;
         this.numCurWorkListRuns = this.currentWorkList.runs.Count;
@@ -72,23 +66,10 @@ public class ClusteringTest : MonoBehaviour
             frameStart: this.frameStart,
             frameEnd: this.frameEnd,
             logType: this.currentWorkList.logType,
-            csHighlightRemoval: this.csHighlightRemoval,
-            noGcAvailable: this.noGcAvailable
+            csHighlightRemoval: this.csHighlightRemoval
         );
 
         Debug.Log(this.measurementRunner.paramsJSON);
-    }
-
-    private void CheckTimerPrecision()
-    {
-        if (System.Diagnostics.Stopwatch.IsHighResolution == false)
-        {
-            throw new System.NotSupportedException("High resolution timer not available!");
-        }
-        else
-        {
-            Debug.Log("High resolution timer support check: OK");
-        }
     }
 
     private void OnFinishedRunner()
@@ -121,8 +102,7 @@ public class ClusteringTest : MonoBehaviour
             frameStart: this.frameStart,
             frameEnd: this.frameEnd,
             logType: this.currentWorkList.logType,
-            csHighlightRemoval: this.csHighlightRemoval,
-            noGcAvailable: this.noGcAvailable
+            csHighlightRemoval: this.csHighlightRemoval
         );
 
         Debug.Log(this.measurementRunner.paramsJSON);

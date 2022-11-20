@@ -1,7 +1,9 @@
+using static Diagnostics;
+
 namespace ClusteringAlgorithms
 {
     /// <summary>
-    /// Runs the clustering function from the wrapped dispatcher and performs one (useless) readback after every iteration.
+    /// Runs the clustering function from the wrapped dispatcher and performs one (useless) readback after every iteration. Used to measure the impact of readback on frame times.
     /// </summary>
     public class WrapperArtificialReadback : IDispatcher
     {
@@ -12,14 +14,18 @@ namespace ClusteringAlgorithms
             this.wrappedDispatcher = wrappedDispatcher;
             if (wrappedDispatcher.usesStopCondition)
             {
-                throw new System.InvalidOperationException(
-                    "WrapperArtificialReadback must be given a dispatcher, which does not use stop condition."
+                Throw(
+                    new System.InvalidOperationException(
+                        "WrapperArtificialReadback must be given a dispatcher, which does not use stop condition."
+                    )
                 );
             }
             if (wrappedDispatcher.doesReadback)
             {
-                throw new System.InvalidOperationException(
-                    "WrapperArtificialReadback must be given a dispatcher, which does not use readback."
+                Throw(
+                    new System.InvalidOperationException(
+                        "WrapperArtificialReadback must be given a dispatcher, which does not use readback."
+                    )
                 );
             }
         }
@@ -31,13 +37,14 @@ namespace ClusteringAlgorithms
 
         public bool usesStopCondition => this.wrappedDispatcher.usesStopCondition;
         public bool doesReadback => true;
+        public int warningCounter => this.wrappedDispatcher.warningCounter;
 
         public virtual string name => $"{this.wrappedDispatcher.name} + readback";
         public bool doRandomizeEmptyClusters => this.wrappedDispatcher.doRandomizeEmptyClusters;
         public int numIterations => this.wrappedDispatcher.numIterations;
         public ClusteringRTsAndBuffers clusteringRTsAndBuffers =>
             this.wrappedDispatcher.clusteringRTsAndBuffers;
-        public DispatcherParameters parameters => this.wrappedDispatcher.parameters;
+        public DispatcherParameters abstractParameters => this.wrappedDispatcher.abstractParameters;
 
         public void UpdateClusterCenters(ClusteringTextures clusteringTextures, bool rejectOld)
         {
@@ -47,12 +54,9 @@ namespace ClusteringAlgorithms
             );
         }
 
-        public void AttributeClusters(ClusteringTextures clusteringTextures, bool khm)
+        public void AttributeClustersKM(ClusteringTextures clusteringTextures)
         {
-            this.wrappedDispatcher.AttributeClusters(
-                clusteringTextures: clusteringTextures,
-                khm: khm
-            );
+            this.wrappedDispatcher.AttributeClustersKM(clusteringTextures: clusteringTextures);
         }
 
         public bool useFullResTexRef => this.wrappedDispatcher.useFullResTexRef;

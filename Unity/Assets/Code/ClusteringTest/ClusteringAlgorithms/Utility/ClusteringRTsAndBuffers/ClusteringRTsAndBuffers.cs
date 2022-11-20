@@ -1,7 +1,12 @@
 using UnityEngine;
+using System;
+using static Diagnostics;
 
 namespace ClusteringAlgorithms
 {
+    /// <summary>
+    /// Call <see cref="Allocate" /> before using and <see cref="Dispose" /> after using.
+    /// </summary>
     public class ClusteringRTsAndBuffers : System.IDisposable
     {
         public const int max_num_clusters = 32;
@@ -19,7 +24,8 @@ namespace ClusteringAlgorithms
         private int[][] jitterOffsets;
 
         /// <summary>
-        /// Get a pooled instance of ClusterCenters with a copy of the data from ComputeBuffer. Safe to modify. Don't forget to dispose!
+        /// Get a pooled instance of ClusterCenters with a copy of the data from ComputeBuffer. Safe to modify.<para />
+        /// Don't forget to dispose.
         /// </summary>
         /// <returns></returns>
         public ClusterCenters GetClusterCenters()
@@ -40,7 +46,8 @@ namespace ClusteringAlgorithms
         private Vector4[] clusterCentersTempData;
 
         /// <summary>
-        /// For working resolution
+        /// Integer coordinates for working resolution texture.<para />
+        /// These positions are used for <see cref="ADispatcherRS" /> (random swap) and for randomizing empty clusters <see cref="ADispatcher.doRandomizeEmptyClusters" />.
         /// </summary>
         private Position[] randomPositions;
         private System.Random random;
@@ -96,7 +103,10 @@ namespace ClusteringAlgorithms
 
         public void Allocate()
         {
-            Debug.Assert(this.isAllocated == false);
+            Assert(
+                this.isAllocated == false,
+                $"Attempting to allocate already allocated {typeof(ClusteringRTsAndBuffers)}"
+            );
 
             this.rtResult = new RenderTexture(
                 this.workingSize,
@@ -168,14 +178,18 @@ namespace ClusteringAlgorithms
                     // chromaticity axes
                     kkkColor.y,
                     kkkColor.z,
-                    Mathf.Infinity,
+                    // no valid variance
+                    -1,
+                    // empty cluster
                     0
                 ); // "new" cluster center
                 this.clusterCentersTempData[i + this.numClusters] = new Vector4(
                     // chromaticity axes
                     kkkColor.y,
                     kkkColor.z,
-                    Mathf.Infinity,
+                    // no valid variance
+                    -1,
+                    // empty cluster
                     0
                 ); // "old" cluster center
             }
@@ -194,14 +208,18 @@ namespace ClusteringAlgorithms
                     // chromaticity axes
                     kkkColor.y,
                     kkkColor.z,
-                    Mathf.Infinity,
+                    // no valid variance
+                    -1,
+                    // empty cluster
                     0
                 ); // "new" cluster center
                 this.clusterCentersTempData[i + this.numClusters] = new Vector4(
                     // chromaticity axes
                     kkkColor.y,
                     kkkColor.z,
-                    Mathf.Infinity,
+                    // no valid variance
+                    -1,
+                    // empty cluster
                     0
                 ); // "old" cluster center
             }
@@ -260,8 +278,8 @@ namespace ClusteringAlgorithms
 
             csHighlightRemoval.Dispatch(
                 kernelSubsample,
-                this.texturesWorkRes.size / ClusteringTest.kernelSize,
-                this.texturesWorkRes.size / ClusteringTest.kernelSize,
+                Math.Max(this.texturesWorkRes.size / ClusteringTest.kernelSize, 1),
+                Math.Max(this.texturesWorkRes.size / ClusteringTest.kernelSize, 1),
                 1
             );
         }

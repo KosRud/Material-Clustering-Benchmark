@@ -4,13 +4,16 @@ using UnityEngine;
 
 namespace WorkGeneration
 {
+    /// <summary>
+    /// Call <see cref="Dispose" /> after using.
+    /// </summary>
     public class LaunchParameters : IDisposable
     {
         [Serializable]
         public class SerializableLaunchParameters
         {
             [SerializeReference]
-            public DispatcherParameters dispatcherParameters;
+            public DispatcherParameters abstractDispatcherParameters;
 
             public string videoName;
             public int numIterations;
@@ -50,7 +53,7 @@ namespace WorkGeneration
                 this.doDownscale = doDownscale;
                 this.algorithm = algorithm;
                 this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
-                this.dispatcherParameters = dispatcherParameters;
+                this.abstractDispatcherParameters = dispatcherParameters;
                 this.stopCondition = stopCondition;
                 this.useFullResTexRef = useFullResTexRef;
                 this.readback = readback;
@@ -69,7 +72,7 @@ namespace WorkGeneration
                 doDownscale: this.doDownscale,
                 algorithm: this.dispatcher.name,
                 doRandomizeEmptyClusters: this.dispatcher.doRandomizeEmptyClusters,
-                dispatcherParameters: this.dispatcher.parameters,
+                dispatcherParameters: this.dispatcher.abstractParameters,
                 stopCondition: this.dispatcher.usesStopCondition,
                 useFullResTexRef: this.dispatcher.useFullResTexRef,
                 readback: this.dispatcher.doesReadback
