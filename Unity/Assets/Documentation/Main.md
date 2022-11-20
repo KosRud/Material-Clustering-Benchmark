@@ -13,7 +13,7 @@ ClusteringTestGui provides a GUI for selecting and running benchmarks.
 
 [IDispatcher](#ClusteringAlgorithms.IDispatcher) is the interface for dispatchers. Each dispatcher implements a particular clustering algorithm (e.g. [DispatcherKM](#ClusteringAlgorithms.DispatcherKM)). The dispatcher receives a set of parameters upon creation. When clustering with different parameters is required, a new dispatcher is created.
 
-[StopCondition](#ClusteringAlgorithms.StopCondition) is a static class which defines constant for the stoppind condition. Whenever a [dispatcher](#dispatchers) is running with the stopping condition enabled, it references [StopCondition](#ClusteringAlgorithms.StopCondition) to ensure all benchmarks use the same values.
+[StopCondition](#ClusteringAlgorithms.StopCondition) is a static class which defines the constants for the stoppind condition. Whenever a [dispatcher](#dispatchers) is running with the stopping condition enabled, it references [StopCondition](#ClusteringAlgorithms.StopCondition) to ensure all benchmarks use the same values.
 
 [ClusteringRTsAndBuffers](#ClusteringAlgorithms.ClusteringRTsAndBuffers) stores all the textures and buffers needed for the [dispatchers](#ClusteringAlgorithms.IDispatcher) to run.
 
