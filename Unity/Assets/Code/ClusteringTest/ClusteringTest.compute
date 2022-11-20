@@ -75,7 +75,7 @@ inline float is_near_zero(float x){
 	maximize HSI intensity and saturation =>
 		hue is unaffected by diffuse and specular shading
 	
-	can't cluster by hue directly with K-Means, because it is circular
+	can't cluster by hue directly with K-Means because it is circular
 	instead, use I2,I3 plane from I1,I2,I3 color space
 	I2,I3 plane corresponds to HSI chromaticity (hue / saturation)
 */

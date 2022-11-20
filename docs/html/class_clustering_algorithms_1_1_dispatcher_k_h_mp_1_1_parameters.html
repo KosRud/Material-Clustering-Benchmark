@@ -184,7 +184,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Default value of <a class="el" href="class_clustering_algorithms_1_1_dispatcher_k_h_mp_1_1_parameters.html#ac1ea09b62da6e34320af7de62a65d5e0">Parameters.p</a> is 2.5, which we experimentally confirmed to be optimal for our dataset (<a class="el" href="class_benchmark_generation_1_1_k_h_mp.html">BenchmarkGeneration.KHMp</a>). For values above p=3.0 we saw a sharp decline in quality for one of the video files. </p>
-<p >Integer powers are optimized by the compiler to use multiplication instead, which is faster. For non-integer powers <code>pow(a,b)</code> will be replaced with <code>exp2(b * log2(a))</code>, because there is no hardware <code>pow()</code>.</p>
+<p >Integer powers are optimized by the compiler to use multiplication instead, which is faster. For non-integer powers <code>pow(a,b)</code> will be replaced with <code>exp2(b * log2(a))</code> because there is no hardware <code>pow()</code>.</p>
 <p >According to [1]: p=3.5 is the optimal value for 2-dimensional data in a general case; p=3 produces almost as good clustering quality as p=3.5; any value above p=2 should generally outperform K-means; for higher dimensions values of p snould be higher.</p>
 <p >In our application the samples are located on the edges of a triangle in two-dimensional space, which could explain lower value of p being optimal.</p>
 <p >[1] Zhang, B., 2000. Generalized k-harmonic means&ndash;boosting in unsupervised learning. HP LABORATORIES TECHNICAL REPORT HPL, 137. </p>
