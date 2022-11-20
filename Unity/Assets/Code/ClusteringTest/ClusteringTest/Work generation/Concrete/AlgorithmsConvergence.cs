@@ -31,12 +31,12 @@ namespace WorkGeneration
                     );
                 }
 
-                /*AddStopCondtion(
+                AddStopCondtion(
                     workList: workList,
                     video: video,
                     textureSize: textureSize,
                     csHighlightRemoval: this.csHighlightRemoval
-                );*/
+                );
             }
 
             return workList;

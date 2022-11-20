@@ -13,7 +13,7 @@ namespace WorkGeneration
 
         public override WorkList GenerateWork()
         {
-            var workList = new WorkList(ClusteringTest.LogType.Variance, "Scanline jitter");
+            var workList = new WorkList(ClusteringTest.LogType.Variance, "Scanline jitter (KHM)");
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {

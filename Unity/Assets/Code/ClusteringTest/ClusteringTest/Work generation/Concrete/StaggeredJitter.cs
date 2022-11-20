@@ -14,7 +14,7 @@ namespace WorkGeneration
 
         public override WorkList GenerateWork()
         {
-            var workList = new WorkList(ClusteringTest.LogType.Variance, "Staggered jitter");
+            var workList = new WorkList(ClusteringTest.LogType.Variance, "Staggered jitter (KHM)");
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {

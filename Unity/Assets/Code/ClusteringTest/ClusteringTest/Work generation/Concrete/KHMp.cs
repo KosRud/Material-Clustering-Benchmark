@@ -21,7 +21,7 @@ namespace WorkGeneration
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
-                for (float p = 2.0f; p <= 4f; p += 0.1f)
+                for (float p = 2.0f; p <= 4f; p += 0.05f)
                 {
                     workList.runs.Push(
                         new LaunchParameters(
