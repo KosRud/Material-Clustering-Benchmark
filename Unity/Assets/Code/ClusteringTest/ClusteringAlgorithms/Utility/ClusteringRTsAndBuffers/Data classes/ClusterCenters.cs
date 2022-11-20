@@ -8,8 +8,11 @@ namespace ClusteringAlgorithms
         public Vector4[] centers;
         public float? variance;
         public float? oldVariance;
+        public bool warning;
 
         private readonly int numClusters;
+
+        private static System.Text.StringBuilder sb = new System.Text.StringBuilder("", 4096);
 
         private static readonly Dictionary<
             int,
@@ -20,11 +23,11 @@ namespace ClusteringAlgorithms
         {
             if (pools.ContainsKey(numClusters) == false)
             {
-                int localNumClusters = numClusters; // local copy prevent variable capture in lambda
+                int localNumClusters = numClusters; // local copy to prevent variable capture in lambda
                 pools.Add(
                     numClusters,
                     new ObjectPoolMaxAssert<ClusterCenters>(
-                        createFunc: () => new ClusterCenters(localNumClusters),
+                        createFunc: () => new ClusterCenters(localNumClusters), // lambda
                         maxActive: 4
                     )
                 );
@@ -37,6 +40,7 @@ namespace ClusteringAlgorithms
         {
             this.numClusters = numClusters;
             this.centers = new Vector4[this.numClusters * 2];
+            this.warning = false;
         }
 
         public void Dispose()
@@ -67,6 +71,7 @@ namespace ClusteringAlgorithms
         public static ClusterCenters Get(int numClusters, Vector4[] centersBufferData)
         {
             ClusterCenters clusterCenters = GetPool(numClusters).Get();
+            clusterCenters.warning = false;
 
             centersBufferData.CopyTo(clusterCenters.centers, 0);
 
@@ -121,7 +126,8 @@ namespace ClusteringAlgorithms
             {
                 // not a single pixel has sufficient chromatic component
                 clusterCenters.variance = null;
-                Debug.Log("Not a single pixel has sufficient chromatic component");
+                clusterCenters.warning = true;
+                Debug.LogWarning("Not a single pixel has sufficient chromatic component");
                 return clusterCenters;
             }
             else
@@ -131,29 +137,30 @@ namespace ClusteringAlgorithms
 
             if (AreAllClusterCentersEmpty(numClusters, centersBufferData))
             {
+                clusterCenters.warning = true;
+                Debug.LogWarning("All cluster centers are empty!");
                 LogClusterCenters(numClusters, centersBufferData);
-                Debug.Log("All cluster centers are empty");
             }
-
-            /*
-                LogClusterCenters(numClusters, centersBufferData);
-                Debug.Log(
-                    string.Format("variance:{0} / {1}", centersBufferData[0].z, clusterCenters.variance)
-                );
-                Debug.Log("--------------");
-            */
 
             return clusterCenters;
         }
 
         public static void LogClusterCenters(int numClusters, Vector4[] centersBufferData)
         {
+            sb.Clear();
+            sb.AppendLine("New cluster records: \n");
             for (int i = 0; i < numClusters; i++)
             {
-                Vector4 center = centersBufferData[i];
-
-                Debug.Log(center);
+                sb.Append($"{i, 4}  |  ");
+                sb.AppendLine(centersBufferData[i].ToString());
             }
+            sb.AppendLine("\nOld cluster records: \n");
+            for (int i = numClusters; i < numClusters * 2; i++)
+            {
+                sb.Append($"{i, 4}  |  ");
+                sb.AppendLine(centersBufferData[i].ToString());
+            }
+            Debug.Log(sb);
         }
 
         public class InvalidClustersException : System.Exception

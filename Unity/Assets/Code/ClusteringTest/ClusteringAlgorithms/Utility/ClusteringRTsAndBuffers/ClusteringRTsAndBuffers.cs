@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Diagnostics;
 
 namespace ClusteringAlgorithms
 {
@@ -96,7 +97,10 @@ namespace ClusteringAlgorithms
 
         public void Allocate()
         {
-            Debug.Assert(this.isAllocated == false);
+            Assert(
+                this.isAllocated == false,
+                $"Attempting to allocate already allocated {typeof(ClusteringRTsAndBuffers)}"
+            );
 
             this.rtResult = new RenderTexture(
                 this.workingSize,

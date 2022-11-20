@@ -16,6 +16,13 @@ namespace ClusteringAlgorithms
         public abstract bool usesStopCondition { get; }
         public abstract bool doesReadback { get; }
 
+        private int _warningCounter;
+        public int warningCounter
+        {
+            get => _warningCounter;
+            private set { _warningCounter = value; }
+        }
+
         // internal
         public readonly ComputeShader computeShader;
         private readonly int kernelHandleAttributeClusters;
@@ -39,6 +46,7 @@ namespace ClusteringAlgorithms
             this.numIterations = numIterations;
             this.clusteringRTsAndBuffers = clusteringRTsAndBuffers;
             this.useFullResTexRef = useFullResTexRef;
+            this.warningCounter = 0;
         }
 
         public abstract void RunClustering(ClusteringTextures clusteringTextures);
@@ -144,6 +152,11 @@ namespace ClusteringAlgorithms
         {
             using (ClusterCenters backupCenters = this.clusteringRTsAndBuffers.GetClusterCenters())
             {
+                if (backupCenters.warning)
+                {
+                    this.warningCounter++;
+                }
+
                 // We need to perform cluster centers update to get variance. However, we don't want to actually update cluster centers as it would interfere with the benchmarks. So we backup the current cluster centers and restore them afterwards.
                 ClusteringTextures refTextures = this.useFullResTexRef switch
                 {

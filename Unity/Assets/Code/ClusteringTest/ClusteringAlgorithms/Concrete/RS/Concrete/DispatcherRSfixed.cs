@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Diagnostics;
 
 namespace ClusteringAlgorithms
 {
@@ -26,11 +27,12 @@ namespace ClusteringAlgorithms
                 clusteringRTsAndBuffers: clusteringRTsAndBuffers
             )
         {
-            Debug.Assert(
+            Assert(
                 IsNumIterationsValid(
                     iterationsKM: parameters.numIterationsKm,
                     iterations: numIterations
-                )
+                ),
+                "Invalid number of iterations supplied to random swap dispatcher."
             );
 
             this.doReadback = doReadback;

@@ -28,6 +28,7 @@ namespace ClusteringAlgorithms
         */
         public bool doesReadback => true;
         public bool usesStopCondition => true;
+        public int warningCounter => this.wrappedDispatcher.warningCounter;
 
         public virtual string name => this.wrappedDispatcher.name;
         public bool doRandomizeEmptyClusters => this.wrappedDispatcher.doRandomizeEmptyClusters;

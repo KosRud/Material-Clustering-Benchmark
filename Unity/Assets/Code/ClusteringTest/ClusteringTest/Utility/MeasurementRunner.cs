@@ -2,11 +2,12 @@ using UnityEngine;
 using ClusteringAlgorithms;
 using System;
 using System.Collections.Generic;
+using static Diagnostics;
 
 public class MeasurementRunner : IDisposable
 {
     private const int sectionLength = 1000;
-    private const int totalSections = 10; // counting repeats as unique sections
+    private const int totalSections = 100; // counting repeats as unique sections
 
     private class VideoSection
     {
@@ -22,14 +23,14 @@ public class MeasurementRunner : IDisposable
 
     private List<VideoSection> sections;
 
-    private bool loading;
+    private bool loadingVideo;
 
     private void FillSectionList(long numFrames)
     {
         this.sections = new List<VideoSection>();
 
         long numSections = numFrames / sectionLength;
-        Debug.Assert(numSections > 0);
+        Assert(numSections > 0, "Video file has no sections.");
         for (
             long sectionStart = 0;
             sectionStart + sectionLength <= numFrames && sections.Count < totalSections;
@@ -44,14 +45,10 @@ public class MeasurementRunner : IDisposable
         }
     }
 
-    private readonly bool noGcAvailable;
-
     private readonly ComputeShader csHighlightRemoval;
     private readonly int kernelShowResult;
 
     private readonly WorkGeneration.LaunchParameters launchParameters;
-
-    private readonly System.Diagnostics.Stopwatch stopwatch;
 
     private UnityEngine.Video.VideoPlayer videoPlayer;
     private readonly long frameStart;
@@ -62,11 +59,11 @@ public class MeasurementRunner : IDisposable
 
     private readonly ClusteringTest.LogType logType;
 
-    public string paramsJSON => JsonUtility.ToJson(this.launchParameters.GetSerializable());
-
     private long? lastProcessedFrame;
 
+    public string paramsJSON => JsonUtility.ToJson(this.launchParameters.GetSerializable());
     public bool finished;
+    public int warningCounter => this.launchParameters.dispatcher.warningCounter;
 
     /// <summary>
     /// Takes ownership of launchParameters
@@ -77,23 +74,20 @@ public class MeasurementRunner : IDisposable
         long? frameStart,
         long? frameEnd,
         ClusteringTest.LogType logType,
-        ComputeShader csHighlightRemoval,
-        bool noGcAvailable
+        ComputeShader csHighlightRemoval
     )
     {
         this.csHighlightRemoval = csHighlightRemoval;
         this.kernelShowResult = csHighlightRemoval.FindKernel("ShowResult");
         this.logType = logType;
         this.launchParameters = launchParameters;
-        this.stopwatch = new System.Diagnostics.Stopwatch();
         this.lastProcessedFrame = null;
         this.benchmarkMeasurementVariance = new BenchmarkMeasurementVariance();
         this.benchmarkMeasurementFrameTime = new BenchmarkMeasurementFrameTime();
         this.frameEndOrNull = frameEnd;
         this.frameStart = frameStart ?? 0;
-        this.noGcAvailable = noGcAvailable;
         this.finished = false;
-        this.loading = true;
+        this.loadingVideo = true;
 
         if (this.launchParameters.dispatcher.clusteringRTsAndBuffers.isAllocated == false)
         {
@@ -118,7 +112,10 @@ public class MeasurementRunner : IDisposable
 
             TODO robust check
         */
-        Debug.Assert(this.videoPlayer.frame != 0);
+        Assert(
+            this.videoPlayer.frame != 0,
+            "Video player set to frame 0. Normally this does not happen."
+        );
         this.videoPlayer.frame = frameStart ?? 0;
     }
 
@@ -131,12 +128,16 @@ public class MeasurementRunner : IDisposable
 
         int fullTextureSize = this.launchParameters.dispatcher.clusteringRTsAndBuffers.fullSize;
 
-        Debug.Assert(
+        Assert(
             // positive power of 2
             (workingTextureSize & (workingTextureSize - 1)) == 0
-                && workingTextureSize > 0
+                && workingTextureSize > 0,
+            $"Invalid texture size provided to {System.Reflection.MethodBase.GetCurrentMethod().ReflectedType.Name + System.Reflection.MethodBase.GetCurrentMethod().Name}"
         );
-        Debug.Assert(workingTextureSize <= fullTextureSize);
+        Assert(
+            workingTextureSize <= fullTextureSize,
+            "Full texture size can not be smaller than working texture size."
+        );
 
         this.csHighlightRemoval.SetInt("texture_size", workingTextureSize);
     }
@@ -155,15 +156,72 @@ public class MeasurementRunner : IDisposable
         );
     }
 
-    public void ProcessNextFrame(RenderTexture src, RenderTexture dst)
+    private void ProcessFrame_VarianceMode()
+    {
+        this.RunDispatcher();
+
+        if (this.videoPlayer.frame != this.sections[0].start)
+        {
+            this.MakeVarianceLogEntry();
+        }
+    }
+
+    private void ProcessFrame_FrameTimeMode()
     {
         /*
-        if (this.videoPlayer.frame == 500)
+                    in order to re-start the clustering "from scratch"
+                    all we need to do is to reset the cluster centers
+          
+                    clustering only edits:
+                        * attribution texture array
+                        * cluster centers ComputeBuffer
+          
+                    clustering starts with attribution
+                    so the texture array will be messed by the reset of cluster centers
+                */
+
+        using (
+            ClusterCenters clusterCenters =
+                this.launchParameters.dispatcher.clusteringRTsAndBuffers.GetClusterCenters()
+        )
         {
-            this.RenderResult(dst);
-            return;
+            const int numRepetitions = 10;
+
+            float avgTime =
+                BenchmarkHelper.MeasureTime(
+                    () =>
+                    {
+                        for (int i = 0; i < numRepetitions; i++)
+                        {
+                            this.launchParameters.dispatcher.clusteringRTsAndBuffers.SetClusterCenters(
+                                clusterCenters.centers
+                            );
+                            this.RunDispatcher();
+                        }
+
+                        using (
+                            // force current thread to wait until GPU finishes computations
+                            ClusterCenters temp =
+                                this.launchParameters.dispatcher.clusteringRTsAndBuffers.GetClusterCenters()
+                        )
+                        {
+                            // useless line to prevent compiler optimization
+                            temp.centers[0] = temp.centers[1];
+                        }
+                    }
+                ) / numRepetitions;
+
+            this.benchmarkMeasurementFrameTime.frameTimeRecords.Add(
+                new BenchmarkMeasurementFrameTime.FrameTimeRecord(
+                    frameIndex: this.videoPlayer.frame,
+                    time: avgTime
+                )
+            );
         }
-        */
+    }
+
+    private bool IsFrameReady()
+    {
         if (
             // not yet loaded video file
             this.videoPlayer.frame == -1
@@ -173,22 +231,35 @@ public class MeasurementRunner : IDisposable
 
                 TODO robust check
             */
-            || this.videoPlayer.frame != 0 && this.loading
+            || this.videoPlayer.frame != 0 && this.loadingVideo
             // not yet loaded next frame
             || this.lastProcessedFrame == this.videoPlayer.frame
         )
+        {
+            return false;
+        }
+
+        this.loadingVideo = false;
+
+        return true;
+    }
+
+    public void ProcessNextFrame(RenderTexture src, RenderTexture dst)
+    {
+        if (!IsFrameReady())
         {
             Graphics.Blit(src, dst);
             return;
         }
 
-        this.loading = false;
-
         /*
             ProcessNextFrame() should not be called
             after measurements were finished
         */
-        Debug.Assert(this.finished == false);
+        Assert(
+            this.finished == false,
+            $"{System.Reflection.MethodBase.GetCurrentMethod().ReflectedType.Name + System.Reflection.MethodBase.GetCurrentMethod().Name} should not be called after measurements were finished"
+        );
 
         /*
             check, that frames are being processed one by one
@@ -203,20 +274,17 @@ public class MeasurementRunner : IDisposable
                     when jumping from section to section
 
                     setting lastProcessedFrame to null doesn't work
+                        lastProcessedFrame = videoPlayer.frame
+                        means the frame is still loading
 
-                    lastProcessedFrame = videoPlayer.frame
-                    means the frame is still loading
-
-                    setting lastProcessedFrame to null
-                    will loose this information
-                    and we won't know how many frames to skip
+                        setting lastProcessedFrame to null
+                        will loose this information
+                        and we won't know how many frames to skip
                 */
-                if (this.videoPlayer.frame != this.sections[0].start)
-                {
-                    throw new System.Exception(
-                        $"Incorrect frame processing order. Current frame: {this.videoPlayer.frame}. Previous frame: {this.lastProcessedFrame}"
-                    );
-                }
+                Assert(
+                    this.videoPlayer.frame == this.sections[0].start,
+                    $"Incorrect frame processing order. Current frame: {this.videoPlayer.frame}. Previous frame: {this.lastProcessedFrame}"
+                );
             }
         }
         this.lastProcessedFrame = this.videoPlayer.frame;
@@ -232,91 +300,25 @@ public class MeasurementRunner : IDisposable
             doDownscale: this.launchParameters.doDownscale
         );
 
-        if (
-            this.logType == ClusteringTest.LogType.Variance
-            /*
-                at the start of a section cluster centers are randomized
-                and variance is lost
-            */
-            || this.videoPlayer.frame == this.sections[0].start
-        )
+        switch (this.logType)
         {
-            this.RunDispatcher();
-
-            if (this.logType == ClusteringTest.LogType.Variance)
-            {
-                this.MakeVarianceLogEntry();
-            }
-        }
-        else
-        {
-            /*
-                in order to re-start the clustering "from scratch"
-                all we need to do is to reset the cluster centers
-      
-                clustering only edits:
-                    * attribution texture array
-                    * cluster centers ComputeBuffer
-      
-                clustering starts with attribution
-                so the texture array will be messed by the reset of cluster centers
-            */
-
-            using (
-                ClusterCenters clusterCenters =
-                    this.launchParameters.dispatcher.clusteringRTsAndBuffers.GetClusterCenters()
-            )
-            {
-                const int numRepetitions = 10;
-
-                if (this.noGcAvailable)
-                {
-                    Debug.Assert(System.GC.TryStartNoGCRegion(0));
-                }
-                // no GC section
-                {
-                    this.stopwatch.Reset();
-                    this.stopwatch.Start();
-                    // measured section
-                    {
-                        for (int i = 0; i < numRepetitions; i++)
-                        {
-                            this.launchParameters.dispatcher.clusteringRTsAndBuffers.SetClusterCenters(
-                                clusterCenters.centers
-                            );
-                            this.RunDispatcher();
-                        }
-
-                        using (
-                            ClusterCenters temp =
-                                this.launchParameters.dispatcher.clusteringRTsAndBuffers.GetClusterCenters()
-                        )
-                        {
-                            temp.centers[0] = temp.centers[1];
-                            // useless line, safeguard to prevent compiler optimization
-
-                            // force current thread to wait until GPU finishes computations
-                        }
-                    }
-                    this.stopwatch.Stop();
-                }
-                if (this.noGcAvailable)
-                {
-                    GC.EndNoGCRegion();
-                }
-
-                float measuredtimeMS = (float)this.stopwatch.Elapsed.TotalMilliseconds;
-                float avgTime = measuredtimeMS / numRepetitions;
-
-                this.benchmarkMeasurementFrameTime.frameTimeRecords.Add(
-                    new BenchmarkMeasurementFrameTime.FrameTimeRecord(
-                        frameIndex: this.videoPlayer.frame,
-                        time: avgTime
-                    )
-                );
-            }
+            case ClusteringTest.LogType.Variance:
+                this.ProcessFrame_VarianceMode();
+                break;
+            case ClusteringTest.LogType.FrameTime:
+                ProcessFrame_FrameTimeMode();
+                break;
+            default:
+                throw new System.NotImplementedException();
         }
 
+        this.AdvanceFrame();
+
+        this.RenderResult(dst);
+    }
+
+    private void AdvanceFrame()
+    {
         // if the frame we just processed is the last in current section
         if (this.videoPlayer.frame == this.sections[0].end - 1)
         {
@@ -358,13 +360,6 @@ public class MeasurementRunner : IDisposable
         {
             this.videoPlayer.frame++;
         }
-
-        this.RenderResult(dst);
-    }
-
-    public void AdvanceFrame()
-    {
-        this.videoPlayer.StepForward();
     }
 
     /// <summary>
