@@ -2,9 +2,9 @@
 
 ## Table of Contents
 
+* [Documentation](#documentation)
 * [Folders](#folders)
 * [Screenshots](#screenshots)
-* [Documentation](#documentation)
 
 ## Documentation
 
