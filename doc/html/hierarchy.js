@@ -21,7 +21,7 @@ var hierarchy =
     [ "Diagnostics", "class_diagnostics.html", null ],
     [ "ClusteringAlgorithms.DispatcherParameters", "class_clustering_algorithms_1_1_dispatcher_parameters.html", [
       [ "ClusteringAlgorithms.ADispatcherRS.Parameters", "class_clustering_algorithms_1_1_a_dispatcher_r_s_1_1_parameters.html", null ],
-      [ "ClusteringAlgorithms.DispatcherKHM.Parameters", "class_clustering_algorithms_1_1_dispatcher_k_h_m_1_1_parameters.html", null ]
+      [ "ClusteringAlgorithms.DispatcherKHMp.Parameters", "class_clustering_algorithms_1_1_dispatcher_k_h_mp_1_1_parameters.html", null ]
     ] ],
     [ "System.Exception", null, [
       [ "ClusteringAlgorithms.ClusterCenters.InvalidClustersException", "class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html", null ]
@@ -35,7 +35,7 @@ var hierarchy =
       [ "ClusteringAlgorithms.IDispatcher", "interface_clustering_algorithms_1_1_i_dispatcher.html", [
         [ "ClusteringAlgorithms.ADispatcher", "class_clustering_algorithms_1_1_a_dispatcher.html", [
           [ "ClusteringAlgorithms.ASimpleDispatcer", "class_clustering_algorithms_1_1_a_simple_dispatcer.html", [
-            [ "ClusteringAlgorithms.DispatcherKHM", "class_clustering_algorithms_1_1_dispatcher_k_h_m.html", null ],
+            [ "ClusteringAlgorithms.DispatcherKHMp", "class_clustering_algorithms_1_1_dispatcher_k_h_mp.html", null ],
             [ "ClusteringAlgorithms.DispatcherKM", "class_clustering_algorithms_1_1_dispatcher_k_m.html", [
               [ "ClusteringAlgorithms.ADispatcherRS", "class_clustering_algorithms_1_1_a_dispatcher_r_s.html", [
                 [ "ClusteringAlgorithms.DispatcherRSfixed", "class_clustering_algorithms_1_1_dispatcher_r_sfixed.html", null ],

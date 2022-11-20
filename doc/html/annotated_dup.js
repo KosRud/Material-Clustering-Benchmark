@@ -6,7 +6,7 @@ var annotated_dup =
       [ "ASimpleDispatcer", "class_clustering_algorithms_1_1_a_simple_dispatcer.html", "class_clustering_algorithms_1_1_a_simple_dispatcer" ],
       [ "ClusterCenters", "class_clustering_algorithms_1_1_cluster_centers.html", "class_clustering_algorithms_1_1_cluster_centers" ],
       [ "ClusteringRTsAndBuffers", "class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html", "class_clustering_algorithms_1_1_clustering_r_ts_and_buffers" ],
-      [ "DispatcherKHM", "class_clustering_algorithms_1_1_dispatcher_k_h_m.html", "class_clustering_algorithms_1_1_dispatcher_k_h_m" ],
+      [ "DispatcherKHMp", "class_clustering_algorithms_1_1_dispatcher_k_h_mp.html", "class_clustering_algorithms_1_1_dispatcher_k_h_mp" ],
       [ "DispatcherKM", "class_clustering_algorithms_1_1_dispatcher_k_m.html", "class_clustering_algorithms_1_1_dispatcher_k_m" ],
       [ "DispatcherKnecht", "class_clustering_algorithms_1_1_dispatcher_knecht.html", "class_clustering_algorithms_1_1_dispatcher_knecht" ],
       [ "DispatcherParameters", "class_clustering_algorithms_1_1_dispatcher_parameters.html", null ],

@@ -25,18 +25,20 @@
 var NAVTREE =
 [
   [ "Material Clustering Benchmark", "index.html", [
-    [ "Brief Overview", "index.html#autotoc_md6", [
-      [ "Top Level Classes", "index.html#autotoc_md7", null ],
-      [ "Assorted Highlights", "index.html#autotoc_md8", null ]
+    [ "Brief Overview", "index.html#autotoc_md4", [
+      [ "Top Level Classes", "index.html#autotoc_md5", null ],
+      [ "Assorted Highlights", "index.html#autotoc_md6", null ]
     ] ],
     [ "Data Layout", "md__assets__documentation__data__layout.html", [
       [ "ClusteringTextures.rtArr", "md__assets__documentation__data__layout.html#autotoc_md0", [
-        [ "Color representation", "md__assets__documentation__data__layout.html#autotoc_md1", null ],
-        [ "Noisy pixels", "md__assets__documentation__data__layout.html#autotoc_md2", null ],
-        [ "Third component", "md__assets__documentation__data__layout.html#autotoc_md3", null ]
+        [ "Color representation", "md__assets__documentation__data__layout.html#color-representation", null ],
+        [ "Noisy pixels", "md__assets__documentation__data__layout.html#noise-flag", [
+          [ "Corresponding Code:", "md__assets__documentation__data__layout.html#autotoc_md1", null ]
+        ] ],
+        [ "Third component", "md__assets__documentation__data__layout.html#third-component", null ]
       ] ],
-      [ "Compute Buffer", "md__assets__documentation__data__layout.html#autotoc_md4", null ],
-      [ "References", "md__assets__documentation__data__layout.html#autotoc_md5", null ]
+      [ "Compute Buffer", "md__assets__documentation__data__layout.html#autotoc_md2", null ],
+      [ "References", "md__assets__documentation__data__layout.html#autotoc_md3", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -66,8 +68,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_a_dispatcher_8cs.html",
-"class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html#aae19d0455568bcbdd6aafd41a70ea5fc",
-"class_work_generation_1_1_empty_cluster_randomization.html#af4cd40f95b6187c8445985acdb274892"
+"class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html#aafb640b3964e052d947f78eedc609a66",
+"class_work_generation_1_1_frame_time.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

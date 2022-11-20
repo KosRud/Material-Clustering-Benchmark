@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['default_0',['Default',['../class_clustering_algorithms_1_1_a_dispatcher_r_s_1_1_parameters.html#a2ad169c1100b550e46fbde9eaf2eb73d',1,'ClusteringAlgorithms.ADispatcherRS.Parameters.Default()'],['../class_clustering_algorithms_1_1_dispatcher_k_h_m_1_1_parameters.html#a94a4211159cdee3e7ebba212106df379',1,'ClusteringAlgorithms.DispatcherKHM.Parameters.Default()']]],
-  ['dispatcherkhm_1',['DispatcherKHM',['../class_clustering_algorithms_1_1_dispatcher_k_h_m.html#adf67419551365394af21df2ca5c9da46',1,'ClusteringAlgorithms::DispatcherKHM']]],
+  ['default_0',['Default',['../class_clustering_algorithms_1_1_a_dispatcher_r_s_1_1_parameters.html#a2ad169c1100b550e46fbde9eaf2eb73d',1,'ClusteringAlgorithms.ADispatcherRS.Parameters.Default()'],['../class_clustering_algorithms_1_1_dispatcher_k_h_mp_1_1_parameters.html#a48ac46dcfaa42c3f66526fc145ddd6bc',1,'ClusteringAlgorithms.DispatcherKHMp.Parameters.Default()']]],
+  ['dispatcherkhmp_1',['DispatcherKHMp',['../class_clustering_algorithms_1_1_dispatcher_k_h_mp.html#abb59a28b225b86189e44d2a77dfa6b25',1,'ClusteringAlgorithms::DispatcherKHMp']]],
   ['dispatcherkm_2',['DispatcherKM',['../class_clustering_algorithms_1_1_dispatcher_k_m.html#a9ce58d478bc2d36648f1025cdc38a83b',1,'ClusteringAlgorithms::DispatcherKM']]],
   ['dispatcherknecht_3',['DispatcherKnecht',['../class_clustering_algorithms_1_1_dispatcher_knecht.html#a06cc44fc708b9064a7ad3bf9c93f0a15',1,'ClusteringAlgorithms::DispatcherKnecht']]],
   ['dispatcherrsfixed_4',['DispatcherRSfixed',['../class_clustering_algorithms_1_1_dispatcher_r_sfixed.html#a9c94e930ab693ff7f5cd1b765487c271',1,'ClusteringAlgorithms::DispatcherRSfixed']]],
