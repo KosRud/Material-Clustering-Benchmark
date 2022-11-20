@@ -77,7 +77,7 @@ When HSI intensity and/or saturation is low, the hue becomes unstable. Such pixe
 
 $$
 f(\delta) = \begin{cases}
-	1, & \text{if} \quad \left\Vert \pmb{C}(\delta) - \min\limits_{i \in \lbrace\mathrm{R,G,B}\rbrace}C_i(\delta) \right\Vert_1 \geq t \\\\
+	1, & \text{if} \quad \left\Vert \pmb{C}(\delta) - (1,1,1)^T \cdot \min\limits_{i \in \lbrace\mathrm{R,G,B}\rbrace}C_i(\delta) \right\Vert_1 \geq t \\\\
 	0 & \text{otherwise}
 	\end{cases}
 $$

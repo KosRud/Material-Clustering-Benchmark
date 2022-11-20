@@ -162,7 +162,7 @@ Color representation</h2>
 <h2><a class="anchor" id="noise-flag"></a>
 Noisy pixels</h2>
 <p >When HSI intensity and/or saturation is low, the hue becomes unstable. Such pixels will be ignored during clustering by setting \(f(\delta)=0\). The value of \(f(\delta)\) for the given RGB color is determined by the function <code>is_color_valid()</code> in the shader.</p>
-<p >$$ f(\delta) = \begin{cases} 1, &amp; \text{if} \quad \left\Vert \pmb{C}(\delta) - \min\limits_{i \in \lbrace\mathrm{R,G,B}\rbrace}C_i(\delta) \right\Vert_1 \geq t \\ 0 &amp; \text{otherwise} \end{cases} $$</p>
+<p >$$ f(\delta) = \begin{cases} 1, &amp; \text{if} \quad \left\Vert \pmb{C}(\delta) - (1,1,1)^T \cdot \min\limits_{i \in \lbrace\mathrm{R,G,B}\rbrace}C_i(\delta) \right\Vert_1 \geq t \\ 0 &amp; \text{otherwise} \end{cases} $$</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Variable   </th><th class="markdownTableHeadNone">Explanation    </th></tr>
