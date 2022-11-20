@@ -89,7 +89,11 @@ namespace ClusteringAlgorithms
                     Throw("NaN in shader");
                 }
 
-                if (center.x < -0.5 || center.x > 0.5 || center.y < -0.5 || center.y > 0.5)
+                /*
+                    valid values are in range [-0.5; 0.5]
+                    slightly increased range accounts for floating point inaccuracy
+                */
+                if (center.x < -0.6 || center.x > 0.6 || center.y < -0.6 || center.y > 0.6)
                 {
                     LogClusterCenters(numClusters, centersBufferData);
                     Throw($"invalid cluster center record: {center}");
