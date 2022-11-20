@@ -139,6 +139,7 @@ $$
 |Variable|Explanation|
 |----|----|
 |\\(d_\mathrm{min}(\delta)\\)|Euclidean distance between the color \\(\tilde{C}_2(\delta),\tilde{C}_3(\delta)\\) and the nearest cluster center|
+|\\(f(\delta)\\)|[binary flag](#noise-flag) which determines if the pixel is rejected as noise|
 
 # Compute Buffer
 
