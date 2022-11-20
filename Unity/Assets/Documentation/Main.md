@@ -15,7 +15,7 @@ ClusteringTestGui provides a GUI for selecting and running benchmarks.
 
 [StopCondition](#ClusteringAlgorithms.StopCondition) is a static class which defines constant for the stoppind condition. Whenever a [dispatcher](#dispatchers) is running with the stopping condition enabled, it references [StopCondition](#ClusteringAlgorithms.StopCondition) to ensure all benchmarks use the same values.
 
-[ClusteringRTsAndBuffers](#ClusteringAlgorithms.ClusteringRTsAndBuffers) stores all the textures and buffers needed for clustering.
+[ClusteringRTsAndBuffers](#ClusteringAlgorithms.ClusteringRTsAndBuffers) stores all the textures and buffers needed for the [dispatchers](#ClusteringAlgorithms.IDispatcher) to run.
 
 ## Helper Classes
 

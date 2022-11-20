@@ -86,7 +86,7 @@ namespace ClusteringAlgorithms
         public readonly int fullSize;
 
         /// <summary>
-        /// Textures are not allocated in the constructor. Call Allocate() manually before using.
+        /// Textures are not allocated in the constructor. Call <see cref="Allocate" /> manually before using.
         /// </summary>
         public ClusteringRTsAndBuffers(
             int numClusters,
