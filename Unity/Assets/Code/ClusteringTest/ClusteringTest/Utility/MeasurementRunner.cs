@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class MeasurementRunner : IDisposable
 {
     private const int sectionLength = 1000;
-    private const int totalSections = 5; // counting repeats as unique sections
+    private const int totalSections = 10; // counting repeats as unique sections
 
     private class VideoSection
     {
@@ -397,9 +397,8 @@ public class MeasurementRunner : IDisposable
             this final attribution does not create a "bonus" iteration
             because the next frame starts with attribution
         */
-        this.launchParameters.dispatcher.AttributeClusters(
-            this.launchParameters.dispatcher.clusteringRTsAndBuffers.texturesWorkRes,
-            khm: false
+        this.launchParameters.dispatcher.AttributeClustersKM(
+            this.launchParameters.dispatcher.clusteringRTsAndBuffers.texturesWorkRes
         );
     }
 

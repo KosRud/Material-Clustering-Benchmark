@@ -13,6 +13,7 @@ bool reject_old;
 bool store_variance;
 bool do_random_sample_empty_clusters;
 bool KHM;
+float p;	// KHM parameter
 
 uint randomClusterCenter;
 uint subsample_mip_level;
@@ -42,6 +43,14 @@ SamplerState sampler_tex_variance_r;
 
 RWStructuredBuffer<float4> cbuf_cluster_centers;
 RWStructuredBuffer<int4> cbuf_random_positions;
+
+bool isVarianceValid(float x){
+	/*
+		positive number 	|	valid variance
+		-1 					|	not a single pixel has sufficient chromatic component
+	*/
+	return x > -0.5;
+}
 
 static const float3x3 kkk2rgb_matrix = {
 	1,	1, -0.6667,
@@ -144,6 +153,24 @@ void SubSample (uint3 id : SV_DispatchThreadID)
     }
 }
 
+inline float pow2(float x){
+	return x*x;
+}
+
+inline float pow3(float x){
+	return x*x*x;
+}
+
+inline float pow4(float x){
+	return pow2(
+		pow2(x)
+	);
+}
+
+inline float pow5(float x){
+	return pow4(x)*x;
+}
+
 [numthreads(8,8,1)]
 void AttributeClusters (uint3 id : SV_DispatchThreadID)
 {
@@ -177,7 +204,10 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 	for (uint k = 0; k < num_clusters; k++) {
 		float4 result = 0;
 
-		if (!KHM){
+		if (
+			!KHM ||
+			isNearZero(min_dist) // prevent division by zero in KHM
+		){
 			// K-Means weights
 			result.w = (k == clusterID);
 		} else {
@@ -189,34 +219,29 @@ void AttributeClusters (uint3 id : SV_DispatchThreadID)
 
 				Zhang, Bin. "Generalized k-harmonic means--boosting in unsupervised learning." HP LABORATORIES TECHNICAL REPORT HPL 137 (2000).
 			*/
+			
+			float top = pow(abs(min_dist), p-2);
+			float bottom = 1.0;
 
-            if (isNearZero(min_dist)) {
-				// prevent division by zero
-                result.w = (k == clusterID);
-            } else {
-				// abs suppresses compiler warning
-				// it is free in terms of performance
-				// it is passed as a flag to an existing operation
-				// instead of creating a new operation
+			if (k != clusterID) {
+				top *= pow(
+					abs(min_dist / dist_list[k]), 
+					p+2
+				);
+			}
 
-				float top = pow(abs(min_dist), 1.5);
-           		float bottom = 1.0;
+			for (uint n = 0; n < num_clusters; n++){
+				if (n == clusterID) {
+					continue;
+				}
+				
+				bottom += pow(
+					abs(min_dist / dist_list[n]),
+					p
+				);
+			}
 
-
-                if (k != clusterID) {
-                    top *= pow(abs(min_dist / dist_list[k]), 5.5);
-                }
-
-                for (uint n = 0; n < num_clusters; n++){
-                    if (n == clusterID) {
-                        continue;
-                    }
-                    
-                    bottom += pow(abs(min_dist / dist_list[n]), 3.5);
-                }
-
-				result.w = top / (bottom * bottom);
-            }
+			result.w = top / (bottom * bottom);
         }
 
 		if (!included) {
@@ -257,23 +282,36 @@ void RandomSwap (uint3 id : SV_DispatchThreadID)
 	cbuf_cluster_centers[randomClusterCenter].xy = project(sampleCol);
 }
 
-[numthreads(32,1,1)]
+[numthreads(1,1,1)]
 void ValidateCandidates (uint3 id : SV_DispatchThreadID)
 {
-	if (id.x >= num_clusters) {
-		return;
-	}
+	/*
+			|0              |numClusters	|
+			|---------------|---------------|
+			|  new centers	| old centers	|
+	*/
+	float oldVariance = cbuf_cluster_centers[num_clusters].z;
+	float newVariance = cbuf_cluster_centers[0].z;
 
-	float4 old = cbuf_cluster_centers[id.x + num_clusters];
-	float4 candidate = cbuf_cluster_centers[id.x];
+	if (
+		isVarianceValid(newVariance) && (
+			!isVarianceValid(oldVariance) ||
+			newVariance < oldVariance
+		)
+	){
+		// variance improved
 
-	// z is same on all cluster centers
-	// and contains Variance across ALL clusters
-
-	if (candidate.z < old.z) {
-		cbuf_cluster_centers[id.x + num_clusters] = candidate;
+		// save new centers as old
+		for (uint i = 0; i < num_clusters; i++) {
+			cbuf_cluster_centers[i + num_clusters] = cbuf_cluster_centers[i];
+		}
 	} else {
-		cbuf_cluster_centers[id.x] = old;
+		// variance did not improve
+
+		// restore old centers as new
+		for (uint i = 0; i < num_clusters; i++) {
+			cbuf_cluster_centers[i] = cbuf_cluster_centers[i + num_clusters];
+		}
 	}
 }
 

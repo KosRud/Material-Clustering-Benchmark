@@ -8,24 +8,38 @@ namespace ClusteringAlgorithms
         [Serializable]
         public class Parameters : DispatcherParameters
         {
-            public int p;
+            public float p;
 
-            public Parameters(int p)
+            public Parameters(float p)
             {
                 this.p = p;
+            }
+
+			/// <summary>
+			/// Default value of <see cref="Parameters.p"/> is 2.5, which we experimentally confirmed to be optimal for our dataset (<see cref="WorkGeneration.KHMp"/>). For values above p=3.0 we saw a sharp decline in quality for one of the video files.<para />
+			/// Integer powers are optimized by the compiler to use multiplication instead, which is faster. For non-integer powers <c>pow(a,b)</c> will be replaced with <c>exp2(b * log2(a))</c>, because there is no hardware <c>pow()</c>.<para />
+			/// According to [1]: p=3.5 is the optimal value for 2-dimensional data in a general case; p=3 produces almost as good clustering quality as p=3.5; any value above p=2 should generally outperform K-means; for higher dimensions values of p snould be higher.<para />
+			/// In our application the samples are located on the edges of a triangle in two-dimensional space, which could explain lower value of p being optimal.<para />
+			/// [1] Zhang, B., 2000. Generalized k-harmonic means--boosting in unsupervised learning. HP LABORATORIES TECHNICAL REPORT HPL, 137.
+			/// </summary>
+			/// <returns></returns>
+            public static Parameters Default()
+            {
+                return new Parameters(p: 2.5f);
             }
         }
 
         public override bool doesReadback => false;
+        public override DispatcherParameters abstractParameters => this.parameters;
 
-        private readonly Parameters _parameters;
-        public override DispatcherParameters parameters => this._parameters;
+        private readonly Parameters parameters;
 
         public DispatcherKHM(
             ComputeShader computeShader,
             int numIterations,
             bool doRandomizeEmptyClusters,
             bool useFullResTexRef,
+            Parameters parameters,
             ClusteringRTsAndBuffers clusteringRTsAndBuffers
         )
             : base(
@@ -36,7 +50,7 @@ namespace ClusteringAlgorithms
                 clusteringRTsAndBuffers: clusteringRTsAndBuffers
             )
         {
-            this._parameters = new Parameters(3); // hard-coded in shader
+            this.parameters = parameters; // hard-coded in shader
         }
 
         public override string name => "KHM";
@@ -63,7 +77,7 @@ namespace ClusteringAlgorithms
         /// </summary>
         protected void KHMiteration(ClusteringTextures textures)
         {
-            this.AttributeClusters(textures, khm: true);
+            this.AttributeClustersKHM(textures, p: this.parameters.p);
             this.UpdateClusterCenters(textures, rejectOld: false);
         }
 

@@ -34,7 +34,7 @@ namespace ClusteringAlgorithms
         public int numIterations => this.wrappedDispatcher.numIterations;
         public ClusteringRTsAndBuffers clusteringRTsAndBuffers =>
             this.wrappedDispatcher.clusteringRTsAndBuffers;
-        public DispatcherParameters parameters => this.wrappedDispatcher.parameters;
+        public DispatcherParameters abstractParameters => this.wrappedDispatcher.abstractParameters;
 
         public void UpdateClusterCenters(ClusteringTextures clusteringTextures, bool rejectOld)
         {
@@ -44,12 +44,9 @@ namespace ClusteringAlgorithms
             );
         }
 
-        public void AttributeClusters(ClusteringTextures clusteringTextures, bool khm)
+        public void AttributeClustersKM(ClusteringTextures clusteringTextures)
         {
-            this.wrappedDispatcher.AttributeClusters(
-                clusteringTextures: clusteringTextures,
-                khm: khm
-            );
+            this.wrappedDispatcher.AttributeClustersKM(clusteringTextures: clusteringTextures);
         }
 
         public bool useFullResTexRef => this.wrappedDispatcher.useFullResTexRef;

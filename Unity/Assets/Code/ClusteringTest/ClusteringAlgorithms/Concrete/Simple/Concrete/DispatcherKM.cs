@@ -45,7 +45,7 @@ namespace ClusteringAlgorithms
         /// </summary>
         protected void KMiteration(ClusteringTextures textures, bool rejectOld)
         {
-            this.AttributeClusters(textures, khm: false);
+            this.AttributeClustersKM(textures);
             this.UpdateClusterCenters(textures, rejectOld);
         }
 

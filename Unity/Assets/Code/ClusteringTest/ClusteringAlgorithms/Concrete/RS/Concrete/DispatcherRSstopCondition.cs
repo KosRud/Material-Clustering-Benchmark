@@ -8,7 +8,7 @@ namespace ClusteringAlgorithms
             ComputeShader computeShader,
             bool doRandomizeEmptyClusters,
             bool useFullResTexRef,
-            int numIterationsKM,
+            ADispatcherRS.Parameters parameters,
             ClusteringRTsAndBuffers clusteringRTsAndBuffers
         )
             : base(
@@ -16,7 +16,7 @@ namespace ClusteringAlgorithms
                 numIterations: 1,
                 doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                 useFullResTexRef: useFullResTexRef,
-                numIterationsKm: numIterationsKM,
+                parameters: parameters,
                 clusteringRTsAndBuffers: clusteringRTsAndBuffers
             ) { }
 
@@ -33,11 +33,11 @@ namespace ClusteringAlgorithms
 
             int numFailedSwaps = 0;
 
-            for (int i = 1; ; i += this._parameters.numIterationsKm)
+            for (int i = 1; ; i += this.parameters.numIterationsKm)
             {
                 this.RandomSwap(clusteringTextures);
 
-                for (int k = 0; k < this._parameters.numIterationsKm; k++)
+                for (int k = 0; k < this.parameters.numIterationsKm; k++)
                 {
                     this.KMiteration(clusteringTextures, rejectOld: false);
                 }

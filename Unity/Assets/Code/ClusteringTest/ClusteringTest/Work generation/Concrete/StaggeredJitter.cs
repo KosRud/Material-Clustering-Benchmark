@@ -14,7 +14,7 @@ namespace WorkGeneration
 
         public override WorkList GenerateWork()
         {
-            var workList = new WorkList(ClusteringTest.LogType.Variance, "Staggered jitter");
+            var workList = new WorkList(ClusteringTest.LogType.Variance, "Staggered jitter (KHM)");
 
             foreach (UnityEngine.Video.VideoClip video in this.videos)
             {
@@ -39,6 +39,7 @@ namespace WorkGeneration
                                     numIterations: 3,
                                     doRandomizeEmptyClusters: false,
                                     useFullResTexRef: true,
+                                    parameters: DispatcherKHM.Parameters.Default(),
                                     clusteringRTsAndBuffers: new ClusteringRTsAndBuffers(
                                         numClusters: 32,
                                         workingSize: textureSize,

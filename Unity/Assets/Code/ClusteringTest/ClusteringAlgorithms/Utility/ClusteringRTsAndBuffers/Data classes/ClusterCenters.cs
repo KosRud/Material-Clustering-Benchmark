@@ -88,11 +88,14 @@ namespace ClusteringAlgorithms
             }
 
             /*
-                positive number = valid variance
-                -1 = not a single pixel has sufficient chromatic component
+                z = ...
 
-                |0              |numClusters
+                positive number 	==	valid variance
+                -1 					==	not a single pixel has sufficient chromatic component
+
+                |0              |numClusters	|
                 |---------------|---------------|
+                |  new centers	| old centers	|
             */
             if (centersBufferData[numClusters].z < -0.5)
             {
@@ -105,11 +108,14 @@ namespace ClusteringAlgorithms
             }
 
             /*
+                z = ...
+                
                 positive number = valid variance
                 -1 = not a single pixel has sufficient chromatic component
 
-                |0              |numClusters
+                |0              |numClusters	|
                 |---------------|---------------|
+                |  new centers	| old centers	|
             */
             if (centersBufferData[0].z < -0.5)
             {
@@ -140,7 +146,7 @@ namespace ClusteringAlgorithms
             return clusterCenters;
         }
 
-        private static void LogClusterCenters(int numClusters, Vector4[] centersBufferData)
+        public static void LogClusterCenters(int numClusters, Vector4[] centersBufferData)
         {
             for (int i = 0; i < numClusters; i++)
             {

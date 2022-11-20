@@ -1,12 +1,10 @@
 using UnityEngine;
-using System;
 
 namespace ClusteringAlgorithms
 {
     public class DispatcherRSfixed : ADispatcherRS
     {
         public override bool usesStopCondition => false;
-        public override DispatcherParameters parameters => this._parameters;
 
         private readonly bool doReadback;
 
@@ -15,21 +13,24 @@ namespace ClusteringAlgorithms
             int numIterations,
             bool doRandomizeEmptyClusters,
             bool useFullResTexRef,
-            int numIterationsKM,
             bool doReadback,
+            ADispatcherRS.Parameters parameters,
             ClusteringRTsAndBuffers clusteringRTsAndBuffers
         )
             : base(
                 computeShader: computeShader,
                 numIterations: numIterations,
+                parameters: parameters,
                 doRandomizeEmptyClusters: doRandomizeEmptyClusters,
                 useFullResTexRef: useFullResTexRef,
-                numIterationsKm: numIterationsKM,
                 clusteringRTsAndBuffers: clusteringRTsAndBuffers
             )
         {
             Debug.Assert(
-                IsNumIterationsValid(iterationsKM: numIterationsKM, iterations: numIterations)
+                IsNumIterationsValid(
+                    iterationsKM: parameters.numIterationsKm,
+                    iterations: numIterations
+                )
             );
 
             this.doReadback = doReadback;
@@ -43,11 +44,11 @@ namespace ClusteringAlgorithms
         {
             this.KMiteration(clusteringTextures, rejectOld: true);
 
-            for (int i = 1; i < this.numIterations; i += this._parameters.numIterationsKm)
+            for (int i = 1; i < this.numIterations; i += this.parameters.numIterationsKm)
             {
                 this.RandomSwap(clusteringTextures);
 
-                for (int k = 0; k < this._parameters.numIterationsKm; k++)
+                for (int k = 0; k < this.parameters.numIterationsKm; k++)
                 {
                     this.KMiteration(clusteringTextures, rejectOld: false);
                 }
