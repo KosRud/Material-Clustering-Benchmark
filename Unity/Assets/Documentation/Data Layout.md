@@ -4,22 +4,23 @@
 
 Inside the array texture ClusteringTextures.rtArr the following data layout is used:
 
-$$
+
+\f{equation}{
 \begin{aligned}
-	\pmb{T}_k(\delta)       & = \begin{bmatrix}
-		\tilde{C}_2(\delta) w(\delta,k) f(\delta) \\\\
-		\tilde{C}_3(\delta) w(\delta,k) f(\delta) \\\\
-		z_k(\delta) \\\\
+	\boldsymbol{T}_k(\delta)       & = \begin{bmatrix}
+		\tilde{C}_2(\delta) w(\delta,k) f(\delta) \\
+		\tilde{C}_3(\delta) w(\delta,k) f(\delta) \\
+		z_k(\delta) \\
 		w(\delta,k) f(\delta)
 	\end{bmatrix}
 \end{aligned}
-$$
+\f}
 
 |Variable|Explanation|
 |----|----|
-|\\(\pmb{T}_k\\)|4-component floating point texture corresponding to \\(k\\)-th cluster|
+|\\(\boldsymbol{T}_k\\)|4-component floating point texture corresponding to \\(k\\)-th cluster|
 |\\(\delta\\)|pixel|
-|\\(\pmb{\tilde{C}}(\delta)\\)|[color representation](#color-representation) used for material clustering|
+|\\(\boldsymbol{\tilde{C}}(\delta)\\)|[color representation](#color-representation) used for material clustering|
 |\\(w(\delta,k)\\)|weight of \\(k\\)-th cluster for the pixel \\(\delta\\) (1 or 0 in the case of K-Means)<SUP>&lowast;</SUP>|
 |\\(f(\delta)\\)|[binary flag](#noise-flag) which determines if the pixel is rejected as noise|
 |\\(z_k(\delta)\\)|used for storing MSE ([see below](#third-component))|
@@ -28,28 +29,28 @@ $$
 
 ## Color representation {#color-representation}
 
-Color representation \\(\pmb{\tilde{C}}(\delta)\\) is generated from the RGB color of pixel \\(\delta\\) as follows:
+Color representation \\(\boldsymbol{\tilde{C}}(\delta)\\) is generated from the RGB color of pixel \\(\delta\\) as follows:
 
 1. maximize HSI saturation (intensity becomes invalid)
-$$
-\\dot{\pmb{C}} (\delta) = \pmb{C}(\delta) - (1,1,1)^T \cdot \min\limits_{i \in \lbrace\mathrm{R,G,B}\rbrace}C_i(\delta)
-$$
+\f{equation}{
+	\dot{\boldsymbol{C}} (\delta) = \boldsymbol{C}(\delta) - (1,1,1)^T \cdot \min\limits_{i \in \lbrace\mathrm{R,G,B}\rbrace}C_i(\delta)
+\f}
 2. normalize HSI intensity to \\(\frac{1}{3}\\)
-$$
-\ddot{\pmb{C}} (\delta) = \frac{
-	\\dot{\pmb{C}} (\delta)
+\f{equation}{
+\ddot{\boldsymbol{C}} (\delta) = \frac{
+	\dot{\boldsymbol{C}} (\delta)
 }{
-	\Vert \\dot{\pmb{C}} (\delta) \Vert_1
+	\Vert \dot{\boldsymbol{C}} (\delta) \Vert_1
 }
-$$
+\f}
 3. convert from RGB to I<SUB>1</SUB>,I<SUB>2</SUB>,I<SUB>3</SUB> color space [1,2]
-$$
-\pmb{\tilde{C}} = \begin{bmatrix}
-	\phantom{-}\frac{1}{3}\hspace{10px}\phantom{-} 	& \frac{1}{3}\hspace{10px} 	& \phantom{-}\frac{1}{3} \\\\[4pt]
-	\phantom{-}\frac{1}{2}\hspace{10px}\phantom{-} 	& 0\hspace{10px} 			& -\frac{1}{2} \\\\[4px]
+\f{equation}{
+\boldsymbol{\tilde{C}} = \begin{bmatrix}
+	\phantom{-}\frac{1}{3}\hspace{10px}\phantom{-} 	& \frac{1}{3}\hspace{10px} 	& \phantom{-}\frac{1}{3} \\[4pt]
+	\phantom{-}\frac{1}{2}\hspace{10px}\phantom{-} 	& 0\hspace{10px} 			& -\frac{1}{2} \\[4px]
 	-\frac{1}{4}\hspace{10px}\phantom{-} 			& \frac{1}{2}\hspace{10px} 	& -\frac{1}{4}
-\end{bmatrix} \cdot \ddot{\pmb{C}} (\delta)
-$$
+\end{bmatrix} \cdot \ddot{\boldsymbol{C}} (\delta)
+\f}
 
 
 ### Code
@@ -89,16 +90,16 @@ float2 project(float3 col)
 
 When HSI intensity and/or saturation is low, the hue becomes unstable. Such pixels will be ignored during clustering by setting \\(f(\delta)=0\\). The value of \\(f(\delta)\\) for the given RGB color is determined as follows:
 
-$$
+\f{equation}{
 f(\delta) = \begin{cases}
-	1, & \text{if} \quad \left\Vert \pmb{C}(\delta) - (1,1,1)^T \cdot \min\limits_{i \in \lbrace\mathrm{R,G,B}\rbrace}C_i(\delta) \right\Vert_1 \geq t \\\\
+	1, & \text{if} \quad \left\Vert \boldsymbol{C}(\delta) - (1,1,1)^T \cdot \min\limits_{i \in \lbrace\mathrm{R,G,B}\rbrace}C_i(\delta) \right\Vert_1 \geq t \\
 	0 & \text{otherwise}
 	\end{cases}
-$$
+\f}
 
 |Variable|Explanation|
 |----|----|
-|\\(\pmb{C}(\delta)\\)|RGB color of pixel \\(\delta\\)|
+|\\(\boldsymbol{C}(\delta)\\)|RGB color of pixel \\(\delta\\)|
 |\\(t\\)|threshold for determining noisy pixels (we used \\(t=0.05\\))
 
 ### Code
@@ -125,16 +126,16 @@ After the clustering is completed, noisy pixels are assigned to the nearest clus
 
 ## Third component {#third-component}
 
-The third component \\(z_k(\delta)\\) has different values in different \\(\pmb{T}_k\\) textures:
+The third component \\(z_k(\delta)\\) has different values in different \\(\boldsymbol{T}_k\\) textures:
 
-$$
+\f{equation}{
 z_k(\delta) =
 	\begin{cases}
-	d_\mathrm{min}(\delta)^2 f(\delta) & \text{first texture } (k=1) \\\\
-	f(\delta), & \text{second texture } (k=2) \\\\
+	d_\mathrm{min}(\delta)^2 f(\delta) & \text{first texture } (k=1) \\
+	f(\delta), & \text{second texture } (k=2) \\
 	0 & \text{remaining textures}
 	\end{cases}
-$$
+\f}
 
 |Variable|Explanation|
 |----|----|
@@ -147,15 +148,15 @@ Inside the [compute buffer](#ClusteringAlgorithms.ClusteringRTsAndBuffers.cbufCl
 
 |Component|Value|
 |----|----|
-|x, y|cluster center (see [color representation](#color-representation))|
-|z|MSE (or -1, if MSE can not be computed)<SUP>&lowast;</SUP>|
-|w|1 if cluster is not empty, 0 otherwise|
+|`x,y`|cluster center (see [color representation](#color-representation))|
+|`z`|MSE (or -1, if MSE can not be computed)<SUP>&lowast;</SUP>|
+|`w`|1 if cluster is not empty, 0 otherwise|
 
 <SUP>&lowast;</SUP>If all pixels in the frame are [rejected as noise](#noise-flag) (i.e. \\(f(\delta)=0\\) for every \\(\delta\\)), MSE can not be computed.
 
 # References
 
 1. Kahu, S.Y., Raut, R.B., Bhurchandi, K.M.: Review and evaluation of color spaces
-for image/video compression. Color Research & Application 44(1), 8–33 (2019)
+for image/video compression. Color Research & Application 44(1), 8–33 (2019) \f$\label{ref1}\f$
 2. Ohta, Y.I., Kanade, T., Sakai, T.: Color information for region segmentation.
 Computer graphics and image processing 13(3), 222–241 (1980)
