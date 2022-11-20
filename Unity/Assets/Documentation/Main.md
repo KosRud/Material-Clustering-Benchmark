@@ -1,9 +1,7 @@
 \mainpage
 [TOC]
 
-# Brief Overview
-
-## Top Level Classes
+# Top Level Classes
 
 | | |
 |----|-----|
@@ -11,7 +9,7 @@
 |ClusteringTestGui|Provides a GUI for selecting and running benchmarks.|
 |WorkGeneration.AWorkGenerator|Abstract class for benchmark definitions.|
 
-## Assorted Highlights
+# Assorted Highlights
 
 ClusteringAlgorithms.IDispatcher is the interface for dispatchers. Each dispatcher implements a particular clustering algorithm (e.g. ClusteringAlgorithms.DispatcherKM). The dispatcher receives a set of parameters upon creation. When clustering with different parameters is required, a new dispatcher is created.
 
