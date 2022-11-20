@@ -20,4 +20,4 @@ The folder [node-notebook](./node-notebook) contains a [Node.js REPL](https://ma
 
 ## Documentation
 
-Doxygen documentation is available [here](https://kosrud.github.io/Material-Clustering-Benchmark/).
+Doxygen documentation is available [here](https://kosrud.github.io/Material-Clustering-Benchmark/html).
