@@ -9,7 +9,7 @@
 ## Documentation
 
 Doxygen documentation is available [here](https://kosrud.github.io/Material-Clustering-Benchmark/html).\
-Revised data layout: [link](https://kosrud.github.io/Material-Clustering-Benchmark/html/md__assets__documentation__data__layout.html).
+Revised texture layout: [link](https://kosrud.github.io/Material-Clustering-Benchmark/html/md__assets__documentation__data__layout.html).
 
 ## Folders
 
