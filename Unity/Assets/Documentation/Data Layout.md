@@ -23,7 +23,7 @@ Inside the array texture ClusteringTextures.rtArr the following data layout is u
 |\\(\boldsymbol{\tilde{C}}(\delta)\\)|[color representation](#color-representation) used for material clustering|
 |\\(w(\delta,k)\\)|weight of \\(k\\)-th cluster for the pixel \\(\delta\\) (1 or 0 in the case of K-Means)<SUP>&lowast;</SUP>|
 |\\(f(\delta)\\)|[binary flag](#noise-flag) which determines if the pixel is rejected as noise|
-|\\(z_k(\delta)\\)|used for storing MSE ([see below](#third-component))|
+|\\(z_k(\delta)\\)|used for calculating MSE ([see below](#third-component))|
 
 <SUP>&lowast;</SUP> For [KHMp](#ClusteringAlgorithms.DispatcherKHMp) algorithm, weights \\(w(\delta,k)\\) for the given pixel do not add up to 1.
 
