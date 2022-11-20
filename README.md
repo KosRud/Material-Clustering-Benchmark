@@ -5,6 +5,7 @@
 * [Documentation](#documentation)
 * [Folders](#folders)
 * [Screenshots](#screenshots)
+* [ToDo](#todo)
 
 ## Documentation
 
@@ -22,3 +23,9 @@ The folder [node-notebook](./node-notebook) contains a [Node.js REPL](https://ma
 |||
 |----|----|
 |![image](https://user-images.githubusercontent.com/36504423/202903483-30bd083e-47a2-4807-b110-6ff55ac4fd54.png)|![image](https://user-images.githubusercontent.com/36504423/202903522-867759d3-dee4-497d-9b4b-b85498e26813.png)|
+
+## ToDo
+
+### Report Format
+
+JSON files are getting too large. Use SQLite, or separate JSON files for every dispatch.
