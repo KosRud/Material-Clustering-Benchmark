@@ -25,8 +25,9 @@
 var NAVTREE =
 [
   [ "Material Clustering Benchmark", "index.html", [
-    [ "Top Level Classes", "index.html#autotoc_md5", null ],
-    [ "Assorted Highlights", "index.html#autotoc_md6", null ],
+    [ "Overview", "index.html#autotoc_md5", [
+      [ "Helper Classes", "index.html#autotoc_md6", null ]
+    ] ],
     [ "Data Layout", "md__assets__documentation__data__layout.html", [
       [ "Array Texture", "md__assets__documentation__data__layout.html#autotoc_md0", [
         [ "Color representation", "md__assets__documentation__data__layout.html#color-representation", [

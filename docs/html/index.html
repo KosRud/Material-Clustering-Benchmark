@@ -97,32 +97,25 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md5">Top Level Classes</a></li>
-<li class="level1"><a href="#autotoc_md6">Assorted Highlights</a></li>
+<ul><li class="level1"><a href="#autotoc_md5">Overview</a><ul><li class="level2"><a href="#autotoc_md6">Helper Classes</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="textblock"><h1><a class="anchor" id="autotoc_md5"></a>
-Top Level Classes</h1>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone"></th><th class="markdownTableHeadNone"></th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="class_clustering_test.html">ClusteringTest</a>   </td><td class="markdownTableBodyNone">Top-level class responsible for running the benchmarks.    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="class_clustering_test_gui.html">ClusteringTestGui</a>   </td><td class="markdownTableBodyNone">Provides a GUI for selecting and running benchmarks.    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a class="el" href="class_benchmark_generation_1_1_a_benchmark_generator.html">BenchmarkGeneration.ABenchmarkGenerator</a>   </td><td class="markdownTableBodyNone">Abstract class for benchmark generators. Each benchmark contains a list of measurements (dispatches) to perform.    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a class="el" href="class_benchmark_generation_1_1_benchmark_description.html">BenchmarkGeneration.BenchmarkDescription</a>   </td><td class="markdownTableBodyNone">Represents a single benchmark.   </td></tr>
-</table>
-<h1><a class="anchor" id="autotoc_md6"></a>
-Assorted Highlights</h1>
-<p ><a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html" title="Call Dispose after using.">ClusteringAlgorithms.IDispatcher</a> is the interface for dispatchers. Each dispatcher implements a particular clustering algorithm (e.g. <a class="el" href="class_clustering_algorithms_1_1_dispatcher_k_m.html">ClusteringAlgorithms.DispatcherKM</a>). The dispatcher receives a set of parameters upon creation. When clustering with different parameters is required, a new dispatcher is created.</p>
-<p ><a class="el" href="class_object_pool_max_assert.html">ObjectPoolMaxAssert</a> is a wrapper over UnityEngine.Pool.ObjectPool, which throws an exception if the number of objects in the pool exceeds a predetermined threshold. This helps to prevent memory leaks.</p>
-<p ><a class="el" href="class_diagnostics.html">Diagnostics</a> is a static class with custom diagnostics tools (<a class="el" href="class_diagnostics.html#af2c8f2e1cd902d27f552f62aeeee0068">Assert</a>, <a class="el" href="class_diagnostics.html#ad122236eed62502e632b0e85bc334092">Throw</a>). If the aplication is running in the editor, it throws exceptions as usual and stops the editor. If the application is running from a compiled executable, it writes the error into a file Error.txt and closes the application.</p>
-<p ><a class="el" href="class_benchmark_helper.html">BenchmarkHelper</a> is a static class, which provides <a class="el" href="class_benchmark_helper.html#ab64ef0b9dfe4c2a2dd0ed9347a21f400">MeasureTime</a> method for speed benchmarks. <a class="el" href="class_benchmark_helper.html#ab64ef0b9dfe4c2a2dd0ed9347a21f400">MeasureTime</a> ensures that GC is disabled while running the measured function.</p>
+Overview</h1>
+<p ><a class="el" href="class_clustering_test.html">ClusteringTest</a> is the top-level class responsible for running the benchmarks.</p>
+<p ><a class="el" href="class_clustering_test_gui.html">ClusteringTestGui</a> provides a GUI for selecting and running benchmarks.</p>
+<p ><a class="el" href="class_benchmark_generation_1_1_a_benchmark_generator.html">ABenchmarkGenerator</a> is the abstract class for benchmark generators. Each benchmark contains a list of measurements (dispatches) to perform.</p>
+<p ><a class="el" href="class_benchmark_generation_1_1_benchmark_description.html">BenchmarkDescription</a> represents a single benchmark.</p>
+<p ><a class="el" href="interface_clustering_algorithms_1_1_i_dispatcher.html">IDispatcher</a> is the interface for dispatchers. Each dispatcher implements a particular clustering algorithm (e.g. <a class="el" href="class_clustering_algorithms_1_1_dispatcher_k_m.html">DispatcherKM</a>). The dispatcher receives a set of parameters upon creation. When clustering with different parameters is required, a new dispatcher is created.</p>
 <p ><a class="el" href="class_clustering_algorithms_1_1_stop_condition.html">StopCondition</a> is a static class which defines constant for the stoppind condition. Whenever a dispatcher is running with the stopping condition enabled, it references <a class="el" href="class_clustering_algorithms_1_1_stop_condition.html">StopCondition</a> to ensure all benchmarks use the same values.</p>
-<p ><a class="el" href="class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html">ClusteringRTsAndBuffers</a> stores all the textures and buffers needed for clustering. </p>
+<p ><a class="el" href="class_clustering_algorithms_1_1_clustering_r_ts_and_buffers.html">ClusteringRTsAndBuffers</a> stores all the textures and buffers needed for clustering.</p>
+<h2><a class="anchor" id="autotoc_md6"></a>
+Helper Classes</h2>
+<p ><a class="el" href="class_object_pool_max_assert.html">ObjectPoolMaxAssert</a> is a wrapper over UnityEngine.Pool.ObjectPool, which throws an exception if the number of objects in the pool exceeds a predetermined threshold. This helps to prevent memory leaks.</p>
+<p ><a class="el" href="class_diagnostics.html">Diagnostics</a> is a static class that provides custom diagnostics tools (<a class="el" href="class_diagnostics.html#af2c8f2e1cd902d27f552f62aeeee0068">Assert</a>, <a class="el" href="class_diagnostics.html#ad122236eed62502e632b0e85bc334092">Throw</a>). If the aplication is running in the editor, it throws exceptions as usual and stops the editor. If the application is running from a compiled executable, it writes the error into the file <code>Error.txt</code> and closes the application.</p>
+<p ><a class="el" href="class_benchmark_helper.html">BenchmarkHelper</a> is a static class, which provides <a class="el" href="class_benchmark_helper.html#ab64ef0b9dfe4c2a2dd0ed9347a21f400">MeasureTime</a> method for speed benchmarks. <a class="el" href="class_benchmark_helper.html#ab64ef0b9dfe4c2a2dd0ed9347a21f400">MeasureTime</a> ensures that GC is disabled while running the measured function. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
