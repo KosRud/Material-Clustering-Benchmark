@@ -27,25 +27,3 @@ The folder [node-notebook](./node-notebook) contains a [Node.js REPL](https://ma
 <img src="https://user-images.githubusercontent.com/36504423/202917046-b26856c2-d456-4c04-93f4-0e0df29b0dcd.png" width="400">
 
 <div>
-
-## ToDo
-
-### Report Format
-
-Current JSON format is inefficient for both on-disk and in-memory storage. Change how frame/variance data is stored.
-
-Current format:
-```ts
-frameVarianceRecords: {
-    frameIndex: number,
-    variance: number,
-}[]
-```
-New format:
-```ts
-frameVarianceRecords: {
-    frameIndices: number[],
-    varianceValues: number[],
-}
-```
-Also create separate .json reports for each dispatch (currently doing one report per benchmark).
