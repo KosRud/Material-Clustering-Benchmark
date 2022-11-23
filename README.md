@@ -46,5 +46,6 @@ New format:
 frameVarianceRecords: {
     frameIndices: number[],
     varianceValues: number[],
-} 
+}
 ```
+Also create separate .json reports for each dispatch (currently doing one report per benchmark).
