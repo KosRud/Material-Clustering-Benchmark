@@ -32,4 +32,19 @@ The folder [node-notebook](./node-notebook) contains a [Node.js REPL](https://ma
 
 ### Report Format
 
-JSON files are getting too large. Use SQLite, or separate JSON files for every dispatch.
+Current JSON format is inefficient for both on-disk and in-memory storage. Change how frame/variance data is stored.
+
+Current format:
+```ts
+frameVarianceRecords: {
+    frameIndex: number,
+    variance: number,
+}[]
+```
+New format:
+```ts
+frameVarianceRecords: {
+    frameIndices: number[],
+    varianceValues: number[],
+} 
+```
