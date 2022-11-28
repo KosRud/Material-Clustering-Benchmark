@@ -27,9 +27,3 @@ The folder [node-notebook](./node-notebook) contains a [Node.js REPL](https://ma
 <img src="https://user-images.githubusercontent.com/36504423/202917046-b26856c2-d456-4c04-93f4-0e0df29b0dcd.png" width="400">
 
 <div>
-
-## ToDo
-
-### Report Format
-
-JSON files are getting too large. Use SQLite, or separate JSON files for every dispatch.
