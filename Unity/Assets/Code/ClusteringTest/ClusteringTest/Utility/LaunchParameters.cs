@@ -13,7 +13,7 @@ namespace BenchmarkGeneration
         public class SerializableLaunchParameters
         {
             [SerializeReference]
-            public DispatcherParameters abstractDispatcherParameters;
+            public DispatcherParameters dispatcherParameters;
 
             public string videoName;
             public int numIterations;
@@ -53,7 +53,7 @@ namespace BenchmarkGeneration
                 this.doDownscale = doDownscale;
                 this.algorithm = algorithm;
                 this.doRandomizeEmptyClusters = doRandomizeEmptyClusters;
-                this.abstractDispatcherParameters = dispatcherParameters;
+                this.dispatcherParameters = dispatcherParameters;
                 this.stopCondition = stopCondition;
                 this.useFullResTexRef = useFullResTexRef;
                 this.readback = readback;
