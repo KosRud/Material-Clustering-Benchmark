@@ -5,7 +5,10 @@
 * [Documentation](#documentation)
 * [Folders](#folders)
 * [Screenshots](#screenshots)
-* [ToDo](#todo)
+* [Charts](#charts)
+  * [Comparison of Algorithms](#comparison-of-algorithms)
+    * [Stopping Condition](#stopping-condition)
+    * [Fixed Number of Iterations per Frame](#fixed-number-of-iterations-per-frame)
 
 ## Documentation
 
@@ -27,3 +30,20 @@ The folder [node-notebook](./node-notebook) contains a [Node.js REPL](https://ma
 <img src="https://user-images.githubusercontent.com/36504423/202917046-b26856c2-d456-4c04-93f4-0e0df29b0dcd.png" width="400">
 
 <div>
+
+## Charts
+
+### Comparison of Algorithms
+
+#### Stopping Condition
+
+<img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/Stop-condition_video-1.png" width="400">
+<img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/Stop-condition_video-2.png" width="400">
+
+#### Fixed Number of Iterations per Frame
+
+<img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/Algorithm-convergence_video-1.png" width="400">
+<img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/Algorithm-convergence_video-2.png" width="400">
+
+
+
