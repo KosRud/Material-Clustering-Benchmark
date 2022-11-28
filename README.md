@@ -9,6 +9,7 @@
   * [Comparison of Algorithms](#comparison-of-algorithms)
     * [Stopping Condition](#stopping-condition)
     * [Fixed Number of Iterations per Frame](#fixed-number-of-iterations-per-frame)
+    * [KHM parameter p](#khm-parameter-p)
 
 ## Documentation
 
@@ -43,7 +44,12 @@ The folder [node-notebook](./node-notebook) contains a [Node.js REPL](https://ma
 #### Fixed Number of Iterations per Frame
 
 <img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/Algorithm-convergence_video-1.png" width="400">
-<img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/Algorithm-convergence_video-2.png" width="400">
+<img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/Algorithm-convergence_video-2.png" width="400"> 
+ 
+### KHM parameter p
 
-
+<img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/KHMp_video-1.png" width="400">
+<img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/KHMp_video-2.png" width="400">
+ 
+We used the value `p=2.5` for other benchmarks involving KHM
 
