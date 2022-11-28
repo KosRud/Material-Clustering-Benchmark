@@ -34,30 +34,48 @@ The folder [node-notebook](./node-notebook) contains a [Node.js REPL](https://ma
 <div>
 
 ## Charts
-
+ 
 ### Comparison of Algorithms
 
 #### Stopping Condition
-
+ 
+<br><br>
+ 
 <img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/Stop-condition_video-1.png" width="400">
 <img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/Stop-condition_video-2.png" width="400">
 
+<br><br>
+ 
 #### Fixed Number of Iterations per Frame
+ 
+<br><br>
  
 <img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/Algorithm-convergence_video-1.png" width="400">
 <img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/Algorithm-convergence_video-2.png" width="400"> 
  
+<br><br><br><br>
+ 
 <img src="https://github.com/KosRud/Material-Clustering-Benchmark/blob/master/charts/Algorithm-peak_video-1.png" width="400">
 <img src="https://github.com/KosRud/Material-Clustering-Benchmark/blob/master/charts/Algorithm-peak_video-2.png" width="400"> 
  
+<br><br>
+ 
 ### KHM: Parameter p
 
+<br><br>
+ 
 <img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/KHMp_video-1.png" width="400">
 <img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/KHMp_video-2.png" width="400">
- 
+
+<br><br>
+
 We used the value `p=2.5` for other benchmarks involving KHM
- 
+
 ### Random Swap: Number of KM Iterations per Swap
 
+<br><br>
+ 
 <img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/RS_KM-per-swap_video-1.png" width="400">
 <img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/RS_KM-per-swap_video-2.png" width="400">
+
+<br><br>
