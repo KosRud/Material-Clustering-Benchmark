@@ -43,9 +43,6 @@ The folder [node-notebook](./node-notebook) contains a [Node.js REPL](https://ma
 <br><br>
  
 <img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/Stop-condition_video-1.png" width="450">
-
-<br><br>
-
 <img src="https://raw.githubusercontent.com/KosRud/Material-Clustering-Benchmark/master/charts/Stop-condition_video-2.png" width="450">
 
 <br><br>
