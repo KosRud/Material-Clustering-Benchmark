@@ -52,7 +52,7 @@ Color representation \f$ \boldsymbol{\tilde{C}}(\delta) \f$ is generated from th
 \end{bmatrix} \cdot \ddot{\boldsymbol{C}} (\delta)
 \f}
 
-Only 2nd and 3rd components of \f$ \boldsymbol{\tilde{C}}(\delta) \f$ are used for clustering. We can not cluster by hue directly, because it is circular. Instead, we use a two-dimensional representation \f$I_2I_3\f$. Axis \f$I_1\f$ is identical to HSI intensity; the plane \f$ I_2I_3 \f$ corresponds to variations HSI chromaticity (hue/saturation).
+Only 2nd and 3rd components of \f$ \boldsymbol{\tilde{C}}(\delta) \f$ are used for clustering. We can not cluster by hue directly, because it is circular. Instead, we use a two-dimensional representation \f$I_2I_3\f$. Axis \f$I_1\f$ is identical to HSI intensity; the plane \f$ I_2I_3 \f$ corresponds to variations in HSI chromaticity (i.e. hue and saturation).
 
 ### Code
 

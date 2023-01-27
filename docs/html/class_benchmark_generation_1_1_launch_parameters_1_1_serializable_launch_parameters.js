@@ -1,8 +1,8 @@
 var class_benchmark_generation_1_1_launch_parameters_1_1_serializable_launch_parameters =
 [
     [ "SerializableLaunchParameters", "class_benchmark_generation_1_1_launch_parameters_1_1_serializable_launch_parameters.html#a29de70865d3c7cc06add2cdf076c64c0", null ],
-    [ "abstractDispatcherParameters", "class_benchmark_generation_1_1_launch_parameters_1_1_serializable_launch_parameters.html#af93b07f9cc6387bb1d0d26eb57e6ce34", null ],
     [ "algorithm", "class_benchmark_generation_1_1_launch_parameters_1_1_serializable_launch_parameters.html#aeaae03db61de4dca651159923db46aaf", null ],
+    [ "dispatcherParameters", "class_benchmark_generation_1_1_launch_parameters_1_1_serializable_launch_parameters.html#ab81ef5fec87616f666966d3941e17085", null ],
     [ "doDownscale", "class_benchmark_generation_1_1_launch_parameters_1_1_serializable_launch_parameters.html#aacdd3cf004e3b0391145660c44e89531", null ],
     [ "doRandomizeEmptyClusters", "class_benchmark_generation_1_1_launch_parameters_1_1_serializable_launch_parameters.html#a59072772c791eb77238f0193c27569aa", null ],
     [ "jitterSize", "class_benchmark_generation_1_1_launch_parameters_1_1_serializable_launch_parameters.html#aec6a376cf70aa6afac3974fbed010d5b", null ],

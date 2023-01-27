@@ -187,95 +187,99 @@ $(document).ready(function(){initNavTree('_cluster_centers_8cs_source.html','');
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                    Throw(<span class="stringliteral">&quot;NaN in shader&quot;</span>);</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                }</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                <span class="keywordflow">if</span> (center.x &lt; -0.5 || center.x &gt; 0.5 || center.y &lt; -0.5 || center.y &gt; 0.5)</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                {</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                    <a class="code hl_function" href="class_clustering_algorithms_1_1_cluster_centers.html#ad886adab89f870c01bd5bf0d4b7594be">LogClusterCenters</a>(numClusters, centersBufferData);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                    Throw($<span class="stringliteral">&quot;invalid cluster center record: {center}&quot;</span>);</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                }</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            }</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            <span class="comment">/*</span></div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment">                z = ...</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment"></span> </div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="comment">                positive number     ==  valid variance</span></div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="comment">                -1                  ==  not a single pixel has sufficient chromatic component</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="comment"></span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="comment">                |0              |numClusters    |</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="comment">                |---------------|---------------|</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="comment">                |  new centers  | old centers   |</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="comment">            */</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            <span class="keywordflow">if</span> (centersBufferData[numClusters].z &lt; -0.5)</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>            {</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                <span class="comment">// not a single pixel has sufficient chromatic component</span></div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                clusterCenters.oldVariance = <span class="keyword">null</span>;</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            }</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            {</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                clusterCenters.oldVariance = centersBufferData[numClusters].z;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                <span class="comment">/*</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="comment">                    valid values are in range [-0.5; 0.5]</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment">                    slightly increased range accounts for floating point inaccuracy</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="comment">                */</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                <span class="keywordflow">if</span> (center.x &lt; -0.6 || center.x &gt; 0.6 || center.y &lt; -0.6 || center.y &gt; 0.6)</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                {</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                    <a class="code hl_function" href="class_clustering_algorithms_1_1_cluster_centers.html#ad886adab89f870c01bd5bf0d4b7594be">LogClusterCenters</a>(numClusters, centersBufferData);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                    Throw($<span class="stringliteral">&quot;invalid cluster center record: {center}&quot;</span>);</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                }</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            }</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            <span class="comment">/*</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="comment">                z = ...</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="comment"></span> </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="comment">                positive number     ==  valid variance</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="comment">                -1                  ==  not a single pixel has sufficient chromatic component</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="comment"></span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="comment">                |0              |numClusters    |</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="comment">                |---------------|---------------|</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="comment">                |  new centers  | old centers   |</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span><span class="comment">            */</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            <span class="keywordflow">if</span> (centersBufferData[numClusters].z &lt; -0.5)</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                <span class="comment">// not a single pixel has sufficient chromatic component</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                clusterCenters.oldVariance = <span class="keyword">null</span>;</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>            }</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            <span class="comment">/*</span></div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="comment">                z = ...</span></div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="comment">                </span></div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="comment">                positive number = valid variance</span></div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="comment">                -1 = not a single pixel has sufficient chromatic component</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="comment"></span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="comment">                |0              |numClusters    |</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="comment">                |---------------|---------------|</span></div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="comment">                |  new centers  | old centers   |</span></div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="comment">            */</span></div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            <span class="keywordflow">if</span> (centersBufferData[0].z &lt; -0.5)</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            {</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                <span class="comment">// not a single pixel has sufficient chromatic component</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                clusterCenters.variance = <span class="keyword">null</span>;</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                clusterCenters.warning = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                Debug.LogWarning(<span class="stringliteral">&quot;Not a single pixel has sufficient chromatic component&quot;</span>);</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                <span class="keywordflow">return</span> clusterCenters;</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>            }</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>            {</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                clusterCenters.variance = centersBufferData[0].z;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>            <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            {</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                clusterCenters.oldVariance = centersBufferData[numClusters].z;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>            }</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>            <span class="comment">/*</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="comment">                z = ...</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="comment">                </span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="comment">                positive number = valid variance</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="comment">                -1 = not a single pixel has sufficient chromatic component</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="comment"></span> </div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="comment">                |0              |numClusters    |</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="comment">                |---------------|---------------|</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="comment">                |  new centers  | old centers   |</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="comment">            */</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>            <span class="keywordflow">if</span> (centersBufferData[0].z &lt; -0.5)</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            {</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                <span class="comment">// not a single pixel has sufficient chromatic component</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                clusterCenters.variance = <span class="keyword">null</span>;</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                clusterCenters.warning = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                Debug.LogWarning(<span class="stringliteral">&quot;Not a single pixel has sufficient chromatic component&quot;</span>);</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                <span class="keywordflow">return</span> clusterCenters;</div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>            }</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>            <span class="keywordflow">if</span> (AreAllClusterCentersEmpty(numClusters, centersBufferData))</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>            {</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                clusterCenters.warning = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                Debug.LogWarning(<span class="stringliteral">&quot;All cluster centers are empty!&quot;</span>);</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                <a class="code hl_function" href="class_clustering_algorithms_1_1_cluster_centers.html#ad886adab89f870c01bd5bf0d4b7594be">LogClusterCenters</a>(numClusters, centersBufferData);</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>            }</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            <span class="keywordflow">return</span> clusterCenters;</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        }</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno"><a class="line" href="class_clustering_algorithms_1_1_cluster_centers.html#ad886adab89f870c01bd5bf0d4b7594be">  152</a></span>        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_clustering_algorithms_1_1_cluster_centers.html#ad886adab89f870c01bd5bf0d4b7594be">LogClusterCenters</a>(<span class="keywordtype">int</span> numClusters, Vector4[] centersBufferData)</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        {</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            sb.Clear();</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>            sb.AppendLine(<span class="stringliteral">&quot;New cluster records: \n&quot;</span>);</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; numClusters; i++)</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            {</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                sb.Append($<span class="stringliteral">&quot;{i, 4}  |  &quot;</span>);</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                sb.AppendLine(centersBufferData[i].ToString());</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>            }</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            sb.AppendLine(<span class="stringliteral">&quot;\nOld cluster records: \n&quot;</span>);</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = numClusters; i &lt; numClusters * 2; i++)</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>            {</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                sb.Append($<span class="stringliteral">&quot;{i, 4}  |  &quot;</span>);</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                sb.AppendLine(centersBufferData[i].ToString());</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            }</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            Debug.Log(sb);</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        }</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno"><a class="line" href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html">  170</a></span>        <span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html">InvalidClustersException</a> : System.Exception</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        {</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno"><a class="line" href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html#a8c72193431b5cf237c0c1547b1994ddf">  172</a></span>            <span class="keyword">public</span> <a class="code hl_function" href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html#a8c72193431b5cf237c0c1547b1994ddf">InvalidClustersException</a>() : base() { }</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>            <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>            {</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                clusterCenters.variance = centersBufferData[0].z;</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>            }</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>            <span class="keywordflow">if</span> (AreAllClusterCentersEmpty(numClusters, centersBufferData))</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>            {</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>                clusterCenters.warning = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>                Debug.LogWarning(<span class="stringliteral">&quot;All cluster centers are empty!&quot;</span>);</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                <a class="code hl_function" href="class_clustering_algorithms_1_1_cluster_centers.html#ad886adab89f870c01bd5bf0d4b7594be">LogClusterCenters</a>(numClusters, centersBufferData);</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            }</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            <span class="keywordflow">return</span> clusterCenters;</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        }</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno"><a class="line" href="class_clustering_algorithms_1_1_cluster_centers.html#ad886adab89f870c01bd5bf0d4b7594be">  156</a></span>        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_clustering_algorithms_1_1_cluster_centers.html#ad886adab89f870c01bd5bf0d4b7594be">LogClusterCenters</a>(<span class="keywordtype">int</span> numClusters, Vector4[] centersBufferData)</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        {</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            sb.Clear();</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            sb.AppendLine(<span class="stringliteral">&quot;New cluster records: \n&quot;</span>);</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; numClusters; i++)</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            {</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                sb.Append($<span class="stringliteral">&quot;{i, 4}  |  &quot;</span>);</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                sb.AppendLine(centersBufferData[i].ToString());</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>            }</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>            sb.AppendLine(<span class="stringliteral">&quot;\nOld cluster records: \n&quot;</span>);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = numClusters; i &lt; numClusters * 2; i++)</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            {</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                sb.Append($<span class="stringliteral">&quot;{i, 4}  |  &quot;</span>);</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                sb.AppendLine(centersBufferData[i].ToString());</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>            }</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            Debug.Log(sb);</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        }</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno"><a class="line" href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html#a8ef53b3ac6d8306dda7de6985eb45dfc">  174</a></span>            <span class="keyword">public</span> <a class="code hl_function" href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html#a8ef53b3ac6d8306dda7de6985eb45dfc">InvalidClustersException</a>(<span class="keywordtype">string</span> message) : base(message) { }</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        }</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    }</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>}</div>
-<div class="ttc" id="aclass_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception_html"><div class="ttname"><a href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html">ClusteringAlgorithms.ClusterCenters.InvalidClustersException</a></div><div class="ttdef"><b>Definition:</b> <a href="_cluster_centers_8cs_source.html#l00170">ClusterCenters.cs:171</a></div></div>
-<div class="ttc" id="aclass_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception_html_a8c72193431b5cf237c0c1547b1994ddf"><div class="ttname"><a href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html#a8c72193431b5cf237c0c1547b1994ddf">ClusteringAlgorithms.ClusterCenters.InvalidClustersException.InvalidClustersException</a></div><div class="ttdeci">InvalidClustersException()</div><div class="ttdef"><b>Definition:</b> <a href="_cluster_centers_8cs_source.html#l00172">ClusterCenters.cs:172</a></div></div>
-<div class="ttc" id="aclass_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception_html_a8ef53b3ac6d8306dda7de6985eb45dfc"><div class="ttname"><a href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html#a8ef53b3ac6d8306dda7de6985eb45dfc">ClusteringAlgorithms.ClusterCenters.InvalidClustersException.InvalidClustersException</a></div><div class="ttdeci">InvalidClustersException(string message)</div><div class="ttdef"><b>Definition:</b> <a href="_cluster_centers_8cs_source.html#l00174">ClusterCenters.cs:174</a></div></div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno"><a class="line" href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html">  174</a></span>        <span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html">InvalidClustersException</a> : System.Exception</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        {</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno"><a class="line" href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html#a8c72193431b5cf237c0c1547b1994ddf">  176</a></span>            <span class="keyword">public</span> <a class="code hl_function" href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html#a8c72193431b5cf237c0c1547b1994ddf">InvalidClustersException</a>() : base() { }</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno"><a class="line" href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html#a8ef53b3ac6d8306dda7de6985eb45dfc">  178</a></span>            <span class="keyword">public</span> <a class="code hl_function" href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html#a8ef53b3ac6d8306dda7de6985eb45dfc">InvalidClustersException</a>(<span class="keywordtype">string</span> message) : base(message) { }</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        }</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    }</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>}</div>
+<div class="ttc" id="aclass_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception_html"><div class="ttname"><a href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html">ClusteringAlgorithms.ClusterCenters.InvalidClustersException</a></div><div class="ttdef"><b>Definition:</b> <a href="_cluster_centers_8cs_source.html#l00174">ClusterCenters.cs:175</a></div></div>
+<div class="ttc" id="aclass_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception_html_a8c72193431b5cf237c0c1547b1994ddf"><div class="ttname"><a href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html#a8c72193431b5cf237c0c1547b1994ddf">ClusteringAlgorithms.ClusterCenters.InvalidClustersException.InvalidClustersException</a></div><div class="ttdeci">InvalidClustersException()</div><div class="ttdef"><b>Definition:</b> <a href="_cluster_centers_8cs_source.html#l00176">ClusterCenters.cs:176</a></div></div>
+<div class="ttc" id="aclass_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception_html_a8ef53b3ac6d8306dda7de6985eb45dfc"><div class="ttname"><a href="class_clustering_algorithms_1_1_cluster_centers_1_1_invalid_clusters_exception.html#a8ef53b3ac6d8306dda7de6985eb45dfc">ClusteringAlgorithms.ClusterCenters.InvalidClustersException.InvalidClustersException</a></div><div class="ttdeci">InvalidClustersException(string message)</div><div class="ttdef"><b>Definition:</b> <a href="_cluster_centers_8cs_source.html#l00178">ClusterCenters.cs:178</a></div></div>
 <div class="ttc" id="aclass_clustering_algorithms_1_1_cluster_centers_html"><div class="ttname"><a href="class_clustering_algorithms_1_1_cluster_centers.html">ClusteringAlgorithms.ClusterCenters</a></div><div class="ttdoc">Call Dispose after using.</div><div class="ttdef"><b>Definition:</b> <a href="_cluster_centers_8cs_source.html#l00010">ClusterCenters.cs:11</a></div></div>
 <div class="ttc" id="aclass_clustering_algorithms_1_1_cluster_centers_html_a14253d161fbe61c4667daee6c3c63bb7"><div class="ttname"><a href="class_clustering_algorithms_1_1_cluster_centers.html#a14253d161fbe61c4667daee6c3c63bb7">ClusteringAlgorithms.ClusterCenters.oldVariance</a></div><div class="ttdeci">float? oldVariance</div><div class="ttdef"><b>Definition:</b> <a href="_cluster_centers_8cs_source.html#l00014">ClusterCenters.cs:14</a></div></div>
 <div class="ttc" id="aclass_clustering_algorithms_1_1_cluster_centers_html_a732fa012d37e6bf4b31c411064f28a01"><div class="ttname"><a href="class_clustering_algorithms_1_1_cluster_centers.html#a732fa012d37e6bf4b31c411064f28a01">ClusteringAlgorithms.ClusterCenters.variance</a></div><div class="ttdeci">float? variance</div><div class="ttdef"><b>Definition:</b> <a href="_cluster_centers_8cs_source.html#l00013">ClusterCenters.cs:13</a></div></div>
@@ -283,7 +287,7 @@ $(document).ready(function(){initNavTree('_cluster_centers_8cs_source.html','');
 <div class="ttc" id="aclass_clustering_algorithms_1_1_cluster_centers_html_ab6eaadc82f16b0d7e65e2e04f1898999"><div class="ttname"><a href="class_clustering_algorithms_1_1_cluster_centers.html#ab6eaadc82f16b0d7e65e2e04f1898999">ClusteringAlgorithms.ClusterCenters.centers</a></div><div class="ttdeci">Vector4[] centers</div><div class="ttdef"><b>Definition:</b> <a href="_cluster_centers_8cs_source.html#l00012">ClusterCenters.cs:12</a></div></div>
 <div class="ttc" id="aclass_clustering_algorithms_1_1_cluster_centers_html_abd3a6f0cf6d3e7debe013dc67bc93548"><div class="ttname"><a href="class_clustering_algorithms_1_1_cluster_centers.html#abd3a6f0cf6d3e7debe013dc67bc93548">ClusteringAlgorithms.ClusterCenters.Dispose</a></div><div class="ttdeci">void Dispose()</div><div class="ttdef"><b>Definition:</b> <a href="_cluster_centers_8cs_source.html#l00050">ClusterCenters.cs:50</a></div></div>
 <div class="ttc" id="aclass_clustering_algorithms_1_1_cluster_centers_html_acd8023d9d25a427308b9fa060dd76074"><div class="ttname"><a href="class_clustering_algorithms_1_1_cluster_centers.html#acd8023d9d25a427308b9fa060dd76074">ClusteringAlgorithms.ClusterCenters.warning</a></div><div class="ttdeci">bool warning</div><div class="ttdef"><b>Definition:</b> <a href="_cluster_centers_8cs_source.html#l00015">ClusterCenters.cs:15</a></div></div>
-<div class="ttc" id="aclass_clustering_algorithms_1_1_cluster_centers_html_ad886adab89f870c01bd5bf0d4b7594be"><div class="ttname"><a href="class_clustering_algorithms_1_1_cluster_centers.html#ad886adab89f870c01bd5bf0d4b7594be">ClusteringAlgorithms.ClusterCenters.LogClusterCenters</a></div><div class="ttdeci">static void LogClusterCenters(int numClusters, Vector4[] centersBufferData)</div><div class="ttdef"><b>Definition:</b> <a href="_cluster_centers_8cs_source.html#l00152">ClusterCenters.cs:152</a></div></div>
+<div class="ttc" id="aclass_clustering_algorithms_1_1_cluster_centers_html_ad886adab89f870c01bd5bf0d4b7594be"><div class="ttname"><a href="class_clustering_algorithms_1_1_cluster_centers.html#ad886adab89f870c01bd5bf0d4b7594be">ClusteringAlgorithms.ClusterCenters.LogClusterCenters</a></div><div class="ttdeci">static void LogClusterCenters(int numClusters, Vector4[] centersBufferData)</div><div class="ttdef"><b>Definition:</b> <a href="_cluster_centers_8cs_source.html#l00156">ClusterCenters.cs:156</a></div></div>
 <div class="ttc" id="aclass_diagnostics_html"><div class="ttname"><a href="class_diagnostics.html">Diagnostics</a></div><div class="ttdef"><b>Definition:</b> <a href="_diagnostics_8cs_source.html#l00001">Diagnostics.cs:2</a></div></div>
 <div class="ttc" id="aclass_object_pool_max_assert_html"><div class="ttname"><a href="class_object_pool_max_assert.html">ObjectPoolMaxAssert</a></div><div class="ttdef"><b>Definition:</b> <a href="_object_pool_max_assert_8cs_source.html#l00003">ObjectPoolMaxAssert.cs:4</a></div></div>
 <div class="ttc" id="anamespace_clustering_algorithms_html"><div class="ttname"><a href="namespace_clustering_algorithms.html">ClusteringAlgorithms</a></div><div class="ttdef"><b>Definition:</b> <a href="_a_dispatcher_8cs_source.html#l00004">ADispatcher.cs:5</a></div></div>
